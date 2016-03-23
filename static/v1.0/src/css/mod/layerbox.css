@@ -1,0 +1,68 @@
+/**
+ * 信息弹层
+ * @file layerbox.css
+ */
+
+.mod-layerbox-mask{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.35);
+    z-index: 59999;
+}
+.mod-layerbox-box{
+    width: 85%;
+    max-width: 500px;
+    padding: 8px;
+    background-color: #fff;
+    border-radius: 7px;
+}
+.mod-layerbox-content{
+    font-size: 16px;
+    text-align: center;
+    color: #848484;
+}
+.mod-layerbox-content:before{
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\f05a";
+    display: block;
+    font-size: 72px;
+    margin-bottom: 18px;
+    color: #848484;
+}
+.mod-layerbox-buttons{
+    margin-top: 14px;
+}
+.mod-layerbox-buttons button{
+    width: 100%;
+}
+.mod-layerbox-buttons button:last-child{
+    background-color: #0CA735;
+    color: #fff;
+}
+.mod-layerbox-buttons button:last-child:active{
+    background-color: #0FC33F;
+    color: #e6e6e6;
+}
+.mod-layerbox-mask.confirm .mod-layerbox-content:before{
+    content: "\f059";
+    color: #3C85FF;
+}
+.mod-layerbox-mask.alarm .mod-layerbox-content:before{
+    content: "\f06a";
+    color: #FF8D21;
+}
+.mod-layerbox-mask.error .mod-layerbox-content:before{
+    content: "\f057";
+    color: #FF1B1B;
+}
+.mod-layerbox-mask.right .mod-layerbox-content:before{
+    content: "\f058";
+    color: #00C102;
+}

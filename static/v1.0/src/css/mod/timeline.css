@@ -1,0 +1,293 @@
+/**
+ * 社交朋友圈列表
+ * @style timeline.css
+ */
+.mod-timeline-header{
+    width: 100%;
+    margin-bottom: 1.6rem;
+}
+.mod-timeline-cover{
+    width: 100%;
+    height: 4rem;
+    background-color: #fafafa;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    position: relative;
+}
+.mod-timeline-userinfo{
+    position: relative;
+    height: auto;
+}
+.mod-timeline-userinfo > dl{
+    width: 100%;
+    position: absolute;
+    margin-top: -0.8rem;
+}
+.mod-timeline-userinfo > dl dt{
+    width: 1.6rem;
+    height: 1.6rem;
+    float: right;
+    margin-right: 0.2rem;
+    position: relative;
+}
+.mod-timeline-userinfo > dl dt cite{
+    display: block;
+    width: 100%;
+    height: 1.6rem;
+    background-color: #eee;
+    box-shadow: 0 0 5px #999;
+}
+.mod-timeline-userinfo > dl dd{
+    float: right;
+    width: 65%;
+    height: 0.8rem;
+    line-height: 0.8rem;
+    margin-right: 0.2rem;
+    text-align: right;
+    font-size: 14px;
+}
+.mod-timeline-userinfo > dl dd:last-child{
+    line-height: 1.5;
+}
+.mod-timeline-attention{
+    margin: 8px auto;
+    display: block;
+    font-size: 14px;
+    width: 100%;
+    height: 0.4rem;
+    line-height: 0.4rem;
+    border-radius: 5px;
+    border: 1px solid #FF6600;
+    text-align: center;
+    color: #FF6600;
+    cursor: pointer;
+    background-color: #fff;
+}
+.mod-timeline-attention:before{
+    content: "\f068";
+    margin: 0 5px 0 0;
+}
+.mod-timeline-attention:not(.attention):before{
+    content: "\f067";
+}
+.mod-timeline-attention:not(.attention) span:last-child{
+    display: none;
+}
+.mod-timeline-attention.attention{
+    border: 1px solid #2284FF;
+    color: #2284FF;
+}
+.mod-timeline-attention.attention span:first-child{
+    display: none;
+}
+.mod-timeline-frame{
+    width: 100%;
+    height: auto;
+}
+.mod-timeline-items{
+
+}
+.mod-timeline-item{
+    width: 95%;
+    margin: 0 auto;
+    margin-bottom: .16rem;
+    padding: .1rem .05rem;
+    border-bottom: 1px solid #eaeaea;
+    min-height: 1.40rem;
+}
+.mod-timeline-item dt{
+    width: 1.2rem;
+}
+.mod-timeline-item dt cite{
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid #eaeaea;
+    background-color: #fafafa;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+.mod-timeline-item dd{
+    -webkit-box-flex: 1;        
+        -webkit-flex: 1;
+            -ms-flex: 1;
+                flex: 1;
+}
+.mod-timeline-avatorlink,
+.mod-timeline-avatorlink:visited,
+.mod-timeline-avatorlink:hover,
+.mod-timeline-avatorlink:active{
+    outline: none;
+    text-decoration: none;
+}
+.mod-timeline-nicklink,
+.mod-timeline-nicklink:visited,
+.mod-timeline-nicklink:hover,
+.mod-timeline-nicklink:active{
+    outline: none;
+    text-decoration: none;
+    font-size: 16px;
+    color: #1033FF;
+    display: block;
+    margin-bottom: .24rem;
+}
+.mod-timeline-messagelink,
+.mod-timeline-messagelink:visited,
+.mod-timeline-messagelink:hover,
+.mod-timeline-messagelink:active{
+    outline: none;
+    text-decoration: none;
+    display: block;
+    min-height: 1.20rem;
+    width: 100%;
+    color: #000;
+}
+.mod-timeline-title{
+    font-size: 16px;
+    margin-bottom: 0.16rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: normal;
+    word-break: normal;
+    line-height: 1.5;
+    font-weight: normal;
+}
+.mod-timeline-content{
+    font-size: 14px;
+    line-height: 1.5;
+}
+.mod-timeline-sharelink{
+    height: 1rem;
+    overflow: hidden;
+    background-color: #fafafa;
+    padding: .1rem;
+}
+.mod-timeline-sharelink img{
+    max-height: 100%;
+    max-width: 100%;
+    vertical-align: middle;
+}
+.mod-timeline-sharelink span{
+    display: inline-block;
+    margin-left: 6px;
+    line-height: 1.25;
+    padding: 0 3px;
+    background-color: transparent;
+    -webkit-box-flex: 1;        
+        -webkit-flex: 1;
+            -ms-flex: 1;
+                flex: 1;
+}
+.mod-timeline-photos{
+    list-style: none;
+    margin-top: .16rem;
+}
+.mod-timeline-photos > li,
+.mod-timeline-photos.single > li{
+    background-color: #fafafa;
+    margin-bottom: 0.16rem;
+    width: 100%;
+    height: 2.4rem;
+}
+.mod-timeline-photos > li img{
+    max-height: 2.4rem;
+}
+.mod-timeline-photos.multiple > li{
+    width: 1.5rem;
+    height: 1.5rem;
+}
+.mod-timeline-photos.multiple > li:nth-child(3n-1){
+    margin-left: 0.16rem;
+    margin-right: 0.16rem;
+}
+.mod-timeline-photos.multiple > li img{
+    max-width: 100%;
+}
+.mod-timeline-datetime{
+    color: #ccc;
+    margin-top: 8px;
+    font-size: 12px;
+}
+.mod-timeline-delete{
+    color: #0A1186;
+    margin-left: 8px;
+    cursor: pointer;
+}
+.mod-timeline-delete:active{
+    background-color: #fefefe;
+}
+.mod-timeline-socialbar{
+    margin-top: 10px;
+    font-size: 14px;
+    height: 20px;
+}
+.mod-timeline-socialbar i:before,
+.mod-timeline-socialbar b:before{
+    margin-right: 5px;
+    cursor: pointer;
+}
+.mod-timeline-socialbar i:before{
+    content: "\f08a";
+}
+.mod-timeline-socialbar i.on:before{
+    content: "\f004";
+}
+.mod-timeline-socialbar b:before{
+    content: "\f0e5";
+}
+.mod-timeline-socialbar i{
+    float: left;
+    cursor: pointer;
+}
+.mod-timeline-socialbar b{
+    float: right;
+    cursor: pointer;
+}
+.mod-timeline-socialdata{
+    margin-top: 8px;
+    background-color: #fafafa;
+    padding: 8px;
+    position: relative;
+    -webkit-box-flex: 1;        
+        -webkit-flex: 1;
+            -ms-flex: 1;
+                flex: 1;
+}
+.mod-timeline-socialdata:before{
+    content: "\f0d8";
+    color: #fafafa;
+    position: absolute;
+    font-size: 26px;
+    top: -17px;
+    left: 24px;
+}
+.mod-timeline-like{
+    color: #1033FF;
+    font-size: 14px;
+    line-height: 1.3;
+    padding: 5px 0;
+}
+.mod-timeline-like:before{
+    content: "\f08a";
+    margin-right: 5px;
+}
+.mod-timeline-comments{
+    list-style: none;
+    border-top: 1px solid #ededed;
+    font-size: 14px;
+}
+.mod-timeline-comments li{
+    padding: 5px;
+}
+.mod-timeline-comments .mod-timeline-nicklink,
+.mod-timeline-comments .mod-timeline-nicklink:visited,
+.mod-timeline-comments .mod-timeline-nicklink:hover,
+.mod-timeline-comments .mod-timeline-nicklink:active{
+    display: initial;
+    font-size: inherit;
+}
+.mod-timeline-comments li span{
+    margin: 0 3px;
+}

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html data-page-alias="demo">
+<head>
+<!--#include virtual="/static/v1.0/inc/meta.html"-->
+<!--#include virtual="/static/v1.0/inc/rem.html"-->
+<title>桌面终端页面框架DEMO</title>
+<!--#include virtual="/static/v1.0/inc/css_common_gm.html"-->
+<!--#include virtual="/static/v1.0/inc/css_common_dm.html"-->
+<!--#include virtual="/static/v1.0/inc/js_html5_shiv.html" --> 
+</head>
+<body>
+<header class="app-header"></header> 
+<article class="app-body"></article>
+<footer class="app-footer"></footer>
+<!--#include virtual="/static/v1.0/inc/js_common_j.html" -->  
+</body>
+</html>

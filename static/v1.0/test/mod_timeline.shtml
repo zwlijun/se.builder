@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html data-page-alias="data-timeline">
+<head>
+<!--#include virtual="/static/v1.0/inc/meta.html"-->
+<!--#include virtual="/static/v1.0/inc/rem.html"-->
+<title>Mod/Timeline</title>
+<!--#include virtual="/static/v1.0/inc/css_common_gm.html"-->
+</head>
+<body>
+  <div class="mod-timeline-header">
+    <div class="mod-timeline-cover"></div>
+    <div class="mod-timeline-userinfo">
+      <dl class="clearfix">
+        <dt>
+          <a class="mod-timeline-avatorlink" href="#avator">
+            <cite></cite>
+          </a>
+          <div class="mod-timeline-attention icofont attention">
+            <span>关注</span>
+            <span>取消</span>
+          </div>
+        </dt>
+        <dd>小网UU</dd>
+        <dd>闪电从不打在相同的地方,人不该被相同的方式伤害两次</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="mod-timeline-frame">
+    <div class="mod-timeline-items">
+      <dl class="mod-timeline-item flexbox">
+        <dt>
+          <a class="mod-timeline-avatorlink" href="#avator">
+            <cite></cite>
+          </a>
+        </dt>
+        <dd>
+          <a class="mod-timeline-nicklink" href="#nick">小网UU</a>
+          <a class="mod-timeline-messagelink" href="#message">
+            <h2 class="mod-timeline-title">CSS3:nth-child()伪类选择器,奇偶数行自定义样式CSS3:nth-child()伪类选择器,奇偶数行自定义样式CSS3:nth-child()伪类选择器,奇偶数行自定义样式CSS3:nth-child()伪类选择器,奇偶数行自定义样式CSS3:nth-child()伪类选择器,奇偶数行自定义样式</h2>
+            <div class="mod-timeline-content">
+              CSS3:nth-child()伪类选择器,奇偶数行自定义样式first-child (2014-07-10 12...参数number必须为大于0的整数。 例子: li:nth-child(3){background:orange;} CSS3:nth-child()伪类选择器,奇偶数行自定义样式first-child (2014-07-10 12...参数number必须为大于0的整数。 例子: li:nth-child(3){background:orange;} CSS3:nth-child()伪类选择器,奇偶数行自定义样式first-child (2014-07-10 12...参数number必须为大于0的整数。 例子: li:nth-child(3){background:orange;} CSS3:nth-child()伪类选择器,奇偶数行自定义样式first-child (2014-07-10 12...参数number必须为大于0的整数。 例子: li:nth-child(3){background:orange;} CSS3:nth-child()伪类选择器,奇偶数行自定义样式first-child (2014-07-10 12...参数number必须为大于0的整数。 例子: li:nth-child(3){background:orange;} CSS3:nth-child()伪类选择器,奇偶数行自定义样式first-child (2014-07-10 12...参数number必须为大于0的整数。 例子: li:nth-child(3){background:orange;} CSS3:nth-child()伪类选择器,奇偶数行自定义样式first-child (2014-07-10 12...参数number必须为大于0的整数。 例子: li:nth-child(3){background:orange;}
+            </div>
+          </a>
+          <div class="mod-timeline-datetime">1分钟前</div>
+          <div class="mod-timeline-socialbar clearfix">
+            <i class="icofont">点赞(<span>10</span>)</i>
+            <b class="icofont">评论(<span>999999</span>)</b>
+          </div>
+        </dd>
+      </dl>
+      <dl class="mod-timeline-item flexbox">
+        <dt>
+          <a class="mod-timeline-avatorlink" href="#avator">
+            <cite></cite>
+          </a>
+        </dt>
+        <dd>
+          <a class="mod-timeline-nicklink" href="#nick">小网UU</a>
+          <a class="mod-timeline-messagelink" href="#message">
+            <h2 class="mod-timeline-title">CSS3:nth-child()伪类选择器,奇偶数行自定义样式CSS3:nth-child()伪类选择器,奇偶数行自定义样式CSS3:nth-child()伪类选择器,奇偶数行自定义样式CSS3:nth-child()伪类选择器,奇偶数行自定义样式CSS3:nth-child()伪类选择器,奇偶数行自定义样式</h2>
+            <div class="mod-timeline-content">
+              CSS3:nth-child()伪类选择器,奇偶数行自定义样式first-child (2014-07-10 12...参数number必须为大于0的整数。 例子: li:nth-child(3){background:orange;}
+            </div>
+          </a>
+          <ul class="mod-timeline-photos flexbox wrap single">
+            <li></li>
+          </ul>
+          <div class="mod-timeline-datetime">1天前</div>
+          <div class="mod-timeline-socialbar clearfix">
+            <i class="icofont">点赞(<span>10</span>)</i>
+            <b class="icofont">评论(<span>999999</span>)</b>
+          </div>
+        </dd>
+      </dl>
+      <dl class="mod-timeline-item flexbox">
+        <dt>
+          <a class="mod-timeline-avatorlink" href="#avator">
+            <cite></cite>
+          </a>
+        </dt>
+        <dd>
+          <a class="mod-timeline-nicklink" href="#nick">小网UU</a>
+          <a class="mod-timeline-messagelink" href="#message">
+            <h2 class="mod-timeline-title hide"></h2>
+            <div class="mod-timeline-content">
+              <div class="mod-timeline-sharelink flexbox middle">
+                <img src="http://img5.duitang.com/uploads/item/201503/11/20150311103609_5HEU2.jpeg">
+                <span>input的type="number"在部分手机端会出现一个小按钮要如何解决?</span>
+              </div>
+            </div>
+          </a>
+          <div class="mod-timeline-datetime">2016-03-02 20:32:49<span class="mod-timeline-delete">删除</span></div>
+          <div class="mod-timeline-socialbar clearfix">
+            <i class="icofont on">点赞(<span>10</span>)</i>
+            <b class="icofont">评论(<span>999999</span>)</b>
+          </div>
+          <div class="mod-timeline-socialdata flexbox vertical left icofont">
+            <div class="mod-timeline-like icofont">小网，HELLO</div>
+            <ul class="mod-timeline-comments">
+              <li><a class="mod-timeline-nicklink" href="#">小网</a>：Good</li>
+              <li><a class="mod-timeline-nicklink" href="#">小网</a><span>回复</span><a class="mod-timeline-nicklink" href="#">HELLO</a>：Good</li>
+            </ul>
+          </div>
+        </dd>
+      </dl>
+    </div>
+    <div class="mod-dataset-nodata icofont info">无数据</div>
+    <div class="mod-dataset-footer flexbox middle center">
+      <i class="icofont icofont-spin"></i>
+      <span data-button-text="加载中...">点击查看更多</span>
+    </div>
+  </div>
+<!--#include virtual="/static/v1.0/inc/js_common_z.html" -->    
+</body>
+</html>

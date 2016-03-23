@@ -1,0 +1,256 @@
+/**
+ * swiper plugin#slider
+ * @file swiper.slider.css
+ */
+.mod-swiper.slider.x .mod-swiper-item.maybe.after{
+    -webkit-transform: translate(100%, 0) translateZ(0);
+            transform: translate(100%, 0) translateZ(0);
+}
+.mod-swiper.slider.x .mod-swiper-item.maybe.before{
+    -webkit-transform: translate(-100%, 0) translateZ(0);
+            transform: translate(-100%, 0) translateZ(0);
+}
+.mod-swiper.slider.y .mod-swiper-item.maybe.after{
+    -webkit-transform: translate(0, 100%) translateZ(0);
+            transform: translate(0, 100%) translateZ(0);
+}
+.mod-swiper.slider.y .mod-swiper-item.maybe.before{
+    -webkit-transform: translate(0, -100%) translateZ(0);
+            transform: translate(0, -100%) translateZ(0);
+}
+
+.mod-swiper.slider.x.goto-after .mod-swiper-item.current{
+    -webkit-animation-name: swiper-slider-x-after-exit;
+       -moz-animation-name: swiper-slider-x-after-exit;
+            animation-name: swiper-slider-x-after-exit;
+}
+.mod-swiper.slider.x.goto-after .mod-swiper-item.after{
+    -webkit-animation-name: swiper-slider-x-after-enter;
+       -moz-animation-name: swiper-slider-x-after-enter;
+            animation-name: swiper-slider-x-after-enter;
+}
+@-webkit-keyframes swiper-slider-x-after-exit{
+    0% {
+        -webkit-transform: translate(0, 0) translateZ(0);
+    }
+    100% {
+        -webkit-transform: translate(-100%, 0) translateZ(0);
+    }
+}
+@-moz-keyframes swiper-slider-x-after-exit{
+    0% {
+        -moz-transform: translate(0, 0) translateZ(0);
+    }
+    100% {
+        -moz-transform: translate(-100%, 0) translateZ(0);
+    }
+}
+@keyframes swiper-slider-x-after-exit{
+    0% {
+        transform: translate(0, 0) translateZ(0);
+    }
+    100% {
+        transform: translate(-100%, 0) translateZ(0);
+    }
+}
+@-webkit-keyframes swiper-slider-x-after-enter{
+    0% {
+        -webkit-transform: translate(100%, 0) translateZ(0);
+    }
+    100% {
+        -webkit-transform: translate(0, 0) translateZ(0);
+    }
+}
+@-moz-keyframes swiper-slider-x-after-enter{
+    0% {
+        -moz-transform: translate(100%, 0) translateZ(0);
+    }
+    100% {
+        -moz-transform: translate(0, 0) translateZ(0);
+    }
+}
+@keyframes swiper-slider-x-after-enter{
+    0% {
+        transform: translate(100%, 0) translateZ(0);
+    }
+    100% {
+        transform: translate(0, 0) translateZ(0);
+    }
+}
+
+.mod-swiper.slider.x.goto-before .mod-swiper-item.current{
+    -webkit-animation-name: swiper-slider-x-before-exit;
+       -moz-animation-name: swiper-slider-x-before-exit;
+            animation-name: swiper-slider-x-before-exit;
+}
+.mod-swiper.slider.x.goto-before .mod-swiper-item.before{
+    -webkit-animation-name: swiper-slider-x-before-enter;
+       -moz-animation-name: swiper-slider-x-before-enter;
+            animation-name: swiper-slider-x-before-enter;
+}
+@-webkit-keyframes swiper-slider-x-before-exit{
+    0% {
+        -webkit-transform: translate(0, 0) translateZ(0);
+    }
+    100% {
+        -webkit-transform: translate(100%, 0) translateZ(0);
+    }
+}
+@-moz-keyframes swiper-slider-x-before-exit{
+    0% {
+        -moz-transform: translate(0, 0) translateZ(0);
+    }
+    100% {
+        -moz-transform: translate(100%, 0) translateZ(0);
+    }
+}
+@keyframes swiper-slider-x-before-exit{
+    0% {
+        transform: translate(0, 0) translateZ(0);
+    }
+    100% {
+        transform: translate(100%, 0) translateZ(0);
+    }
+}
+@-webkit-keyframes swiper-slider-x-before-enter{
+    0% {
+        -webkit-transform: translate(-100%, 0) translateZ(0);
+    }
+    100% {
+        -webkit-transform: translate(0, 0) translateZ(0);
+    }
+}
+@-moz-keyframes swiper-slider-x-before-enter{
+    0% {
+        -moz-transform: translate(-100%, 0) translateZ(0);
+    }
+    100% {
+        -moz-transform: translate(0, 0) translateZ(0);
+    }
+}
+@keyframes swiper-slider-x-before-enter{
+    0% {
+        transform: translate(-100%, 0) translateZ(0);
+    }
+    100% {
+        transform: translate(0, 0) translateZ(0);
+    }
+}
+
+.mod-swiper.slider.y.goto-after .mod-swiper-item.current{
+    -webkit-animation-name: swiper-slider-y-after-exit;
+       -moz-animation-name: swiper-slider-y-after-exit;
+            animation-name: swiper-slider-y-after-exit;
+}
+.mod-swiper.slider.y.goto-after .mod-swiper-item.after{
+    -webkit-animation-name: swiper-slider-y-after-enter;
+       -moz-animation-name: swiper-slider-y-after-enter;
+            animation-name: swiper-slider-y-after-enter;
+}
+@-webkit-keyframes swiper-slider-y-after-exit{
+    0% {
+        -webkit-transform: translate(0, 0) translateZ(0);
+    }
+    100% {
+        -webkit-transform: translate(0, -100%) translateZ(0);
+    }
+}
+@-moz-keyframes swiper-slider-y-after-exit{
+    0% {
+        -moz-transform: translate(0, 0) translateZ(0);
+    }
+    100% {
+        -moz-transform: translate(0, -100%) translateZ(0);
+    }
+}
+@keyframes swiper-slider-y-after-exit{
+    0% {
+        transform: translate(0, 0) translateZ(0);
+    }
+    100% {
+        transform: translate(0, -100%) translateZ(0);
+    }
+}
+@-webkit-keyframes swiper-slider-y-after-enter{
+    0% {
+        -webkit-transform: translate(0, 100%) translateZ(0);
+    }
+    100% {
+        -webkit-transform: translate(0, 0) translateZ(0);
+    }
+}
+@-moz-keyframes swiper-slider-y-after-enter{
+    0% {
+        -moz-transform: translate(0, 100%) translateZ(0);
+    }
+    100% {
+        -moz-transform: translate(0, 0) translateZ(0);
+    }
+}
+@keyframes swiper-slider-y-after-enter{
+    0% {
+        transform: translate(0, 100%) translateZ(0);
+    }
+    100% {
+        transform: translate(0, 0) translateZ(0);
+    }
+}
+
+.mod-swiper.slider.y.goto-before .mod-swiper-item.current{
+    -webkit-animation-name: swiper-slider-y-before-exit;
+       -moz-animation-name: swiper-slider-y-before-exit;
+            animation-name: swiper-slider-y-before-exit;
+}
+.mod-swiper.slider.y.goto-before .mod-swiper-item.before{
+    -webkit-animation-name: swiper-slider-y-before-enter;
+       -moz-animation-name: swiper-slider-y-before-enter;
+            animation-name: swiper-slider-y-before-enter;
+}
+@-webkit-keyframes swiper-slider-y-before-exit{
+    0% {
+        -webkit-transform: translate(0, 0) translateZ(0);
+    }
+    100% {
+        -webkit-transform: translate(0, 100%) translateZ(0);
+    }
+}
+@-moz-keyframes swiper-slider-y-before-exit{
+    0% {
+        -moz-transform: translate(0, 0) translateZ(0);
+    }
+    100% {
+        -moz-transform: translate(0, 100%) translateZ(0);
+    }
+}
+@keyframes swiper-slider-y-before-exit{
+    0% {
+        transform: translate(0, 0) translateZ(0);
+    }
+    100% {
+        transform: translate(0, 100%) translateZ(0);
+    }
+}
+@-webkit-keyframes swiper-slider-y-before-enter{
+    0% {
+        -webkit-transform: translate(0, -100%) translateZ(0);
+    }
+    100% {
+        -webkit-transform: translate(0, 0) translateZ(0);
+    }
+}
+@-moz-keyframes swiper-slider-y-before-enter{
+    0% {
+        -moz-transform: translate(0, -100%) translateZ(0);
+    }
+    100% {
+        -moz-transform: translate(0, 0) translateZ(0);
+    }
+}
+@keyframes swiper-slider-y-before-enter{
+    0% {
+        transform: translate(0, -100%) translateZ(0);
+    }
+    100% {
+        transform: translate(0, 0) translateZ(0);
+    }
+}

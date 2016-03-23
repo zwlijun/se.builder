@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="utf-8">
+<title><%= conf.siteName%> v<%= conf.siteVersion%></title>
+<%- include ../tpl/css%>
+</head>
+
+<body>
+<header class="header"><%= conf.siteName%>(<%= conf.siteVersion%>)</header>
+<article class="main flexbox">
+  <aside class="project-nav">
+    <form name="projNavForm" id="projNavForm">
+      <%projects.projects.forEach(function(project, index){%>
+      <dl class="project">
+        <dt><input type="radio" name="project" id="<%=project.alias%>" value="project,<%=project.alias%>" data-hook="1"><label for="<%=project.alias%>"><%=project.name%></label></dt>
+        <dd>
+          <%project.env.forEach(function(env, index){%>
+            <dl class="env">
+              <dt><input type="radio" name="env" id="<%=project.alias%>_<%=env.alias%>" value="env,<%=project.alias%>,<%=env.alias%>" data-hook="1"><label for="<%=project.alias%>_<%=env.alias%>"><%=env.name%></label></dt>
+              <%env.build.forEach(function(deploy, index){%>
+              <dd><input type="radio" name="deploy" id="<%=project.alias%>_<%=env.alias%>_<%=deploy.alias%>" value="deploy,<%=project.alias%>,<%=env.alias%>,<%=deploy.alias%>" data-hook="1"><label for="<%=project.alias%>_<%=env.alias%>_<%=deploy.alias%>"><%=deploy.name%></label></dd>
+              <%})%>
+            </dl>
+          <%})%>
+        </dd>
+      </dl>
+      <%})%>
+    </form>
+  </aside>
+  <div class="frame">
+    <form name="fileForm" id="fileForm">
+      <div class="block flexbox">
+        <div class="base">
+          <div class="lib">lib list...</div>
+          <div class="mod">mod list...</div>
+        </div>
+        <div class="logic">logic list...</div>
+      </div>
+      <div class="operatebar"><button type="button" id="build">Build</button><button type="reset" id="reset">Reset</button></div>
+      <div class="console">[INFO] trace info.</div>
+    </form>
+  </div>
+</article>
+<footer class="footer">&copy; <%= conf.copyright%></footer>
+<script src="/socket.io/socket.io.js"></script>
+<script charset="utf-8" src="/js/index.js"></script>
+</body>
+</html>

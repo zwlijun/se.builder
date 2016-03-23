@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html data-page-alias="demo">
+<head>
+<!--#include virtual="/static/v1.0/inc/meta.html"-->
+<!--#include virtual="/static/v1.0/inc/rem.html"-->
+<title>CUBE</title>
+<!--#include virtual="/static/v1.0/inc/css_common_gm.html"-->
+<!--#include virtual="/static/v1.0/inc/css_common_mm.html"-->
+<style type="text/css">
+.wrapper{
+	position: relative;
+    perspective: 1000px;
+    margin: 50px auto;
+    width: 400px;
+    height: 200px;
+}
+.body{
+	position: relative;
+    transform-style: preserve-3d;
+    -webkit-transform-origin: 50% 0;
+       -moz-transform-origin: 50% 0;
+            transform-origin: 50% 0;
+            transform: rotateY(0deg);
+    width: 400px;
+    height: 200px;
+}
+.body > div{
+	position: absolute;
+	width: 400px;
+    height: 200px;
+    left: 0;
+    top: 0;
+}
+.front{
+	transform: translateZ(200px);
+	background-color: rgba(255, 0, 0, 0.5);
+}
+.left{
+	transform: rotateY(-90deg) translateZ(200px);
+	background-color: rgba(0, 128, 0, 0.5);
+
+}
+.right{
+	transform: rotateY(90deg) translateZ(200px);
+	background-color: rgba(0, 0, 255, 0.5);
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+	<div class="body">
+		<div class="front">FRONT</div>
+		<div class="left">LEFT</div>
+		<div class="right">RIGHT</div>
+	</div>
+</div>
+</body>
+</html>

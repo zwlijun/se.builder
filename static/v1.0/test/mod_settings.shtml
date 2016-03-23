@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html data-page-alias="data-settings">
+<head>
+<!--#include virtual="/static/v1.0/inc/meta.html"-->
+<!--#include virtual="/static/v1.0/inc/rem.html"-->
+<title>Mod/Settings</title>
+<!--#include virtual="/static/v1.0/inc/css_common_gm.html"-->
+</head>
+<body>
+<div class="mod-settings-frame">
+  <div class="mod-settings-groups">
+    <figure class="mod-settings-group">
+      <figcaption class="mod-settings-caption clearfix flexbox middle">
+        <i class="icofont drag" title="拖动"></i>
+        <span>基本内容</span>
+        <em class="icofont unfold" title="展开/收缩"></em>
+        <del class="icofont delete" title="删除"></del>
+      </figcaption>
+      <div class="mod-settings-items none-label">
+        <dl class="mod-settings-item clearfix">
+          <dt class="flexbox middle">标题：</dt>
+          <dd class="flexbox middle">HELLO DataLabel</dd>
+          <dd class="flexbox middle">
+            <input type="text" class="wp50">
+          </dd>
+          <dd class="flexbox middle">
+            <label class="chooser clearfix wp75">
+              <input type="text">
+              <span>选择图片</span>
+            </label>
+          </dd>
+          <dd class="flexbox center vertical">
+            <input type="text" class="wp50">
+            <ins class="icofont info">请输入6-32个字符</ins>
+            <ins class="icofont error">请输入6-32个字符</ins>
+            <ins class="icofont question">请输入6-32个字符</ins>
+            <ins class="icofont alarm">请输入6-32个字符</ins>
+            <ins class="icofont right">请输入6-32个字符</ins>
+          </dd>
+          <dd class="flexbox middle"><input type="file" class="wp50"></dd>
+        </dl>
+        <dl class="mod-settings-item clearfix">
+          <dt class="flexbox middle">参加城市：</dt>
+          <dd class="flexbox middle wrap item4">
+            <label for=""><input type="checkbox">北京</label>
+            <label for=""><input type="checkbox">上海</label>
+            <label for=""><input type="checkbox">深圳</label>
+            <label for=""><input type="checkbox">广州</label>
+            <label for=""><input type="checkbox">长沙</label>
+            <label for=""><input type="checkbox">益阳</label>
+            <label for=""><input type="checkbox">成都</label>
+            <label for=""><input type="checkbox">重庆</label>
+          </dd>
+        </dl>
+        <dl class="mod-settings-item clearfix">
+          <dt class="flexbox middle">所在公司：</dt>
+          <dd class="flexbox middle wrap item4">
+            <label for=""><input type="radio">阿里集团</label>
+            <label for=""><input type="radio">腾讯公司</label>
+            <label for=""><input type="radio">百度</label>
+            <label for=""><input type="radio">Google</label>
+            <label for=""><input type="radio">Microsoft</label>
+            <label for=""><input type="radio">Apple Inc.</label>
+          </dd>
+        </dl>
+        <dl class="mod-settings-item clearfix">
+          <dt>行业/岗位</dt>
+          <dd class="flexbox middle">
+            <label class="icofont select wp75" for="">
+              <select>
+                <optgroup label="IT">
+                  <option>软件开发</option>
+                  <option>硬件开发</option>
+                  <option>嵌入式开发</option>
+                </optgroup>
+                <optgroup label="互联网">
+                  <option>Web前端开发</option>
+                  <option>UI设计</option>
+                  <option>产品经理</option>
+                  <option>交互设计</option>
+                </optgroup>
+                <optgroup label="教育">
+                  <option>幼儿早教</option>
+                  <option>学前教育</option>
+                  <option>基础教育</option>
+                </optgroup>
+              </select>
+            </label>
+          </dd>
+        </dl>
+        <dl class="mod-settings-item clearfix">
+          <dt class="flexbox middle">留言：</dt>
+          <dd class="flexbox middle">
+            <textarea class="wp75"></textarea>
+          </dd>
+        </dl>
+        <dl class="mod-settings-item clearfix">
+          <dt class="flexbox middle">范围：</dt>
+          <dd class="flexbox middle">
+            <input class="wp75" type="range">
+          </dd>
+          <dd class="flexbox middle">
+            <input class="wp20" type="number">
+          </dd>
+          <dd class="flexbox middle">
+            <label class="range clearfix">
+              <input type="range">
+              <input type="number">
+            </label>
+          </dd>
+        </dl>
+      </div>
+    </figure>
+    <figure class="mod-settings-group">
+      <figcaption class="mod-settings-caption clearfix flexbox middle">
+        <i class="icofont drag" title="拖动"></i>
+        <span>基本内容</span>
+        <em class="icofont unfold" title="展开/收缩"></em>
+        <del class="icofont delete" title="删除"></del>
+      </figcaption>
+      <div class="mod-settings-items">
+        <dl class="mod-settings-item clearfix">
+          <dt class="flexbox middle">标题：</dt>
+          <dd class="flexbox middle">HELLO DataLabel</dd>
+          <dd class="flexbox middle">
+            <input type="text" class="wp50">
+          </dd>
+          <dd class="flexbox center vertical">
+            <input type="text" class="wp50">
+            <ins class="icofont info">请输入6-32个字符</ins>
+            <ins class="icofont error">请输入6-32个字符</ins>
+            <ins class="icofont question">请输入6-32个字符</ins>
+            <ins class="icofont alarm">请输入6-32个字符</ins>
+            <ins class="icofont right">请输入6-32个字符</ins>
+          </dd>
+          <dd class="flexbox middle"><input type="file" class="wp50"></dd>
+        </dl>
+        <dl class="mod-settings-item clearfix">
+          <dt class="flexbox middle">参加城市：</dt>
+          <dd class="flexbox middle wrap item4">
+            <label for=""><input type="checkbox">北京</label>
+            <label for=""><input type="checkbox">上海</label>
+            <label for=""><input type="checkbox">深圳</label>
+            <label for=""><input type="checkbox">广州</label>
+            <label for=""><input type="checkbox">长沙</label>
+            <label for=""><input type="checkbox">益阳</label>
+            <label for=""><input type="checkbox">成都</label>
+            <label for=""><input type="checkbox">重庆</label>
+          </dd>
+        </dl>
+        <dl class="mod-settings-item clearfix">
+          <dt class="flexbox middle">所在公司：</dt>
+          <dd class="flexbox middle wrap item4">
+            <label for=""><input type="radio">阿里集团</label>
+            <label for=""><input type="radio">腾讯公司</label>
+            <label for=""><input type="radio">百度</label>
+            <label for=""><input type="radio">Google</label>
+            <label for=""><input type="radio">Microsoft</label>
+            <label for=""><input type="radio">Apple Inc.</label>
+          </dd>
+        </dl>
+        <dl class="mod-settings-item clearfix">
+          <dt>行业/岗位</dt>
+          <dd class="flexbox middle">
+            <label class="icofont select wp75" for="">
+              <select>
+                <optgroup label="IT">
+                  <option>软件开发</option>
+                  <option>硬件开发</option>
+                  <option>嵌入式开发</option>
+                </optgroup>
+                <optgroup label="互联网">
+                  <option>Web前端开发</option>
+                  <option>UI设计</option>
+                  <option>产品经理</option>
+                  <option>交互设计</option>
+                </optgroup>
+                <optgroup label="教育">
+                  <option>幼儿早教</option>
+                  <option>学前教育</option>
+                  <option>基础教育</option>
+                </optgroup>
+              </select>
+            </label>
+          </dd>
+        </dl>
+        <dl class="mod-settings-item clearfix">
+          <dt class="flexbox middle">留言：</dt>
+          <dd class="flexbox middle">
+            <textarea class="wp75"></textarea>
+          </dd>
+        </dl>
+        <dl class="mod-settings-item clearfix">
+          <dt class="flexbox middle">范围：</dt>
+          <dd class="flexbox middle">
+            <input class="wp75" type="range">
+          </dd>
+          <dd class="flexbox middle">
+            <input class="wp20" type="number">
+          </dd>
+          <dd class="flexbox middle">
+            <label class="range clearfix">
+              <input type="range">
+              <input type="number">
+            </label>
+          </dd>
+        </dl>
+      </div>
+    </figure>
+    <figure class="mod-settings-group">
+      <figcaption class="mod-settings-caption clearfix flexbox middle">
+        <i class="icofont drag" title="拖动"></i>
+        <span>基本内容</span>
+        <em class="icofont unfold" title="展开/收缩"></em>
+        <del class="icofont delete" title="删除"></del>
+      </figcaption>
+      <div class="mod-settings-items vertical-label">
+        <dl class="mod-settings-item clearfix">
+          <dt class="flexbox middle">标题：</dt>
+          <dd class="flexbox middle">HELLO DataLabel</dd>
+          <dd class="flexbox middle">
+            <input type="text" class="wp50">
+          </dd>
+          <dd class="flexbox center vertical">
+            <input type="text" class="wp50">
+            <ins class="icofont info">请输入6-32个字符</ins>
+            <ins class="icofont error">请输入6-32个字符</ins>
+            <ins class="icofont question">请输入6-32个字符</ins>
+            <ins class="icofont alarm">请输入6-32个字符</ins>
+            <ins class="icofont right">请输入6-32个字符</ins>
+          </dd>
+          <dd class="flexbox middle"><input type="file" class="wp50"></dd>
+        </dl>
+        <dl class="mod-settings-item clearfix">
+          <dt class="flexbox middle">参加城市：</dt>
+          <dd class="flexbox middle wrap item4">
+            <label for=""><input type="checkbox">北京</label>
+            <label for=""><input type="checkbox">上海</label>
+            <label for=""><input type="checkbox">深圳</label>
+            <label for=""><input type="checkbox">广州</label>
+            <label for=""><input type="checkbox">长沙</label>
+            <label for=""><input type="checkbox">益阳</label>
+            <label for=""><input type="checkbox">成都</label>
+            <label for=""><input type="checkbox">重庆</label>
+          </dd>
+        </dl>
+        <dl class="mod-settings-item clearfix">
+          <dt class="flexbox middle">所在公司：</dt>
+          <dd class="flexbox middle wrap item4">
+            <label for=""><input type="radio">阿里集团</label>
+            <label for=""><input type="radio">腾讯公司</label>
+            <label for=""><input type="radio">百度</label>
+            <label for=""><input type="radio">Google</label>
+            <label for=""><input type="radio">Microsoft</label>
+            <label for=""><input type="radio">Apple Inc.</label>
+          </dd>
+        </dl>
+        <dl class="mod-settings-item clearfix">
+          <dt>行业/岗位</dt>
+          <dd class="flexbox middle">
+            <label class="icofont select wp75" for="">
+              <select>
+                <optgroup label="IT">
+                  <option>软件开发</option>
+                  <option>硬件开发</option>
+                  <option>嵌入式开发</option>
+                </optgroup>
+                <optgroup label="互联网">
+                  <option>Web前端开发</option>
+                  <option>UI设计</option>
+                  <option>产品经理</option>
+                  <option>交互设计</option>
+                </optgroup>
+                <optgroup label="教育">
+                  <option>幼儿早教</option>
+                  <option>学前教育</option>
+                  <option>基础教育</option>
+                </optgroup>
+              </select>
+            </label>
+          </dd>
+        </dl>
+        <dl class="mod-settings-item clearfix">
+          <dt class="flexbox middle">留言：</dt>
+          <dd class="flexbox middle">
+            <textarea class="wp75"></textarea>
+          </dd>
+        </dl>
+        <dl class="mod-settings-item clearfix">
+          <dt class="flexbox middle">范围：</dt>
+          <dd class="flexbox middle">
+            <input class="wp75" type="range">
+          </dd>
+          <dd class="flexbox middle">
+            <input class="wp20" type="number">
+          </dd>
+          <dd class="flexbox middle">
+            <label class="range clearfix">
+              <input type="range">
+              <input type="number">
+            </label>
+          </dd>
+        </dl>
+      </div>
+    </figure>
+  </div>
+  <div class="mod-settings-footer">
+    <div class="mod-settings-items none-label">
+        <dl class="mod-settings-item clearfix">
+          <dt class="flexbox middle"></dt>
+          <dd class="flexbox middle">
+            <button type="button">取消</button>
+            <button type="submit">提交</button>
+            <button type="button" class="danger loading">删除</button>
+          </dd>
+        </dl>
+      </div>
+  </div>
+</div>
+<!--#include virtual="/static/v1.0/inc/js_common_z.html" -->  
+</body>
+</html>

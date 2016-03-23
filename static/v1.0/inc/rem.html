@@ -1,0 +1,49 @@
+<script>
+//w: window
+//d: document
+//design: 设计稿尺寸
+//fontSize: 基础字体大小
+//minFontSize: 最小字体大小
+//maxFontSize: 最大字体大小
+(function(w, d, design, fontSize, minFontSize, maxFontSize){
+    var _reset = function(){
+        var root = d.documentElement;
+        var _designWidth = root.getAttribute("data-adaptor-design") || design;
+        var _fontSize = root.getAttribute("data-adaptor-base") || fontSize;
+        var _minFontSize = Number(root.getAttribute("data-adaptor-min") || minFontSize);
+        var _maxFontSize = Number(root.getAttribute("data-adaptor-max") || maxFontSize);
+        var clientWidth = root.clientWidth;
+        var windowWidth = w.innerWidth || 0;
+
+        var width = Math.max(clientWidth, windowWidth);
+        var fsize = (_fontSize * (width / _designWidth));
+
+        if(fsize < _minFontSize){
+            fsize = _minFontSize;
+        }
+
+        if(fsize > _maxFontSize){
+            fsize = _maxFontSize;
+        }
+
+        root.style.fontSize = fsize + 'px';
+    };
+
+    var ua = navigator.userAgent;
+    var ios = /(iPhone|iPad|iPod)/i.test(ua);
+    var hasOrientationChange = false;
+
+    d.addEventListener("DOMContentLoaded", function(e){
+        _reset();
+
+        if(("onorientationchange" in window)){
+            w.addEventListener("orientationchange", _reset, false);
+
+            hasOrientationChange = true;
+        }
+        if(!ios || (ios && true !== hasOrientationChange)){
+            w.addEventListener("resize", _reset, false);
+        }
+    }, false);
+})(window, document, 640, 100, 50, 100);
+</script>
