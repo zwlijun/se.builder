@@ -6,7 +6,7 @@
  * 重力感应
  * @charset utf-8
  * @author lijun
- * @git: https://github.com/zwlijun/se.lib
+ * @git: https://github.com/zwlijun/se.builder
  * @date 2015.3
  * @see http://www.w3.org/html/ig/zh/wiki/DeviceOrientation%E4%BA%8B%E4%BB%B6%E8%A7%84%E8%8C%83#deviceorientation_.E4.BA.8B.E4.BB.B6
  */

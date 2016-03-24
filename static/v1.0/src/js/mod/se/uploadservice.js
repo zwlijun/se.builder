@@ -6,7 +6,7 @@
  * 文件上传模块，仅支持XMLHttpReqeust Level 2
  * @charset utf-8
  * @author lijun
- * @git: https://github.com/zwlijun/se.lib
+ * @git: https://github.com/zwlijun/se.builder
  * @date 2015.7
  */
 ;define(function Upload(require, exports, module){

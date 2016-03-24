@@ -6,7 +6,7 @@
  * 气泡提示弹层模块
  * @charset utf-8
  * @author lijun
- * @git: https://github.com/zwlijun/se.lib
+ * @git: https://github.com/zwlijun/se.builder
  * @date 2015.10
  * @see https://github.com/PitPik/colorPicker
  */

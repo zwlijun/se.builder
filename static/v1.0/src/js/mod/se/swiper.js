@@ -6,7 +6,7 @@
  * Swiper模块
  * @charset utf-8
  * @author lijun
- * @git: https://github.com/zwlijun/se.lib
+ * @git: https://github.com/zwlijun/se.builder
  * @date 2016.03
  */
 ;define(function(require, exports, module){

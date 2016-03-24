@@ -6,7 +6,7 @@
  * AudioContext
  * @charset utf-8
  * @author lijun
- * @git: https://github.com/zwlijun/se.lib
+ * @git: https://github.com/zwlijun/se.builder
  * @date 2014.9
  */
 ;define(function AC(require, exports, module){

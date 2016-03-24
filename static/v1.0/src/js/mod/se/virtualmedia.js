@@ -7,7 +7,7 @@
  * 单例调度，主要用于X5内核多音频控件播放问题
  * @charset utf-8
  * @author lijun
- * @git: https://github.com/zwlijun/se.lib
+ * @git: https://github.com/zwlijun/se.builder
  * @date 2014.4
  */
 ;define(function (require, exports, module){
