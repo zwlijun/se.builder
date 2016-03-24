@@ -343,7 +343,15 @@
         return path.create(paths);
     };
 
-    _Shape.version = "R16B0324";
-
-    module.exports = _Shape;
+    module.exports = {
+        "version": "R16B0324",
+        "Points": _Shape.Points,
+        "createRect": _Shape.createRect,
+        "createCircle": _Shape.createCircle,
+        "createEllipse": _Shape.createEllipse,
+        "createLine": _Shape.createLine,
+        "createPolygon": _Shape.createPolygon,
+        "createPolyline": _Shape.createPolyline,
+        "createPath": _Shape.createPath
+    };
 });
