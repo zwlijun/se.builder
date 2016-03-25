@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html data-page-alias="data-dataset">
+<head>
+<!--#include virtual="/static/v1.0/inc/meta.html"-->
+<!--#include virtual="/static/v1.0/inc/rem.html"-->
+<title>Lib/Snap.SVG</title>
+<!--#include virtual="/static/v1.0/inc/css_common_gm.html"-->
+</head>
+
+<body>
+<div id="svg_box"></div>
+<!--#include virtual="/static/v1.0/inc/js_common_z.html" -->  
+<script>
+seajs.use(["logic/test/test_snap_svg"]);
+</script>
+</body>
+</html>

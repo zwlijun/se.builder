@@ -13,6 +13,17 @@ define(function(require, exports, module){
 
 	_paint.fill("#ff0000");
 	_paint.fillOpacity(0.3);
+	_svg.setAttribute("overflow", "visible");
+	_svg.appendTo("#svg_box");
+
+	var roundRectShape = SVGShape.createRoundRect(0, 0, 20, 10, 240, 80);
+	_svg = roundRectShape.svg;
+	_paint = roundRectShape.paint;
+	_shape = _paint.element;
+
+	_paint.fill("#ff00ff");
+	_paint.fillOpacity(0.3);
+	_svg.setAttribute("overflow", "visible");
 	_svg.appendTo("#svg_box");
 
 	var circleShape = SVGShape.createCircle(50, 50, 50);
@@ -22,6 +33,7 @@ define(function(require, exports, module){
 	_shape = _paint.element;
 
 	_paint.fill("#00ff00");
+	_svg.setAttribute("overflow", "visible");
 	_svg.appendTo("#svg_box");
 
 	var ellipseShape = SVGShape.createEllipse(50, 100, 50, 100);
@@ -31,6 +43,7 @@ define(function(require, exports, module){
 	_shape = _paint.element;
 
 	_paint.fill("#00ff00");
+	_svg.setAttribute("overflow", "visible");
 	_svg.appendTo("#svg_box");
 
 	var lineShape = SVGShape.createLine(0, 0, 300, 0);
@@ -42,12 +55,15 @@ define(function(require, exports, module){
 	_paint.stroke("#ff0000");
 	_paint.strokeWidth(8);
 	_svg.setAttribute("width", 500);
+	_svg.setAttribute("overflow", "visible");
 	_svg.appendTo("#svg_box");
 
 	var polygonPoints = new SVGShape.Points();
 	polygonPoints.add(0, 0)
-				 .add(100, 210)
-				 .add(210, 300);
+				 .add(20, 28)
+				 .add(30, 63)
+				 .add(45, 24)
+				 .add(18, 75);
 
 	var polygonShape = SVGShape.createPolygon(polygonPoints);
 
@@ -57,6 +73,7 @@ define(function(require, exports, module){
 
 	_paint.fill("#ff0000");
 	_svg.setAttribute("width", 500);
+	_svg.setAttribute("overflow", "visible");
 	_svg.appendTo("#svg_box");
 
 	var svgPath = new SVGPath();
@@ -74,4 +91,14 @@ define(function(require, exports, module){
     console.log(paths);
 	console.log(SVGPath.stringify(paths));
 	console.log(svgPath.indexOf("c-9.5,0-17.2,7.7-17.2,17.1c0,0.6,0,1.3,0.1,1.9h-0.1c-6.1,0-11,5.8-11,12.9"))
+
+
+
+	var root = $("#svg_5");
+	var _pathData = SVGPath.pathData(root.children()[0]);
+
+	$("#tsvg_99").find("path").attr("d", _pathData.source);
+
+	console.info(_pathData)
+
 });

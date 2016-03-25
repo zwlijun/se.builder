@@ -172,6 +172,29 @@
             };
         }
     };
+    _Shape.RoundRect = function(svg){
+        this.svg = svg;
+    };
+    _Shape.RoundRect.prototype = {
+        create: function(x, y, rx, ry, width, height){
+            var svg = _Shape.render(this.svg, width, height);
+            var rect = document.createElementNS(svg.xmlns, "rect");
+            
+            rect.setAttribute("x", x);
+            rect.setAttribute("y", y);
+            rect.setAttribute("rx", rx);
+            rect.setAttribute("ry", ry);
+            rect.setAttribute("width", width);
+            rect.setAttribute("height", height);
+
+            svg.append(rect);
+
+            return {
+                "svg": svg,
+                "paint": new _Shape.Paint(rect)
+            };
+        }
+    };
     _Shape.Circle = function(svg){
         this.svg = svg;
     };
@@ -301,6 +324,13 @@
         return rect.create(x, y, width, height);
     };
 
+    _Shape.createRoundRect = function(x, y, rx, ry, width, height){
+        var svg = SVGUtil.SVG();
+        var rect = new _Shape.RoundRect(svg);
+        
+        return rect.create(x, y, rx, ry, width, height);
+    };
+
     _Shape.createCircle = function(x, y, radius){
         var svg = SVGUtil.SVG();
         var circle = new _Shape.Circle(svg);
@@ -347,6 +377,7 @@
         "version": "R16B0324",
         "Points": _Shape.Points,
         "createRect": _Shape.createRect,
+        "createRoundRect": _Shape.createRoundRect,
         "createCircle": _Shape.createCircle,
         "createEllipse": _Shape.createEllipse,
         "createLine": _Shape.createLine,
