@@ -13,25 +13,129 @@
     var wx = require("http://res.wx.qq.com/open/js/jweixin-1.0.0.js");
     $.Util = require("mod/se/util");
 
-    var _MetaNode = $('script[name="wx"]');
-    var _MetaData = (function(){
-        var items = null;
-        var item = null;
-        var splitIndex = -1;
-        var o = {};
-        var content = _MetaNode.html() || "";
-        content = content.replace(/([\s ]*[\r\n]+[\s ]*)/g, "\n").replace(/\n$/, "");
-        content = content.replace(/^([\s ]*\n+[\s ]*)|([\s ]*\n+[\s ]*)$/, "");
-        items = content.split(/(;\n)/);
+    /**
+    <script type="text/template" name="wx">
+    shareTitle=分享标题;
+    shareContent=分享描述;
+    shareURL=分享内容的链接地址;
+    shareImage=分享图标;
+    shareImageWidth=300;
+    shareImageHeight=300;
+    appId=应用ID，为空即可;
+    shareClick=分享成功时的统计地址，如果为空不统计;
+    shareRedirectURL=分享后的跳转地址，如果为空不跳转;
+    allow=是否允许分享，1：允许，0：禁止;
+    </script>
+    **/
 
-        for(var i = 0, j = items.length; i < j; i++){
-            item = items[i];
-            splitIndex = item.indexOf("=");
-            o[item.substring(0, splitIndex).replace(/^([\s ]*)|([\s ]*)$/g, "")] = item.substring(splitIndex).replace(/^([\s ]*=[\s ]*)/g, "");
+    var _MetaData = {
+        templates: null,
+        templateIndex: 0,
+        templateNode: null,
+        template: function(name){
+            var tpls = $('script[name="' + (name || "wx") + '"]');
+            var size = tpls.length;
+
+            _MetaData.templates = tpls;
+
+            if(size < 2){
+                _MetaData.templateIndex = 0;
+                _MetaData.templateNode = tpls;
+            }else{
+                _MetaData.templateIndex = Math.floor(Math.random() * size);
+                _MetaData.templateNode = $(tpls.get(_MetaData.templateIndex));
+            }
+
+            return _MetaData.templateNode;
+        },
+        parse: function(name){
+            var conf = _MetaData.template(name);
+            var o = {};
+            var content = conf.html() || "";
+            var pattern = /([^\s=]+)[\s]*=[\s]*(([^;]*)(;*(?![\n\r])([^;]*))*)[\s]*;/gi;
+            var matcher = null;
+            var key = null;
+            var value = null;
+
+            pattern.lastIndex = 0;
+
+            while(null !== (matcher = pattern.exec(content))){
+                key = matcher[1];
+                value = matcher[2] || "";
+
+                if(!key){continue;}
+                o[key] = value.replace(/[\r\n]+/g, "");
+            }
+
+            return o;
+        },
+        update: function(options, name){
+            var conf = _MetaData.templateNode ? _MetaData.templateNode : _MetaData.template(name);
+            var metaQQItemProp = {
+                "shareTitle": "name",
+                "shareContent": "description",
+                "shareImage": "image",
+                "shareImageWidth": null,
+                "shareImageHeight": null,
+                "shareURL": null,
+                "appId": null,
+                "shareClick": null,
+                "shareRedirectURL": null,
+                "allow": null
+            };
+            var metaItemPropNode = null;
+            var metaItemPropName = null;
+            var obj = _MetaData.parse(name);
+
+            for(var key in options){
+                if(options.hasOwnProperty(key)){
+                    metaItemPropName = metaQQItemProp[key];
+
+                    if(metaItemPropName){
+                        metaItemPropNode = $('meta[itemprop="' + metaItemPropName + '"]');
+
+                        if(metaItemPropNode.length > 0){
+                            metaItemPropNode.attr("content", options[key]);
+                        }
+                    }
+
+                    obj[key] = options[key];
+                }
+            }
+
+            var tmp = [];
+            for(var key in obj){
+                if(obj.hasOwnProperty(key)){
+                    tmp.push(key + "=" + obj[key] + ";");
+                }
+            }
+
+            conf.html(tmp.join("\n"));
+
+            return obj;
+        },
+        //list {}
+        /*{
+            allow: "1"
+            appid: ""
+            shareContent: "云场景 ;;;; - 描;述;;"
+            shareImageHeight: "200"
+            shareImage: "http://m.zuikuapp.com/newadmin/res/img/nopic150x150.jpg"
+            shareImageWidth: "200"
+            shareURL: "http://vip.zuikuapp.com/v/429182_0.html"
+            shareClick: "http://click.zuiku.com/share.jsp?appId=429182"
+            shareTitle: "云场景标题"
+            shareRedirectUrl: ""
+          }
+        */
+        random: function(list, name){
+            var size = list.length;
+            var index = Math.floor(Math.random() * size);
+            var options = list[i];
+
+            return _MetaData.update(options, name);
         }
-
-        return o;
-    })();
+    };
 
     var WeiXinAPI = {
         MetaData : _MetaData,
@@ -158,6 +262,8 @@
             return WeiXinAPI;
         }
     };
+
+    window["WeiXinAPI"] = WeiXinAPI;
 
     module.exports = WeiXinAPI;
 });
