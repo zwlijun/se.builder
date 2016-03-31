@@ -10,7 +10,7 @@
  * @date 2015.9
  */
 ;define(function (require, exports, module){
-    var Style         = require("mod/polyfill/css");
+    var Style         = require("mod/se/css");
 
     var _KeyFrames = function(name){
         this.name = name;

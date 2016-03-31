@@ -13,7 +13,7 @@
                         require("mod/zepto/touch");
     var Listener      = require("mod/se/listener");
     var Util = $.Util = require("mod/se/util");
-    var Style         = require("mod/polyfill/css");
+    var Style         = require("mod/se/css");
     var Timer         = require("mod/se/timer");
     var HandleStack   = Listener.HandleStack;
 
@@ -110,8 +110,6 @@
 
             vo = this.viewer.offset();
             so = this.scroller.offset();
-            // vo = Util.getNodeRealSize(this.viewer, 1);
-            // so = Util.getNodeRealSize(this.scroller, 1);
 
             this.viewerbox = {
                 "width": vo.width / this.ratio,

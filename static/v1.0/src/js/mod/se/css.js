@@ -3,7 +3,7 @@
  **********************************************************/
 
 /**
- * Polyfill
+ * 样式处理
  * @charset utf-8
  * @author lijun
  * @git: https://github.com/zwlijun/se.builder

@@ -13,7 +13,7 @@
                         require("mod/polyfill/array");
     var Util          = require("mod/se/util");
     var Listener      = require("mod/se/listener");
-    var Style         = require("mod/polyfill/css");
+    var Style         = require("mod/se/css");
     var HandleStack   = Listener.HandleStack;
 
     var _KeyFrame = function(name){
@@ -237,7 +237,23 @@
                     continue ;
                 }
 
-                var events = Util.getAnimationEvents();
+                var events = [
+                    "webkitAnimationStart", 
+                    "mozAnimationStart", 
+                    "MSAnimationStart", 
+                    "oanimationstart", 
+                    "animationstart",
+                    "webkitAnimationEnd", 
+                    "mozAnimationEnd", 
+                    "MSAnimationEnd", 
+                    "oanimationend", 
+                    "animationend",
+                    "webkitAnimationIteration", 
+                    "mozAnimationIteration", 
+                    "MSAnimationIteration", 
+                    "oanimationiteration", 
+                    "animationiteration"
+                ];
 
                 plugin.on(events.join(" "), "", this, function(e){
                     e.stopPropagation();

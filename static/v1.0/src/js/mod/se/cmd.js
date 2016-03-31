@@ -3,7 +3,7 @@
  **********************************************************/
 
 /**
- * 公共命令模块
+ * 公共数据请求命令模块
  * @charset utf-8
  * @author lijun
  * @git: https://github.com/zwlijun/se.builder

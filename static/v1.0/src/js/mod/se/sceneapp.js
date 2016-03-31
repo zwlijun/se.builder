@@ -14,7 +14,7 @@
     var Listener      = require("mod/se/listener");
     var Util          = require("mod/se/util");
     var Scene         = require("mod/sa/scene");
-    var Style         = require("mod/polyfill/css");
+    var Style         = require("mod/se/css");
     var HandleStack   = Listener.HandleStack;
 
     var SCROLL = window["SCROLL"] = {
@@ -70,7 +70,7 @@
             var items = str.split("/");
             var width = Number(items[0]);
             var height = Number(items[1]);
-            var _flag = true;//Util.isMobileDevice();
+            var _flag = true;
 
             if(isNaN(width)){
                 width = 640;

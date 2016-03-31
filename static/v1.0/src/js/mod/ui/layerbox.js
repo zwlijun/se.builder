@@ -24,7 +24,7 @@
                          '    <div class="mod-layerbox-buttons flexbox center middle">' +
                          '      <%for(var i = 0; i < options.btns.length; i++){%>' +
                          '      <%var btn = options.btns[i];%>' +
-                         '      <button data-btn-for="layerbox" data-btn-index="<%=i%>,<%=options.name%>" data-action="Action://seui/mod/layerbox/btn#<%=i%>" type="button"<%=(btn.skin ? " class=\"" + btn.skin + "\"" : "")%>><%=btn.label%></button>' +
+                         '      <button data-btn-for="layerbox" data-btn-index="<%=i%>,<%=options.name%>" data-action-click="Action://seui/mod/layerbox/btn#<%=i%>,<%=options.name%>" type="button"<%=(btn.skin ? " class=\"" + btn.skin + "\"" : "")%>><%=btn.label%></button>' +
                          '      <%}%>' +
                          '    </div>' +
                          '  </div>' +
@@ -32,9 +32,10 @@
                          '';
 
     var Action = {
-        seui: {
-            mod: {
-                layerbox: {
+        "name": "Action",
+        "seui": {
+            "mod": {
+                "layerbox": {
                     btn: function(data, node, e){
                         var args = (data || "").split(",");
                         var index = Number(args[0]);
@@ -52,8 +53,6 @@
             }
         }
     };
-
-    Util.injectAction(Action);
 
     var Types = {
         "INFO": "info",
@@ -106,7 +105,9 @@
 
                     targetNode.append(ret.result);
 
-                    Util.setActionHook(".js-layerbox-mask-" + _name);
+                    Util.registAction(".js-layerbox-mask-" + _name, [
+                        {type: "click", mapping: null, compatible: null}
+                    ] Action);
                 },
                 args: [name]
             });

@@ -14,7 +14,7 @@
     var Listener      = require("mod/se/listener");
     var Util          = require("mod/se/util");
     var Scene         = require("mod/sa/scene");
-    var Style         = require("mod/polyfill/css");
+    var Style         = require("mod/se/css");
     var Timer         = require("mod/se/timer");
     var HandleStack   = Listener.HandleStack;
 

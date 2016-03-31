@@ -10,104 +10,15 @@
  * @date 2014.4
  */
 ;define(function Util(require, exports, module){
-    //Action配置
-    $.Action = {
-        //todo
-    };
-
-    var __action__ = function(e){
-        e = e || {};
-        //flag:        1|2   1: preventDefault   2:stopPropagation   1 & 2: preventDefault + stopPropagation
-        //eventType:   事件类型，如：click, mousedown, custom.boxshow
-        //[flag#][eventType::]Class://[dir[/dir1...n]/]method[#params]
-        //mousedown::Action://a/b/get#1,2,3
-        //Actoin://a/b/get#1,2,3
-        //
-        var node = $(e.currentTarget);
-        var eventData = e.data;
-        var action = node.attr("data-action") || "";
-        var pattern = /^([0-9]+#)?([a-zA-Z\. ]+::)?(([a-zA-Z0-9_]+):\/\/([a-zA-Z0-9_\/]+)(#([\w\W]*))?)$/;
-        var result = pattern.exec(action);
-        var _trigger = null;
-        var _flag = null;
-        var _uri = null;
-
-        if(result){
-            _flag = Number((result[1] || "0").replace("#", ""));
-            _trigger = (result[2] || _util.CLICK_EVENT).replace("::", "");
-            _uri = result[3];
-            //_method = result[2];
-
-            //console.info(result[1] + "\n" + result[2] + "\n" + result[3] + "\n" + result[5]);
-
-            if(((function(a, b){
-                var types = a.split(" ");
-                var size = types.length;
-
-                for(var i = 0; i < size; i++){
-                    if(types[i] == b){
-                        return true;
-                    }
-                }
-
-                return false;
-            })(_trigger, e.type))){
-
-                if(_flag > 0){
-                    if(_util.checkBitFlag(_flag, 1) && e.preventDefault){ //preventDefault
-                        e.preventDefault();
-                    }
-
-                    if(_util.checkBitFlag(_flag, 2) && e.stopPropagation){
-                        e.stopPropagation();
-                    }
-                }
-
-                _util.requestExternal(_uri, [node, e]);
-            }
-        }
-    }; 
-
-    //Action事件委托
-    var __onAction = function(e){
-        // e.preventDefault();
-        // e.stopPropagation();
-        
-        __action__(e);
-    };
-
     var _util = {
-        //点击事件，如果支持touch，则用tap事件，否则用click事件
-        CLICK_EVENT : (("ontouchstart" in window) ? "tap" : "click"),
-        //zepto ajax异常配置
-        RequestStatus : {
-            "timeout"  : {status: 0xFE01, text: "亲，网络不给力啊~~"},
-            "error"  : {status: 0xFE02, text: "亲，系统出了点小问题，请稍候片刻再试"},
-            "abort" : {status: 0xFE03, text: "抱歉，您的请求被中断，请重新发起"},
-            "parsererror" : {status: 0xFE04, text: "数据处理异常"},
-            "success" : {status: 0x0000, text: "OK"}
-        },
-        PACKAGE_HOLDER: "FORMAT_PACKAGE_HOLDER",
-        /**
-         * bit位检测
-         * @param int src 源值
-         * @param int flag 标识位
-         * @return Boolean 
-         * @example Util.checkBitFlag(7, 2) => true
-         *          Util.checkBitFlag(7, 8) => false
-         */
-        checkBitFlag : function(src, flag){
-            return (!!(src & flag) && flag > 0)
-        },
         /**
          * 格式化模板数据
          * @param String tpl 模板数据
          * @param Object metaData 元数据
          * @param String preifx 模板数据前缀标识，默认为$
-         * @param Handler handle 用于处理非Object或非简单数据类型的数据
          * @return String str 格式化后的字符串
          */
-        formatData : function(tplData, metaData, prefix, handler){
+        formatData : function(tplData, metaData, prefix){
             var str = "";
             var reg = null;
             var meta = null;
@@ -137,29 +48,6 @@
             return str;
         },
         /**
-         * 隐藏地址栏
-         */
-        hideAddressBar : function(e){
-            setTimeout(function(){
-                window.scrollTo(0, 1);
-            }, 0);
-        },
-        /**
-         * 获取设备屏幕显示方向
-         * @return int orient 0:竖屏 1:横屏
-         */
-        getOrientation : function(){
-            var orient = window.orientation;
-
-            if(0 === orient || 180 == orient){
-                return 0; //竖屏
-            }else if(90 == orient || -90 == orient){
-                return 1;  //横屏
-            }else{
-                return 0;  //竖屏
-            }
-        },
-        /**
          * 执行回调
          * @param Object handler {Function callback, Array args, Object context, int delay}
          */
@@ -172,9 +60,14 @@
 
                 if(callback && callback instanceof Function){
                     if(typeof(delay) == "number" && delay >= 0){
-                        setTimeout(function(){
+                        if(arguments.callee.id){
+                            clearTimeout(arguments.callee.tid);
+                            arguments.callee.tid = undefined;
+                        }
+
+                        return (arguments.callee.tid = setTimeout(function(){
                             callback.apply(context, args);
-                        }, delay);
+                        }, delay));
                     }else{
                         return callback.apply(context, args);
                     }
@@ -199,76 +92,6 @@
 
             return this.execHandler(newHandler);
         },
-        /**
-         * html解码
-         * @param String str 字符串
-         * @return String tmp 解码后的字符串
-         */
-        decodeHTML : function(str){
-            var tmp = str.replace(/&#60;/g, "<");
-                tmp = tmp.replace(/&#62;/g, ">");
-                tmp = tmp.replace(/&#34;/g, "\"");
-                tmp = tmp.replace(/&#39;/g, "'");
-                tmp = tmp.replace(/&#38;/g, "&");
-                
-            return tmp;
-        },
-        /**
-         * html编码
-         * @param String str 字符串
-         * @return String tmp 编码后的字符串
-         */
-        encodeHTML : function(str){
-            var tmp = str.replace(/&/g, "&#38;");
-                tmp = tmp.replace(/>/g, "&#62;");
-                tmp = tmp.replace(/"/g, "&#34;");
-                tmp = tmp.replace(/'/g, "&#39;");
-                tmp = tmp.replace(/</g, "&#60;");
-            
-            return tmp;
-        },
-        /**
-         * 获取光标位置
-         * @param Node ctrl 控件
-         * @return Number caretPos 光标位置
-         */
-        getCursorPosition : function(ctrl){
-            var caretPos = 0;
-            
-            if(document.selection) {
-                ctrl.focus();
-                
-                var section = document.selection.createRange();
-                
-                section.moveStart ('character', -ctrl.value.length);
-                caretPos = section.text.length;
-                
-            }else if(typeof(ctrl.selectionStart) == "number"){
-                caretPos = ctrl.selectionStart;
-            }
-            return caretPos;
-        },
-        /**
-         * 设置光标位置
-         * @param Node ctrl 控件
-         * @param Number pos 光标位置
-         */
-        setCursorPosition : function(ctrl, pos){
-            setTimeout(function(){
-                if(typeof(ctrl.selectionStart) == "number"){
-                    ctrl.selectionStart = ctrl.selectionEnd = pos;
-                }else if(ctrl.setSelectionRange){
-                    ctrl.focus();
-                    ctrl.setSelectionRange(pos,pos);
-                }else if (ctrl.createTextRange) {
-                    var range = ctrl.createTextRange();
-                    range.collapse(true);
-                    range.moveEnd('character', pos);
-                    range.moveStart('character', pos);
-                    range.select();
-                }
-            }, 15);
-        },
         source: function(data){
             var name = data.name;
 
@@ -281,8 +104,8 @@
             }
         },
         requestExternal: function(uri, args){
-            var pattern = /^([a-zA-Z0-9_]+):\/\/([a-zA-Z0-9_\/]+)(#([\w\W]*))?$/;
-            var result = pattern.exec(uri);
+            var pattern = /^([a-zA-Z0-9_]+):\/\/([a-zA-Z0-9_\/]+)(#(.*))?$/;
+            var result = pattern.exec(uri||"");
             var _class = null;
             var _className = null;
             var _namespace = null;
@@ -325,145 +148,88 @@
                     if(null != _class && (_method in _class)){
                         return {
                             "result": _class[_method].apply(null, [_data].concat(args||[])),
-                            "code": 0
+                            "code": 0,
+                            "msg": "ok"
                         };
                     }
 
                     return {
                         "result": undefined,
-                        "code": -1
+                        "code": -1,
+                        "msg": "no such class or method"
                     };
                 }
             }else{
                 return {
                     "result": undefined,
-                    "code": -2
+                    "code": -2,
+                    "msg": "not match"
                 };
             }
         },
         /**
-         * 设置Action勾子         
+         * {"type": "touchstart", "mapping": "mousedown", "compatible": null}
+         * {"type": "animationstart", "mapping": null, "compatible": ["webkitAnimationStart", "mozAnimationStart"]}
          */
-        setActionHook : function(selector, eventType){
-            var body = $(selector || "body");
-            var type = eventType || _util.CLICK_EVENT;
-            var setting = null;
- 
-            if(Object.prototype.toString.call(type) == "[object Array]"){
-                for(var i = 0; i < type.length; i++){
-                    setting =  body.attr("data-action-" + type[i]);
+        registAction: function(target, events, settings){
+            var box = $(target || "body");
+            var dom = box[0];
+            var _events = [].concat(events);
+            var size = _events.length;
+            var evt = null;
+            var type = null;
+            var actualType = null;
+            var compatible = null;
+            var mapping = null;
+            var flag = null;
+            
+            if(!dom){
+                console.log("the target is not existed");
+                return ;
+            }
 
-                    if("1" != setting){
-                        body.on(type[i], '[data-action]', __onAction); 
-                        body.attr("data-action-" + type[i], "1");
+            _util.source(settings);
+
+            for(var i = 0; i < size; i++){
+                evt = _events[i];
+                type = evt.type;
+                mapping = evt.mapping;
+                compatible = evt.compatible;
+
+                flag = box.attr("data-action-" + type + "-flag");
+
+                if("1" == flag){
+                    continue;
+                }
+
+                box.attr("data-action-" + type + "-flag", "1");
+
+                actualType = type;
+
+                if(mapping){
+                    if(!(("on" + type) in dom)){
+                        actualType = mapping;
                     }
                 }
-            }else{
-                setting =  body.attr("data-action-" + type);
-                if("1" != setting){
-                    body.on(type, '[data-action]', __onAction); 
-                    body.attr("data-action-" + type, "1");
-                }
-            }
 
-            body = null;
-        },
-        /**
-         * 主动触发data-action
-         * @param Event|Object e 事件 ，如果Object类型，数据格式为：{"type":eventType, "currentTarget": node, "data": null}
-         */
-        fireAction : function(e){
-            __action__.apply(null, [e]);
-        },
-        /**
-         * 注入Action配置
-         * @param Object action action配置
-         */
-        injectAction : function(action){
-            $.extend(true, $.Action, action);
-        },
-        /**
-         * 获取设备的像素比
-         * @return float ratio 像素比
-         */
-        getDevicePixelRatio : function(){
-            return window.devicePixelRatio || 1;
-        },
-        /**
-         * 是否为隐藏节点
-         * @param Node node
-         * @return Boolean hidden
-         */
-        isHiddenNode : function(node){
-            var dom = node[0];
-            var hidden = false;
-            var display = null;
-
-            do{
-                display = node.css("display");
-
-                if("none" == display){
-                    hidden = true;
-                    break;
+                if(compatible){
+                    compatible = [].concat(compatible);
+                    actualType = ([actualType].concat(compatible)).join(" ");
                 }
 
-                node = node.parent();
-                dom = node[0];
-            }while(dom != document.documentElement);
+                box.on(actualType, '[data-action-' + type + ']', type, function(e){
+                    var currentTarget = $(e.currentTarget);
+                    var external = currentTarget.attr("data-action-" + e.data);
 
-            return hidden;
-        },
-        /**
-         * 查找节点的真实尺寸
-         * @param Node node
-         * @param String name
-         * @param Number scale
-         * @return Number size
-         */
-        findNodeRealSize : function(node, name, scale){
-            var v = (node.css(name) || "").toLowerCase();
-
-            if(v){
-                if(v.indexOf("px") != -1){
-                    return Number(v.substr(0, v.length - 2)) * scale;
-                }else if(v.indexOf("%") != -1){
-                    v = Number(v.substr(0, v.length - 1));
-
-                    return this.findNodeRealSize(node.parent(), name, Math.round(v / 100));
-                }else{
-                    var tmp = v.replace(/[^0-9]+/g, "");
-
-                    if(tmp){
-                        return Number(v.replace(/[^0-9]+/g, "")) * scale;
-                    }else{
-                        return this.findNodeRealSize(node.parent(), name, scale);
-                    }
-                }
-            }else{
-                return this.findNodeRealSize(node.parent(), name, scale);
+                    _util.requestExternal(external, [currentTarget, e, e.data]);
+                });
             }
         },
-        /**
-         * 获取节点的真实尺寸
-         * @param Node node
-         * @param Number scale
-         * @param Object {Number width, Number height}
-         */
-        getNodeRealSize : function(node, scale){
-            var offset = node.offset() || {"width": 0, "height": 0};
-            var width = offset.width;
-            var height = offset.height;
-            var size = {
-                "width":  width,
-                "height": height
-            };
+        fireAction: function(target, type){
+            var node = $(target);
+            var external = node.attr("data-action-" + type);
 
-            if(width <= 0 || height <= 0){
-                size.width = this.findNodeRealSize(node, "width", scale);
-                size.height = this.findNodeRealSize(node, "height", scale);
-            }
-
-            return size;
+            _util.requestExternal(external, [node, null, type]);
         },
         getBoundingClientRect: function(target, scrollDOM){
             var root = document.documentElement;
@@ -583,28 +349,6 @@
 
             return sn;
         },
-        /**
-         * 获取当前节点之后的可用大小
-         * @param Node node
-         * @param viewport 视窗
-         * @return Object {Number width, Number height}
-         */
-        getRemainingSize: function(node, viewport){
-            viewport = viewport || $(window);
-
-            var width = viewport.outerWidth ? viewport.outerWidth() : viewport.width();
-            var height = viewport.outerHeight ? viewport.outerHeight() : viewport.height();
-            var nodeWidth = node.outerWidth ? node.outerWidth() : node.width();
-            var nodeHeight = node.outerHeight ? node.outerHeight() : node.height();
-            var nodeOffset = node.offset();
-            var left = nodeOffset.left;
-            var top = nodeOffset.top;
-
-            return {
-                "height": height - (top + nodeHeight),
-                "width": width - left
-            };
-        },
         blobSlice: function(blob, start, end, type){
             if(blob.slice){
                 return blob.slice(start, end, type);
@@ -672,7 +416,6 @@
             blob = null;
 
             reader.readAsBinaryString(newblob);      
-
         },
         asBlob: function(dataURL){
             var arr = dataURL.split(','), 
@@ -686,25 +429,6 @@
             }
 
             return new Blob([u8arr], {type: mime});
-        },
-        register: function(key, value){
-            window[key] = value;
-
-            return _util;
-        },
-        unregister: function(key){
-            if(key in window){
-                delete window[key];
-            }
-
-            return _util;
-        },
-        getRegisterValue: function(key){
-            if(key in window){
-                return window[key];
-            }
-
-            return undefined;
         },
         getFileSize : function(size){
             var KB = Math.pow(2, 10);           
@@ -726,67 +450,20 @@
 
             return str;
         },
-        delay: function(milliseconds, handle, tid){
-            if(tid){
-                clearTimeout(tid);
+        delay: function(milliseconds, handle){
+            if(arguments.callee.tid){
+                clearTimeout(arguments.callee.tid);
+                arguments.callee.tid = undefined;
             }
 
             var start = _util.getTime();
-            var timeId = setTimeout(function(){
+
+            arguments.callee.tid = setTimeout(function(){
                 var end = _util.getTime();
                 var elapsedTime = end - start;
 
                 _util.execAfterMergerHandler(handle, [elapsedTime]);
             }, milliseconds);
-
-            return timeId;
-        },
-        getAnimationEvents: function(){
-            var events = [
-                "webkitAnimationStart", 
-                "mozAnimationStart", 
-                "MSAnimationStart", 
-                "oanimationstart", 
-                "animationstart",
-                "webkitAnimationEnd", 
-                "mozAnimationEnd", 
-                "MSAnimationEnd", 
-                "oanimationend", 
-                "animationend",
-                "webkitAnimationIteration", 
-                "mozAnimationIteration", 
-                "MSAnimationIteration", 
-                "oanimationiteration", 
-                "animationiteration"
-            ];
-
-            return events;
-        },
-        stopAnimationPropagation: function(selectors){
-            // var t1 = _util.getTime();
-            var events = _util.getAnimationEvents();
-
-            var nodes = $(selectors || "html,body,article,section,div,ul,ol,dl,span,em,i,li,p,code,del,ins,strong,b,sup,sub");
-
-            nodes.each(function(index, item){
-                if(!item.hasAttribute("data-animation-bubbles")){
-                    $(item).on(events.join(" "), function(e){
-                        e.stopPropagation();
-                    });
-
-                    item.setAttribute("data-animation-bubbles", "1");
-                }
-            });
-            // var t2 = _util.getTime();
-            // var diff = t2 - t1;
-
-            // console.info("stop animation cost: " + (diff) + "ms");
-        },
-        isMobileDevice: function(){
-            var ua = navigator.userAgent;
-            var _flag = /(iPhone|iPad|iPod|iOS|Android|Windows[\s ]*Phone|IEMobile|Mobile[\s ]*Safari|MQQBrowser|BlackBerry|JUC|Fennec|wOSBrowser|TouchPad|BrowserNG|WebOS)/gi.test(ua);
-            
-            return _flag;
         }
     };
 

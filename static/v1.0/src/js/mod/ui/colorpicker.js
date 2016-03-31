@@ -152,27 +152,6 @@
         color: "rgba(255, 255, 255, 1)"
     };
 
-    var Action = {
-        "colorpicker": {
-            "internal": {
-                "set": function(data, node, e){
-                    var args = (data || "").split(",");
-                    var name = args[0];
-                    var extra = args.slice(1);
-
-                    var cp = null;
-
-                    if(name && (name in _ColorPicker.Cache)){
-                        var cp = _ColorPicker.Cache[name];
-
-                        cp.colorPickerUI.setColor(node);
-                        cp.exec("action", [cp.colors.colors].concat(extra));
-                    }
-                }
-            }
-        }
-    };
-
     var Tools = {
         getOrigin: function(elm){
             var box = (elm.getBoundingClientRect) ? elm.getBoundingClientRect() : {top: 0, left: 0},
@@ -896,8 +875,7 @@
         this.handleStack = new HandleStack();
         this.listener = new Listener({
             onvisible: null,
-            onrender: null,
-            onaction: null
+            onrender: null
         }, this.handleStack);
 
         //-----------------------
@@ -1020,11 +998,6 @@
     };
 
     _ColorPicker.Cache = {};
-
-    (function main(){
-        Util.setActionHook("body", ["click"]);
-        Util.injectAction(Action);
-    })();
 
     module.exports = {
         "version": "R15B1021",
