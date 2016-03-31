@@ -91,7 +91,7 @@
             this.context = this.stage.getContext("2d");
         },
         setAction : function(name, action){
-            $("#" + name).attr("data-action", "Action://" + (action || "nul"));
+            $("#" + name).attr("data-action-click", "Action://" + (action || "nul"));
         },
         setComplete : function(handler){
             this.complete = handler || null;
