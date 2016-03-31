@@ -632,17 +632,25 @@ var writeChecksum = function(file, isDest){
                     var findName = null;
                     var nonEscapeFindName = null;
 
-                    var irs = fs.createReadStream(filename, {
+                    var rsopts = {
                         flags: 'r',
                         mode: "0644",
                         encoding: nodeCharset,
                         autoClose: true
-                    });
+                    };
 
-                    var ows = fs.createWriteStream(filename.replace(ext, signExt), {
+                    var wsopts = {
                         mode : "0644",
                         defaultEncoding: nodeCharset
-                    });
+                    };
+
+                    if("img" == _deploy.alias){
+                        delete rsopts.encoding;
+                        delete wsopts.defaultEncoding;
+                    }
+
+                    var irs = fs.createReadStream(filename, rsopts);
+                    var ows = fs.createWriteStream(filename.replace(ext, signExt), wsopts);
 
                     irs.pipe(ows);
 
