@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html data-page-alias="data-uicomponent">
+<head>
+<!--#include virtual="/static/v1.0/inc/meta.html"-->
+<!--#include virtual="/static/v1.0/inc/rem.html"-->
+<title>Mod/UI Component</title>
+<!--#include virtual="/static/v1.0/inc/css_common_gm.html"-->
+</head>
+
+<body>
+
+<!--#include virtual="/static/v1.0/inc/js_common_z.html" -->  
+<script>
+seajs.use(["logic/test/test_uicomponent"]);
+</script>
+</body>
+</html>

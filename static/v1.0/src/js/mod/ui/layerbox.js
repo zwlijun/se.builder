@@ -18,13 +18,13 @@
     }); 
 
     var _layerbox_html = '' +
-                         '<div class="mod-layerbox-mask hide js-layerbox-mask-<%=options.name%> <%=options.type%> <%=options.skin ? " class=\"" + options.skin + "\"" : ""%>">' +
+                         '<div class="mod-layerbox-mask hide js-layerbox-mask-<%=options.name%> <%=options.type%> <%=options.skin ? " class=\\\"" + options.skin + "\\\"" : ""%>">' +
                          '  <div class="mod-layerbox-box abs-center">' +
                          '    <div class="mod-layerbox-content"><%=options.text%></div>' +
                          '    <div class="mod-layerbox-buttons flexbox center middle">' +
                          '      <%for(var i = 0; i < options.btns.length; i++){%>' +
                          '      <%var btn = options.btns[i];%>' +
-                         '      <button data-btn-for="layerbox" data-btn-index="<%=i%>,<%=options.name%>" data-action-click="Action://seui/mod/layerbox/btn#<%=i%>,<%=options.name%>" type="button"<%=(btn.skin ? " class=\"" + btn.skin + "\"" : "")%>><%=btn.label%></button>' +
+                         '      <button data-btn-for="layerbox" data-btn-index="<%=i%>,<%=options.name%>" data-action-click="Action://seui/mod/layerbox/btn#<%=i%>,<%=options.name%>" type="button"<%=(btn.skin ? " class=\\\"" + btn.skin + "\\\"" : "")%>><%=btn.label%></button>' +
                          '      <%}%>' +
                          '    </div>' +
                          '  </div>' +
@@ -66,7 +66,7 @@
         return {
             "text": "",
             "skin": "",
-            "type": Types.info,
+            "type": Types.INFO,
             "btns": [{
                 "label": "确定", 
                 "skin": "", 
@@ -107,7 +107,7 @@
 
                     Util.registAction(".js-layerbox-mask-" + _name, [
                         {type: "click", mapping: null, compatible: null}
-                    ] Action);
+                    ], Action);
                 },
                 args: [name]
             });
@@ -119,15 +119,15 @@
 
             if(mask.length > 0){
                 if(true === visible){
-                    o.removeClass("hide");
+                    mask.removeClass("hide");
                 }else{
-                    o.addClass("hide");
+                    mask.addClass("hide");
                 }
                 Util.execAfterMergerHandler(handler, [this.name]);
             }
         },
         conf: function(options){
-            this.options = $.extend(GET_DEFAULT_OPTIONS, options);
+            this.options = $.extend(GET_DEFAULT_OPTIONS(), options);
             this.options.name = this.name;
 
             this.insert(this.options);

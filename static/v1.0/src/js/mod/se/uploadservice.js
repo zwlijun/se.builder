@@ -443,13 +443,13 @@
                 }
             }
 
-            var timer = Timer.getTimer("upload_read_files", 60, null);
+            var timer = Timer.getTimer("upload_read_files_" + Util.GUID(), 60, null);
 
             timer.setTimerHandler({
                 callback: function(_timer, size){
                     if(this.readCount >= size){
-                        _timer.stop();
-
+                        _timer.destroy();
+                        
                         this.exec("read", [this.fileInfoList]);
                     }else{
                         this.exec("reading", [this.readCount, size]);

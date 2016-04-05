@@ -185,7 +185,7 @@
             
             if(!dom){
                 console.log("the target is not existed");
-                return ;
+                return false;
             }
 
             _util.source(settings);
@@ -224,12 +224,28 @@
                     _util.requestExternal(external, [currentTarget, e, e.data]);
                 });
             }
+
+            return true;
         },
         fireAction: function(target, type){
             var node = $(target);
             var external = node.attr("data-action-" + type);
 
             _util.requestExternal(external, [node, null, type]);
+        },
+        watchAction: function(target, events, settings){
+            var regist = _util.registAction(target, events, settings);
+
+            if(!regist){
+                arguments.callee.tid = setTimeout(function(){
+                   _util.watchAction(target, events, settings);
+                }, 16);
+            }else{
+                if(arguments.callee.tid){
+                    clearTimeout(arguments.callee.tid);
+                    arguments.callee.tid = undefined;
+                }
+            }
         },
         getBoundingClientRect: function(target, scrollDOM){
             var root = document.documentElement;

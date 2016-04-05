@@ -16,7 +16,8 @@
 	var rAF = requestAnimationFrame;
     var cAF = cancelAnimationFrame;
 
-    var Timer = function(fps, handler){
+    var Timer = function(name, fps, handler){
+        this.name = name || Util.GUID();
         this.fps = fps || 0;
         this.handler = handler || null;
         this.timerId = null;
@@ -83,6 +84,21 @@
             }else{
                 this.start();
             }
+        },
+        destroy: function(){
+            var _timer = this;
+            var name = _timer.name;
+
+            _timer.stop();
+
+            _timer.element = null;
+            _timer.elapsedTime = 0;
+            _timer.fps = 0;
+            _timer.timerId = null;
+            _timer.handler = null;
+
+            Timer.TimerPool[name] = undefined;
+            delete Timer.TimerPool[name];
         }
     };
 
@@ -94,7 +110,7 @@
             fps = fps || 0;
             handler = handler || null;
             
-            var timer = Timer.TimerPool[name] || (Timer.TimerPool[name] = new Timer(fps, handler));
+            var timer = Timer.TimerPool[name] || (Timer.TimerPool[name] = new Timer(name, fps, handler));
 
             return timer;
         },

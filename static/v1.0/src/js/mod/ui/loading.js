@@ -85,7 +85,7 @@
             
             if(mask.length > 0){
                 if(true === visible){                                        
-                    o.removeClass("hide");
+                    mask.removeClass("hide");
 
                     this.count++;
                 }else{
@@ -132,7 +132,7 @@
                 mask.addClass(options.skin);
             }
 
-            var textNode = mask.find("mod-loading-text");
+            var textNode = mask.find(".mod-loading-text");
 
             textNode.addClass("hide");
             if(options.text){
