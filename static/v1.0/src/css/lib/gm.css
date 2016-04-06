@@ -925,8 +925,8 @@ button.loading:before{
     height: 100%;
     position: fixed;
     left: 0;
-    right: 0;
-    background-color: rgba(255, 255, 255, 0.35);
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.45);
     z-index: 59999;
 }
 .mod-layerbox-box{
@@ -1045,8 +1045,8 @@ button.loading:before{
     height: 100%;
     position: fixed;
     left: 0;
-    right: 0;
-    background-color: rgba(255, 255, 255, 0.35);
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.45);
     z-index: 59998;
 }
 
