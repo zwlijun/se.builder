@@ -4,6 +4,7 @@
 	var LogicBox = require("mod/ui/logicbox");
 
 	LayerBox.conf({
+		"skin": "aabb",
 		"text": "这里是一条文案",
 		"type": LayerBox.Types.RIGHT,
 		"btns": [
@@ -33,5 +34,7 @@
 
 	var lb = LogicBox.newLogicBox("test");
 
-	lb.conf().update("<h1>Hello World</h1>").show();
+	lb.conf({
+		"skin": "aabb"
+	}).update("<h1>Hello World</h1>").show();
 });

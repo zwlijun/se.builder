@@ -18,7 +18,7 @@
     }); 
 
     var _layerbox_html = '' +
-                         '<div class="mod-layerbox-mask hide js-layerbox-mask-<%=options.name%> <%=options.type%> <%=options.skin ? " class=\\\"" + options.skin + "\\\"" : ""%>">' +
+                         '<div class="mod-layerbox-mask hide js-layerbox-mask-<%=options.name%> <%=options.type%> <%=(options.skin ? options.skin : "")%>">' +
                          '  <div class="mod-layerbox-box abs-center">' +
                          '    <div class="mod-layerbox-content"><%=options.text%></div>' +
                          '    <div class="mod-layerbox-buttons flexbox center middle">' +

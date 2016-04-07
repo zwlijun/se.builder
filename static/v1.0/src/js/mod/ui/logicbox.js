@@ -10,14 +10,47 @@
  * @date 2014.4
  */
 ;define(function LogicBox(require, exports, module){
-    var Util = $.Util = require("mod/se/util");
+    var Util             = require("mod/se/util");
+    var TemplateEngine   = require("mod/se/template");
+
+    var LOGICBOX = TemplateEngine.getTemplate("mod_logicbox", {
+        "root": "options"
+    }); 
 
     var _logicbox_html = '' +
-                         '<div class="mod-logicbox-mask hide js-logicbox-mask-${name}">' +
+                         '<div class="mod-logicbox-mask hide js-logicbox-mask-<%=options.name%> <%=(options.skin ? options.skin : "")%>">' +
                          '  <div class="mod-logicbox-box abs-center">' +
                          '  </div>' +
                          '</div>' +
                          '';
+
+    var GET_DEFAULT_OPTIONS = function(){
+        return {
+            "skin": "",
+            "update": null,
+            "show": null,
+            "hide": null,
+            "mask": {
+                callback: function(name, mask){
+                    mask.on("click", function(e){
+                        e.stopPropagation();
+
+                        var ins = _LogicBox.get(name);
+
+                        if(ins){
+                            ins.hide();
+                        }
+
+                        ins = null;
+                    });
+
+                    mask.find(".mod-logicbox-box").on("click", function(e){
+                        e.stopPropagation();
+                    });
+                }
+            }
+        };
+    };
 
     var _LogicBox = function(name){
         this.name = name || "default";
@@ -27,27 +60,43 @@
     _LogicBox.Cache = {};
 
     _LogicBox.prototype = {
+        //options::skin
         //options::mask
         //options::update
         //optoins::show
         //options::hide
-        conf: function(options){
-            var name = this.name;
-
-            this.options = options || {};
-            this.options.name = name;
-
+        insert: function(options){
+            var name = options.name;
             var mask = $(".js-logicbox-mask-" + name);
 
-            if(mask.length == 0){
-                $("body").append(_logicbox_html.replace("${name}", name));
-
-                mask = $(".js-logicbox-mask-" + name);
+            if(mask.length > 0){
+                mask.remove();
             }
 
-            if(this.options.mask){
-                Util.execAfterMergerHandler(this.options.mask, [name, mask]);
-            }
+            LOGICBOX.render(true, _logicbox_html, options, {
+                callback: function(ret, _name){
+                    var meta = ret.metaData;
+                    var targetNode = $("body");
+
+                    targetNode.append(ret.result);
+
+                    if(meta.mask){
+                        var _mask = $(".js-logicbox-mask-" + _name);
+                        Util.execAfterMergerHandler(meta.mask, [_name, _mask]);
+                    }
+                },
+                args: [name]
+            });
+
+            return this;
+        },
+        conf: function(options){
+            this.options = $.extend(GET_DEFAULT_OPTIONS(), options);
+            this.options.name = this.name;
+
+            this.insert(this.options);
+
+            return this;
         },
         update: function(content){
             var options = this.options;
