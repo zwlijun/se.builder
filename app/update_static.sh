@@ -20,37 +20,17 @@ echo ${STATIC_PREFIX}
 if [ "$#" -eq "2" ]; then
     #复制脚本文件
     cp -rf ${STATIC_BASE_PREFIX}/src/js/lib/extra ${STATIC_PREFIX}/src/js/lib/
+    cp -rf ${STATIC_BASE_PREFIX}/src/js/lib/*.mix.js ${STATIC_PREFIX}/src/js/lib/
     cp -rf ${STATIC_BASE_PREFIX}/src/js/mod ${STATIC_PREFIX}/src/js/
     #复制样式文件
     cp -rf ${STATIC_BASE_PREFIX}/src/css/lib/extra ${STATIC_PREFIX}/src/css/lib/
+    cp -rf ${STATIC_BASE_PREFIX}/src/css/lib/gm.css ${STATIC_PREFIX}/src/css/lib/
     #复制图片文件
-    cp -rf ${STATIC_BASE_PREFIX}/src/css/lib ${STATIC_PREFIX}/src/img/
-    cp -rf ${STATIC_BASE_PREFIX}/src/css/mod ${STATIC_PREFIX}/src/img/
+    cp -rf ${STATIC_BASE_PREFIX}/src/img/lib ${STATIC_PREFIX}/src/img/
+    cp -rf ${STATIC_BASE_PREFIX}/src/img/mod ${STATIC_PREFIX}/src/img/
     #复制字体目录
-    cp -rf ${STATIC_PREFIX}/src/fonts/* ${STATIC_PREFIX}/res/fonts/
-
-    #合并模块样式
-    cat ${STATIC_PREFIX}/src/css/lib/g.css > ${STATIC_PREFIX}/src/css/lib/gm.css
-    cat ${STATIC_PREFIX}/src/css/mod/* >> ${STATIC_PREFIX}/src/css/lib/gm.css
-    
-    #合并JS
-    echo ";/*! jQuery JavaScript Library v${JQUERY_VERSION} - http://jquery.org/license */" > ${STATIC_PREFIX}/src/js/lib/j.mix.js
-    cat ${STATIC_PREFIX}/src/js/lib/jquery-${JQUERY_VERSION}.js >> ${STATIC_PREFIX}/src/js/lib/j.mix.js
-    echo ";/*! Sea.js ${SEAJS_VERSION} | seajs.org/LICENSE.md */" >> ${STATIC_PREFIX}/src/js/lib/j.mix.js
-    cat ${STATIC_PREFIX}/src/js/lib/sea-${SEAJS_VERSION}.js >> ${STATIC_PREFIX}/src/js/lib/j.mix.js
-    echo ";/*! SeaJS-Combo.js ${COMBO_VERSION} | seajs.org/LICENSE.md */" >> ${STATIC_PREFIX}/src/js/lib/j.mix.js
-    cat ${STATIC_PREFIX}/src/js/lib/seajs-combo-${COMBO_VERSION}.js >> ${STATIC_PREFIX}/src/js/lib/j.mix.js
-    echo ";/*! SE Config For SeaJS */" >> ${STATIC_PREFIX}/src/js/lib/j.mix.js
-    cat ${STATIC_PREFIX}/src/js/lib/se.js >> ${STATIC_PREFIX}/src/js/lib/j.mix.js
-
-    echo ";/*! Zepto v${ZEPTO_VERSION} - zepto event ajax form ie - zeptojs.com/license */" > ${STATIC_PREFIX}/src/js/lib/z.mix.js
-    cat ${STATIC_PREFIX}/src/js/lib/zepto-${ZEPTO_VERSION}.js >> ${STATIC_PREFIX}/src/js/lib/z.mix.js
-    echo ";/*! Sea.js ${SEAJS_VERSION} | seajs.org/LICENSE.md */" >> ${STATIC_PREFIX}/src/js/lib/z.mix.js
-    cat ${STATIC_PREFIX}/src/js/lib/sea-${SEAJS_VERSION}.js >> ${STATIC_PREFIX}/src/js/lib/z.mix.js
-    echo ";/*! SeaJS-Combo.js ${COMBO_VERSION} | seajs.org/LICENSE.md */" >> ${STATIC_PREFIX}/src/js/lib/z.mix.js
-    cat ${STATIC_PREFIX}/src/js/lib/seajs-combo-${COMBO_VERSION}.js >> ${STATIC_PREFIX}/src/js/lib/z.mix.js
-    echo ";/*! SE Config For SeaJS */" >> ${STATIC_PREFIX}/src/js/lib/z.mix.js
-    cat ${STATIC_PREFIX}/src/js/lib/se.js >> ${STATIC_PREFIX}/src/js/lib/z.mix.js
+    cp -rf ${STATIC_BASE_PREFIX}/src/fonts/* ${STATIC_PREFIX}/src/fonts/
+    cp -rf ${STATIC_BASE_PREFIX}/src/fonts/* ${STATIC_PREFIX}/res/fonts/
 
     #svn check & commit
     SVN_REVISION=`svn info |grep "Last Changed Rev:" |awk '{print $4}'`  
@@ -77,5 +57,3 @@ if [ "$#" -eq "2" ]; then
 else
     echo "请输入基础版本和目标版本，如：v1, v2, v2.1"
 fi
-
-

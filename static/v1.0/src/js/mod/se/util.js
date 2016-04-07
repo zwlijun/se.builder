@@ -365,6 +365,14 @@
 
             return sn;
         },
+        random: function(min, max){
+            var n = (Math.random() * (max - min)) + min;
+
+            return {
+                intValue: Math.floor(n),
+                floatValue: n
+            };
+        },
         blobSlice: function(blob, start, end, type){
             if(blob.slice){
                 return blob.slice(start, end, type);
