@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html data-page-alias="ui-component#framebox">
+<head>
+<!--#include virtual="/static/v1.0/inc/meta.html"-->
+<!--#include virtual="/static/v1.0/inc/rem.html"-->
+<title>Mod/FrameBox</title>
+<!--#include virtual="/static/v1.0/inc/css_common_gm.html"-->
+<link id="seed_style" rel="stylesheet" type="text/css" href="/static/v1.0/src/css/mod/framebox.css">
+</head>
+<body style="background: red;">
+  <div class="mod-framebox-mask">
+    <div class="mod-framebox-box abs-center">
+      <del class="icofont" title="关闭"></del>
+      <h3 class="mod-framebox-titlebar">
+        <i></i>
+        <span>我是标题</span>
+      </h3>
+      <div class="mod-framebox-content">
+        <p>我是内容</p>
+        <p>我是内容</p>
+        <p>我是内容</p>
+        <p>我是内容</p>
+        <p>我是内容</p>
+        <p>我是内容</p>
+        <p>我是内容</p>
+        <p>我是内容</p>
+        <p>我是内容</p>
+        <p>我是内容</p>
+        <p>我是内容</p>
+        <p>我是内容</p>
+        <p>我是内容</p>
+        <p>我是内容</p>
+        <p>我是内容</p>
+        <p>我是内容</p>
+        <p>我是内容</p>
+        <p>我是内容</p>
+        <p>我是内容</p>
+        <p>我是内容</p>
+      </div>
+      <div class="mod-framebox-statusbar">完成 - Status</div>
+    </div>
+  </div>
+<!--#include virtual="/static/v1.0/inc/js_common_z.html" -->  
+</body>
+</html>

@@ -23,7 +23,7 @@
 }
 .mod-loading-ani{}
 .mod-loading-ani svg{
-    stroke: #fff;
+    fill: #fff;
 }
 .mod-loading-text{
     text-align: center;
@@ -48,6 +48,6 @@
     color: #000;
 }
 .mod-loading-mask.white svg{
-    stroke: #000;
+    fill: #000;
 }
 

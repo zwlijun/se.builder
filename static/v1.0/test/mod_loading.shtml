@@ -7,53 +7,37 @@
 <!--#include virtual="/static/v1.0/inc/css_common_gm.html"-->
 </head>
 <body style="background: red;">
-  <div class="mod-loading-mask">
+  <div class="mod-loading-mask hide">
     <div class="mod-loading-box abs-center">
       <div class="mod-loading-ani flexbox center middle">
-        <svg width="64" height="64" viewBox="0 0 57 57" xmlns="http://www.w3.org/2000/svg" stroke="#fff">
-          <g fill="none" fill-rule="evenodd">
-            <g transform="translate(1 1)" stroke-width="2">
-              <circle cx="5" cy="50" r="5">
-                <animate attributeName="cy"
-                   begin="0s" dur="2.2s"
-                   values="50;5;50;50"
-                   calcMode="linear"
-                   repeatCount="indefinite" />
-                <animate attributeName="cx"
-                   begin="0s" dur="2.2s"
-                   values="5;27;49;5"
-                   calcMode="linear"
-                   repeatCount="indefinite" />
-              </circle>
-              <circle cx="27" cy="5" r="5">
-                <animate attributeName="cy"
-                   begin="0s" dur="2.2s"
-                   from="5" to="5"
-                   values="5;50;50;5"
-                   calcMode="linear"
-                   repeatCount="indefinite" />
-                <animate attributeName="cx"
-                   begin="0s" dur="2.2s"
-                   from="27" to="27"
-                   values="27;49;5;27"
-                   calcMode="linear"
-                   repeatCount="indefinite" />
-              </circle>
-              <circle cx="49" cy="50" r="5">
-                <animate attributeName="cy"
-                   begin="0s" dur="2.2s"
-                   values="50;50;5;50"
-                   calcMode="linear"
-                   repeatCount="indefinite" />
-                <animate attributeName="cx"
-                   from="49" to="49"
-                   begin="0s" dur="2.2s"
-                   values="49;5;27;49"
-                   calcMode="linear"
-                   repeatCount="indefinite" />
-              </circle>
-            </g>
-          </g>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="48" height="48" fill="white">
+          <circle cx="16" cy="3" r="0">
+            <animate attributeName="r" values="0;3;0;0" dur="1s" repeatCount="indefinite" begin="0" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" />
+          </circle>
+          <circle transform="rotate(45 16 16)" cx="16" cy="3" r="0">
+            <animate attributeName="r" values="0;3;0;0" dur="1s" repeatCount="indefinite" begin="0.125s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" />
+          </circle>
+          <circle transform="rotate(90 16 16)" cx="16" cy="3" r="0">
+            <animate attributeName="r" values="0;3;0;0" dur="1s" repeatCount="indefinite" begin="0.25s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" />
+          </circle>
+          <circle transform="rotate(135 16 16)" cx="16" cy="3" r="0">
+            <animate attributeName="r" values="0;3;0;0" dur="1s" repeatCount="indefinite" begin="0.375s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" />
+          </circle>
+          <circle transform="rotate(180 16 16)" cx="16" cy="3" r="0">
+            <animate attributeName="r" values="0;3;0;0" dur="1s" repeatCount="indefinite" begin="0.5s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" />
+          </circle>
+          <circle transform="rotate(225 16 16)" cx="16" cy="3" r="0">
+            <animate attributeName="r" values="0;3;0;0" dur="1s" repeatCount="indefinite" begin="0.625s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" />
+          </circle>
+          <circle transform="rotate(270 16 16)" cx="16" cy="3" r="0">
+            <animate attributeName="r" values="0;3;0;0" dur="1s" repeatCount="indefinite" begin="0.75s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" />
+          </circle>
+          <circle transform="rotate(315 16 16)" cx="16" cy="3" r="0">
+            <animate attributeName="r" values="0;3;0;0" dur="1s" repeatCount="indefinite" begin="0.875s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" />
+          </circle>
+          <circle transform="rotate(180 16 16)" cx="16" cy="3" r="0">
+            <animate attributeName="r" values="0;3;0;0" dur="1s" repeatCount="indefinite" begin="0.5s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" />
+          </circle>
         </svg>
       </div>
       <div class="mod-loading-text">加载中(80%)</div>
@@ -61,50 +45,34 @@
   </div>
   <div class="mod-loading-box abs-center">
     <div class="mod-loading-ani flexbox center middle">
-      <svg width="64" height="64" viewBox="0 0 57 57" xmlns="http://www.w3.org/2000/svg" stroke="#fff">
-        <g fill="none" fill-rule="evenodd">
-          <g transform="translate(1 1)" stroke-width="2">
-            <circle cx="5" cy="50" r="5">
-              <animate attributeName="cy"
-                 begin="0s" dur="2.2s"
-                 values="50;5;50;50"
-                 calcMode="linear"
-                 repeatCount="indefinite" />
-              <animate attributeName="cx"
-                 begin="0s" dur="2.2s"
-                 values="5;27;49;5"
-                 calcMode="linear"
-                 repeatCount="indefinite" />
-            </circle>
-            <circle cx="27" cy="5" r="5">
-              <animate attributeName="cy"
-                 begin="0s" dur="2.2s"
-                 from="5" to="5"
-                 values="5;50;50;5"
-                 calcMode="linear"
-                 repeatCount="indefinite" />
-              <animate attributeName="cx"
-                 begin="0s" dur="2.2s"
-                 from="27" to="27"
-                 values="27;49;5;27"
-                 calcMode="linear"
-                 repeatCount="indefinite" />
-            </circle>
-            <circle cx="49" cy="50" r="5">
-              <animate attributeName="cy"
-                 begin="0s" dur="2.2s"
-                 values="50;50;5;50"
-                 calcMode="linear"
-                 repeatCount="indefinite" />
-              <animate attributeName="cx"
-                 from="49" to="49"
-                 begin="0s" dur="2.2s"
-                 values="49;5;27;49"
-                 calcMode="linear"
-                 repeatCount="indefinite" />
-            </circle>
-          </g>
-        </g>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="48" height="48" fill="white">
+        <circle cx="16" cy="3" r="0">
+          <animate attributeName="r" values="0;3;0;0" dur="1s" repeatCount="indefinite" begin="0" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" />
+        </circle>
+        <circle transform="rotate(45 16 16)" cx="16" cy="3" r="0">
+          <animate attributeName="r" values="0;3;0;0" dur="1s" repeatCount="indefinite" begin="0.125s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" />
+        </circle>
+        <circle transform="rotate(90 16 16)" cx="16" cy="3" r="0">
+          <animate attributeName="r" values="0;3;0;0" dur="1s" repeatCount="indefinite" begin="0.25s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" />
+        </circle>
+        <circle transform="rotate(135 16 16)" cx="16" cy="3" r="0">
+          <animate attributeName="r" values="0;3;0;0" dur="1s" repeatCount="indefinite" begin="0.375s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" />
+        </circle>
+        <circle transform="rotate(180 16 16)" cx="16" cy="3" r="0">
+          <animate attributeName="r" values="0;3;0;0" dur="1s" repeatCount="indefinite" begin="0.5s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" />
+        </circle>
+        <circle transform="rotate(225 16 16)" cx="16" cy="3" r="0">
+          <animate attributeName="r" values="0;3;0;0" dur="1s" repeatCount="indefinite" begin="0.625s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" />
+        </circle>
+        <circle transform="rotate(270 16 16)" cx="16" cy="3" r="0">
+          <animate attributeName="r" values="0;3;0;0" dur="1s" repeatCount="indefinite" begin="0.75s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" />
+        </circle>
+        <circle transform="rotate(315 16 16)" cx="16" cy="3" r="0">
+          <animate attributeName="r" values="0;3;0;0" dur="1s" repeatCount="indefinite" begin="0.875s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" />
+        </circle>
+        <circle transform="rotate(180 16 16)" cx="16" cy="3" r="0">
+          <animate attributeName="r" values="0;3;0;0" dur="1s" repeatCount="indefinite" begin="0.5s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" />
+        </circle>
       </svg>
     </div>
     <div class="mod-loading-text">加载中(80%)</div>

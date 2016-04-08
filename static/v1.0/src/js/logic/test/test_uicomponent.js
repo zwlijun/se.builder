@@ -2,6 +2,7 @@
 	var LayerBox = require("mod/ui/layerbox");
 	var Loading = require("mod/ui/loading");
 	var LogicBox = require("mod/ui/logicbox");
+	var FrameBox = require("mod/ui/framebox");
 
 	LayerBox.conf({
 		"skin": "aabb",
@@ -11,6 +12,20 @@
 			{"label": "取消", "handler": {
 				callback: function(layerbox, index, name){
 					layerbox.hide();
+
+					var frame = FrameBox.newFrameBox("hello");
+
+					frame.conf({
+						titleBar: true,
+						statusBar: true,
+						title: "我是标题",
+						content: '<h2>我是内容主题</h2><div>我是内容</div><div>我是内容</div><div>我是内容</div><div>我是内容</div><div>我是内容</div>',
+						onvisible: {
+							callback: function(framebox, name, mask){
+								framebox.size(800, 500);
+							}
+						}
+					}).show()
 				}
 			}},
 			{"label": "新弹层", "handler": {
@@ -28,9 +43,9 @@
 
 	Loading.show("加载中...");
 
-	// setTimeout(function(){
-	// 	Loading.hide();
-	// }, 8000);
+	setTimeout(function(){
+		Loading.hide();
+	}, 1500);
 
 	var lb = LogicBox.newLogicBox("test");
 

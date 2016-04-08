@@ -119,15 +119,23 @@
                 mask.addClass(options.skin);
             }
 
+            this.text(options.text);
+
+            return this;
+        },
+        text: function(text){
+            var name = this.name;
+            var mask = $(".js-loading-mask-" + name);
             var textNode = mask.find(".mod-loading-text");
 
             textNode.addClass("hide");
-            if(options.text){
-                textNode.html(options.text);
+            if(text){
+                textNode.html(text);
                 textNode.removeClass("hide");
             }
 
-            return this;
+            mask = null;
+            textNode = null;
         },
         /**
          * 内嵌Loading内容
@@ -154,6 +162,11 @@
         var _loading = _Loading.Cache[name] || (_Loading.Cache[name] = new _Loading(name));
 
         return {
+            text: function(text){
+                _loading.text(text);
+
+                return this;
+            },
             show: function(options){
                 _loading.show(options);
 
@@ -173,6 +186,11 @@
         "version": "R16B0314",
         newLoading: function(name){
             return _Loading.create(name || "default");
+        },
+        text: function(text){
+            _Compatible.text(text);
+
+            return this;
         },
         show : function(loadingText){
             _Compatible.show({
