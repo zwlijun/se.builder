@@ -28,9 +28,9 @@
 
 	Loading.show("加载中...");
 
-	setTimeout(function(){
-		Loading.hide();
-	}, 3000);
+	// setTimeout(function(){
+	// 	Loading.hide();
+	// }, 8000);
 
 	var lb = LogicBox.newLogicBox("test");
 
