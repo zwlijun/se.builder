@@ -33,6 +33,8 @@ if [ "$#" -eq "2" ]; then
     mkdir -p ${STATIC_PREFIX}/src/img/logic
     #字体目录
     mkdir -p ${STATIC_PREFIX}/src/fonts
+    #SVG文件目录
+    mkdir -p ${STATIC_PREFIX}/src/svg
     #create res dir
     #JS构建后的目录，lib - 基础库   mod - 公用模块  logic - 业务逻辑  extra - 第三方插件、引擎或库
     mkdir -p ${STATIC_PREFIX}/res/js/lib/extra
@@ -51,6 +53,8 @@ if [ "$#" -eq "2" ]; then
     mkdir -p ${STATIC_PREFIX}/res/media/video
     #字体目录
     mkdir -p ${STATIC_PREFIX}/res/fonts
+    #SVG文件目录
+    mkdir -p ${STATIC_PREFIX}/res/svg
     #create inc & html dir
     #公共Include文件目录
     mkdir -p ${STATIC_PREFIX}/inc
@@ -66,6 +70,8 @@ if [ "$#" -eq "2" ]; then
     cp -rf ${STATIC_BASE_PREFIX}/* ${STATIC_PREFIX}/
     #复制字体目录
     cp -rf ${STATIC_PREFIX}/src/fonts/* ${STATIC_PREFIX}/res/fonts/
+    #复制SVG目录
+    cp -rf ${STATIC_PREFIX}/src/svg/* ${STATIC_PREFIX}/res/svg/
     #合并模块样式
     cat ${STATIC_PREFIX}/src/css/lib/g.css > ${STATIC_PREFIX}/src/css/lib/gm.css
     cat ${STATIC_PREFIX}/src/css/mod/* >> ${STATIC_PREFIX}/src/css/lib/gm.css

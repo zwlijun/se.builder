@@ -18,6 +18,54 @@ echo ${STATIC_BASE_PREFIX}
 echo ${STATIC_PREFIX}
 
 if [ "$#" -eq "2" ]; then
+    #create src dir
+    #js源文件目录，lib - 基础库   mod - 公用模块  logic - 业务逻辑  extra - 第三方插件、引擎或库
+    mkdir -p ${STATIC_PREFIX}/src/js/lib/extra
+    mkdir -p ${STATIC_PREFIX}/src/js/mod
+    mkdir -p ${STATIC_PREFIX}/src/js/logic
+    #CSS源文件目录，lib - 基础库   mod - 公用模块  logic - 业务逻辑  extra - 第三方插件、引擎或库
+    mkdir -p ${STATIC_PREFIX}/src/css/lib/extra
+    mkdir -p ${STATIC_PREFIX}/src/css/mod
+    mkdir -p ${STATIC_PREFIX}/src/css/logic
+    #图片源文件目录，lib - 基础库   mod - 公用模块  logic - 业务逻辑  extra - 第三方插件、引擎或库
+    mkdir -p ${STATIC_PREFIX}/src/img/lib/extra
+    mkdir -p ${STATIC_PREFIX}/src/img/mod
+    mkdir -p ${STATIC_PREFIX}/src/img/logic
+    #字体目录
+    mkdir -p ${STATIC_PREFIX}/src/fonts
+    #SVG文件目录
+    mkdir -p ${STATIC_PREFIX}/src/svg
+    #create res dir
+    #JS构建后的目录，lib - 基础库   mod - 公用模块  logic - 业务逻辑  extra - 第三方插件、引擎或库
+    mkdir -p ${STATIC_PREFIX}/res/js/lib/extra
+    mkdir -p ${STATIC_PREFIX}/res/js/mod
+    mkdir -p ${STATIC_PREFIX}/res/js/logic
+    #CSS构建后的目录，lib - 基础库   mod - 公用模块  logic - 业务逻辑  extra - 第三方插件、引擎或库
+    mkdir -p ${STATIC_PREFIX}/res/css/lib/extra
+    mkdir -p ${STATIC_PREFIX}/res/css/mod
+    mkdir -p ${STATIC_PREFIX}/res/css/logic
+    #图片构建后的目录，lib - 基础库   mod - 公用模块  logic - 业务逻辑  extra - 第三方插件、引擎或库
+    mkdir -p ${STATIC_PREFIX}/res/img/lib/extra
+    mkdir -p ${STATIC_PREFIX}/res/img/mod
+    mkdir -p ${STATIC_PREFIX}/res/img/logic
+    #媒体目录，audio - 音频    video - 视频
+    mkdir -p ${STATIC_PREFIX}/res/media/audio
+    mkdir -p ${STATIC_PREFIX}/res/media/video
+    #字体目录
+    mkdir -p ${STATIC_PREFIX}/res/fonts
+    #SVG文件目录
+    mkdir -p ${STATIC_PREFIX}/res/svg
+    #create inc & html dir
+    #公共Include文件目录
+    mkdir -p ${STATIC_PREFIX}/inc
+    #静态页面目录
+    mkdir -p ${STATIC_PREFIX}/html
+    #功能模块复杂的第三方插件或工程目录，如：文本编辑器
+    mkdir -p ${STATIC_PREFIX}/extra
+    #创建测试目录
+    mkdir -p ${STATIC_PREFIX}/test
+    #创建演示目录
+    mkdir -p ${STATIC_PREFIX}/demo
     #复制脚本文件
     cp -rf ${STATIC_BASE_PREFIX}/src/js/lib/extra ${STATIC_PREFIX}/src/js/lib/
     cp -rf ${STATIC_BASE_PREFIX}/src/js/lib/*.mix.js ${STATIC_PREFIX}/src/js/lib/
@@ -31,6 +79,9 @@ if [ "$#" -eq "2" ]; then
     #复制字体目录
     cp -rf ${STATIC_BASE_PREFIX}/src/fonts/* ${STATIC_PREFIX}/src/fonts/
     cp -rf ${STATIC_BASE_PREFIX}/src/fonts/* ${STATIC_PREFIX}/res/fonts/
+    #复制SVG目录
+    cp -rf ${STATIC_BASE_PREFIX}/src/svg/* ${STATIC_PREFIX}/src/svg/
+    cp -rf ${STATIC_BASE_PREFIX}/src/svg/* ${STATIC_PREFIX}/res/svg/
 
     #svn check & commit
     SVN_REVISION=`svn info |grep "Last Changed Rev:" |awk '{print $4}'`  
