@@ -24,9 +24,9 @@
     };
 
     var _BubbleTips = {
-        fire: function(message){
+        fire: function(message, type){
             var tips = $("#cmd_bubble_tips");
-            var html = '<div id="cmd_bubble_tips" class="bubble-tips"></div>';
+            var html = '<div id="cmd_bubble_tips" class="bubble-tips' + (type ? " " + type : "") + '"></div>';
 
             if(tips.length > 0){
                 tips.remove();
@@ -39,15 +39,16 @@
     };
 
     var _ErrorHandler = {
-        callback: function(code, message){
+        callback: function(code, message, type){
             //alert(message);
-            _BubbleTips.fire(message);
+            _BubbleTips.fire(message, type);
         }
     };
 
     var ErrorMap = {
         // "EXAMPLE_CODE" : function(handler){
         //     //todo
+        //     handler.args::code, message, type
         //     Util.execHandler(handler);
         //     return true;
         // }
@@ -59,6 +60,15 @@
         "P" : "jsonp",
         "T" : "text",
         "R" : "redirect"
+    };
+
+    //错误类型
+    var ErrorTypes = {
+        "SUCCESS": "success",
+        "FAILURE": "failure",
+        "ERROR": "error",
+        "INFO": "info",
+        "ALARM": "alarm"
     };
 
     //默认数据
@@ -111,9 +121,10 @@
      * 触发一个错误处理
      * @param String code 错误码
      * @param String msg 错误信息
-     * @param Object handler 
+     * @param String type 错误类型
+     * @param Object handler 错误处理函数
      */
-    function FireError(code, msg, handler){
+    function FireError(code, msg, type, handler){
         code = "" + code;
         msg = msg.replace(/\[\d+\]/, "");
         handler = handler || _ErrorHandler;
@@ -121,7 +132,7 @@
         var fireHandle = $.extend({}, handler);
         var args = handler.args || [];
 
-        fireHandle.args = [code, msg].concat(args);
+        fireHandle.args = [code, msg, type].concat(args);
 
         if(code in ErrorMap){
             return ErrorMap[code].apply(null, [fireHandle]);
@@ -289,7 +300,7 @@
         var _error = fnError || function(xhr, errorType, error){
             var err = RequestStatus[errorType];
 
-            FireError(err.status, err.text);
+            FireError(err.status, err.text, ErrorTypes.ERROR);
         };
         cmd.error = _error;
 
@@ -351,6 +362,7 @@
         "errorHandler": _ErrorHandler,
         //-------------------------------------------------
         "ResponseTypes" : RespTypes,
+        "ErrorTypes": ErrorTypes,
         "RequestStatus": RequestStatus
     };
 });

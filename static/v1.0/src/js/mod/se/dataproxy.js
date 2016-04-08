@@ -13,6 +13,8 @@
     var CMD                 = require("mod/se/cmd");
     var Util                = require("mod/se/util");
 
+    var ErrorTypes = CMD.ErrorTypes;
+
     var _config = {
         "code": "retCode",                  //服务器返回用于判断是否成功的代码key，如：{"retCode": 0, "retMsg": "ok"}
         "msg": "retMsg",                    //服务器返回用于提示的信息key，如：{"retCode": 0, "retMsg": "ok"}
@@ -43,7 +45,7 @@
                     Util.execAfterMergerHandler(handler, [context, data, msg]);
                 }else{
                     if(false !== exception.tips){
-                        CMD.fireError(code || "0x02", msg || "系统繁忙，请稍候再试", errorHandler);
+                        CMD.fireError(code || "0x02", msg || "系统繁忙，请稍候再试", ErrorTypes.ERROR, errorHandler);
                     }
 
                     if(exception.handle){
@@ -52,7 +54,7 @@
                 }
             }else{
                 if(false !== exception.tips){
-                    CMD.fireError("0x01", "服务器返回数据失败", errorHandler);
+                    CMD.fireError("0x01", "服务器返回数据失败", ErrorTypes.ERROR, errorHandler);
                 }
 
                 if(exception.handle){
@@ -64,7 +66,7 @@
             if(data){
                 Util.execAfterMergerHandler(handler, [context, data]);
             }else{
-                CMD.fireError("0x03", "获取模板数据异常", _config["errorHandler"]);
+                CMD.fireError("0x03", "获取模板数据异常", ErrorTypes.ERROR, _config["errorHandler"]);
             }
         }
     }; 

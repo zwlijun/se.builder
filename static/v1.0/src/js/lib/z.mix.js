@@ -3062,11 +3062,11 @@ var __PAGE_ALIAS__  	= $.__ROOT__.PAGE_ALIAS  	= __APP__.attr("data-page-alias")
 var __REFERER__     	= $.__ROOT__.REFERER     	= document.URL;
 var __DOC_REFERER__     = $.__ROOT__.DOC_REFERER    = document.referrer;
 
-var hashIndex = __PAGE_ALIAS__.indexOf("#");
+var dotIndex = __PAGE_ALIAS__.indexOf(".");
 var isSourceDir = __RES_ROOT__.indexOf("/src/") != -1;
 
 if(true === isSourceDir){
-	__DEBUG__ = true;
+	__DEBUG__ = $.__ROOT__.DEBUG = true;
 }
 
 $.__ROOT__.ALIAS_SET = {
@@ -3074,9 +3074,9 @@ $.__ROOT__.ALIAS_SET = {
 	"SUFFIX": __PAGE_ALIAS__
 };
 
-if(hashIndex != -1){
-	var aliasMain = __PAGE_ALIAS__.substring(0, hashIndex);
-	var aliasSub  = __PAGE_ALIAS__.substring(hashIndex + 1);
+if(dotIndex != -1){
+	var aliasMain = __PAGE_ALIAS__.substring(0, dotIndex);
+	var aliasSub  = __PAGE_ALIAS__.substring(dotIndex + 1);
 
 	$.__ROOT__.ALIAS_SET = {
 		"PREFIX": aliasMain,

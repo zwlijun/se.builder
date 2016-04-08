@@ -473,6 +473,125 @@ textarea {
     -webkit-align-items: baseline;
             align-items: baseline;
 }
+.bubble-tips,
+.bubble-tips.info{
+    position: fixed;
+    top: -100%;
+    left: 50%;
+        -ms-transform: translateX(-50%);
+       -moz-transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+    border-radius: 7px;
+    padding: 6px 15px;
+    min-width: 200px;
+    line-height: 1.5;
+    font-size: 14px;
+    background-color: rgba(205,233,194,.8);
+    color: #507b3e;
+    border: 1px solid #b9de9a;
+    text-align: center;
+    z-index: 999999;
+    opacity: 0;
+}
+.bubble-tips.success{
+    background-color: rgba(38, 136, 0, 0.8);
+    color: #fff;
+    border: 1px solid #b9de9a;
+}
+.bubble-tips.failure{
+    background-color: rgba(255, 160, 160, 0.8);
+    color: #800000;
+    border: 1px solid #FF5B5B;
+}
+.bubble-tips.error{
+    background-color: rgba(255, 0, 0, 0.8);
+    color: #fff;
+    border: 1px solid #FF5B5B;
+}
+.bubble-tips.alarm{
+    background-color: rgba(255, 193, 148, 0.8);
+    color: #CA450A;
+    border: 1px solid #FF9B54;
+}
+.bubble-tips.show{
+        -ms-animation:bubbleTips 6s ease;
+       -moz-animation:bubbleTips 6s ease;
+    -webkit-animation:bubbleTips 6s ease;
+            animation:bubbleTips 6s ease; 
+}
+@-ms-keyframes bubbleTips{
+    0% {
+        opacity: 0;
+        top: -100%;
+    }
+    15% {
+        opacity: 1;
+        top: 15%;
+    }
+    85% {
+        opacity: 1;
+        top: 15%;
+    }
+    100% {
+        opacity: 0;
+        top: -100%;
+    }
+}
+@-moz-keyframes bubbleTips{
+    0% {
+        opacity: 0;
+        top: -100%;
+    }
+    15% {
+        opacity: 1;
+        top: 15%;
+    }
+    85% {
+        opacity: 1;
+        top: 15%;
+    }
+    100% {
+        opacity: 0;
+        top: -100%;
+    }
+}
+@-webkit-keyframes bubbleTips{
+    0% {
+        opacity: 0;
+        top: -100%;
+    }
+    15% {
+        opacity: 1;
+        top: 15%;
+    }
+    85% {
+        opacity: 1;
+        top: 15%;
+    }
+    100% {
+        opacity: 0;
+        top: -100%;
+    }
+}
+@keyframes bubbleTips{
+    0% {
+        opacity: 0;
+        top: -100%;
+    }
+    15% {
+        opacity: 1;
+        top: 15%;
+    }
+    85% {
+        opacity: 1;
+        top: 15%;
+    }
+    100% {
+        opacity: 0;
+        top: -100%;
+    }
+}
 /************************************/
 button[type="button"],
 button[type="submit"]{

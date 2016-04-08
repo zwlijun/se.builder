@@ -207,8 +207,16 @@
                 actualType = type;
 
                 if(mapping){
-                    if(!(("on" + type) in dom)){
-                        actualType = mapping;
+                    var p = /^(swipe|swipeLeft|swipeRight|swipeUp|swipeDown|doubleTap|tap|singleTap|longTap)$/;
+
+                    if(p.test(type)){
+                        if(!("ontouchstart" in window)){
+                            actualType = mapping;
+                        }
+                    }else{
+                        if(!(("on" + type) in dom)){
+                            actualType = mapping;
+                        }
                     }
                 }
 
@@ -227,11 +235,11 @@
 
             return true;
         },
-        fireAction: function(target, type){
+        fireAction: function(target, type, e){
             var node = $(target);
             var external = node.attr("data-action-" + type);
 
-            _util.requestExternal(external, [node, null, type]);
+            _util.requestExternal(external, [node, (e || null), type]);
         },
         watchAction: function(target, events, settings){
             var regist = _util.registAction(target, events, settings);
