@@ -86,6 +86,13 @@
         };
     };
 
+    var command_global_data = {
+        // "name": {
+        //     "param1": "a",
+        //     "param2": "b"
+        // }
+    };
+
     //命令集，由外部注入
     var commands = {
         // "mod_name" : {
@@ -182,6 +189,28 @@
     }
 
     /**
+     * 注册全局参数
+     * @param {Object} data 参数对象,格式 {"name": {"key": "value"}}
+     */
+    function InjectGlobalData(data){
+        $.extend(command_global_data, data);
+    }
+
+    function FormatGlobalData(name){
+        if(!name || !(name in command_global_data)){
+            return "";
+        }
+
+        var data = command_global_data[name];
+
+        if(data){
+            return Request.stringify(data);
+        }
+
+        return "";
+    }
+
+    /**
      * 注册错误信息
      * @param Object errInfo 错误信息 @see ErrorMap
      */
@@ -237,10 +266,21 @@
         var mod_name = items[0];
         var request_type = items[1];
         var request_name = items[2];
+        var globalData = null;
+        var data = null;
 
         if(ExistCommand(namespace)){
             cmd = CloneCMD(commands[mod_name][request_type][request_name]);
-            cmd.data = Util.formatData(cmd.data||"", tplData||null);
+            globalData = FormatGlobalData(cmd.name);
+            data = Util.formatData(cmd.data || "", tplData||null);
+
+            if(globalData){
+                // data = globalData + (data ? "&" : "") + data;
+                data = Request.merge(data, globalData);
+            }
+
+            cmd.data = data;
+
         }else{
             throw new Error("unknown command (" + namespace + ")!");
         }        
@@ -276,7 +316,7 @@
             }
 
             if(fnBeforeSend){
-                fnBeforeSend.apply(this, [xhr, settings]);
+                fnBeforeSend.apply(this, [xhr, settings || ajaxSetting]);
             }
 
             fnBeforeSend = null;
@@ -351,12 +391,14 @@
     }
 
     module.exports = {
+        "version": "R16B0411",
         "exec": Exec,
         "existCommand" : ExistCommand,
         "fireError" : FireError,
         "setRequestInfo" : SetRequestInfo,
         "getRequestInfo" : GetRequestInfo,
         "injectCommands" : InjectCommands,
+        "injectGlobalData": InjectGlobalData,
         "injectErrorInfo" : InjectErrorInfo,
         "setBubbleTips" : _BubbleTips.fire,
         "errorHandler": _ErrorHandler,

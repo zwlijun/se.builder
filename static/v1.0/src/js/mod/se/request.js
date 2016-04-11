@@ -119,7 +119,30 @@
             return o;
         },
         append : function(url, data){
-            return url += (url.indexOf("?") == -1 ? ("?" + data) : ("&" + data));
+            var urlInfo = this.parseURL(url);
+            var protocol = urlInfo.protocol;
+            var host = urlInfo.host;
+            var port = urlInfo.port;
+            var pathname = urlInfo.pathname;
+            var search = urlInfo.search;
+            var hash = urlInfo.hash;
+
+            var querystring = this.merge(search, data);
+            var _url = protocol + "//" 
+                     + host 
+                     + (port ? ":" + port : "") 
+                     + pathname 
+                     + (querystring ? "?" + querystring : "") 
+                     + hash;
+
+            return _url;
+        },
+        merge: function(data1, data2){
+            var _data1 = this.serialized(data1);
+            var _data2 = this.serialized(data2);
+            var newData = $.extend(true, _data1, _data2);
+
+            return this.stringify(newData);
         },
         /**
          * 将querystring转换成map对象

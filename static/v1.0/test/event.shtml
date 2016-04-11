@@ -34,6 +34,56 @@
             //     console.info("我是div元素,我是p元素的上层元素");
             //     //p元素的click事件没有向上冒泡,该函数不会被执行.
             // }, false);
+            
+
+            function delay(ms, handler){
+                var callback = handler.callback;
+
+                if(callback.tid){
+                    clearTimeout(callback.tid);
+                    callback.tid = undefined;
+                }
+
+                callback.tid = setTimeout(function(){
+                    callback.apply(null, [callback.tid])
+                }, ms);
+            }
+
+            var handler = {
+                    callback: function(tid){
+                        console.info("A: " + tid)
+                    }
+                };
+
+            function A(){
+                delay(1000, handler);
+            }
+
+            A();
+            A();
+            A();
+
+            delay(2000, {
+                callback: function(tid){
+                    console.info("B: " + tid)
+                }
+            });
+
+            var B_COUNT = [0, 0, 0];
+            var B = function(index){
+                if(B_COUNT[index] < 10){
+                    setTimeout(function(){
+                       B_COUNT[index]++;
+                       console.info(index + ": " + B_COUNT[index])
+                       B(index)
+                    }, 16);
+                }
+            }
+
+            B(0);
+            B(1);
+            B(2);
+
         </script>
     </body>
 </html>

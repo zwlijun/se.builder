@@ -1,0 +1,52 @@
+/**
+ * Grid模块
+ * @style grid.css
+ */
+
+.mod-grid{
+  width: 100%;
+  height: auto;
+}
+.mod-grid > a{
+  width: 100%;
+  display: block;
+  margin-bottom: .16rem;
+  text-decoration: none;
+}
+.mod-grid > a > cite{
+  display: block;
+  width: 80%;
+  height: 0.96rem;
+  margin: 0 auto;
+  background-color: transparent;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.mod-grid > a > span{
+  width: 100%;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-top: 0.1rem;
+  display: block;
+  text-align: center;
+  color: #000;
+}
+.mod-grid.unnamed > a > cite{
+  height: 1.28rem;
+}
+.mod-grid.unnamed > a > span{
+  display: none;
+}
+.mod-grid.grid2 > a{
+  width: 50%;
+}
+.mod-grid.grid3 > a{
+  width: 33.33%;
+}
+.mod-grid.grid4 > a{
+  width: 25%;
+}
+.mod-grid.grid5 > a{
+  width: 20%;
+}

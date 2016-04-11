@@ -60,12 +60,12 @@
 
                 if(callback && callback instanceof Function){
                     if(typeof(delay) == "number" && delay >= 0){
-                        if(arguments.callee.id){
-                            clearTimeout(arguments.callee.tid);
-                            arguments.callee.tid = undefined;
+                        if(callback.tid){
+                            clearTimeout(callback.tid);
+                            callback.tid = undefined;
                         }
 
-                        return (arguments.callee.tid = setTimeout(function(){
+                        return (callback.tid = setTimeout(function(){
                             callback.apply(context, args);
                         }, delay));
                     }else{
@@ -245,14 +245,9 @@
             var regist = _util.registAction(target, events, settings);
 
             if(!regist){
-                arguments.callee.tid = setTimeout(function(){
+                setTimeout(function(){
                    _util.watchAction(target, events, settings);
                 }, 16);
-            }else{
-                if(arguments.callee.tid){
-                    clearTimeout(arguments.callee.tid);
-                    arguments.callee.tid = undefined;
-                }
             }
         },
         getBoundingClientRect: function(target, scrollDOM){
@@ -483,19 +478,24 @@
             return str;
         },
         delay: function(milliseconds, handle){
-            if(arguments.callee.tid){
-                clearTimeout(arguments.callee.tid);
-                arguments.callee.tid = undefined;
+            var _handler = handle || {};
+            var callback = _handler.callback;
+
+            if(callback && Object.prototype.toString.call(callback) == "[object Function]"){
+                if(callback.tid){
+                    clearTimeout(callback.tid);
+                    callback.tid = undefined;
+                }
+
+                var start = _util.getTime();
+
+                callback.tid = setTimeout(function(){
+                    var end = _util.getTime();
+                    var elapsedTime = end - start;
+
+                    _util.execAfterMergerHandler(handle, [elapsedTime]);
+                }, milliseconds);
             }
-
-            var start = _util.getTime();
-
-            arguments.callee.tid = setTimeout(function(){
-                var end = _util.getTime();
-                var elapsedTime = end - start;
-
-                _util.execAfterMergerHandler(handle, [elapsedTime]);
-            }, milliseconds);
         }
     };
 
