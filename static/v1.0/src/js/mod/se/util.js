@@ -188,7 +188,9 @@
                 return false;
             }
 
-            _util.source(settings);
+            if(settings){
+                _util.source(settings);
+            }
 
             for(var i = 0; i < size; i++){
                 evt = _events[i];
