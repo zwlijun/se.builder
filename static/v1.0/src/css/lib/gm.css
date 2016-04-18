@@ -695,6 +695,108 @@ button.loading:before{
     display: inline-block;
 }
 /**
+ * ActionSheet模块
+ * loading > layerbox > actionsheet > logicbox > framebox
+ * @file loading.css
+ */
+.mod-actionsheet{
+	position: fixed;
+	left: 0;
+	width: 100%;
+}
+.mod-actionsheet-mask{
+	top: 0;
+	height: 100%;
+	z-index: 59997;
+	background-color: rgba(0, 0, 0, 0.7);
+	-webkit-transition: background-color 0.4s ease;
+			transition: background-color 0.4s ease;
+}
+.mod-actionsheet-panel{
+	bottom: 0;
+	z-index: 59998;
+	background-color: #fff;
+	font-size: .32rem;
+	-webkit-transform: translate(0, 0) translateZ(0);
+			transform: translate(0, 0) translateZ(0);
+	-webkit-transition: -webkit-transform 0.4s ease;
+			transition: 		transform 0.4s ease;
+}
+.mod-actionsheet-mask.exit{
+	-webkit-transition: background-color 0.4s ease, left 0.1s ease 0.4s;
+			transition: background-color 0.4s ease, left 0.1s ease 0.4s;
+	background-color: rgba(0, 0, 0, 0);
+	left: 10000px;
+}
+.mod-actionsheet-panel.exit{
+	-webkit-transition: -webkit-transform 0.4s ease, left 0.1s ease 0.4s;
+			transition: 		transform 0.4s ease, left 0.1s ease 0.4s;
+	-webkit-transform: translate(0, 100%) translateZ(0);
+			transform: translate(0, 100%) translateZ(0);
+	left: 10000px;
+}
+
+.mod-actionsheet-panel.sheetmenu{
+	text-align: center;
+	background-color: #F8F8F8;
+}
+
+.mod-actionsheet-panel.sheetmenu .sheetmenu-group{
+	list-style: none;
+	margin-top: .12rem;
+	background-color: #fff;
+}
+.mod-actionsheet-panel.sheetmenu .sheetmenu-item,
+.mod-actionsheet-panel.sheetmenu .sheetmenu-item.normal{
+	height: .72rem;
+	line-height: .72rem;
+	border-top: 1px solid #F8F8F8;
+	color: #333;
+	cursor: pointer;
+}
+.mod-actionsheet-panel.sheetmenu .sheetmenu-item:active{
+	background-color: #e8e8e8;
+}
+.mod-actionsheet-panel.sheetmenu .sheetmenu-item.disable{
+	color: #fefefe!important;
+	background-color: #d5d5d5!important;
+	cursor: not-allowed!important;
+}
+.mod-actionsheet-panel.sheetmenu .sheetmenu-item.disable:active{
+	background-color: #d5d5d5!important;
+}
+.mod-actionsheet-panel.sheetmenu .sheetmenu-item.strong{
+	color: #fff;
+	background-color: #0094f8;
+}
+.mod-actionsheet-panel.sheetmenu .sheetmenu-item.strong:active{
+	background-color: #49b6ff;
+}
+.mod-actionsheet-panel.sheetmenu .sheetmenu-item.danger{
+	color: #fff;
+	background-color: #e20024;
+}
+.mod-actionsheet-panel.sheetmenu .sheetmenu-item.danger:active{
+	background-color: #e2415a;
+}
+.mod-actionsheet-panel.sheetmenu .sheetmenu-item.weak{
+	color: #333;
+	background-color: #e5e5e5;
+}
+.mod-actionsheet-panel.sheetmenu .sheetmenu-item.weak:active{
+	background-color: #e0e0e0;
+}
+.mod-actionsheet-panel.sheetmenu .sheetmenu-group:first-child{
+	margin-top: inherit;
+}
+.mod-actionsheet-panel.sheetmenu .sheetmenu-item:first-child{
+	border-top: inherit;
+}
+
+.mod-actionsheet-panel.sheetbox{
+	background-color: #FFF;
+}
+/**
  * 数据集/列表
  * @file dataset.css
  */
@@ -1041,7 +1143,7 @@ button.loading:before{
     left: 0;
     top: 0;
     background-color: rgba(0, 0, 0, 0.45);
-    z-index: 59998;
+    z-index: 59995;
 }
 
 .mod-framebox-box{
@@ -1159,6 +1261,7 @@ button.loading:before{
   width: 20%;
 }/**
  * 信息弹层
+ * loading > layerbox > actionsheet > logicbox > framebox
  * @file layerbox.css
  */
 
@@ -1227,6 +1330,7 @@ button.loading:before{
 }
 /**
  * Loading模块
+ * loading > layerbox > actionsheet > logicbox > framebox
  * @file loading.css
  */
 
@@ -1280,6 +1384,7 @@ button.loading:before{
 
 /**
  * 逻辑弹层
+ * loading > layerbox > actionsheet > logicbox > framebox
  * @file logicbox.css
  */
 .mod-logicbox-mask{
@@ -1289,7 +1394,7 @@ button.loading:before{
     left: 0;
     top: 0;
     background-color: rgba(0, 0, 0, 0.45);
-    z-index: 59997;
+    z-index: 59996;
 }
 
 .mod-logicbox-box{
@@ -1672,6 +1777,54 @@ button.loading:before{
     width: 100%;
 }
 /**
+ * 分享模块
+ * -m: 表示为移动端
+ * -d: PC端
+ * @file swiper.css
+ */
+.mod-sharebox{}
+.mod-sharebox .sharegrid cite{
+	background-image: url(../../img/mod/ico_share_sheetbox.png);
+	background-size: 4.74rem 1.15rem;
+}
+/********************************************/
+.mod-sharebox-m{}
+.mod-sharebox-m.sheetbox{
+	background-color: #efefef;
+}
+.mod-sharebox-m h4{
+	margin-top: .32rem;
+	margin-bottom: .24rem;
+	text-indent: .32rem;
+	font-weight: normal;
+}
+.mod-sharebox-m .sharegrid{
+	margin-bottom: .24rem;
+}
+.mod-sharebox-m .sharegrid cite,
+.mod-sharebox-m .sharegrid cite.ico-share-qq{
+	width: 1.15rem;
+	height: 1.15rem;
+	background-position: 0 0;
+}
+.mod-sharebox-m .sharegrid cite.ico-share-weibo{
+	background-position: -1.2rem 0;
+}
+.mod-sharebox-m .sharegrid cite.ico-share-timeline{
+	background-position: -2.39rem 0;
+}
+.mod-sharebox-m .sharegrid cite.ico-share-wechat{
+	background-position: -3.59rem 0;
+}
+.mod-sharebox-m .sharebox-cancel{
+    width: 100%;
+    height: .72rem;
+    line-height: .72rem;
+    text-align: center;
+    background-color: #fff;
+    border-top: 1px solid #e5e5e5;
+}
+/********************************************//**
  * Swiper模块
  * @file swiper.css
  */

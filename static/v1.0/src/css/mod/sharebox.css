@@ -1,0 +1,49 @@
+/**
+ * 分享模块
+ * -m: 表示为移动端
+ * -d: PC端
+ * @file swiper.css
+ */
+.mod-sharebox{}
+.mod-sharebox .sharegrid cite{
+	background-image: url(../../img/mod/ico_share_sheetbox.png);
+	background-size: 4.74rem 1.15rem;
+}
+/********************************************/
+.mod-sharebox-m{}
+.mod-sharebox-m.sheetbox{
+	background-color: #efefef;
+}
+.mod-sharebox-m h4{
+	margin-top: .32rem;
+	margin-bottom: .24rem;
+	text-indent: .32rem;
+	font-weight: normal;
+}
+.mod-sharebox-m .sharegrid{
+	margin-bottom: .24rem;
+}
+.mod-sharebox-m .sharegrid cite,
+.mod-sharebox-m .sharegrid cite.ico-share-qq{
+	width: 1.15rem;
+	height: 1.15rem;
+	background-position: 0 0;
+}
+.mod-sharebox-m .sharegrid cite.ico-share-weibo{
+	background-position: -1.2rem 0;
+}
+.mod-sharebox-m .sharegrid cite.ico-share-timeline{
+	background-position: -2.39rem 0;
+}
+.mod-sharebox-m .sharegrid cite.ico-share-wechat{
+	background-position: -3.59rem 0;
+}
+.mod-sharebox-m .sharebox-cancel{
+    width: 100%;
+    height: .72rem;
+    line-height: .72rem;
+    text-align: center;
+    background-color: #fff;
+    border-top: 1px solid #e5e5e5;
+}
+/********************************************/
