@@ -8,8 +8,8 @@
   height: auto;
 }
 .mod-grid > a{
-  width: 100%;
   display: block;
+  width: 100%;
   margin-bottom: .16rem;
   text-decoration: none;
 }
@@ -49,4 +49,36 @@
 }
 .mod-grid.grid5 > a{
   width: 20%;
+}
+/** wechat x5 compatible **/
+.wechat-x5 .mod-grid:before,
+.wechat-x5 .mod-grid:after{
+    content: "\0020"; 
+    display: block; 
+    height: 0; 
+    overflow: hidden; 
+}
+.wechat-x5 .mod-grid:after{
+    clear: both;
+}
+.wechat-x5 .mod-grid{
+    zoom: 1;
+    display: block;
+      -webkit-box-align: inherit;
+       -moz-align-items: inherit;
+    -webkit-align-items: inherit;
+            align-items: inherit;
+           -webkit-box-pack: inherit;
+       -moz-justify-content: inherit;
+    -webkit-justify-content: inherit;
+            justify-content: inherit;
+    -webkit-box-lines: inherit;
+    -webkit-flex-wrap: inherit;
+       -moz-flex-wrap: inherit;
+        -ms-flex-wrap: inherit;
+         -o-flex-wrap: inherit;
+            flex-wrap: inherit;
+}
+.wechat-x5 .mod-grid > a{
+    float: left;
 }

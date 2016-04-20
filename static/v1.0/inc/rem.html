@@ -31,7 +31,17 @@
 
     var ua = navigator.userAgent;
     var ios = /(iPhone|iPad|iPod)/i.test(ua);
+    var x5_tbs = /(TBS)\/(\d+)/.exec(ua);
     var hasOrientationChange = false;
+
+    if(x5_tbs && ((x5_tbs[2] || "").indexOf("03") == -1)){
+        var r = d.documentElement;
+        var cls = r.className;
+
+        if(cls.indexOf("wechat-x5") == -1){
+            r.className = cls + " wechat-x5";
+        }
+    }
 
     d.addEventListener("DOMContentLoaded", function(e){
         _reset();

@@ -82,7 +82,9 @@ if [ "$#" -eq "2" ]; then
     #复制SVG目录
     cp -rf ${STATIC_BASE_PREFIX}/src/svg/* ${STATIC_PREFIX}/src/svg/
     cp -rf ${STATIC_BASE_PREFIX}/src/svg/* ${STATIC_PREFIX}/res/svg/
-
+    #复制 inc/rem
+    cp -rf ${STATIC_BASE_PREFIX}/inc/rem.html ${STATIC_PREFIX}/inc/
+    
     #svn check & commit
     SVN_REVISION=`svn info |grep "Last Changed Rev:" |awk '{print $4}'`  
 

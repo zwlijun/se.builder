@@ -45,6 +45,21 @@
         "scale"
     ];
 
+    //DOM Options
+    //data-swiper-type      :: 类型 [slider | scale | fade | draw | cube]
+    //data-swiper-mode      :: 模式 [x | y | free]
+    //data-swiper-distance  :: 滑屏距离（手指滑动多少个PX后触发切换）[number]
+    //data-swiper-dots      :: 滑屏定位点或缩略图 [none | static | bottom | right]
+    //data-swiper-width     :: 宽度 -1: 100% [number]
+    //data-swiper-height    :: 高度 [number]
+    //data-swiper-control   :: 是否显示控制箭头 [0 | 1]
+    //data-swiper-autoplay  :: 是否自动播放 [0 | 1]
+    //data-swiper-loop      :: 是否循环播放 [0 | 1]
+    //data-swiper-interval  :: 自动播放时间隔周期 [number]，单位ms
+    //data-swiper-duration  :: 滑屏切换时间 [number]，单位s
+    //data-swiper-timing    :: 滑屏过渡效果 [ease | ease-in | ease-out | ease-in-out | cubic-bezier(n,n,n,n) | linear]
+    //data-swiper-delay     :: 滑屏延迟时长 [number]，单位s
+    //data-swiper-unit      :: 尺寸单位 [% | em | px | pt| rem | ex | pc | in | cm | mm]
     var GetDefaultOptions = function(){
         return {
             "type": "slider",                   //类型 [slider | ...]
@@ -59,8 +74,67 @@
             "interval": 4000,                   //自动播放时间隔周期
             "duration": 1,                      //滑屏时长 [n]s
             "timing": "ease",                   //滑屏过渡类型 [ease | ease-in | ease-out | ease-in-out | cubic-bezier(n,n,n,n) | linear]
-            "delay": 0                          //滑屏延迟时长 [n]s
+            "delay": 0,                         //滑屏延迟时长 [n]s
+            "unit": "px"                        //尺寸单位 [% | em | px | pt| rem | ex | pc | in | cm | mm]
         };
+    };
+
+    var ParseDOMOptions = function(selector, useDefault){
+        var attrs = [
+            {"name": "type", "dataType": "string", "defaultValue": "slider"},
+            {"name": "mode", "dataType": "string", "defaultValue": "x"},
+            {"name": "distance", "dataType": "number", "defaultValue": "50"},
+            {"name": "dots", "dataType": "string", "defaultValue": "none"},
+            {"name": "width", "dataType": "number", "defaultValue": "-1"},
+            {"name": "height", "dataType": "number", "defaultValue": "400"},
+            {"name": "control", "dataType": "boolean", "defaultValue": "0"},
+            {"name": "autoplay", "dataType": "boolean", "defaultValue": "0"},
+            {"name": "loop", "dataType": "boolean", "defaultValue": "1"},
+            {"name": "interval", "dataType": "number", "defaultValue": "4000"},
+            {"name": "duration", "dataType": "number", "defaultValue": "1"},
+            {"name": "timing", "dataType": "string", "defaultValue": "ease"},
+            {"name": "delay", "dataType": "number", "defaultValue": "0"},
+            {"name": "unit", "dataType": "number", "defaultValue": "px"}
+        ];
+        var size = attrs.length;
+        var node = $(selector);
+        var opts = {};
+        var attr = null;
+        var value = null;
+
+        if(node.length === 0){
+            return null;
+        }
+
+        for(var i = 0; i < size; i++){
+            attr = attrs[i];
+
+            value = node.attr("data-swiper-" + attr.name);
+
+            if(!value){
+                if(true !== useDefault){
+                    continue;
+                }
+
+                value = attr.defaultValue;
+            }
+
+            if("number" == attr.dataType){
+                value = Number(value);
+
+                if(isNaN(value)){
+                    value = Number(attr.defaultValue);
+                }
+
+                opts[attr.name] = value;
+            }else if("boolean" == attr.dataType){
+                opts[attr.name] = ("1" === value);
+            }else{
+                opts[attr.name] = value;
+            }
+        }
+
+        return opts;
     };
 
     var emit = function(type, str){
@@ -73,7 +147,11 @@
 
     var _Swiper = function(name, options){
         this.name = name;
-        this.opts = $.extend(GetDefaultOptions(), options || {});
+        this.opts = $.extend(
+            GetDefaultOptions(), 
+            options || {}, 
+            ParseDOMOptions('[data-swiper="' + name + '"]', false) || {}
+        );
 
         this.viewport = null;
         this.body = null;
@@ -697,6 +775,9 @@
             var swiper = this;
             var width = swiper.options("width");
             var height = swiper.options("height");
+            var unit = swiper.options("unit");
+            var widthUnit = unit;
+            var heightUnit = unit;
             var body = swiper.body;
             var viewport = swiper.viewport;
             var current = body.find(".mod-swiper-item.current");
@@ -719,15 +800,17 @@
                     dom = current[0];
                 break;
             }
-            retc = Util.getBoundingClientRect(dom);
+            rect = Util.getBoundingClientRect(dom);
             
             width = width <= 0 ? rect.width : width;
+            widthUnit = width <= 0 ? "px" : unit;
             height = height <= 0 ? rect.height : height;
+            heightUnit = height <= 0 ? "px": unit;
 
             if(false !== _set){
                 var obj = {
-                    "width": width + "px",
-                    "height": height + "px"
+                    "width": width + widthUnit,
+                    "height": height + heightUnit
                 };
                 body.css(obj);
                 viewport.css(obj);
@@ -735,7 +818,11 @@
 
             return {
                 "width": width,
-                "height": height
+                "height": height,
+                "unit": {
+                    "width": widthUnit,
+                    "height": heightUnit
+                }
             };
         },
         render: function(){
@@ -1034,25 +1121,24 @@
                 var before = body.find(".mod-swiper-item.maybe.before");
                 var sizeof = swiper.sizeof();
 
+                var unit = sizeof.unit;
                 var width = sizeof.width;
                 var height = sizeof.height;
 
-                console.info(mode)
-
                 if("y" == mode){
                     //front
-                    Style.css(current, "transform", "translateZ(" + (height / 2) + "px)");
+                    Style.css(current, "transform", "translateZ(" + (height / 2) + unit.height + ")");
                     //bottom
-                    Style.css(after, "transform", "rotateX(-90deg) translateZ(" + (height / 2) + "px)");
+                    Style.css(after, "transform", "rotateX(-90deg) translateZ(" + (height / 2) + unit.height + ")");
                     //top
-                    Style.css(before, "transform", "rotateX(90deg) translateZ(" + (height / 2) + "px)");
+                    Style.css(before, "transform", "rotateX(90deg) translateZ(" + (height / 2) + unit.height + ")");
                 }else{
                     //front
-                    Style.css(current, "transform", "translateZ(" + (width / 2) + "px)");
+                    Style.css(current, "transform", "translateZ(" + (width / 2) + unit.width + ")");
                     //right
-                    Style.css(after, "transform", "rotateY(90deg) translateZ(" + (width / 2) + "px)");
+                    Style.css(after, "transform", "rotateY(90deg) translateZ(" + (width / 2) + unit.width + ")");
                     //left
-                    Style.css(before, "transform", "rotateY(-90deg) translateZ(" + (width / 2) + "px)");
+                    Style.css(before, "transform", "rotateY(-90deg) translateZ(" + (width / 2) + unit.width + ")");
                 }
             },
             restore: function(swiper){
@@ -1200,6 +1286,9 @@
                     return this;
                 }
             }
+        },
+        parse: function(selector, useDefault){
+            return ParseDOMOptions(selector, useDefault || false);
         }
     };
 });

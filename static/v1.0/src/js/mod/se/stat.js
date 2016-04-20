@@ -18,7 +18,7 @@
     var Util         = $.Util;
     var Session      = Storage.Session;
     var Persistent   = Storage.Persistent;
-    var env          = Detect.data;
+    var env          = Detect.env;
 
     var Types = {
         "CLICK": {
@@ -101,31 +101,29 @@
             return type;
         },
         getPlatform: function(){
-            // var os = [
-            //     {"alias": "ios", "name": "iOS"},
-            //     {"alias": "android", "name": "Android"}, 
-            //     {"alias": "wp", "name": "WindowsPhone"},
-            //     {"alias": "osx", "name": "OSX"},
-            //     {"alias": "win", "name": "Windows"}
-            // ];
-            // var size = os.length;
-            // var name = "other";
-            // var version = "0";
-            // var tmp = null;
+            var os = [
+                {"alias": "ios", "name": "iOS"},
+                {"alias": "android", "name": "Android"}, 
+                {"alias": "windowsphone", "name": "WindowsPhone"},
+                {"alias": "osx", "name": "OSX"},
+                {"alias": "windows", "name": "Windows"}
+            ];
+            var size = os.length;
+            var name = "other";
+            var version = "0";
+            var tmp = null;
+            var item = null;
 
-            // for(var i = 0; i < size; i++){
-            //     tmp = os[i];
+            for(var i = 0; i < size; i++){
+                tmp = os[i];
+                item = env.os[tmp.alias];
 
-            //     if(true === $.os[tmp.alias]){
-            //         name = tmp.name;
-            //         version = $.os.version;
-            //         break;
-            //     }
-            // }
-
-            var os = env.os;
-            var name = os.family;
-            var version = os.version;
+                if(item.major > 0){
+                    name = tmp.name;
+                    version = item.short;
+                    break;
+                }
+            }
 
             return {
                 "name": name,
