@@ -1,0 +1,65 @@
+<script>
+(function(){
+var AliasSet = $.__ROOT__.ALIAS_SET;
+
+var platform = AliasSet.PLATFORM;
+var app = AliasSet.APP;
+var project = AliasSet.PROJECT;
+var module = AliasSet.MODULE;
+var feature = AliasSet.FEATURE;
+var page = AliasSet.PAGE;
+
+var debug = $.__ROOT__.DEBUG;
+var __conf__ = window.__CONFIG || {};
+
+var requires = [
+    "logic/m/main"
+];
+
+var sea_callback = function(){
+    var args = arguments;
+    var size = args.length;
+
+    if(size === 0){
+        return ;
+    }
+
+    var main = args[0];
+
+    main.init($.extend({
+        "alias": {
+            "platform": platform,
+            "app": app,
+            "project": project,
+            "module": module,
+            "feature": feature,
+            "page": page
+        },
+        "debug": debug
+    }, __conf__));
+
+    if(size > 1){
+        var logic = null;
+
+        for(var i = 1; i < size; i++){
+            logic = args[i];
+
+            if(logic && ("connect" in logic)){
+                logic.connect(main);
+            }
+        }
+    }
+};
+
+// var bridge = {
+//     "key": "require path"
+// };
+
+// switch(feature){
+//    case "feature":
+//        requires.push(bridge.key);
+//    break;
+// }
+seajs.use(requires, sea_callback);
+})();
+</script>

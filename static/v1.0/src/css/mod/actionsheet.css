@@ -49,6 +49,10 @@
 	list-style: none;
 	margin-top: .12rem;
 	background-color: #fff;
+	text-align: center;
+}
+.mod-actionsheet-panel.sheetmenu .sheetmenu-group.large-spacing{
+	margin-top: .24rem;
 }
 .mod-actionsheet-panel.sheetmenu .sheetmenu-item,
 .mod-actionsheet-panel.sheetmenu .sheetmenu-item.normal{
@@ -90,13 +94,16 @@
 .mod-actionsheet-panel.sheetmenu .sheetmenu-item.weak:active{
 	background-color: #e0e0e0;
 }
-.mod-actionsheet-panel.sheetmenu .sheetmenu-group:first-child{
+.mod-actionsheet-panel.sheetmenu .sheetmenu-group:first-child,
+.mod-actionsheet-panel.sheetmenu .sheetmenu-group.none-spacing{
 	margin-top: inherit;
 }
-.mod-actionsheet-panel.sheetmenu .sheetmenu-item:first-child{
+.mod-actionsheet-panel.sheetmenu .sheetmenu-item:first-child,
+.mod-actionsheet-panel.sheetmenu .sheetmenu-item.none-border{
 	border-top: inherit;
 }
 
 .mod-actionsheet-panel.sheetbox{
 	background-color: #FFF;
+	text-align: inherit;
 }
