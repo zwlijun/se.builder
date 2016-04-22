@@ -44,18 +44,14 @@
 
                     Util.execAfterMergerHandler(handler, [context, data, msg]);
                 }else{
-                    if(false !== exception.tips){
-                        CMD.fireError(code || "0x02", msg || "系统繁忙，请稍候再试", ErrorTypes.ERROR, errorHandler);
-                    }
+                    CMD.fireError(code || "0x02", msg || "系统繁忙，请稍候再试", ErrorTypes.ERROR, errorHandler, false === exception.tips);
 
                     if(exception.handle){
                         Util.execAfterMergerHandler(exception.handle, [context, code, msg]);
                     }
                 }
             }else{
-                if(false !== exception.tips){
-                    CMD.fireError("0x01", "服务器返回数据失败", ErrorTypes.ERROR, errorHandler);
-                }
+                CMD.fireError("0x01", "服务器返回数据失败", ErrorTypes.ERROR, errorHandler, false === exception.tips);
 
                 if(exception.handle){
                     Util.execAfterMergerHandler(exception.handle, [context, -1, "服务器返回数据失败"]);

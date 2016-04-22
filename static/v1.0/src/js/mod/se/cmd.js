@@ -130,8 +130,9 @@
      * @param String msg 错误信息
      * @param String type 错误类型
      * @param Object handler 错误处理函数
+     * @param Boolean onlyCheckErrorMap 仅仅执行ErrorMap的回调
      */
-    function FireError(code, msg, type, handler){
+    function FireError(code, msg, type, handler, onlyCheckErrorMap){
         code = "" + code;
         msg = msg.replace(/\[\d+\]/, "");
         handler = handler || _ErrorHandler;
@@ -141,10 +142,16 @@
 
         fireHandle.args = [code, msg, type].concat(args);
 
-        if(code in ErrorMap){
-            return ErrorMap[code].apply(null, [fireHandle]);
+        if(true === onlyCheckErrorMap){
+            if(code in ErrorMap){
+                return ErrorMap[code].apply(null, [fireHandle]);
+            }
         }else{
-            return Util.execHandler(fireHandle);
+            if(code in ErrorMap){
+                return ErrorMap[code].apply(null, [fireHandle]);
+            }else{
+                return Util.execHandler(fireHandle);
+            }
         }
     }
 
