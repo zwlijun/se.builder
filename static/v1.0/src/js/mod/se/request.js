@@ -72,6 +72,32 @@
 
             return items;
         },
+        fix: function(url){
+            var startWiths = /^([a-z0-9\-_]+):\/\//i;
+
+            if(startWiths.test(url)){
+                return url;
+            }
+
+            var protocol = location.protocol;
+            var hostname = location.hostname;
+            var port = location.port;
+            var pathname = location.pathname;
+            var ch1 = url.substr(0, 1);
+            var ch2 = url.substr(0, 2);
+            var host = protocol + "//" + hostname + (port ? ":" + port : "");
+            var current = pathname.replace(/\/([^\/]+)/, "/");
+
+            if(ch2 == "//"){
+                return protocol + url;
+            }
+
+            if(ch1 == "/"){
+                return host + url;
+            }
+
+            return host + current + url;
+        },
         /**
          * 解析URL
          * @method parseURL
@@ -95,7 +121,7 @@
             // 11:"?sss=123&t=123&o=000",    //search
             // 12:"#!asd=123"                //hash
             //]
-            var loc = url || document.URL;
+            var loc = this.fix(url || document.URL);
             var r0 = p.exec(loc)||[];
             
             var path = r0[9] || "";

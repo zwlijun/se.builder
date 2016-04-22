@@ -230,8 +230,27 @@
                 box.on(actualType, '[data-action-' + type + ']', type, function(e){
                     var currentTarget = $(e.currentTarget);
                     var external = currentTarget.attr("data-action-" + e.data);
+                    var beforeCheck = currentTarget.attr("data-" + e.data + "-beforecheck");
+                    var before = currentTarget.attr("data-" + e.data + "-before");
+                    var after = currentTarget.attr("data-" + e.data + "-after");
+
+                    if(beforeCheck){
+                        var ret = _util.requestExternal(beforeCheck, [currentTarget, e, e.data]);
+
+                        if(0 === ret.code && true !== ret.result){
+                            return ;
+                        }
+                    }
+
+                    if(before){
+                        _util.requestExternal(before, [currentTarget, e, e.data]);
+                    }
 
                     _util.requestExternal(external, [currentTarget, e, e.data]);
+
+                    if(after){
+                        _util.requestExternal(after, [currentTarget, e, e.data]);
+                    }
                 });
             }
 
