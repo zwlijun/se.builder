@@ -271,6 +271,7 @@
          *            min                             //最小值
          *            data-max                        //最大值
          *            max                             //最大值
+         *            data-nullvalue=""               //除了""之外的空值
          * />               
          * </form> 
          * </script>        
@@ -287,6 +288,7 @@
             var value = null;
             var useValue = null;
             var defaultValue = null;
+            var nullvalue = null;
             var length = 0;
             var pattern = null;            
             var empty = null;
@@ -328,6 +330,7 @@
                 useValue = ((use && el[0].hasAttribute("data-" + use)) ? el.attr("data-" + use) : undefined);
                 value = StringUtil.trim(undefined !== useValue ? useValue : el.val());
                 defaultValue = el[0].hasAttribute("data-default") ? el.attr("data-default") : undefined;
+                nullvalue = el.attr("data-nullvalue") || "";
                 filter = (el.prop("disabled") || ("1" == el.attr("data-filter")));
                 holder = (el.attr("placeholder") || el.attr("data-placeholder") || "");
 
@@ -394,6 +397,10 @@
                 }
 
                 if(holder && holder == value){
+                    value = "";
+                }
+
+                if(nullvalue == value){
                     value = "";
                 }
 
