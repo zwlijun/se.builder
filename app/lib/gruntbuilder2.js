@@ -221,14 +221,15 @@ buildGruntFile.js = function(files){
     };
 
     conf["uglify"] = {
-        "default": {
-            "options": {
-                "preserveComments": "some",
-                "mangle": {
-                    "except": ["require", "exports", "module"]
-                },
-                "banner": project.banner
+        "options": {
+            "preserveComments": false,
+            "mangle": {
+                "except": ["require", "exports", "module"]
             },
+            "report": "gzip",
+            "banner": project.banner
+        },
+        "default": {
             "files": (function(list){
                 var size = list.length;
                 var file = null;
@@ -258,7 +259,7 @@ buildGruntFile.js = function(files){
                     srcFile = path.replace(doc + src, doc + src + transportTempDir + "/"); //从__transport__目录获取源文件
                     distFile = path.replace(doc + src, doc + src + buildTempDir + "/") //将__transport__目录下的文件构建到__build__目录
 
-                    ret[distFile] = srcFile;
+                    ret[distFile] = [srcFile];
                 }
 
                 return ret;
@@ -358,7 +359,8 @@ buildGruntFile.css = function(files){
     conf["cssmin"] = {
         "default": {
             "options": {
-                "banner": project.banner
+                "banner": project.banner,
+                "report": "gzip"
             },
             "files": (function(list){
                 var size = list.length;
@@ -389,7 +391,7 @@ buildGruntFile.css = function(files){
                     srcFile = path.replace(doc + src, doc + src + transportTempDir + "/"); //从__transport__目录获取源文件
                     distFile = path.replace(doc + src, doc + src + buildTempDir + "/") //将__transport__目录下的文件构建到__build__目录
 
-                    ret[distFile] = srcFile;
+                    ret[distFile] = [srcFile];
                 }
 
                 return ret;
@@ -743,12 +745,15 @@ var startGruntApp = function(){
     console.log("Run at Win32: " + win32);
 
     var gruntFile = process.cwd() + "/Gruntfile.js";
-    var grunt = spawn(win32 ? "grunt.cmd" : "grunt", ['-gruntfile', gruntFile]);
+    var grunt = spawn(win32 ? "grunt.cmd" : "grunt", ['-gruntfile', gruntFile, "-stack", "true", "-verbose", "true"]);
 
     grunt.stdout.on('data', function (data) {
+        // console.log(data)
         var str = data.toString("UTF-8");
         
         emit("encoding", 'grunt stdout: ' + str);
+
+        // console.log("str: " + str);
 
         if(str.indexOf("File ") != -1){
             parseGruntData(str);

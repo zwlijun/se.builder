@@ -32,9 +32,10 @@
     var ua = navigator.userAgent;
     var ios = /(iPhone|iPad|iPod)/i.test(ua);
     var x5_tbs = /(TBS)\/(\d+)/.exec(ua);
+    var uc = /UC[\s]?Browser/.test(ua);
     var hasOrientationChange = false;
 
-    if(x5_tbs && ((x5_tbs[2] || "").indexOf("03") == -1)){
+    if((x5_tbs && ((x5_tbs[2] || "").indexOf("03") == -1)) || uc){
         var r = d.documentElement;
         var cls = r.className;
 

@@ -144,6 +144,22 @@
          */
         dateDiff: function(interval, firstDate, compareDate) {
             var diff = 0;
+            // var _firstYear = firstDate.getFullYear();
+            // var _firstMonth = firstDate.getMonth() + 1;
+            // var _firstDate = firstDate.getDate();
+            // var _firstHours = firstDate.getHours();
+            // var _firstMintues = firstDate.getMinutes();
+            // var _firstSeconds = firstDate.getSeconds();
+            // var _firstMilliSeconds = firstDate.getMilliseconds();
+
+            // var _compareYear = compareDate.getFullYear();
+            // var _compareMonth = compareDate.getMonth() + 1;
+            // var _compareDate = compareDate.getDate();
+            // var _compareHours = compareDate.getHours();
+            // var _compareMintues = compareDate.getMinutes();
+            // var _compareSeconds = compareDate.getSeconds();
+            // var _compareMilliSeconds = compareDate.getMilliseconds();
+
             switch(interval){
                 case 'y':
                     diff = compareDate.getFullYear() - firstDate.getFullYear();
@@ -253,6 +269,36 @@
                 _d = 365;
             }
             return {isLeapYear:_is, days:_days, yearDays:_d, monthDays:_days[indate.getMonth()]};
+        },
+        /**
+         * 转换成UTC
+         * @param  {[type]} time [description]
+         * @return {[type]}      [description]
+         */
+        toUTC: function(time){
+            var d = null;
+            var type = Object.prototype.toString.call(time);
+            var utc = 0;
+
+            if(type == "[object Number]"){
+                d = new Date(time);
+            }else if(type == "[object Date]"){
+                d = time;
+            }
+
+            if(d){
+                utc = Date.UTC(
+                    d.getFullYear(), 
+                    d.getMonth(), 
+                    d.getDate(), 
+                    d.getHours(), 
+                    d.getMinutes(), 
+                    d.getSeconds(), 
+                    d.getMilliseconds()
+                );
+            }
+
+            return utc;
         }
     };
 });

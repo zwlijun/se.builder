@@ -21,7 +21,7 @@
     border-radius: 7px;
 }
 .mod-layerbox-content{
-    font-size: 16px;
+    font-size: .32rem;
     text-align: center;
     color: #848484;
 }
@@ -33,12 +33,12 @@
     -moz-osx-font-smoothing: grayscale;
     content: "\f05a";
     display: block;
-    font-size: 72px;
-    margin-bottom: 18px;
+    font-size: .72rem;
+    margin-bottom: .18rem;
     color: #848484;
 }
 .mod-layerbox-buttons{
-    margin-top: 14px;
+    margin-top: .14rem;
 }
 .mod-layerbox-buttons button{
     width: 100%;

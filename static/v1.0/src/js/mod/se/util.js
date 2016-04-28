@@ -50,13 +50,20 @@
         /**
          * 执行回调
          * @param Object handler {Function callback, Array args, Object context, int delay}
+         * @param * __args 附加参数，些参数将会置于 handler.args 之前
          */
-        execHandler : function(handler){
+        execHandler : function(handler, __args){
             if(handler && handler instanceof Object){
                 var callback = handler.callback || null;
                 var args = handler.args || [];
                 var context = handler.context || null;
                 var delay = handler.delay || -1;
+
+                if(__args){
+                    __args = [].concat(__args);
+
+                    args = __args.concat(args);
+                }
 
                 if(callback && callback instanceof Function){
                     if(typeof(delay) == "number" && delay >= 0){
@@ -80,17 +87,7 @@
          * @param Array args 参数
          */
         execAfterMergerHandler : function(handler, _args){
-            var newHandler = $.extend({}, handler);
-            
-            if(handler && handler instanceof Object){
-                var callback = handler.callback || null;
-                var args = handler.args || [];
-                var context = handler.context || null;
-
-                newHandler.args = _args.concat(args);
-            }
-
-            return this.execHandler(newHandler);
+            return _util.execHandler(handler, _args);
         },
         source: function(data){
             var name = data.name;

@@ -5,7 +5,7 @@
 /*基础样式*/
 .mod-settings-frame{
     width: 100%;
-    font-size: 14px;
+    font-size: .28rem;
 }
 .mod-settings-groups{
 
@@ -14,8 +14,8 @@
     margin-bottom: 16px;
 }
 .mod-settings-caption{
-    min-height: 32px;
-    font-size: 16px;
+    min-height: .64rem;
+    font-size: .32rem;
 }
 .mod-settings-caption .icofont{
     vertical-align: middle;
@@ -56,16 +56,16 @@
 .mod-settings-item dt{
     width: 20%;
     float: left;
-    min-height: 32px;
+    min-height: .64rem;
 }
 .mod-settings-item dd{
     width: 80%;
-    min-height: 32px;
+    min-height: .64rem;
     float: right;
 }
 .mod-settings-item dd input{
     width: 100%;
-    height: 24px;
+    height: .48rem;
     outline: none;
     padding: 0 3px;
     border: 1px solid #ccc;
@@ -192,7 +192,7 @@
 .mod-settings-item dd label.range{
     display: inline-block;
     width: 100%;
-    height: 24px;
+    height: .48rem;
 }
 .mod-settings-item dd label.range input[type="range"]{
     width: 75%;
@@ -206,7 +206,7 @@
 .mod-settings-item dd label.chooser{
     display: inline-block;
     width: 100%;
-    height: 26px;
+    height: .52rem;
     border: 1px solid #ccc;
     padding-left:3px;
 }
@@ -222,12 +222,12 @@
     width: 30%;
     height: 100%;
     text-align: center;
-    line-height: 26px;
+    line-height: .52rem;
     background-color: #0CA735;
     color: #fff;
     float: right;
     cursor: pointer;
-    font-size: 14px;
+    font-size: .28rem;
 }
 .mod-settings-item dd label.chooser span:active{
     background-color: #0FC33F;
@@ -236,7 +236,7 @@
 .mod-settings-item dd label.select{
     display: inline-block;
     width: 100%;
-    height: 24px;
+    height: .48rem;
     border: 1px solid #ccc;
     position: relative;
     padding: 3px; 
