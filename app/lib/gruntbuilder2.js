@@ -472,7 +472,7 @@ buildGruntFile.img = function(files){
     conf["imagemin"] = {
         "default": {
             "options": {
-                optimizationLevel: 3
+                optimizationLevel: 7
             },
             "files": (function(list){
                 var size = list.length;
