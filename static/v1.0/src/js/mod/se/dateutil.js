@@ -299,6 +299,20 @@
             }
 
             return utc;
+        },
+        /**
+         * 将UTC转换成本地日期
+         * @param  {[type]} utc [description]
+         * @return {[type]}     [description]
+         */
+        toLocalDate: function(utc){
+            var d = new Date();
+            var timeZoneOffset = d.getTimezoneOffset();
+            var d2 = new Date(utc);
+
+            d2.setMinutes(d2.getMinutes() + timeZoneOffset);
+
+            return d2;
         }
     };
 });
