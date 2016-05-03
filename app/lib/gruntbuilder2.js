@@ -727,7 +727,9 @@ var parseGruntImageData = function(str){
     var src = root.src;
     var prefix = "✔ ";
     var startIndex = str.indexOf(prefix) + prefix.length;
-    var endIndex = str.indexOf(" (saved");
+    var endIndex1 = str.indexOf(" (saved");
+    var endIndex2 = str.indexOf(" (already optimized)");
+    var endIndex = endIndex1 === -1 ? endIndex2 : endIndex1;
     var source = str.substring(startIndex, endIndex);
     var min = doc + src + buildTempDir + source.replace(doc + src + transportTempDir, "");
 
