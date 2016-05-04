@@ -364,6 +364,8 @@
             if(lastUTC < ame){
                 if(lastUTC < ams){
                     lastUTC = ams;
+                }else{
+                    lastUTC += step;
                 }
 
                 for(var i = lastUTC; i <= ame; i += step){
@@ -386,6 +388,8 @@
             }else if(lastUTC < pme){
                 if(lastUTC < pms){
                     lastUTC = pms;
+                }else{
+                    lastUTC += step;
                 }
 
                 for(var i = lastUTC; i <= pme; i += step){
@@ -398,6 +402,16 @@
                     data = {};
                     data[dateKey] = pme;
                     filterList.push(data);
+                }
+            }
+
+            var lastData = filterList[filterList.length - 1];
+            var prevLastData = filterList[filterList.length - 2];
+            var priceKey = RealTimeTrendChart.DataItem.Y;
+
+            if(undefined !== prevLastData[priceKey]){
+                if(undefined === lastData[priceKey]){
+                    filterList[filterList.length - 1][priceKey] = prevLastData[priceKey];
                 }
             }
 
@@ -509,6 +523,22 @@
                 },
                 credits: {
                     enabled: false
+                },
+                plotOptions: {
+                    areaspline: {
+                        dataGrouping: {
+                            dateTimeLabelFormats: {
+                                millisecond: ['%Y-%b-%e(%A) %H:%M:%S.%L', '%Y-%b-%e(%A) %H:%M:%S.%L', '-%H:%M:%S.%L'],
+                                second: ['%Y-%b-%e(%A) %H:%M:%S', '%Y-%b-%e(%A) %H:%M:%S', '-%H:%M:%S'],
+                                minute: ['%Y-%b-%e(%A) %H:%M', '%Y-%b-%e(%A) %H:%M', '-%H:%M'],
+                                hour: ['%Y-%b-%e(%A) %H:%M', '%Y-%b-%e(%A) %H:%M', '-%H:%M'],
+                                day: ['%Y-%b-%e(%A)', '%Y-%b-%e(%A)', '-%Y-%b-%e(%A)'],
+                                week: ['Week from %Y-%b-%e, %A', '%b-%e, %A', '-%Y-%b-%e, %A'],
+                                month: ['%Y-%b', '%B', '-%Y-%b'],
+                                year: ['%Y', '%Y', '-%Y']
+                            }
+                        }
+                    }
                 },
                 series: [],
                 xAxis: [],
@@ -638,7 +668,7 @@
                     color: colors.orange,
                     width: 1,
                     dashStyle: 'dash',
-                    zIndex: 1000
+                    zIndex: 4
                     // label: {
                     //     useHTML: true,
                     //     text: '<span style="color:' + colors.orange + ';">' + yesterdayClose + '</span>',
@@ -679,7 +709,10 @@
                 type: "areaspline",
                 animation: this.options("animation"),
                 tooltip : {
-                    valueDecimals : 3
+                    valueDecimals : 3,
+                    pointFormatter: function(){
+                        return '<span>价　格：' + (Number(this.y)).toFixed(2) + '</span><br/>';
+                    }
                 },
                 lineWidth: 0.2,
                 lineColor: colors.line,
@@ -694,7 +727,10 @@
                 type: "areaspline",
                 animation: this.options("animation"),
                 tooltip : {
-                    valueDecimals : 3
+                    valueDecimals : 3,
+                    pointFormatter: function(){
+                        return '<span>涨　幅：' + (Number((this.y / yesterdayClose - 1) * 100)).toFixed(2) + '%</span><br/>';
+                    }
                 },
                 lineWidth: 0.2,
                 lineColor: "transparent",
@@ -761,6 +797,15 @@
                     name: '成交量',
                     data: data.volumes,
                     animation: this.options("animation"),
+                    tooltip: {
+                        pointFormatter: function(){
+                            var tmp = '' +
+                                      '<span>成交量：' + this.y + '</span><br>' +
+                                      '';
+
+                            return tmp;
+                        }
+                    },
                     dataGrouping: {
                         enabled: false,
                         forced: true

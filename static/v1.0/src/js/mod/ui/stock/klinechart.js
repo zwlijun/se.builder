@@ -336,7 +336,19 @@
                         upColor: colors.red,              
                         upLineColor: colors.red,
                         color: colors.green,
-                        lineColor: colors.green
+                        lineColor: colors.green,
+                        dataGrouping: {
+                            dateTimeLabelFormats: {
+                                millisecond: ['%Y-%b-%e(%A) %H:%M:%S.%L', '%Y-%b-%e(%A) %H:%M:%S.%L', '-%H:%M:%S.%L'],
+                                second: ['%Y-%b-%e(%A) %H:%M:%S', '%Y-%b-%e(%A) %H:%M:%S', '-%H:%M:%S'],
+                                minute: ['%Y-%b-%e(%A) %H:%M', '%Y-%b-%e(%A) %H:%M', '-%H:%M'],
+                                hour: ['%Y-%b-%e(%A) %H:%M', '%Y-%b-%e(%A) %H:%M', '-%H:%M'],
+                                day: ['%Y-%b-%e(%A)', '%Y-%b-%e(%A)', '-%Y-%b-%e(%A)'],
+                                week: ['Week from %Y-%b-%e, %A', '%b-%e, %A', '-%Y-%b-%e, %A'],
+                                month: ['%Y-%b', '%B', '-%Y-%b'],
+                                year: ['%Y', '%Y', '-%Y']
+                            }
+                        }
                     }
                 },
                 series: []
@@ -388,7 +400,17 @@
                 type: "candlestick",
                 animation: this.options("animation"),
                 tooltip : {
-                    valueDecimals : 3
+                    valueDecimals : 3,
+                    pointFormatter: function(){
+                        var tmp = '' +
+                                  '<span>开　盘：'  + this.open + '</span><br>' +
+                                  '<span>最　高：'  + this.high + '</span><br>' +
+                                  '<span>最　低：'  + this.low + '</span><br>' +
+                                  '<span>收　盘：'  + this.close + '</span><br>' +
+                                  '';
+
+                        return tmp;
+                    }
                 },
                 xAxis: 0,
                 yAxis: 0
@@ -446,6 +468,15 @@
                     name: '成交量',
                     data: data.volumes,
                     animation: this.options("animation"),
+                    tooltip: {
+                        pointFormatter: function(){
+                            var tmp = '' +
+                                      '<span>成交量：'  + this.y + '</span><br>' +
+                                      '';
+
+                            return tmp;
+                        }
+                    },
                     dataGrouping: {
                         enabled: false,
                         forced: true

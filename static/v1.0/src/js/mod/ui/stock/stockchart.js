@@ -18,13 +18,13 @@
         tooltip: {
             enabled: true,
             dateTimeLabelFormats: {
-                millisecond: '%Y-%b-%e %H:%M:%S.%L',
-                second: '%Y-%b-%e %H:%M:%S',
-                minute: '%Y-%b-%e %H:%M',
-                hour: '%Y-%b-%e %H',
-                day: '%Y-%b-%e',
-                week: '%A',
-                month: '%Y-%B',
+                millisecond: '%Y-%b-%e(%A) %H:%M:%S.%L',
+                second: '%Y-%b-%e(%A) %H:%M:%S',
+                minute: '%Y-%b-%e(%A) %H:%M',
+                hour: '%Y-%b-%e(%A) %H',
+                day: '%Y-%b-%e(%A)',
+                week: '%Y-%b-%e(%A)',
+                month: '%Y-%b',
                 year: '%Y'
             }
         },
