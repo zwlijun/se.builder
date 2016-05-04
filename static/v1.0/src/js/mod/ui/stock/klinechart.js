@@ -5,6 +5,9 @@
     //options -> render         图表渲染区域
     //options -> dataRange      数据范围， {start: StartUTC, end: EndUTC}，默认: {start: 0, end: Number.MAX_VALUE}
     //options -> volume         是否显示成交量，true/false
+    //options -> rangeSelect    是否启用范围选择
+    //options -> rangeVisible   是否显示范围选择
+    //options -> selectedIndex  默认选择范围
     //options -> colors         颜色配置
     //           colors -> line     线条颜色，默认值为：rgba(24, 124, 243, 1)
     //           colors -> fill     填充颜色，默认值为：rgba(24, 124, 243, 0.05)
@@ -13,6 +16,8 @@
     //           colors -> blue     蓝色，默认值为：#187cf3
     //           colors -> orange   橙色，默认值为：#ff8000
     //           colors -> grid     栅格颜色，默认值为：#e0e0e0
+    //           colors -> white    白色，默认值为：#ffffff
+    //           colors -> black    黑色，默认值为：#222222
     //options -> animation      是否启用动画， true/false
     //options -> scrollbar      是否启用滚动条，true/false
     //options -> navigator      是否启动导航栏，true/false
@@ -27,6 +32,9 @@
                 end: Number.MAX_VALUE
             },
             volume: true,
+            rangeSelect: true,
+            rangeVisible: true,
+            selectedIndex: 1,
             colors: {
                 line: "#187cf3",                    //#187cf3
                 fill: "rgba(24, 124, 243, 0.05)",   //#187cf3|0.05
@@ -34,7 +42,9 @@
                 green: "#1dc83d",                   //#1dc83d
                 blue: "#187cf3",                    //#187cf3
                 orange: "#ff8000",                  //#ff8000
-                grid: "#e0e0e0"                     //#e0e0e0
+                grid: "#e0e0e0",                    //#e0e0e0
+                white: "#ffffff",
+                black: "#222222"
             },
             animation: false,
             scrollbar: false,
@@ -318,13 +328,79 @@
                     spacingTop: 12
                 },
                 navigator: {
-                    enabled: this.options("navigator")
+                    enabled: this.options("navigator"),
+                    series: {
+                        data: data.volumes
+                    },
+                    xAxis: {
+                        labels: {
+                            enabled: false
+                        }
+                    }
                 },
                 scrollbar: {
                     enabled: this.options("scrollbar")
                 },
                 rangeSelector: {
-                    enabled: false
+                    enabled: this.options("rangeSelect"),
+                    selected: this.options("selectedIndex"),
+                    inputEnabled: false,
+                    buttons: [
+                        {
+                            type: 'month',
+                            count: 1,
+                            text: ' 1个月 '
+                        },
+                        {
+                            type: 'month',
+                            count: 3,
+                            text: ' 3个月 '
+                        },
+                        {
+                            type: 'month',
+                            count: 6,
+                            text: ' 半年 '
+                        },
+                        {
+                            type: 'year',
+                            count: 1,
+                            text: ' 1年 '
+                        },
+                        {
+                            type: 'year',
+                            count: 3,
+                            text: ' 3年 '
+                        },
+                        {
+                            type: 'all',
+                            text: ' 所有 '
+                        }
+                    ],
+                    labelStyle: {
+                        display: this.options("rangeVisible") ? "inherit" : "none"
+                    },
+                    buttonTheme: {
+                        "fill": colors.grid,
+                        "stroke": 'none',
+                        "stroke-width": 0,
+                        "r": 3,
+                        "width": 42,
+                        "style": {
+                            color: colors.black,
+                            display: this.options("rangeVisible") ? "inherit" : "none"
+                        },
+                        states: {
+                            hover: {
+
+                            },
+                            select: {
+                                fill: colors.blue,
+                                style: {
+                                    color: colors.white
+                                }
+                            }
+                        }
+                    }
                 },
                 credits: {
                     enabled: false
