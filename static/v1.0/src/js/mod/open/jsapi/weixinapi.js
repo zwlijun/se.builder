@@ -10,135 +10,219 @@
  * @date 2015.1
  */
 ;define(function WeiXinAPI(require, exports, module){
-    var wx = require("http://res.wx.qq.com/open/js/jweixin-1.0.0.js");
-    $.Util = require("mod/se/util");
+    var wx       = require("http://res.wx.qq.com/open/js/jweixin-1.0.0.js");
+    var Util     = require("mod/se/util");
+    var DataType = require("mod/se/datatype");
 
-    /**
-    <script type="text/template" name="wx">
-    shareTitle=分享标题;
-    shareContent=分享描述;
-    shareURL=分享内容的链接地址;
-    shareImage=分享图标;
-    shareImageWidth=300;
-    shareImageHeight=300;
-    appId=应用ID，为空即可;
-    shareClick=分享成功时的统计地址，如果为空不统计;
-    shareRedirectURL=分享后的跳转地址，如果为空不跳转;
-    allow=是否允许分享，1：允许，0：禁止;
-    </script>
-    **/
+    /*
+    <meta itemprop="type" content="share" itemfor="share" desc="分享类型说明">
+    <meta itemprop="text" content="通用" itemfor="share" desc="分享类型说明">
+    <meta itemprop="title" content="" itemfor="share" desc="分享标题">
+    <meta itemprop="image" content="" itemfor="share" desc="分享图标">
+    <meta itemprop="link" content="" itemfor="share" desc="分享链接，为空时取当前URL">
+    <meta itemprop="description" content="" itemfor="share" desc="分享描述">
+    <meta itemprop="source" content="" itemfor="share" desc="分享来源">
+    <meta itemprop="summary" content="" itemfor="share" desc="分享摘要">
+    <meta itemprop="allow" content="" itemfor="share" desc="在微信下控制是否允许分享, 默认为 1， 0:禁止 1:允许">
+    <meta itemprop="shareStatURL" content="" itemfor="share" desc="分享统计地址">
+    <meta itemprop="shareRedirectURL" content="" itemfor="share" desc="分享后自动跳转地址">
+    <meta itemprop="appId" content="" itemfor="share" desc="应用ID">
+    <meta itemprop="appKey" content="" itemfor="share" desc="应用KEY">
+    <meta itemprop="token" content="" itemfor="share" desc="应用TOKEN"> 
+    <meta itemprop="pageId" content="" itemfor="share" desc="分享页面标识">
+    */
+    
+    var MetaSet = function(options){
+        this.opts = $.extend({
+            title: "",
+            link: "",
+            image: "",
+            description: "",
+            source: "",
+            summary: "",
+            allow: true,
+            shareStatURL: "",
+            shareRedirectURL: "",
+            appId: "",
+            appKey: "",
+            token: "",
+            type: "share",
+            text: "通用",
+            pageId: ""
+        }, options || {});
+    };
 
-    var _MetaData = {
-        templates: null,
-        templateIndex: 0,
-        templateNode: null,
-        template: function(name){
-            var tpls = $('script[name="' + (name || "wx") + '"]');
-            var size = tpls.length;
+    MetaSet.prototype = {
+        options: function(){
+            var args = arguments;
+            var size = args.length;
 
-            _MetaData.templates = tpls;
-
-            if(size < 2){
-                _MetaData.templateIndex = 0;
-                _MetaData.templateNode = tpls;
-            }else{
-                _MetaData.templateIndex = Math.floor(Math.random() * size);
-                _MetaData.templateNode = $(tpls.get(_MetaData.templateIndex));
+            if(0 === size){
+                return this.opts;
             }
 
-            return _MetaData.templateNode;
+            if(1 === size){
+                if(DataType.isString(args[0])){
+                    return this.opts[args[0]];
+                }
+
+                this.opts = $.extends(true, this.opts, args[0]);
+            }else if(2 === size){
+                this.opts[args[0]] = args[1];
+            }
         },
-        parse: function(name){
-            var conf = _MetaData.template(name);
-            var o = {};
-            var content = conf.html() || "";
-            var pattern = /([^\s=]+)[\s]*=[\s]*(([^;]*)(;*(?![\n\r])([^;]*))*)[\s]*;/gi;
-            var matcher = null;
-            var key = null;
-            var value = null;
+        set: function(key, value){
+            this.options(key, value);
+        },
+        get: function(key){
+            return this.options(key);
+        }
+    };
 
-            pattern.lastIndex = 0;
+    var MetaData = {
+        Sets: null,
+        index: -1,
+        parse: function(){
+            var metaList = $('meta[itemfor]');
+            var size = metaList.length;
+            var map = {};
+            var meta = null;
+            var itemfor = null;
+            var itemprop = null;
+            var itemcontent = null;
 
-            while(null !== (matcher = pattern.exec(content))){
-                key = matcher[1];
-                value = matcher[2] || "";
+            var sets = {};
+            var items = null;
 
-                if(!key){continue;}
-                o[key] = value.replace(/[\r\n]+/g, "");
+            for(var i = 0; i < size; i++){
+                meta = $(metaList[i]);
+
+                itemfor = meta.attr("itemfor");
+                itemprop = meta.attr("itemprop");
+                itemcontent = meta.attr("content");
+
+                if(itemfor in map){
+                    map[itemfor][itemprop] = itemcontent;
+                }else{
+                    map[itemfor] = {};
+                    map[itemfor][itemprop] = itemcontent;
+                }
             }
 
-            return o;
-        },
-        update: function(options, name){
-            var conf = _MetaData.templateNode ? _MetaData.templateNode : _MetaData.template(name);
-            var metaQQItemProp = {
-                "shareTitle": "name",
-                "shareContent": "description",
-                "shareImage": "image",
-                "shareImageWidth": null,
-                "shareImageHeight": null,
-                "shareURL": null,
-                "appId": null,
-                "shareClick": null,
-                "shareRedirectURL": null,
-                "allow": null
-            };
-            var metaItemPropNode = null;
-            var metaItemPropName = null;
-            var obj = _MetaData.parse(name);
+            for(var key in map){
+                if(map.hasOwnProperty(key)){
+                    items = map[key];
 
-            for(var key in options){
-                if(options.hasOwnProperty(key)){
-                    metaItemPropName = metaQQItemProp[key];
+                    if(!items.type){
+                        items.type = key;
+                    }
 
-                    if(metaItemPropName){
-                        metaItemPropNode = $('meta[itemprop="' + metaItemPropName + '"]');
-
-                        if(metaItemPropNode.length > 0){
-                            metaItemPropNode.attr("content", options[key]);
+                    if(!items.text){
+                        switch(items.type){
+                            case "wechat":
+                                items.text = "微信";
+                            break;
+                            case "mqq":
+                                items.text = "手机QQ";
+                            break;
+                            case "qzone":
+                                items.text = "QQ空间";
+                            break;
+                            case "weibo":
+                                items.text = "微博";
+                            break;
+                            case "share":
+                                items.text = "通用";
+                            break;
+                            default:
+                                items.text = "其他";
+                            break;
                         }
                     }
 
-                    obj[key] = options[key];
+                    if(!items.description){
+                        items.title = items.description;
+                    }
+
+                    if(!items.link){
+                        items.link = (document.URL).replace(/#.*$/, "");
+                    }
+
+                    if(DataType.isUndefined(items.allow)){
+                        items.allow = true;
+                    }else if(DataType.isEmptyString(items.allow)){
+                        items.allow = true;
+                    }else{
+                        items.allow = !("0" == items.allow);
+                    }
+
+                    sets[key] = new MetaSet(items);
                 }
             }
 
-            var tmp = [];
-            for(var key in obj){
-                if(obj.hasOwnProperty(key)){
-                    tmp.push(key + "=" + obj[key] + ";");
-                }
-            }
+            MetaData.Sets = sets;
 
-            conf.html(tmp.join("\n"));
-
-            return obj;
+            return sets;
         },
-        //list {}
-        /*{
-            allow: "1"
-            appid: ""
-            shareContent: "云场景 ;;;; - 描;述;;"
-            shareImageHeight: "200"
-            shareImage: "http://m.zuikuapp.com/newadmin/res/img/nopic150x150.jpg"
-            shareImageWidth: "200"
-            shareURL: "http://vip.zuikuapp.com/v/429182_0.html"
-            shareClick: "http://click.zuiku.com/share.jsp?appId=429182"
-            shareTitle: "云场景标题"
-            shareRedirectUrl: ""
-          }
-        */
-        random: function(list, name){
-            var size = list.length;
-            var index = Math.floor(Math.random() * size);
-            var options = list[i];
+        find: function(key){
+            var tmp = [];
+            var ds = MetaData.Sets;
 
-            return _MetaData.update(options, name);
+            if(!ds){
+                return tmp;
+            }
+
+            for(var n in ds){
+                if(ds.hasOwnProperty(n)){
+                    if(key === n.substr(0, key.length)){
+                        tmp.push(ds[n]);
+                    }
+                }
+            }
+
+            return tmp;
+        },
+        random: function(key, index){
+            var list = MetaData.find(key);
+            var size = list.length;
+            var generic = MetaData.getMetaSet("share");
+            var randomIndex = 0;
+
+            if(0 === size && generic){
+                list.push(generic);
+            }
+            size = list.length;
+
+            if(size > 0){
+                randomIndex = DataType.isNumber(index) ? index : Math.floor(Math.random() * size);
+                MetaData.index = randomIndex;
+
+                return list[randomIndex];
+            }
+
+            return null;
+        },
+        getIndex: function(){
+            return MetaData.index;
+        },
+        update: function(key, metaSetOptions){
+            var metaSet = MetaData.getMetaSet(key);
+
+            if(metaSet){
+                metaSet.options(metaSetOptions);
+            }
+        },
+        getMetaSet: function(key){
+            if(MetaData.Sets && (key in MetaData.Sets)){
+                return MetaData.Sets[key];
+            }
+
+            return null;
         }
     };
 
     var WeiXinAPI = {
-        MetaData : _MetaData,
+        MetaData : MetaData,
         readyState: 0,
         _readyList: [],
         _errorList: [],
@@ -151,8 +235,11 @@
         error: function(handler){
             wx.error(function(res){
                 WeiXinAPI.readyState = -1;
+                try{
+                    console.info(res);
+                }catch(e){}
 
-                $.Util.execAfterMergerHandler(handler, [res]);
+                Util.execHandler(handler, [res]);
                 WeiXinAPI.execSignErrorHandler();
             });
 
@@ -188,7 +275,7 @@
             var handler = WeiXinAPI._errorList.shift();
 
             if(handler && handler.callback){
-                $.Util.execHandler(handler);
+                Util.execHandler(handler);
 
                 WeiXinAPI.execErrorHandler();
             }
@@ -204,7 +291,7 @@
             var handler = WeiXinAPI._signErrorList.shift();
 
             if(handler && handler.callback){
-                $.Util.execHandler(handler);
+                Util.execHandler(handler);
 
                 WeiXinAPI.execSignErrorHandler();
             }
@@ -220,7 +307,7 @@
             var handler = WeiXinAPI._readyList.shift();
 
             if(handler && handler.callback){
-                $.Util.execHandler(handler);
+                Util.execHandler(handler);
 
                 WeiXinAPI.execReadyHandler();
             }
@@ -230,7 +317,7 @@
         register: function(api){
             for(var key in api){
                 if(api.hasOwnProperty(key) && (key in wx)){
-                    $.Util.execAfterMergerHandler(api[key], [key]);
+                    Util.execHandler(api[key], [key]);
                 }
             }
 

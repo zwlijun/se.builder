@@ -284,7 +284,7 @@
         parseData: function(data){
             var dataList = null;
 
-            if(DataType.isString(data)){
+            if(!DataType.isEmptyString(data)){
                 dataList = data.split("|");
             }else if(DataType.isArray(data)){
                 dataList = data;

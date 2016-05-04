@@ -15,7 +15,6 @@
     var CMD                = require("mod/se/cmd");
     var Stat               = require("mod/se/stat");
 
-    var RespTypes = CMD.ResponseTypes;
     var MetaData  = WeiXinAPI.MetaData;
 
     var G_StatFlag = 0;
@@ -44,15 +43,19 @@
 
     //---------------------------
 
-    G["GetJSAPITemplateData"] = function(){
-        var meta = MetaData.parse(TemplateName);
+    G["GetJSAPITemplateData"] = function(name, forceIndex){
+        var sets = MetaData.parse();
+        var index = MetaData.getIndex();
+        var meta = MetaData.random(name || "wechat", (undefined !== forceIndex ? forceIndex : (index < 0 ? undefined : index)));
 
-        var title = meta.shareTitle;
-        var text = meta.shareContent;
-        var link = meta.shareURL;
-        var imgUrl = meta.shareImage;
+        if(!meta){
+            return null;
+        }
 
-        var allow = ("1" === meta.allow || "");
+        var title = meta.options("title");
+        var text = meta.options("description");
+        var link = meta.options("link");
+        var imgUrl = meta.options("image");
 
         var options = {
             "imgUrl" : imgUrl,
@@ -60,12 +63,12 @@
             "title" : title,
             "desc" : text,
             "success": function(){
-                if(meta.shareClick){
-                    stat(meta.shareClick);
+                if(meta.options("shareStatURL")){
+                    stat(meta.options("shareStatURL"));
                 }
 
-                if(meta.shareRedirectURL){
-                    location.href = meta.shareRedirectURL;
+                if(meta.options("shareRedirectURL")){
+                    location.href = meta.options("shareRedirectURL");
                 }
 
                 Stat.send("share");
@@ -132,10 +135,13 @@
         APIMap.put("showOptionMenu", {
             callback: function(name){
                 var data = G["GetJSAPITemplateData"]();
+                if(!data){
+                    return ;
+                }
                 var opts = data.options;
                 var meta = data.meta;
 
-                if("1" === (meta.allow + "")){
+                if(meta.options("allow")){
                     this.invoke(name, opts);
                 }
             },
@@ -145,10 +151,13 @@
         APIMap.put("hideOptionMenu", {
             callback: function(name){
                 var data = G["GetJSAPITemplateData"]();
+                if(!data){
+                    return ;
+                }
                 var opts = data.options;
                 var meta = data.meta;
 
-                if("1" !== (meta.allow + "")){
+                if(!meta.options("allow")){
                     this.invoke(name, opts);
                 }
             },
@@ -158,6 +167,10 @@
         APIMap.put("onMenuShareTimeline", {
             callback: function(name){
                 var data = G["GetJSAPITemplateData"]();
+                
+                if(!data){
+                    return ;
+                }
                 var opts = data.options;
 
                 this.invoke(name, opts);
@@ -168,6 +181,10 @@
         APIMap.put("onMenuShareAppMessage", {
             callback: function(name){
                 var data = G["GetJSAPITemplateData"]();
+
+                if(!data){
+                    return ;
+                }
                 var opts = data.options;
 
                 this.invoke(name, opts);
@@ -178,6 +195,9 @@
         APIMap.put("onMenuShareQQ", {
             callback: function(name){
                 var data = G["GetJSAPITemplateData"]();
+                if(!data){
+                    return ;
+                }
                 var opts = data.options;
 
                 this.invoke(name, opts);
@@ -188,6 +208,9 @@
         APIMap.put("onMenuShareWeibo", {
             callback: function(name){
                 var data = G["GetJSAPITemplateData"]();
+                if(!data){
+                    return ;
+                }
                 var opts = data.options;
 
                 this.invoke(name, opts);
@@ -198,6 +221,9 @@
         APIMap.put("onMenuShareQZone", {
             callback: function(name){
                 var data = G["GetJSAPITemplateData"]();
+                if(!data){
+                    return ;
+                }
                 var opts = data.options;
 
                 this.invoke(name, opts);
@@ -216,14 +242,7 @@
                 "bin": {
                     "sign": {
                         "url": signAPI || "/service/share/weixinsign", 
-                        "data": data || "url=" + signURL, 
-                        "method":"POST", 
-                        "cross":false, 
-                        "spa":false, 
-                        "replace":false, 
-                        "cache":"auto", 
-                        "append":"auto", 
-                        "dataType":RespTypes.J
+                        "data": data || "url=" + signURL
                     }
                 }
             }
@@ -298,8 +317,8 @@
                     "code": String(code || "10")
                 },
                 success : function(data, status, xhr){
-                    var result = String(data.code);
-                    var msg = data.msg;
+                    var result = String(data.code || data.retCode);
+                    var msg = data.msg || data.retMsg;
 
                     if(this.code === result){
                         configure(data, this.debug).success(APIMap.getItems());
