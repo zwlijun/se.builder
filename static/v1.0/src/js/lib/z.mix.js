@@ -3081,7 +3081,7 @@ if(true === isSourceDir){
 }
 
 //force debug
-// __DEBUG__ = true;
+// __DEBUG__ = $.__ROOT__.DEBUG = true;
 
 $.__ROOT__.ALIAS_SET = {
     "PLATFORM": __PAGE_ALIAS__,     //平台

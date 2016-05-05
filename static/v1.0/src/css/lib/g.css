@@ -674,7 +674,7 @@ button.loading:before{
     line-height: .72rem;
     text-align: center;
     color: #5F5F5F;
-    font-size: .32rem!important;
+    font-size: .28rem;
 }
 .mod-dataset-nodata:before{
     margin-right: 8px;

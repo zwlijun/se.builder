@@ -745,13 +745,6 @@
                     width: 1,
                     dashStyle: 'dash',
                     zIndex: 4
-                    // label: {
-                    //     useHTML: true,
-                    //     text: '<span style="color:' + colors.orange + ';">' + yesterdayClose + '</span>',
-                    //     align: "right",
-                    //     y: 12,
-                    //     x: 0
-                    // }
                 }]
             };
             var PercentageAxis = {

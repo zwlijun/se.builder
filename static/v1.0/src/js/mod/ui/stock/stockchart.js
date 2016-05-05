@@ -16,7 +16,9 @@
             weekdays: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
             rangeSelectorFrom: "从",
             rangeSelectorTo: "至",
-            rangeSelectorZoom: "范围"
+            rangeSelectorZoom: "范围",
+            resetZoom: "重置",
+            resetZoomTitle: "缩放1:1"
         },
         tooltip: {
             enabled: true,
