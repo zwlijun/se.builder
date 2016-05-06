@@ -464,7 +464,7 @@
                 },
                 top:'0%',
                 height: (true === this.options("volume") ? '75%' : '100%'),
-                lineWidth: 0.2,
+                lineWidth: 0.5,
                 gridLineColor: colors.grid,
                 gridLineWidth: 0.2,
                 showFirstLabel: true,
@@ -506,7 +506,7 @@
                         overflow: 'justify',
                         align: 'left',
                         x: 2,
-                        y: 4,
+                        y: 10,
                         formatter:function(){
                             if(this.value > 1000000000) {
                                 return Number((this.value/1000000000).toFixed(2))+"G";
@@ -522,7 +522,7 @@
                     top: '80%',
                     height: '20%',
                     offset: -1,
-                    lineWidth: 0.2,
+                    lineWidth: 0.5,
                     gridLineColor: colors.grid,
                     gridLineWidth: 0.2,
                     showFirstLabel: false,

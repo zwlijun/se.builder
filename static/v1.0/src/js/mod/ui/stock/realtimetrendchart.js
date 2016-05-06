@@ -38,7 +38,7 @@
             selectedIndex: 5,
             colors: {
                 line: "#187cf3",                    //#187cf3
-                fill: "rgba(24, 124, 243, 0.05)",   //#187cf3|0.05
+                fill: "rgba(24, 124, 243, 0.15)",   //#187cf3|0.05
                 red: "#ff3e3e",                     //#ff3e3e
                 green: "#1dc83d",                   //#1dc83d
                 blue: "#187cf3",                    //#187cf3
@@ -466,7 +466,7 @@
                 data = dataList[i];
 
                 utc = data[dateKey];
-                price = data[priceKey] || 0;
+                price = data[priceKey];
                 avg = data[averageKey] || 0;
                 vol = data[volumeKey] || 0;
 
@@ -673,7 +673,7 @@
                 top:'0%',
                 height: (true === this.options("volume") ? '75%' : '100%'),
                 offset: 0,
-                lineWidth: 0.2,
+                lineWidth: 0.5,
                 gridLineColor: colors.grid,
                 gridLineWidth: 0.2,
                 showFirstLabel: true,
@@ -724,7 +724,7 @@
                         maxTick = 2 * yesterdayClose;
                     }
 
-                    var interval = (maxTick - yesterdayClose) / 10;
+                    var interval = (maxTick - yesterdayClose) / 29999.99;
                     
                     maxTick += interval;
                     minTick = yesterdayClose - (maxTick - yesterdayClose);
@@ -762,7 +762,7 @@
                     }
                 },
                 offset: 0,
-                lineWidth: 0.2,
+                lineWidth: 0.5,
                 top:'0%',
                 height: (true === this.options("volume") ? '75%' : '100%'),
                 gridLineWidth: 0,
@@ -783,7 +783,7 @@
                         return '<span>价　格：' + (Number(this.y)).toFixed(2) + '</span><br/>';
                     }
                 },
-                lineWidth: 0.2,
+                lineWidth: 0.5,
                 lineColor: colors.line,
                 fillColor: colors.fill,
                 gapSize: 0,
@@ -801,7 +801,7 @@
                         return '<span>涨　幅：' + (Number((this.y / yesterdayClose - 1) * 100)).toFixed(2) + '%</span><br/>';
                     }
                 },
-                lineWidth: 0.2,
+                lineWidth: 0.5,
                 lineColor: "transparent",
                 fillColor: "transparent",
                 gapSize: 0,
@@ -844,7 +844,7 @@
                     top: '80%',
                     height: '20%',
                     offset: -1,
-                    lineWidth: 0.2,
+                    lineWidth: 0.5,
                     gridLineColor: colors.grid,
                     gridLineWidth: 0.2,
                     showFirstLabel: false,
