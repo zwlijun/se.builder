@@ -25,11 +25,11 @@
     top: 0;
 }
 .mod-swiper-item.current{
-    display: initial;
+    display: inherit;
     z-index: 9
 }
 .mod-swiper-item.maybe{
-    display: initial;
+    display: inherit;
     z-index: 5;
 }
 .mod-swiper-item.impossible{

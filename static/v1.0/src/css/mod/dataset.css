@@ -105,7 +105,7 @@
 	display: none;
 }
 .mod-dataset-frame.style2 .mod-dataset-item > dt{
-	margin-right: initial;
+	margin-right: inherit;
 	margin-left: 5px;
 }
 .mod-dataset-frame.style2 .mod-dataset-item > dt > *,
@@ -142,7 +142,7 @@
                 flex: 1;
 }
 .mod-dataset-frame.style4 .mod-dataset-item > dd{
-	display: initial;
+	display: inherit;
 }
 .mod-dataset-frame.style2 .mod-dataset-item > dd > *:not(h3),
 .mod-dataset-frame.style3 .mod-dataset-item > dd > *:not(h3),
@@ -168,8 +168,8 @@
 .mod-dataset-frame.style4 .mod-dataset-item > dd > h3,
 .mod-dataset-frame.style5 .mod-dataset-item > dd > h3,
 .mod-dataset-frame.style9 .mod-dataset-item > dd > h3{
-	height: initial;
-	margin-bottom: initial;
+	height: inherit;
+	margin-bottom: inherit;
 	background-color: inherit;
 	font-size: .28rem;
 }
@@ -208,15 +208,15 @@
 	height: auto;
 	color: #fff;
 	width: 100%;
-	display: initial;
-	  -webkit-box-align: initial;
-       -moz-align-items: initial;
-    -webkit-align-items: initial;
-            align-items: initial;
-    -webkit-box-flex: initial;
-        -webkit-flex: initial;
-            -ms-flex: initial;
-                flex: initial;
+	display: inherit;
+	  -webkit-box-align: inherit;
+       -moz-align-items: inherit;
+    -webkit-align-items: inherit;
+            align-items: inherit;
+    -webkit-box-flex: inherit;
+        -webkit-flex: inherit;
+            -ms-flex: inherit;
+                flex: inherit;
 }
 .mod-dataset-frame.style5 .mod-dataset-item{
 	padding: 0.1rem 0;
@@ -259,8 +259,8 @@
 .mod-dataset-frame.style7 .mod-dataset-item > dd > h3,
 .mod-dataset-frame.style8 .mod-dataset-item > dd > h3{
 	width: 100%;
-	height: initial;
-	background-color: initial;
+	height: inherit;
+	background-color: inherit;
 }
 .mod-dataset-frame.style8 .mod-dataset-item > dd > h3 > em,
 .mod-dataset-frame.style9 .mod-dataset-item > dd > h3 > em,
@@ -315,7 +315,7 @@
 .mod-dataset-frame.style11 .mod-dataset-item > dd > h3{
 	width: 100%;
 	height: 1.1rem;
-	background-color: initial;
+	background-color: inherit;
 	font-size: .28rem;
 	line-height: 1.25;
 	margin-bottom: 0;

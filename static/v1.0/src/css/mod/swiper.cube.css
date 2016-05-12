@@ -11,12 +11,12 @@
     -webkit-transform-style: preserve-3d;
        -moz-transform-style: preserve-3d;
             transform-style: preserve-3d;
-    overflow: initial;
+    overflow: inherit;
 }
 .mod-swiper.cube .mod-swiper-item{
-    -webkit-backface-visibility: initial;
-       -moz-backface-visibility: initial;
-            backface-visibility: initial;
+    -webkit-backface-visibility: inherit;
+       -moz-backface-visibility: inherit;
+            backface-visibility: inherit;
 }
 .mod-swiper.cube.goto-after .mod-swiper-body,
 .mod-swiper.cube.goto-before .mod-swiper-body{

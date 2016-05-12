@@ -6,6 +6,7 @@
 <title>桌面终端页面框架DEMO</title>
 <!--#include virtual="/static/v1.0/inc/css_common_gm.html"-->
 <!--#include virtual="/static/v1.0/inc/css_common_dm.html"-->
+<!--#include virtual="/static/v1.0/inc/ie.html" -->
 <!--#include virtual="/static/v1.0/inc/js_html5_shiv.html" --> 
 </head>
 <body>

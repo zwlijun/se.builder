@@ -254,7 +254,7 @@ textarea {
 .icofont.right:before,
 .icofont.success:before,
 .icofont.ok:before{
-  content: "\f05d";
+  content: "\f058";
   margin-right: 5px;
 }
 .icofont.drag{}
@@ -392,30 +392,35 @@ textarea {
 .flexbox.vertical{
     -webkit-box-direction: normal;
        -webkit-box-orient: vertical;
+        -ms-flex-direction: column;
     -webkit-flex-direction: column;
             flex-direction: column;
 }
 .flexbox.vertical-r{
     -webkit-box-direction: reverse;
        -webkit-box-orient: vertical;
+        -ms-flex-direction: column-reverse;
     -webkit-flex-direction: column-reverse;
             flex-direction: column-reverse;
 }
 .flexbox.horizontal{
     -webkit-box-direction: normal;
        -webkit-box-orient: horizontal;
+        -ms-flex-direction: row;
     -webkit-flex-direction: row;
             flex-direction: row;
 }
 .flexbox.horizontal-r{
     -webkit-box-direction: reverse;
        -webkit-box-orient: horizontal;
+        -ms-flex-direction: row-reverse;
     -webkit-flex-direction: row-reverse;
             flex-direction: row-reverse;
 }
 .flexbox.center{
     /*水平*/
            -webkit-box-pack: center;
+              -ms-flex-pack: center;
        -moz-justify-content: center;
     -webkit-justify-content: center;
             justify-content: center;
@@ -423,6 +428,8 @@ textarea {
 .flexbox.left{
     /*水平*/
            -webkit-box-pack: start;
+              -ms-flex-pack: start;
+        -ms-justify-content: flex-start;
        -moz-justify-content: flex-start;
     -webkit-justify-content: flex-start;
             justify-content: flex-start;
@@ -430,6 +437,8 @@ textarea {
 .flexbox.right{
     /*水平*/
            -webkit-box-pack: end;
+              -ms-flex-pack: end;
+        -ms-justify-content: flex-end;
        -moz-justify-content: flex-end;
     -webkit-justify-content: flex-end;
             justify-content: flex-end; 
@@ -437,6 +446,7 @@ textarea {
 .flexbox.justify{
     /*水平*/
            -webkit-box-pack: justify;
+              -ms-flex-pack: justify;
        -moz-justify-content: space-between;
     -webkit-justify-content: space-between;
             justify-content: space-between; 
@@ -450,6 +460,7 @@ textarea {
 .flexbox.middle{
     /*垂直*/
       -webkit-box-align: center;
+         -ms-flex-align: center;
        -moz-align-items: center;
     -webkit-align-items: center;
             align-items: center;
@@ -457,6 +468,7 @@ textarea {
 .flexbox.top{
     /*垂直*/ 
       -webkit-box-align: start;
+         -ms-flex-align: start;      
        -moz-align-items: flex-start;
     -webkit-align-items: flex-start;
             align-items: flex-start;
@@ -464,6 +476,7 @@ textarea {
 .flexbox.bottom{
     /*垂直*/ 
       -webkit-box-align: end;
+         -ms-flex-align: end;
        -moz-align-items: flex-end;
     -webkit-align-items: flex-end;
             align-items: flex-end;
@@ -471,6 +484,7 @@ textarea {
 .flexbox.stretch{
     /*垂直*/ 
       -webkit-box-align: stretch;
+         -ms-flex-align: stretch;
        -moz-align-items: stretch;
     -webkit-align-items: stretch;
             align-items: stretch;
@@ -478,6 +492,7 @@ textarea {
 .flexbox.baseline{
     /*垂直*/ 
       -webkit-box-align: baseline;
+         -ms-flex-align: baseline;
        -moz-align-items: baseline;
     -webkit-align-items: baseline;
             align-items: baseline;
@@ -917,7 +932,7 @@ button.loading:before{
 	display: none;
 }
 .mod-dataset-frame.style2 .mod-dataset-item > dt{
-	margin-right: initial;
+	margin-right: inherit;
 	margin-left: 5px;
 }
 .mod-dataset-frame.style2 .mod-dataset-item > dt > *,
@@ -954,7 +969,7 @@ button.loading:before{
                 flex: 1;
 }
 .mod-dataset-frame.style4 .mod-dataset-item > dd{
-	display: initial;
+	display: inherit;
 }
 .mod-dataset-frame.style2 .mod-dataset-item > dd > *:not(h3),
 .mod-dataset-frame.style3 .mod-dataset-item > dd > *:not(h3),
@@ -980,8 +995,8 @@ button.loading:before{
 .mod-dataset-frame.style4 .mod-dataset-item > dd > h3,
 .mod-dataset-frame.style5 .mod-dataset-item > dd > h3,
 .mod-dataset-frame.style9 .mod-dataset-item > dd > h3{
-	height: initial;
-	margin-bottom: initial;
+	height: inherit;
+	margin-bottom: inherit;
 	background-color: inherit;
 	font-size: .28rem;
 }
@@ -1020,15 +1035,15 @@ button.loading:before{
 	height: auto;
 	color: #fff;
 	width: 100%;
-	display: initial;
-	  -webkit-box-align: initial;
-       -moz-align-items: initial;
-    -webkit-align-items: initial;
-            align-items: initial;
-    -webkit-box-flex: initial;
-        -webkit-flex: initial;
-            -ms-flex: initial;
-                flex: initial;
+	display: inherit;
+	  -webkit-box-align: inherit;
+       -moz-align-items: inherit;
+    -webkit-align-items: inherit;
+            align-items: inherit;
+    -webkit-box-flex: inherit;
+        -webkit-flex: inherit;
+            -ms-flex: inherit;
+                flex: inherit;
 }
 .mod-dataset-frame.style5 .mod-dataset-item{
 	padding: 0.1rem 0;
@@ -1071,8 +1086,8 @@ button.loading:before{
 .mod-dataset-frame.style7 .mod-dataset-item > dd > h3,
 .mod-dataset-frame.style8 .mod-dataset-item > dd > h3{
 	width: 100%;
-	height: initial;
-	background-color: initial;
+	height: inherit;
+	background-color: inherit;
 }
 .mod-dataset-frame.style8 .mod-dataset-item > dd > h3 > em,
 .mod-dataset-frame.style9 .mod-dataset-item > dd > h3 > em,
@@ -1127,7 +1142,7 @@ button.loading:before{
 .mod-dataset-frame.style11 .mod-dataset-item > dd > h3{
 	width: 100%;
 	height: 1.1rem;
-	background-color: initial;
+	background-color: inherit;
 	font-size: .28rem;
 	line-height: 1.25;
 	margin-bottom: 0;
@@ -1526,16 +1541,16 @@ button.loading:before{
 }
 .mod-settings-item dd input[type="checkbox"],
 .mod-settings-item dd input[type="radio"]{
-    width: initial;
+    width: inherit;
     vertical-align: middle;
     margin-top: -1px;
 }
 .mod-settings-item dd input[type="file"]{
-    border: initial;
+    border: inherit;
 }
 .mod-settings-item dd input[type="range"]{
-    height: initial;
-    padding: initial;
+    height: inherit;
+    padding: inherit;
     margin: 5px 0;
     outline: none;
     border-radius: 3px;
@@ -1897,11 +1912,11 @@ button.loading:before{
     top: 0;
 }
 .mod-swiper-item.current{
-    display: initial;
+    display: inherit;
     z-index: 9
 }
 .mod-swiper-item.maybe{
-    display: initial;
+    display: inherit;
     z-index: 5;
 }
 .mod-swiper-item.impossible{
@@ -2026,12 +2041,12 @@ button.loading:before{
     -webkit-transform-style: preserve-3d;
        -moz-transform-style: preserve-3d;
             transform-style: preserve-3d;
-    overflow: initial;
+    overflow: inherit;
 }
 .mod-swiper.cube .mod-swiper-item{
-    -webkit-backface-visibility: initial;
-       -moz-backface-visibility: initial;
-            backface-visibility: initial;
+    -webkit-backface-visibility: inherit;
+       -moz-backface-visibility: inherit;
+            backface-visibility: inherit;
 }
 .mod-swiper.cube.goto-after .mod-swiper-body,
 .mod-swiper.cube.goto-before .mod-swiper-body{
@@ -3248,7 +3263,7 @@ button.loading:before{
 .mod-timeline-comments .mod-timeline-nicklink:visited,
 .mod-timeline-comments .mod-timeline-nicklink:hover,
 .mod-timeline-comments .mod-timeline-nicklink:active{
-    display: initial;
+    display: inherit;
     font-size: inherit;
 }
 .mod-timeline-comments li span{

@@ -285,7 +285,7 @@
 .mod-timeline-comments .mod-timeline-nicklink:visited,
 .mod-timeline-comments .mod-timeline-nicklink:hover,
 .mod-timeline-comments .mod-timeline-nicklink:active{
-    display: initial;
+    display: inherit;
     font-size: inherit;
 }
 .mod-timeline-comments li span{

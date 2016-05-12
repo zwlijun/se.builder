@@ -73,16 +73,16 @@
 }
 .mod-settings-item dd input[type="checkbox"],
 .mod-settings-item dd input[type="radio"]{
-    width: initial;
+    width: inherit;
     vertical-align: middle;
     margin-top: -1px;
 }
 .mod-settings-item dd input[type="file"]{
-    border: initial;
+    border: inherit;
 }
 .mod-settings-item dd input[type="range"]{
-    height: initial;
-    padding: initial;
+    height: inherit;
+    padding: inherit;
     margin: 5px 0;
     outline: none;
     border-radius: 3px;
