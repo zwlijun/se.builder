@@ -26,6 +26,70 @@
     var endEvent   = supportTouch ? "touchend.swiper"   : "mouseup.swiper";
     var moveEvent  = supportTouch ? "touchmove.swiper"  : "mousemove.swiper";
 
+    var SwiperSchema = {
+        name: "swiper",
+        navigator: {
+            go: function(data, node, e, type){
+                var args = (data || "").split(",");
+                var name = args[0];
+                var index = Number(args[1] || 0);
+                var swiper = _Swiper.getSwiper(name);
+
+                if(!swiper){
+                    return 0;
+                }
+
+                index = isNaN(index) ? 0 : index;
+
+                swiper.go(index);
+            },
+            next: function(data, node, e, type){
+                var args = (data || "").split(",");
+                var name = args[0];
+                var swiper = _Swiper.getSwiper(name);
+
+                if(!swiper){
+                    return 0;
+                }
+
+                swiper.next();
+            },
+            prev: function(data, node, e, type){
+                var args = (data || "").split(",");
+                var name = args[0];
+                var swiper = _Swiper.getSwiper(name);
+
+                if(!swiper){
+                    return 0;
+                }
+
+                swiper.prev();
+            },
+            play: function(data, node, e, type){
+                var args = (data || "").split(",");
+                var name = args[0];
+                var swiper = _Swiper.getSwiper(name);
+
+                if(!swiper){
+                    return 0;
+                }
+
+                swiper.play();
+            },
+            pause: function(data, node, e, type){
+                var args = (data || "").split(",");
+                var name = args[0];
+                var swiper = _Swiper.getSwiper(name);
+
+                if(!swiper){
+                    return 0;
+                }
+
+                swiper.pause();
+            }
+        }
+    };
+
     var _BASE_CLASSNAME = [
         "mod-swiper"
     ];
@@ -94,7 +158,7 @@
             {"name": "duration", "dataType": "number", "defaultValue": "1"},
             {"name": "timing", "dataType": "string", "defaultValue": "ease"},
             {"name": "delay", "dataType": "number", "defaultValue": "0"},
-            {"name": "unit", "dataType": "number", "defaultValue": "px"}
+            {"name": "unit", "dataType": "string", "defaultValue": "px"}
         ];
         var size = attrs.length;
         var node = $(selector);
@@ -753,6 +817,16 @@
         initDots: function(){
             var dots = this.options("dots");
 
+            var dotItmes = this.dots.children("li");
+            var size = dotItmes.length;
+            console.info(size)
+
+            for(var i = 0; i < size; i++){
+                $(dotItmes[i]).attr("data-action-tap", "swiper://navigator/go#" + this.name + "," + i)
+                              .attr("data-action-mouseover", "swiper://navigator/pause#" + this.name)
+                              .attr("data-action-mouseout", "swiper://navigator/play#" + this.name);
+            }
+
             this.viewport.addClass("dots-float-" + dots);
             this.footer.removeClass("hide");
         },
@@ -802,11 +876,12 @@
             }
             rect = Util.getBoundingClientRect(dom);
             
-            width = width <= 0 ? rect.width : width;
             widthUnit = width <= 0 ? "px" : unit;
-            height = height <= 0 ? rect.height : height;
             heightUnit = height <= 0 ? "px": unit;
 
+            width = width <= 0 ? rect.width : width;
+            height = height <= 0 ? rect.height : height;
+            
             if(false !== _set){
                 var obj = {
                     "width": width + widthUnit,
@@ -1096,6 +1171,7 @@
         play: function(){
             var timer = this._timer;
             var interval = this.options("interval");
+            
             timer.setTimerFPS(Timer.toFPS(interval));
 
             timer.setTimerHandler({
@@ -1108,6 +1184,7 @@
             timer.start();
         },
         pause: function(){
+            var timer = this._timer;
             timer.stop();
         }
     };
@@ -1167,10 +1244,21 @@
 
     _Swiper.Cache = {};
 
-    module.exports = {
-        "version": "R16B0321",
-        createSwiper: function(name, options){
-            var swiper = _Swiper.Cache[name] || (_Swiper.Cache[name] = new _Swiper(name, options));
+    _Swiper.createSwiper = function(name, options){
+        var swiper = _Swiper.getSwiper(name);
+
+        if(null === swiper){
+            _Swiper.Cache[name] = new _Swiper(name, options);
+            swiper = _Swiper.getSwiper(name);
+        }
+
+        return swiper;
+    }
+
+    _Swiper.getSwiper = function(name){
+        var swiper = null;
+        if(name in _Swiper.Cache){
+            swiper = _Swiper.Cache[name];
 
             return {
                 "set": function(type, option){
@@ -1276,7 +1364,7 @@
                     return this;
                 },
                 "play": function(){
-                    swiper.autoplay();
+                    swiper.play();
 
                     return this;
                 },
@@ -1285,7 +1373,29 @@
 
                     return this;
                 }
-            }
+            };
+        }
+
+        return null;
+    };
+
+    (function(){
+        Util.watchAction("." + _BASE_CLASSNAME[0], [
+            {type: "tap", mapping: "click", compatible: null},
+            {type: "mouseover", mapping: null, compatible: null},
+            {type: "mouseout", mapping: null, compatible: null}
+        ], null);
+
+        Util.source(SwiperSchema);
+    })();
+
+    module.exports = {
+        "version": "R16B0512",
+        createSwiper: function(name, options){
+            return _Swiper.createSwiper(name, options);
+        },
+        getSwiper: function(name){
+            return _Swiper.getSwiper(name);
         },
         parse: function(selector, useDefault){
             return ParseDOMOptions(selector, useDefault || false);
