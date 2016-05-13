@@ -8,11 +8,24 @@ STATIC_TARGET_VERSION=$2
 STATIC_BASE_PREFIX=${STATIC_BASE_DIR}/static/${STATIC_BASE_VERSION}
 STATIC_PREFIX=${STATIC_TARGET_DIR}/static/${STATIC_TARGET_VERSION}
 STATIC_RELATIVE_DIR=/static/${STATIC_TARGET_VERSION}
-JQUERY_VERSION=2.1.4
+
+JQUERY_1X_VERSION=1.12.3
+JQUERY_2X_VERSION=2.2.3
 ZEPTO_VERSION=1.1.6
 SEAJS_VERSION=3.0.0
 COMBO_VERSION=1.0.1
 HTML5_SHIV_VERSION=3.7.3
+
+BASED_JQUERY_1X_PATH=${STATIC_PREFIX}/src/js/lib/based/jquery/r${JQUERY_1X_VERSION}/jquery.js
+BASED_JQUERY_2X_PATH=${STATIC_PREFIX}/src/js/lib/based/jquery/r${JQUERY_2X_VERSION}/jquery.js
+BASED_ZEPTO_PATH=${STATIC_PREFIX}/src/js/lib/based/zepto/r${ZEPTO_VERSION}/zepto.js
+BASED_SEAJS_PATH=${STATIC_PREFIX}/src/js/lib/based/seajs/r${SEAJS_VERSION}/sea.js
+BASED_COMBO_PATH=${STATIC_PREFIX}/src/js/lib/based/seajs/plugins/combo/r${COMBO_VERSION}/combo.js
+BASED_SE_PATH=${STATIC_PREFIX}/src/js/lib/based/se.js
+
+JQUERY_1X_MIX=${STATIC_PREFIX}/src/js/lib/j.1x.mix.js
+JQUERY_2X_MIX=${STATIC_PREFIX}/src/js/lib/j.2x.mix.js
+ZEPTO_MIX=${STATIC_PREFIX}/src/js/lib/z.mix.js
 
 echo ${STATIC_BASE_PREFIX}
 echo ${STATIC_PREFIX}
@@ -84,7 +97,7 @@ if [ "$#" -eq "2" ]; then
     cp -rf ${STATIC_BASE_PREFIX}/src/svg/* ${STATIC_PREFIX}/res/svg/
     #复制 inc/rem
     cp -rf ${STATIC_BASE_PREFIX}/inc/rem.html ${STATIC_PREFIX}/inc/
-    
+
     #svn check & commit
     SVN_REVISION=`svn info |grep "Last Changed Rev:" |awk '{print $4}'`  
 
