@@ -6,27 +6,39 @@
 //minFontSize: 最小字体大小
 //maxFontSize: 最大字体大小
 (function(w, d, design, fontSize, minFontSize, maxFontSize){
+    var remTimer = null;
     var _reset = function(){
         var root = d.documentElement;
-        var _designWidth = root.getAttribute("data-adaptor-design") || design;
-        var _fontSize = root.getAttribute("data-adaptor-base") || fontSize;
-        var _minFontSize = Number(root.getAttribute("data-adaptor-min") || minFontSize);
-        var _maxFontSize = Number(root.getAttribute("data-adaptor-max") || maxFontSize);
-        var clientWidth = root.clientWidth;
-        var windowWidth = w.innerWidth || 0;
 
-        var width = Math.max(clientWidth, windowWidth);
-        var fsize = (_fontSize * (width / _designWidth));
-
-        if(fsize < _minFontSize){
-            fsize = _minFontSize;
+        if(!root){
+            return false;
         }
 
-        if(fsize > _maxFontSize){
-            fsize = _maxFontSize;
+        try{
+            var _designWidth = root.getAttribute("data-adaptor-design") || design;
+            var _fontSize = root.getAttribute("data-adaptor-base") || fontSize;
+            var _minFontSize = Number(root.getAttribute("data-adaptor-min") || minFontSize);
+            var _maxFontSize = Number(root.getAttribute("data-adaptor-max") || maxFontSize);
+            var clientWidth = root.clientWidth;
+            var windowWidth = w.innerWidth || 0;
+
+            var width = Math.max(clientWidth, windowWidth);
+            var fsize = (_fontSize * (width / _designWidth));
+
+            if(fsize < _minFontSize){
+                fsize = _minFontSize;
+            }
+
+            if(fsize > _maxFontSize){
+                fsize = _maxFontSize;
+            }
+
+            root.style.fontSize = fsize + 'px';
+        }catch(e){
+            return false;
         }
 
-        root.style.fontSize = fsize + 'px';
+        return true;
     };
 
     var ua = navigator.userAgent;
@@ -44,17 +56,30 @@
         }
     }
 
-    d.addEventListener("DOMContentLoaded", function(e){
-        _reset();
-
-        if(("onorientationchange" in window)){
-            w.addEventListener("orientationchange", _reset, false);
-
-            hasOrientationChange = true;
+    remTimer = setTimeout(function(){
+        if(remTimer){
+            clearTimeout(remTimer);
+            remTimer = null;
         }
-        if(!ios || (ios && true !== hasOrientationChange)){
-            w.addEventListener("resize", _reset, false);
+
+        if(_reset()){
+            if(("onorientationchange" in window)){
+                w.addEventListener("orientationchange", _reset, false);
+
+                hasOrientationChange = true;
+            }
+            if(!ios || (ios && true !== hasOrientationChange)){
+                if("addEventListener" in w){
+                    w.addEventListener("resize", _reset, false);
+                }else if("attachEvent" in w){
+                    w.attachEvent("onresize", _reset);
+                }else{
+                    w.onresize = _reset;
+                }
+            }
+        }else{
+            setTimeout(arguments.callee, 0);
         }
-    }, false);
+    }, 0);
 })(window, document, 640, 100, 50, 100);
 </script>

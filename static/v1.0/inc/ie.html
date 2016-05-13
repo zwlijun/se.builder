@@ -145,14 +145,12 @@ var IECompatible = (function(){
             var version = -1;
 
             if((version = _compatible.ie()) > -1){
-                _compatible.addClass(__docroot__, "ie ie" + version);
+                _compatible.addClass(__docroot__, "ie ie" + version + (version < 10 ? " devil-browser" : ""));
             }
 
             return _compatible;
         }
     };
-
-
 
     return _compatible;
 })().importLink().compatible();

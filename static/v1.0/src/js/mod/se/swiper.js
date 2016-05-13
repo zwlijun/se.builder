@@ -10,7 +10,6 @@
  * @date 2016.03
  */
 ;define(function(require, exports, module){
-                          require("mod/zepto/touch");
     var Listener        = require("mod/se/listener");
     var Util            = require("mod/se/util");
     var Style           = require("mod/se/css");

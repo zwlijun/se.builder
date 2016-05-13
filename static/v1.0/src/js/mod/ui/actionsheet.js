@@ -10,7 +10,6 @@
  * @date 2016.4
  */
 ;define(function ActionSheet(require, exports, module){
-               require("mod/zepto/touch");
     var Util = require("mod/se/util");
 
     var SheetProtocol = {

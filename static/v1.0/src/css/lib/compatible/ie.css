@@ -1,1 +1,33 @@
 .ie{}
+.ie.devil-browser{}
+
+.ie.devil-browser .flexbox:before,
+.ie.devil-browser .flexbox:after{
+	content: "\0020"; 
+	display: block; 
+	height: 0; 
+	overflow: hidden;
+}
+
+.ie.devil-browser .flexbox:after{
+	clear: both; 
+}
+
+.ie.devil-browser .flexbox{
+	display: block;
+	zoom: 1;
+}
+.ie.devil-browser .mod-swiper-dots{
+	text-align: center;
+}
+.ie.devil-browser .mod-swiper-dots li{
+	display: inline-block;
+	vertical-align: middle;
+}
+.ie.devil-browser .mod-settings-item dd input[type='checkbox'], 
+.ie.devil-browser .mod-settings-item dd input[type='radio']{
+	border: none;
+}
+
+
+/*************************************************************/

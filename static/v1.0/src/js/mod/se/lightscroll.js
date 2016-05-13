@@ -10,7 +10,6 @@
  * @date 2015.6
  */
 ;define(function (require, exports, module){
-                        require("mod/zepto/touch");
     var Listener      = require("mod/se/listener");
     var Util = $.Util = require("mod/se/util");
     var Style         = require("mod/se/css");
