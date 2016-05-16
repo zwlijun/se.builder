@@ -818,16 +818,17 @@
 
             var dotItmes = this.dots.children("li");
             var size = dotItmes.length;
-            console.info(size)
 
-            for(var i = 0; i < size; i++){
-                $(dotItmes[i]).attr("data-action-tap", "swiper://navigator/go#" + this.name + "," + i)
-                              .attr("data-action-mouseover", "swiper://navigator/pause#" + this.name)
-                              .attr("data-action-mouseout", "swiper://navigator/play#" + this.name);
+            if(size > 1){
+                for(var i = 0; i < size; i++){
+                    $(dotItmes[i]).attr("data-action-tap", "swiper://navigator/go#" + this.name + "," + i)
+                                  .attr("data-action-mouseover", "swiper://navigator/pause#" + this.name)
+                                  .attr("data-action-mouseout", "swiper://navigator/play#" + this.name);
+                }
+
+                this.viewport.addClass("dots-float-" + dots);
+                this.footer.removeClass("hide");
             }
-
-            this.viewport.addClass("dots-float-" + dots);
-            this.footer.removeClass("hide");
         },
         updateDots: function(){
             if("none" == this.options("dots")){
@@ -836,8 +837,10 @@
 
             var dotItems = this.dots.children("li");
 
-            dotItems.removeClass("on");
-            $(dotItems.get(this.getIndex())).addClass("on");
+            if(dotItems.length > 1){
+                dotItems.removeClass("on");
+                $(dotItems.get(this.getIndex())).addClass("on");
+            }
         },
         initControl: function(){
             var control = this.options("control");
@@ -1085,7 +1088,7 @@
                     prevIndex = lastIndex;
                 }
 
-                console.info("A", prevIndex, nextIndex, tmpIndex)
+                // console.info("A", prevIndex, nextIndex, tmpIndex)
 
                 swiper.setIndex(tmpIndex)
             }else{
@@ -1108,7 +1111,7 @@
                     nextIndex = 0;
                 }
 
-                console.info("B", prevIndex, nextIndex, tmpIndex)
+                // console.info("B", prevIndex, nextIndex, tmpIndex)
 
                 swiper.setIndex(tmpIndex);
             }
@@ -1249,6 +1252,16 @@
         if(null === swiper){
             _Swiper.Cache[name] = new _Swiper(name, options);
             swiper = _Swiper.getSwiper(name);
+
+            (function(){
+                Util.watchAction("." + _BASE_CLASSNAME[0], [
+                    {type: "tap", mapping: "click", compatible: null},
+                    {type: "mouseover", mapping: null, compatible: null},
+                    {type: "mouseout", mapping: null, compatible: null}
+                ], null);
+
+                Util.source(SwiperSchema);
+            })();
         }
 
         return swiper;
@@ -1377,16 +1390,6 @@
 
         return null;
     };
-
-    (function(){
-        Util.watchAction("." + _BASE_CLASSNAME[0], [
-            {type: "tap", mapping: "click", compatible: null},
-            {type: "mouseover", mapping: null, compatible: null},
-            {type: "mouseout", mapping: null, compatible: null}
-        ], null);
-
-        Util.source(SwiperSchema);
-    })();
 
     module.exports = {
         "version": "R16B0512",

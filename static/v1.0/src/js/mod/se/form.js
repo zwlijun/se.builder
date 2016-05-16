@@ -167,6 +167,7 @@
     };
 
     var Types = {
+        "OK": "ok",
         "MATCH": "match",
         "MIN": "min",
         "MAX": "max",
@@ -187,7 +188,25 @@
         this.name = name;
         this.prefix = prefix || "";
         this.form = $(this.prefix + 'form[name="' + this.name + '"]');
-        this.optionsMerge = (this.form[0].hasAttribute("data-options-merge") && this.form.attr("data-options-merge")) ? this.form.attr("data-options-merge") : false;
+        this.optionsMerge = (
+                                this.form[0].hasAttribute("data-options-merge") 
+                                    && this.form.attr("data-options-merge")
+                            ) ? this.form.attr("data-options-merge") : false;
+        this.spv = ("0" !== this.form.attr("data-spv")); //single point verification
+        this.checkResults = {
+            crs: {
+                success: 0,
+                failure: 0
+            },
+            items:{
+                //name: {
+                //  verified: true/false
+                //  message: ""
+                //  type: ""
+                //  element: null
+                //}
+            }
+        };
 
         this.handleStack = new HandleStack();
         this.listner = new Listener({
@@ -245,6 +264,52 @@
         clear : function(){
             this.listner.clear();
         },
+        setCheckResults: function(name, verified, el, message, type){
+            var ckey = true === verified ? "success" : "failure";
+
+            this.checkResults["crs"][ckey] += 1;
+            this.checkResults["items"][name] = {
+                "verified": verified,
+                "message": message,
+                "type": type,
+                "element": el
+            };
+        },
+        getCheckResultItems: function(name){
+            if(undefined === name){
+                return this.checkResults["items"];
+            }
+
+            if(name in this.checkResults["items"]){
+                return this.checkResults["items"][name];
+            }
+
+            return null;
+        },
+        getCheckResultCRS: function(type){
+            if(undefined === type){
+                return this.checkResults["crs"];
+            }
+
+            return this.checkResults["crs"][type] || 0;
+        },
+        resetCheckResults: function(){
+            this.checkResults = null;
+            this.checkResults = {
+                crs: {
+                    success: 0,
+                    failure: 0
+                },
+                items:{
+                    //name: {
+                    //  verified: true/false
+                    //  message: ""
+                    //  type: ""
+                    //  element: null
+                    //}
+                }
+            };
+        },
         /**
          * 校驗
          ************************************************************************************
@@ -278,6 +343,7 @@
          */
         doCheck : function(){
             var f = this.form;
+            var spv = this.spv;
             var els = f.prop("elements");
             var size = els.length;
             var el = null;
@@ -311,6 +377,8 @@
             var data = {};
             var options = {};
             var settings = {};
+            
+            this.resetCheckResults();
 
             for(var i = 0; i < size; i++){
                 el = $(els[i]);
@@ -409,16 +477,26 @@
                 } 
 
                 if(required && value == ""){
-                    this.exec("tips", [el, empty, Types["EMPTY"]]);
-                    return null;
+                    if(spv){
+                        this.exec("tips", [el, empty, Types["EMPTY"]]);
+                        return null;
+                    }else{
+                        this.setCheckResults(name, false, el, empty, Types["EMPTY"]);
+                        continue;
+                    }
                 }
                 
                 if(value != "" && pattern){
                     var regExp = new RegExp(pattern);
 
                     if(!regExp.test(value)){
-                        this.exec("tips", [el, invalid, Types["MATCH"]]);
-                        return null;
+                        if(spv){
+                            this.exec("tips", [el, invalid, Types["MATCH"]]);
+                            return null;
+                        }else{
+                            this.setCheckResults(name, false, el, invalid, Types["MATCH"]);
+                            continue;
+                        }
                     }
 
                     pattern = null; regExp = null;
@@ -430,9 +508,13 @@
                     custom_tips = ret.result;
 
                     if(true !== custom_tips){ // body
-                        this.exec("tips", [el, custom_tips || invalid || empty, Types["CUSTOM"]]);
-
-                        return null;
+                        if(spv){
+                            this.exec("tips", [el, custom_tips || invalid || empty, Types["CUSTOM"]]);
+                            return null;
+                        }else{
+                            this.setCheckResults(name, false, el, custom_tips || invalid || empty, Types["CUSTOM"]);
+                            continue;
+                        }
                     }
                 }
 
@@ -440,9 +522,13 @@
                     var ret = $.CheckFilter.Internal[format].apply(null, [null, value, el]);
 
                     if(true !== ret){
-                        this.exec("tips", [el, ret || invalid || empty, Types["FORMAT"]]);
-
-                        return null;
+                        if(spv){
+                            this.exec("tips", [el, ret || invalid || empty, Types["FORMAT"]]);
+                            return null;
+                        }else{
+                            this.setCheckResults(name, false, el, ret || invalid || empty, Types["FORMAT"]);
+                            continue;
+                        }
                     }
                 }
                 
@@ -452,34 +538,61 @@
                     var compareValue = StringUtil.trim(undefined !== useValue ? useValue : els[compare].value);
                     
                     if(value != compareValue){
-                        this.exec("tips", [el, different, Types["SAME"]]);
-                        return null;
+                        if(spv){
+                            this.exec("tips", [el, different, Types["SAME"]]);
+                            return null;
+                        }else{
+                            this.setCheckResults(name, false, el, different, Types["SAME"]);
+                            continue;
+                        }
                     }
                 }
 
                 if(lbound > 0 || ubound > 0){
                     if(lbound > 0 && length < lbound){
-                        this.exec("tips", [el, invalid, Types["LBOUND"]]);
-                        return null;
+                        if(spv){
+                            this.exec("tips", [el, invalid, Types["LBOUND"]]);
+                            return null;
+                        }else{
+                            this.setCheckResults(name, false, el, invalid, Types["LBOUND"]);
+                            continue;
+                        }
                     }
 
                     if(ubound > 0 && length > ubound){
-                        this.exec("tips", [el, invalid, Types["UBOUND"]]);
-                        return null;
+                        if(spv){
+                            this.exec("tips", [el, invalid, Types["UBOUND"]]);
+                            return null;
+                        }else{
+                            this.setCheckResults(name, false, el, invalid, Types["UBOUND"]);
+                            continue;
+                        }
                     }
                 }
 
                 if(!isNaN(value)){
                     if(!isNaN(min) && Number(value) < min){
-                        this.exec("tips", [el, invalid, Types["MIN"]]);
-                        return null;
+                        if(spv){
+                            this.exec("tips", [el, invalid, Types["MIN"]]);
+                            return null;
+                        }else{
+                            this.setCheckResults(name, false, el, invalid, Types["MIN"]);
+                            continue;
+                        }
                     }
 
                     if(!isNaN(max) && Number(value) > max){
-                        this.exec("tips", [el, invalid, Types["MAX"]]);
-                        return null;
+                        if(spv){
+                            this.exec("tips", [el, invalid, Types["MAX"]]);
+                            return null;
+                        }else{
+                            this.setCheckResults(name, false, el, invalid, Types["MAX"]);
+                            continue;
+                        }
                     }
                 }
+
+                this.setCheckResults(name, true, el, "", Types["OK"]);
                 
                 if(xss){
                     value = Request.filterScript(value);
@@ -524,7 +637,10 @@
                 "data": data,
                 "options": options,
                 "merge": mergeData,
-                "settings": settings
+                "settings": settings,
+                "spv": spv,
+                "crs": this.getCheckResultCRS(),
+                "cri": this.getCheckResultItems()
             }]);
 
             return true;
@@ -572,7 +688,7 @@
     var _Cache = {};
 
     module.exports = {
-        "version": "R15B0906",
+        "version": "R16B0516",
         "CheckTypes": Types,
         "getInstance" : function(name, prefix){
             var ins = (_Cache[name] || new _Form(name, prefix)); 

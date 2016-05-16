@@ -146,6 +146,10 @@ var IECompatible = (function(){
 
             if((version = _compatible.ie()) > -1){
                 _compatible.addClass(__docroot__, "ie ie" + version + (version < 10 ? " devil-browser" : ""));
+
+                if(version < 9){
+                    __docroot__.style.fontSize = "14px";
+                }
             }
 
             return _compatible;
