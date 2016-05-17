@@ -15,6 +15,7 @@ ZEPTO_VERSION=1.1.6
 SEAJS_VERSION=3.0.0
 COMBO_VERSION=1.0.1
 HTML5_SHIV_VERSION=3.7.3
+REM_VERSION=1.3.4
 
 BASED_JQUERY_1X_PATH=${STATIC_PREFIX}/src/js/lib/based/jquery/r${JQUERY_1X_VERSION}/jquery.js
 BASED_JQUERY_2X_PATH=${STATIC_PREFIX}/src/js/lib/based/jquery/r${JQUERY_2X_VERSION}/jquery.js
@@ -128,6 +129,7 @@ if [ "$#" -eq "2" ]; then
     echo -n "<link rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_RELATIVE_DIR}/src/css/lib/m_main.css\">" > ${STATIC_BASE_PREFIX}/inc/css_common_mm.html
     echo -n "<link rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_RELATIVE_DIR}/src/css/lib/d_main.css\">" > ${STATIC_BASE_PREFIX}/inc/css_common_dm.html
     echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_RELATIVE_DIR}/src/js/lib/j.1x.mix.js\"></script>" > ${STATIC_BASE_PREFIX}/inc/js_common_j.1.x.html
+    echo -m "<!--[if lt IE 9]><script src=\"${STATIC_RELATIVE_DIR}/src/js/lib/extra/rem/r${REM_VERSION}/rem.js\"></script><![endif]-->" >> ${STATIC_BASE_PREFIX}/inc/js_common_j.1.x.html
     echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_RELATIVE_DIR}/src/js/lib/j.2x.mix.js\"></script>" > ${STATIC_BASE_PREFIX}/inc/js_common_j.2.x.html
     echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_RELATIVE_DIR}/src/js/lib/z.mix.js\"></script>" > ${STATIC_BASE_PREFIX}/inc/js_common_z.html
     echo -n "<!--[if lt IE 9]><script src=\"${STATIC_RELATIVE_DIR}/src/js/lib/extra/html5/r${HTML5_SHIV_VERSION}/html5shiv.js\"></script><![endif]-->" > ${STATIC_BASE_PREFIX}/inc/js_html5_shiv.html

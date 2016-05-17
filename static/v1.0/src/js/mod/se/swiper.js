@@ -1118,6 +1118,7 @@
 
             var items = swiper.getItems();
             var size = swiper.getSize();
+            var item = null;
 
             for(var i = 0; i < size; i++){
                 item = swiper.getItem(i);

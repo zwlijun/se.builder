@@ -146,13 +146,23 @@ var IECompatible = (function(){
 
             if((version = _compatible.ie()) > -1){
                 _compatible.addClass(__docroot__, "ie ie" + version + (version < 10 ? " devil-browser" : ""));
+            }
 
-                if(version < 9){
-                    __docroot__.style.fontSize = "14px";
-                }
+            if(_compatible.rem.supported()){
+                _compatible.addClass(__docroot__, "rem-yes");
+            }else{
+                _compatible.addClass(__docroot__, "rem-no hidden");
             }
 
             return _compatible;
+        },
+        rem: {
+            supported: function(){
+                var div = document.createElement( 'div' );
+                    div.style.cssText = 'font-size: 1rem;';
+
+                return (/rem/).test(div.style.fontSize);
+            }
         }
     };
 
