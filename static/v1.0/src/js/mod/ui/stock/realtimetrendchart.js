@@ -9,6 +9,7 @@
     //options -> rangeSelect    是否启用范围选择
     //options -> rangeVisible   是否显示范围选择
     //options -> selectedIndex  默认选择范围
+    //options -> tickAmount     刻度数量，默认为5
     //options -> colors         颜色配置
     //           colors -> line     线条颜色，默认值为：rgba(24, 124, 243, 1)
     //           colors -> fill     填充颜色，默认值为：rgba(24, 124, 243, 0.05)
@@ -36,6 +37,7 @@
             rangeSelect: false,
             rangeVisible: true,
             selectedIndex: 5,
+            tickAmount: 5,
             colors: {
                 line: "#187cf3",                    //#187cf3
                 fill: "rgba(24, 124, 243, 0.15)",   //#187cf3|0.05
@@ -472,11 +474,29 @@
 
                 color = red;
                 if(undefined !== price){
-                    diff = price - prevPrice;
+                    if(0 === i){
+                        if(open < close){
+                            color = green;
+                        }
 
-                    if(diff < 0){
-                        color = green;
+                        min.average = avg;
+                        min.price = price;
+                        min.volume = vol;
+                        min.percentage = (price / close - 1) * 100;
+
+                        max.average = avg;
+                        max.price = price;
+                        max.volume = vol;
+                        max.percentage = (price / close - 1) * 100;
+                    }else{
+                        diff = price - prevPrice;
+
+                        if(diff < 0){
+                            color = green;
+                        }
                     }
+
+                    prevPrice = price;
 
                     min.average = Math.min(min.average, avg);
                     min.volume = Math.min(min.volume, vol);
@@ -515,8 +535,7 @@
             var yesterdayClose = this.options("yesterdayClose");
             var _HighStock = this.highStock;
             var positions = [];
-            var increment = 0;
-            var tick = 0;
+            var tickAmount = this.options("tickAmount");
             var stockOptions = {
                 chart: {
                     spacingTop: 12
@@ -679,62 +698,44 @@
                 showFirstLabel: true,
                 showLastLabel: true,
                 tickPositioner: function(){
+                    positions = [];
+
                     var min = data.min;
                     var max = data.max;
-
-                    positions = [];
-                    increment = (max.average - min.average) / 5;
-                    tick = min.average;
-
-                    var minTick = min.average;
-                    var maxTick = max.average;
-
-                    if(0 === dataList.length){
-                        minTick = 0.99 * yesterdayClose;
-                        maxTick = 1.01 * yesterdayClose;
-                    }else if (0 === increment){
-                        if(yesterdayClose > min.average){
-                            minTick = min.average;
-                            maxTick = 2 * yesterdayClose - min.average;
-                        }else if(yesterdayClose < min.average){
-                            minTick = yesterdayClose - (max.average - yesterdayClose);
-                            maxTick = max.average;
-                        }else{
-                            minTick = 0.99 * yesterdayClose;
-                            maxTick = 1.01 * yesterdayClose;
-                        }
-                    }else if(min.average - yesterdayClose <= 0 && max.average - yesterdayClose >= 0){
-                        var limit = Math.max(
-                            Math.abs(min.average - yesterdayClose), 
-                            Math.abs(max.average - yesterdayClose)
-                        );
-
-                        minTick = yesterdayClose - limit;
-                        maxTick = yesterdayClose + limit;
-                    }else if(min.average > yesterdayClose && max.average > yesterdayClose){
-                        minTick = yesterdayClose - (max.average - yesterdayClose);
-                        maxTick = max.average;
-                    }else if(min.average < yesterdayClose && max.average < yesterdayClose){
-                        minTick = min.average;
-                        maxTick = yesterdayClose + (yesterdayClose - min.average);
-                    }
-
-                    if(maxTick > 2 * yesterdayClose){
-                        minTick = 0;
-                        maxTick = 2 * yesterdayClose;
-                    }
-
-                    var interval = (maxTick - yesterdayClose) / 29999.99;
                     
-                    maxTick += interval;
-                    minTick = yesterdayClose - (maxTick - yesterdayClose);
-                    increment = (maxTick - yesterdayClose) / 2;
+                    var increment = 0;
+                    var tick = 0;
+                    var middle = yesterdayClose;
+                    var maxPrice = max.price + max.price * 0.05;
+                    var minPrice = min.price - min.price * 0.05;
+                    var xinc = 0;
+                    var ninc = 0;
+                    var tickNum = tickAmount;
+                    var tickHalf = Math.floor(tickNum / 2);
 
-                    tick = minTick;
+                    increment = (maxPrice - minPrice) / tickNum;   
+                    
+                    if(maxPrice - middle > 0 && minPrice - middle < 0){
+                        xinc = (maxPrice - middle) / tickHalf;
+                        ninc = (middle - minPrice) / tickHalf;
 
-                    var i = 0;
-                    for(tick; (i++) < 5; tick += increment){
-                        positions.push(tick);
+                        increment = Math.max(xinc, ninc);
+                    }else if(maxPrice - middle > 0 && minPrice - middle > 0){
+                        increment = (maxPrice - middle) / tickHalf;
+                    }else if(maxPrice - middle < 0 && minPrice - middle < 0){
+                        increment = (middle - minPrice) / tickHalf;
+                    }
+
+                    tick = middle;
+                    for(var i = 0; i < tickHalf; i++){
+                        positions.unshift(tick -= increment);
+                    }
+
+                    positions.push(middle);
+
+                    tick = middle;
+                    for(var i = 0; i < tickHalf; i++){
+                        positions.push(tick += increment);
                     }
 
                     return positions;
@@ -830,14 +831,21 @@
                         x: 2,
                         y: 12,
                         formatter:function(){
-                            if(this.value > 1000000000) {
-                                return Number((this.value/1000000000).toFixed(2))+"G";
-                            }else if(this.value > 1000000) {
-                                return Number((this.value/1000000).toFixed(2))+"M";
-                            }else if(this.value > 1000) {
-                                return Number((this.value/1000).toFixed(2))+"K";
-                            }else{
-                                return Number(this.value.toFixed(2));
+                            var units = ["", "万", "亿"];
+                            var base = 0;
+                            var size = units.length;
+                            var unit = "";
+
+                            for(var i = units.length - 1; i >= 0; i--){
+                                base = Math.pow(10, i * 4);
+                                unit = units[i];
+
+                                if(this.value >= base){
+                                    var div = Number((this.value / base).toFixed(2));
+                                    var fdiv = Math.floor(div);
+
+                                    return (div - fdiv == 0 ? fdiv : div) + unit;
+                                }
                             }
                         }
                     },

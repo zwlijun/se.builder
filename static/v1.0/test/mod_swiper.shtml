@@ -16,7 +16,7 @@
 <body>
 <header class="app-header"></header> 
 <article class="app-body">
-  <div class="mod-swiper" data-swiper="test">
+  <div class="mod-swiper" data-swiper="test" data-swiper-type="cube" data-swiper-autoplay="0">
     <div class="mod-swiper-body">
       <div class="mod-swiper-item current" data-swiper-mode="x">
         <div class="mod-swiper-subject">PAGE 1</div>

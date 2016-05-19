@@ -3,20 +3,40 @@
  * @file swiper.cube.css
  */
 .mod-swiper.cube{
-    -webkit-perspective: 1000px;
-       -moz-perspective: 1000px;
-            perspective: 1000px;
+    -webkit-perspective: 1200px;
+       -moz-perspective: 1200px;
+        -ms-perspective: 1200px;
+            perspective: 1200px;
 }
 .mod-swiper.cube .mod-swiper-body{
     -webkit-transform-style: preserve-3d;
        -moz-transform-style: preserve-3d;
+        -ms-transform-style: preserve-3d;
             transform-style: preserve-3d;
+    -webkit-transition-property: -webkit-transform;
+       -moz-transition-property: -moz-transform;
+         -o-transition-property: -o-transform;
+        -ms-transition-property: -ms-transform;
+            transition-property: transform;
+             -webkit-box-sizing: content-box;
+                -moz-box-sizing: content-box;
+                     box-sizing: content-box;
+    -webkit-transform: translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg);
+       -moz-transform: translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg);
+         -o-transform: translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg);
+        -ms-transform: translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg);
+            transform: translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg);
     overflow: inherit;
 }
 .mod-swiper.cube .mod-swiper-item{
-    -webkit-backface-visibility: inherit;
-       -moz-backface-visibility: inherit;
-            backface-visibility: inherit;
+    -webkit-backface-visibility: hidden;
+       -moz-backface-visibility: hidden;
+        -ms-backface-visibility: hidden;
+            backface-visibility: hidden;
+/*    -webkit-transform-origin: 0 0;
+       -moz-transform-origin: 0 0;
+        -ms-transform-origin: 0 0;
+            transform-origin: 0 0;*/
 }
 .mod-swiper.cube.goto-after .mod-swiper-body,
 .mod-swiper.cube.goto-before .mod-swiper-body{
@@ -48,6 +68,7 @@
 .mod-swiper.cube.x.goto-after .mod-swiper-body{
     -webkit-animation-name: swiper-cube-x-after;
        -moz-animation-name: swiper-cube-x-after;
+        -ms-animation-name: swiper-cube-x-after;
             animation-name: swiper-cube-x-after;
 }
 @-webkit-keyframes swiper-cube-x-after{
@@ -66,6 +87,14 @@
         -moz-transform: rotateY(-90deg);
     }
 }
+@-ms-keyframes swiper-cube-x-after{
+    0% {
+        -ms-transform: rotateY(0deg);
+    }
+    100% {
+        -ms-transform: rotateY(-90deg);
+    }
+}
 @keyframes swiper-cube-x-after{
     0% {
         transform: rotateY(0deg);
@@ -77,6 +106,7 @@
 .mod-swiper.cube.x.goto-before .mod-swiper-body{
     -webkit-animation-name: swiper-cube-x-before;
        -moz-animation-name: swiper-cube-x-before;
+        -ms-animation-name: swiper-cube-x-before;
             animation-name: swiper-cube-x-before;
 }
 @-webkit-keyframes swiper-cube-x-before{
@@ -95,6 +125,14 @@
         -moz-transform: rotateY(90deg);
     }
 }
+@-ms-keyframes swiper-cube-x-before{
+    0% {
+        -ms-transform: rotateY(0deg);
+    }
+    100% {
+        -ms-transform: rotateY(90deg);
+    }
+}
 @keyframes swiper-cube-x-before{
     0% {
         transform: rotateY(0deg);
@@ -106,6 +144,7 @@
 .mod-swiper.cube.y.goto-after .mod-swiper-body{
     -webkit-animation-name: swiper-cube-y-after;
        -moz-animation-name: swiper-cube-y-after;
+        -ms-animation-name: swiper-cube-y-after;
             animation-name: swiper-cube-y-after;
 }
 @-webkit-keyframes swiper-cube-y-after{
@@ -124,6 +163,14 @@
         -moz-transform: rotateX(90deg);
     }
 }
+@-ms-keyframes swiper-cube-y-after{
+    0% {
+        -ms-transform: rotateX(0deg);
+    }
+    100% {
+        -ms-transform: rotateX(90deg);
+    }
+}
 @keyframes swiper-cube-y-after{
     0% {
         transform: rotateX(0deg);
@@ -135,6 +182,7 @@
 .mod-swiper.cube.y.goto-before .mod-swiper-body{
     -webkit-animation-name: swiper-cube-y-before;
        -moz-animation-name: swiper-cube-y-before;
+        -ms-animation-name: swiper-cube-y-before;
             animation-name: swiper-cube-y-before;
 }
 @-webkit-keyframes swiper-cube-y-before{
@@ -151,6 +199,14 @@
     }
     100% {
         -moz-transform: rotateX(-90deg);
+    }
+}
+@-ms-keyframes swiper-cube-y-before{
+    0% {
+        -ms-transform: rotateX(0deg);
+    }
+    100% {
+        -ms-transform: rotateX(-90deg);
     }
 }
 @keyframes swiper-cube-y-before{
