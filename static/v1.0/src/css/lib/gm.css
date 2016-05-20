@@ -718,7 +718,7 @@ button.loading:before{
 }
 /**
  * ActionSheet模块
- * loading > layerbox > actionsheet > logicbox > framebox
+ * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox
  * @file loading.css
  */
 .mod-actionsheet{
@@ -729,14 +729,14 @@ button.loading:before{
 .mod-actionsheet-mask{
 	top: 0;
 	height: 100%;
-	z-index: 59997;
+	z-index: 59996;
 	background-color: rgba(0, 0, 0, 0.7);
 	-webkit-transition: background-color 0.4s ease;
 			transition: background-color 0.4s ease;
 }
 .mod-actionsheet-panel{
 	bottom: 0;
-	z-index: 59998;
+	z-index: 59997;
 	background-color: #fff;
 	font-size: .32rem;
 	-webkit-transform: translate(0, 0) translateZ(0);
@@ -1165,6 +1165,202 @@ button.loading:before{
 }
 
 
+/**
+ * 日期控件弹层
+ * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox
+ * @file logicbox.css
+ */
+.mod-datetime-picker-frame{
+	position: absolute;
+	z-index: 59999;
+}
+.mod-datetime-picker-frame{
+	font-size: .14rem;
+	width: 4.61rem;
+	border: 1px solid #e5e5e5;
+	background-color: #fff;
+}
+.mod-datetime-picker-frame.notime{
+	width: 2.8rem;
+}
+.mod-datetime-picker-frame.notime .mod-datetime-picker-timebox{
+	display: none;
+}
+.mod-datetime-picker-body{
+	height: 3.23rem;
+}
+.mod-datetime-picker-footer{
+	height: .42rem;
+	line-height: .42rem;
+	border-top: 1px solid #e5e5e5;
+	padding: 0 .12rem;
+}
+.mod-datetime-picker-footer button{
+	height: .24rem;
+	width: .72rem;
+	font-size: .14rem;
+	margin-top: .09rem;
+}
+.mod-datetime-picker-footer button[type="button"]{
+	float: left;
+}
+.mod-datetime-picker-footer button[type="submit"]{
+	float: right;
+}
+.mod-datetime-picker-datebox,
+.mod-datetime-picker-timebox{
+	float: left;
+}
+.mod-datetime-picker-frame ul{
+	list-style: none;
+}
+.mod-datetime-picker-datebox{
+	width: 2.8rem;
+}
+.mod-dtp-year{
+	font-weight: 300;
+	font-style: normal;
+	height: .36rem;
+	line-height: .36rem;
+	text-align: center;
+	border-bottom: 1px solid #e5e5e5;
+}
+.mod-dtp-year sup{
+	float: left;
+}
+.mod-dtp-year sub{
+	float: right;
+}
+.mod-dtp-year em,
+.mod-dtp-year cite,
+.mod-dtp-year i{
+	font-style: normal;
+	font-size: .18rem;
+	cursor: pointer;
+}
+.mod-dtp-year i{
+	cursor: default;
+}
+.mod-dtp-year span{
+	margin: 0 .02rem;
+}
+.mod-dtp-year sup,
+.mod-dtp-year sub{
+	display: inline-block;
+	width: 0.28rem;
+	cursor: pointer;
+}
+.mod-dtp-year .icofont.prev:before{
+	content: "\f104";
+}
+.mod-dtp-year .icofont.next:before{
+	content: "\f105";
+}
+.mod-dtp-weeks li,
+.mod-dtp-days li{
+	width: .39rem;
+	height: .40rem;
+	line-height: .40rem;
+	text-align: center;
+	float: left;
+	border-right: 1px solid #e5e5e5;
+}
+.mod-dtp-weeks li:last-child{
+	border-right: 0;
+}
+.mod-dtp-days li{
+	border-top: 1px solid #e5e5e5;
+	cursor: pointer;
+}
+.mod-dtp-days li:nth-child(7n){
+	border-right: 0;
+}
+.mod-dtp-days li.disabled{
+	cursor: not-allowed;
+	background-color: #eaeaea;
+	color: #aaa;
+}
+.mod-dtp-days li.on{
+	background-color: rgba(39, 154, 243, 0.15);
+}
+
+.mod-dtp-days li.cur{
+	background-color: rgba(191, 255, 188, 0.15);
+}
+.mod-dtp-days li.ligthgray{
+	color: #ccc;
+}
+
+.mod-datetime-picker-timebox{
+	width: 1.8rem;
+	border-left: 1px solid #e5e5e5;
+}
+.mod-dtp-time-view{
+	height: .36rem;
+	line-height: .36rem;
+	border-bottom: 1px solid #e5e5e5;
+}
+.mod-dtp-time-view li,
+.mod-dtp-hours,
+.mod-dtp-minutes,
+.mod-dtp-seconds{
+	float: left;
+	width: .60rem;
+	text-align: center;
+}
+.mod-datetime-picker-timebox sup,
+.mod-datetime-picker-timebox sub{
+	display: block;
+	height: .40rem;
+	line-height: .40rem;
+	text-align: center;
+	cursor: pointer;
+}
+.mod-datetime-picker-timebox sup{
+	border-bottom: 1px solid #e5e5e5;
+}
+.mod-dtp-time-picker{
+	width: 100%;
+	position: relative;
+}
+.mod-dtp-hours,
+.mod-dtp-minutes,
+.mod-dtp-seconds{
+	position: relative;
+	z-index: 2;
+}
+.mod-dtp-time-selected{
+	position: absolute;
+	width: 100%;
+	height: .40rem;
+	top: 1.23rem;
+	background-color: rgba(39, 154, 243, 0.15);
+	z-index: 1;
+}
+.mod-dtp-time-picker .icofont.prev:before{
+	content: "\f106";
+}
+.mod-dtp-time-picker .icofont.next:before{
+	content: "\f107";
+}
+.mod-time-chooser{
+	height: 2.05rem;
+	overflow: hidden;
+}
+.mod-time-chooser li{
+	height: .40rem;
+	border-bottom: 1px solid #e5e5e5;
+	text-align: center;
+	line-height: .40rem;
+}
+
+
+
+/**
+ * 窗口弹层
+ * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox
+ * @file logicbox.css
+ */
 .mod-framebox-mask{
 	width: 100%;
     height: 100%;
@@ -1172,7 +1368,7 @@ button.loading:before{
     left: 0;
     top: 0;
     background-color: rgba(0, 0, 0, 0.45);
-    z-index: 59995;
+    z-index: 59994;
 }
 
 .mod-framebox-box{
@@ -1322,7 +1518,7 @@ button.loading:before{
     float: left;
 }/**
  * 信息弹层
- * loading > layerbox > actionsheet > logicbox > framebox
+ * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox
  * @file layerbox.css
  */
 
@@ -1333,7 +1529,7 @@ button.loading:before{
     left: 0;
     top: 0;
     background-color: rgba(0, 0, 0, 0.45);
-    z-index: 59999;
+    z-index: 59998;
 }
 .mod-layerbox-box{
     width: 85%;
@@ -1391,7 +1587,7 @@ button.loading:before{
 }
 /**
  * Loading模块
- * loading > layerbox > actionsheet > logicbox > framebox
+ * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox
  * @file loading.css
  */
 
@@ -1445,7 +1641,7 @@ button.loading:before{
 
 /**
  * 逻辑弹层
- * loading > layerbox > actionsheet > logicbox > framebox
+ * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox
  * @file logicbox.css
  */
 .mod-logicbox-mask{
@@ -1455,7 +1651,7 @@ button.loading:before{
     left: 0;
     top: 0;
     background-color: rgba(0, 0, 0, 0.45);
-    z-index: 59996;
+    z-index: 59995;
 }
 
 .mod-logicbox-box{
@@ -2033,20 +2229,40 @@ button.loading:before{
  * @file swiper.cube.css
  */
 .mod-swiper.cube{
-    -webkit-perspective: 1000px;
-       -moz-perspective: 1000px;
-            perspective: 1000px;
+    -webkit-perspective: 1200px;
+       -moz-perspective: 1200px;
+        -ms-perspective: 1200px;
+            perspective: 1200px;
 }
 .mod-swiper.cube .mod-swiper-body{
     -webkit-transform-style: preserve-3d;
        -moz-transform-style: preserve-3d;
+        -ms-transform-style: preserve-3d;
             transform-style: preserve-3d;
+    -webkit-transition-property: -webkit-transform;
+       -moz-transition-property: -moz-transform;
+         -o-transition-property: -o-transform;
+        -ms-transition-property: -ms-transform;
+            transition-property: transform;
+             -webkit-box-sizing: content-box;
+                -moz-box-sizing: content-box;
+                     box-sizing: content-box;
+    -webkit-transform: translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg);
+       -moz-transform: translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg);
+         -o-transform: translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg);
+        -ms-transform: translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg);
+            transform: translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg);
     overflow: inherit;
 }
 .mod-swiper.cube .mod-swiper-item{
-    -webkit-backface-visibility: inherit;
-       -moz-backface-visibility: inherit;
-            backface-visibility: inherit;
+    -webkit-backface-visibility: hidden;
+       -moz-backface-visibility: hidden;
+        -ms-backface-visibility: hidden;
+            backface-visibility: hidden;
+/*    -webkit-transform-origin: 0 0;
+       -moz-transform-origin: 0 0;
+        -ms-transform-origin: 0 0;
+            transform-origin: 0 0;*/
 }
 .mod-swiper.cube.goto-after .mod-swiper-body,
 .mod-swiper.cube.goto-before .mod-swiper-body{
@@ -2078,6 +2294,7 @@ button.loading:before{
 .mod-swiper.cube.x.goto-after .mod-swiper-body{
     -webkit-animation-name: swiper-cube-x-after;
        -moz-animation-name: swiper-cube-x-after;
+        -ms-animation-name: swiper-cube-x-after;
             animation-name: swiper-cube-x-after;
 }
 @-webkit-keyframes swiper-cube-x-after{
@@ -2096,6 +2313,14 @@ button.loading:before{
         -moz-transform: rotateY(-90deg);
     }
 }
+@-ms-keyframes swiper-cube-x-after{
+    0% {
+        -ms-transform: rotateY(0deg);
+    }
+    100% {
+        -ms-transform: rotateY(-90deg);
+    }
+}
 @keyframes swiper-cube-x-after{
     0% {
         transform: rotateY(0deg);
@@ -2107,6 +2332,7 @@ button.loading:before{
 .mod-swiper.cube.x.goto-before .mod-swiper-body{
     -webkit-animation-name: swiper-cube-x-before;
        -moz-animation-name: swiper-cube-x-before;
+        -ms-animation-name: swiper-cube-x-before;
             animation-name: swiper-cube-x-before;
 }
 @-webkit-keyframes swiper-cube-x-before{
@@ -2125,6 +2351,14 @@ button.loading:before{
         -moz-transform: rotateY(90deg);
     }
 }
+@-ms-keyframes swiper-cube-x-before{
+    0% {
+        -ms-transform: rotateY(0deg);
+    }
+    100% {
+        -ms-transform: rotateY(90deg);
+    }
+}
 @keyframes swiper-cube-x-before{
     0% {
         transform: rotateY(0deg);
@@ -2136,6 +2370,7 @@ button.loading:before{
 .mod-swiper.cube.y.goto-after .mod-swiper-body{
     -webkit-animation-name: swiper-cube-y-after;
        -moz-animation-name: swiper-cube-y-after;
+        -ms-animation-name: swiper-cube-y-after;
             animation-name: swiper-cube-y-after;
 }
 @-webkit-keyframes swiper-cube-y-after{
@@ -2154,6 +2389,14 @@ button.loading:before{
         -moz-transform: rotateX(90deg);
     }
 }
+@-ms-keyframes swiper-cube-y-after{
+    0% {
+        -ms-transform: rotateX(0deg);
+    }
+    100% {
+        -ms-transform: rotateX(90deg);
+    }
+}
 @keyframes swiper-cube-y-after{
     0% {
         transform: rotateX(0deg);
@@ -2165,6 +2408,7 @@ button.loading:before{
 .mod-swiper.cube.y.goto-before .mod-swiper-body{
     -webkit-animation-name: swiper-cube-y-before;
        -moz-animation-name: swiper-cube-y-before;
+        -ms-animation-name: swiper-cube-y-before;
             animation-name: swiper-cube-y-before;
 }
 @-webkit-keyframes swiper-cube-y-before{
@@ -2181,6 +2425,14 @@ button.loading:before{
     }
     100% {
         -moz-transform: rotateX(-90deg);
+    }
+}
+@-ms-keyframes swiper-cube-y-before{
+    0% {
+        -ms-transform: rotateX(0deg);
+    }
+    100% {
+        -ms-transform: rotateX(-90deg);
     }
 }
 @keyframes swiper-cube-y-before{

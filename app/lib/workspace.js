@@ -249,6 +249,7 @@ Workspace.prototype = {
         var fileType = null;
         var fileExtName = null;
 
+        // console.log("map: " + path);
         map[path] = {
             "name": path,
             "relative": path.replace(rootPath.doc + rootPath.src, ""),
@@ -273,8 +274,15 @@ Workspace.prototype = {
                 }
                 fileType = matcher[2];
                 fileExtName = matcher[1];
-                
+
+                if(!map[path]){
+                    continue;
+                }
+
                 cs.FileSHA1CheckSum(absPath, function(filename, checksum, isUpdate, _file, _path, _type, _ext){
+                    // console.log(".......................")
+                    // console.log(_path);
+                    // console.log(map[_path])
                     map[_path].filelist.push({
                         "absolutePath": filename,
                         "checksum": checksum,

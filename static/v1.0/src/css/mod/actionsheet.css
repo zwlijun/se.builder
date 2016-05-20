@@ -1,6 +1,6 @@
 /**
  * ActionSheet模块
- * loading > layerbox > actionsheet > logicbox > framebox
+ * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox
  * @file loading.css
  */
 .mod-actionsheet{
@@ -11,14 +11,14 @@
 .mod-actionsheet-mask{
 	top: 0;
 	height: 100%;
-	z-index: 59997;
+	z-index: 59996;
 	background-color: rgba(0, 0, 0, 0.7);
 	-webkit-transition: background-color 0.4s ease;
 			transition: background-color 0.4s ease;
 }
 .mod-actionsheet-panel{
 	bottom: 0;
-	z-index: 59998;
+	z-index: 59997;
 	background-color: #fff;
 	font-size: .32rem;
 	-webkit-transform: translate(0, 0) translateZ(0);

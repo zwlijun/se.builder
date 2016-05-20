@@ -1,6 +1,6 @@
 /**
  * 逻辑弹层
- * loading > layerbox > actionsheet > logicbox > framebox
+ * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox
  * @file logicbox.css
  */
 .mod-logicbox-mask{
@@ -10,7 +10,7 @@
     left: 0;
     top: 0;
     background-color: rgba(0, 0, 0, 0.45);
-    z-index: 59996;
+    z-index: 59995;
 }
 
 .mod-logicbox-box{

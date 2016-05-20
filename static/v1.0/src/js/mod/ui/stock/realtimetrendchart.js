@@ -86,7 +86,7 @@
                     return this.opts[args[0]];
                 }
 
-                this.opts = $.extends(true, this.opts, args[0]);
+                this.opts = $.extend(true, this.opts, args[0]);
             }
         },
         getTimeRange: function(utc){

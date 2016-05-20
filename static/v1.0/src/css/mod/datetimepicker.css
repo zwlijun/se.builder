@@ -1,0 +1,191 @@
+/**
+ * 日期控件弹层
+ * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox
+ * @file logicbox.css
+ */
+.mod-datetime-picker-frame{
+	position: absolute;
+	z-index: 59999;
+}
+.mod-datetime-picker-frame{
+	font-size: .14rem;
+	width: 4.61rem;
+	border: 1px solid #e5e5e5;
+	background-color: #fff;
+}
+.mod-datetime-picker-frame.notime{
+	width: 2.8rem;
+}
+.mod-datetime-picker-frame.notime .mod-datetime-picker-timebox{
+	display: none;
+}
+.mod-datetime-picker-body{
+	height: 3.23rem;
+}
+.mod-datetime-picker-footer{
+	height: .42rem;
+	line-height: .42rem;
+	border-top: 1px solid #e5e5e5;
+	padding: 0 .12rem;
+}
+.mod-datetime-picker-footer button{
+	height: .24rem;
+	width: .72rem;
+	font-size: .14rem;
+	margin-top: .09rem;
+}
+.mod-datetime-picker-footer button[type="button"]{
+	float: left;
+}
+.mod-datetime-picker-footer button[type="submit"]{
+	float: right;
+}
+.mod-datetime-picker-datebox,
+.mod-datetime-picker-timebox{
+	float: left;
+}
+.mod-datetime-picker-frame ul{
+	list-style: none;
+}
+.mod-datetime-picker-datebox{
+	width: 2.8rem;
+}
+.mod-dtp-year{
+	font-weight: 300;
+	font-style: normal;
+	height: .36rem;
+	line-height: .36rem;
+	text-align: center;
+	border-bottom: 1px solid #e5e5e5;
+}
+.mod-dtp-year sup{
+	float: left;
+}
+.mod-dtp-year sub{
+	float: right;
+}
+.mod-dtp-year em,
+.mod-dtp-year cite,
+.mod-dtp-year i{
+	font-style: normal;
+	font-size: .18rem;
+	cursor: pointer;
+}
+.mod-dtp-year i{
+	cursor: default;
+}
+.mod-dtp-year span{
+	margin: 0 .02rem;
+}
+.mod-dtp-year sup,
+.mod-dtp-year sub{
+	display: inline-block;
+	width: 0.28rem;
+	cursor: pointer;
+}
+.mod-dtp-year .icofont.prev:before{
+	content: "\f104";
+}
+.mod-dtp-year .icofont.next:before{
+	content: "\f105";
+}
+.mod-dtp-weeks li,
+.mod-dtp-days li{
+	width: .39rem;
+	height: .40rem;
+	line-height: .40rem;
+	text-align: center;
+	float: left;
+	border-right: 1px solid #e5e5e5;
+}
+.mod-dtp-weeks li:last-child{
+	border-right: 0;
+}
+.mod-dtp-days li{
+	border-top: 1px solid #e5e5e5;
+	cursor: pointer;
+}
+.mod-dtp-days li:nth-child(7n){
+	border-right: 0;
+}
+.mod-dtp-days li.disabled{
+	cursor: not-allowed;
+	background-color: #eaeaea;
+	color: #aaa;
+}
+.mod-dtp-days li.on{
+	background-color: rgba(39, 154, 243, 0.15);
+}
+
+.mod-dtp-days li.cur{
+	background-color: rgba(191, 255, 188, 0.15);
+}
+.mod-dtp-days li.ligthgray{
+	color: #ccc;
+}
+
+.mod-datetime-picker-timebox{
+	width: 1.8rem;
+	border-left: 1px solid #e5e5e5;
+}
+.mod-dtp-time-view{
+	height: .36rem;
+	line-height: .36rem;
+	border-bottom: 1px solid #e5e5e5;
+}
+.mod-dtp-time-view li,
+.mod-dtp-hours,
+.mod-dtp-minutes,
+.mod-dtp-seconds{
+	float: left;
+	width: .60rem;
+	text-align: center;
+}
+.mod-datetime-picker-timebox sup,
+.mod-datetime-picker-timebox sub{
+	display: block;
+	height: .40rem;
+	line-height: .40rem;
+	text-align: center;
+	cursor: pointer;
+}
+.mod-datetime-picker-timebox sup{
+	border-bottom: 1px solid #e5e5e5;
+}
+.mod-dtp-time-picker{
+	width: 100%;
+	position: relative;
+}
+.mod-dtp-hours,
+.mod-dtp-minutes,
+.mod-dtp-seconds{
+	position: relative;
+	z-index: 2;
+}
+.mod-dtp-time-selected{
+	position: absolute;
+	width: 100%;
+	height: .40rem;
+	top: 1.23rem;
+	background-color: rgba(39, 154, 243, 0.15);
+	z-index: 1;
+}
+.mod-dtp-time-picker .icofont.prev:before{
+	content: "\f106";
+}
+.mod-dtp-time-picker .icofont.next:before{
+	content: "\f107";
+}
+.mod-time-chooser{
+	height: 2.05rem;
+	overflow: hidden;
+}
+.mod-time-chooser li{
+	height: .40rem;
+	border-bottom: 1px solid #e5e5e5;
+	text-align: center;
+	line-height: .40rem;
+}
+
+
+
