@@ -24368,6 +24368,6 @@
         version: VERSION
     });
     
-    win.Highcharts = Highcharts;
+    // win.Highcharts = Highcharts;
     module.exports = Highcharts;
 });

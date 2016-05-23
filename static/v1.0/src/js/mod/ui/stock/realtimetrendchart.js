@@ -479,6 +479,8 @@
                             color = green;
                         }
 
+                        price = price || open;
+
                         min.average = avg;
                         min.price = price;
                         min.volume = vol;
@@ -714,16 +716,19 @@
                     var tickHalf = Math.floor(tickNum / 2);
 
                     increment = (maxPrice - minPrice) / tickNum;   
-                    
+
                     if(maxPrice - middle > 0 && minPrice - middle < 0){
                         xinc = (maxPrice - middle) / tickHalf;
                         ninc = (middle - minPrice) / tickHalf;
 
                         increment = Math.max(xinc, ninc);
+                        // console.info("A: " + increment)
                     }else if(maxPrice - middle > 0 && minPrice - middle > 0){
                         increment = (maxPrice - middle) / tickHalf;
+                        // console.info("B: " + increment)
                     }else if(maxPrice - middle < 0 && minPrice - middle < 0){
                         increment = (middle - minPrice) / tickHalf;
+                        // console.info("C: " + increment)
                     }
 
                     tick = middle;
@@ -737,7 +742,7 @@
                     for(var i = 0; i < tickHalf; i++){
                         positions.push(tick += increment);
                     }
-
+                    
                     return positions;
                 },
                 plotLines: [{

@@ -99,10 +99,11 @@
 
     ///////////////////////////////////////////////////////
     var Logger = {
-        max : 1000,
+        max : 10,
         items : [],
+        console: document.querySelector(".console"),
         write : function(){
-            document.querySelector(".console").innerHTML = this.items.join("");
+            Logger.console.innerHTML = this.items.join("");
         },
         log : function(level, message){
             var item = '<p class="log ' + level.toLowerCase() + '">[<span>' + level + '</span>]&nbsp;' + new Date() + '&nbsp;:&nbsp;' + message + '</p>'
