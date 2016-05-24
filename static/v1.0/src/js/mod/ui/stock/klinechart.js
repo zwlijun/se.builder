@@ -7,7 +7,10 @@
     //options -> volume         是否显示成交量，true/false
     //options -> rangeSelect    是否启用范围选择
     //options -> rangeVisible   是否显示范围选择
+    //options -> selectorHeight 范围选择高度
     //options -> selectedIndex  默认选择范围
+    //options -> width          宽度
+    //options -> height         高度
     //options -> colors         颜色配置
     //           colors -> line     线条颜色，默认值为：rgba(24, 124, 243, 1)
     //           colors -> fill     填充颜色，默认值为：rgba(24, 124, 243, 0.05)
@@ -35,6 +38,9 @@
             rangeSelect: true,
             rangeVisible: true,
             selectedIndex: 1,
+            selectorHeight: 35,
+            width: null,
+            height: null,
             colors: {
                 line: "#187cf3",                    //#187cf3
                 fill: "rgba(24, 124, 243, 0.05)",   //#187cf3|0.05
@@ -325,7 +331,9 @@
 
             var stockOptions = {
                 chart: {
-                    spacingTop: 12
+                    spacingTop: 12,
+                    width: this.options("width") || null,
+                    height: this.options("height") || null
                 },
                 navigator: {
                     enabled: this.options("navigator"),
@@ -345,6 +353,7 @@
                     enabled: this.options("rangeSelect"),
                     selected: this.options("selectedIndex"),
                     inputEnabled: false,
+                    height: this.options("selectorHeight"),
                     buttons: [
                         {
                             type: 'month',
@@ -420,7 +429,7 @@
                                 minute: ['%Y-%b-%e(%A) %H:%M', '%Y-%b-%e(%A) %H:%M', '-%H:%M'],
                                 hour: ['%Y-%b-%e(%A) %H:%M', '%Y-%b-%e(%A) %H:%M', '-%H:%M'],
                                 day: ['%Y-%b-%e(%A)', '%Y-%b-%e(%A)', '-%Y-%b-%e(%A)'],
-                                week: ['Week from %Y-%b-%e, %A', '%b-%e, %A', '-%Y-%b-%e, %A'],
+                                week: ['起始于(周)：%Y-%b-%e, %A', '%b-%e, %A', '-%Y-%b-%e, %A'],
                                 month: ['%Y-%b', '%B', '-%Y-%b'],
                                 year: ['%Y', '%Y', '-%Y']
                             }
@@ -508,14 +517,21 @@
                         x: 2,
                         y: 10,
                         formatter:function(){
-                            if(this.value > 1000000000) {
-                                return Number((this.value/1000000000).toFixed(2))+"G";
-                            }else if(this.value > 1000000) {
-                                return Number((this.value/1000000).toFixed(2))+"M";
-                            }else if(this.value > 1000) {
-                                return Number((this.value/1000).toFixed(2))+"K";
-                            }else{
-                                return Number(this.value.toFixed(2));
+                            var units = ["", "万", "亿"];
+                            var base = 0;
+                            var size = units.length;
+                            var unit = "";
+
+                            for(var i = units.length - 1; i >= 0; i--){
+                                base = Math.pow(10, i * 4);
+                                unit = units[i];
+
+                                if(this.value >= base){
+                                    var div = Number((this.value / base).toFixed(2));
+                                    var fdiv = Math.floor(div);
+
+                                    return (div - fdiv == 0 ? fdiv : div) + unit;
+                                }
                             }
                         }
                     },

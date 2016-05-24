@@ -9,7 +9,11 @@
     //options -> rangeSelect    是否启用范围选择
     //options -> rangeVisible   是否显示范围选择
     //options -> selectedIndex  默认选择范围
+    //options -> selectorHeight 范围选择高度
     //options -> tickAmount     刻度数量，默认为5
+    //options -> width          宽度
+    //options -> height         高度
+    //options -> floating       浮动，默认undefined
     //options -> colors         颜色配置
     //           colors -> line     线条颜色，默认值为：rgba(24, 124, 243, 1)
     //           colors -> fill     填充颜色，默认值为：rgba(24, 124, 243, 0.05)
@@ -37,7 +41,11 @@
             rangeSelect: false,
             rangeVisible: true,
             selectedIndex: 5,
+            selectorHeight: 35,
             tickAmount: 5,
+            width: null,
+            height: null,
+            floating: undefined,
             colors: {
                 line: "#187cf3",                    //#187cf3
                 fill: "rgba(24, 124, 243, 0.15)",   //#187cf3|0.05
@@ -537,10 +545,14 @@
             var yesterdayClose = this.options("yesterdayClose");
             var _HighStock = this.highStock;
             var positions = [];
+            var isForceFloating = false;
+            var floating = this.options("floating");
             var tickAmount = this.options("tickAmount");
             var stockOptions = {
                 chart: {
-                    spacingTop: 12
+                    spacingTop: 12,
+                    width: this.options("width") || null,
+                    height: this.options("height") || null
                 },
                 animation: this.options("animation"),
                 navigator: {
@@ -561,6 +573,7 @@
                     enabled: this.options("rangeSelect"),
                     selected: this.options("selectedIndex"),
                     inputEnabled: false,
+                    height: this.options("selectorHeight"),
                     buttons: [
                         {
                             type: 'minute',
@@ -630,7 +643,7 @@
                                 minute: ['%Y-%b-%e(%A) %H:%M', '%Y-%b-%e(%A) %H:%M', '-%H:%M'],
                                 hour: ['%Y-%b-%e(%A) %H:%M', '%Y-%b-%e(%A) %H:%M', '-%H:%M'],
                                 day: ['%Y-%b-%e(%A)', '%Y-%b-%e(%A)', '-%Y-%b-%e(%A)'],
-                                week: ['Week from %Y-%b-%e, %A', '%b-%e, %A', '-%Y-%b-%e, %A'],
+                                week: ['起始于(周)：%Y-%b-%e, %A', '%b-%e, %A', '-%Y-%b-%e, %A'],
                                 month: ['%Y-%b', '%B', '-%Y-%b'],
                                 year: ['%Y', '%Y', '-%Y']
                             }
@@ -641,6 +654,10 @@
                 xAxis: [],
                 yAxis: []
             };
+
+            if(floating !== undefined && DataType.isNumber(floating)){
+                isForceFloating = true;
+            }
 
             _HighStock.setOptions({
                 "tooltip": {
@@ -715,32 +732,38 @@
                     var tickNum = tickAmount;
                     var tickHalf = Math.floor(tickNum / 2);
 
-                    increment = (maxPrice - minPrice) / tickNum;   
+                    if(!isForceFloating){
+                        increment = (maxPrice - minPrice) / tickNum;   
 
-                    if(maxPrice - middle > 0 && minPrice - middle < 0){
-                        xinc = (maxPrice - middle) / tickHalf;
-                        ninc = (middle - minPrice) / tickHalf;
+                        if(maxPrice - middle > 0 && minPrice - middle < 0){
+                            xinc = (maxPrice - middle) / tickHalf;
+                            ninc = (middle - minPrice) / tickHalf;
 
-                        increment = Math.max(xinc, ninc);
-                        // console.info("A: " + increment)
-                    }else if(maxPrice - middle > 0 && minPrice - middle > 0){
-                        increment = (maxPrice - middle) / tickHalf;
-                        // console.info("B: " + increment)
-                    }else if(maxPrice - middle < 0 && minPrice - middle < 0){
-                        increment = (middle - minPrice) / tickHalf;
-                        // console.info("C: " + increment)
-                    }
+                            increment = Math.max(xinc, ninc);
+                            // console.info("A: " + increment)
+                        }else if(maxPrice - middle > 0 && minPrice - middle > 0){
+                            increment = (maxPrice - middle) / tickHalf;
+                            // console.info("B: " + increment)
+                        }else if(maxPrice - middle < 0 && minPrice - middle < 0){
+                            increment = (middle - minPrice) / tickHalf;
+                            // console.info("C: " + increment)
+                        }
 
-                    tick = middle;
-                    for(var i = 0; i < tickHalf; i++){
-                        positions.unshift(tick -= increment);
-                    }
+                        tick = middle;
+                        for(var i = 0; i < tickHalf; i++){
+                            positions.unshift(tick -= increment);
+                        }
 
-                    positions.push(middle);
+                        positions.push(middle);
 
-                    tick = middle;
-                    for(var i = 0; i < tickHalf; i++){
-                        positions.push(tick += increment);
+                        tick = middle;
+                        for(var i = 0; i < tickHalf; i++){
+                            positions.push(tick += increment);
+                        }
+                    }else{
+                        positions.unshift(middle - (middle * floating));
+                        positions.push(middle);
+                        positions.push(middle + (middle * floating));
                     }
                     
                     return positions;
