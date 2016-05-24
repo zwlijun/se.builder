@@ -13,7 +13,7 @@
     //options -> tickAmount     刻度数量，默认为5
     //options -> width          宽度
     //options -> height         高度
-    //options -> floating       浮动，默认undefined
+    //options -> floating       浮动，默认false
     //options -> colors         颜色配置
     //           colors -> line     线条颜色，默认值为：rgba(24, 124, 243, 1)
     //           colors -> fill     填充颜色，默认值为：rgba(24, 124, 243, 0.05)
@@ -45,7 +45,7 @@
             tickAmount: 5,
             width: null,
             height: null,
-            floating: undefined,
+            floating: false,
             colors: {
                 line: "#187cf3",                    //#187cf3
                 fill: "rgba(24, 124, 243, 0.15)",   //#187cf3|0.05
@@ -545,7 +545,6 @@
             var yesterdayClose = this.options("yesterdayClose");
             var _HighStock = this.highStock;
             var positions = [];
-            var isForceFloating = false;
             var floating = this.options("floating");
             var tickAmount = this.options("tickAmount");
             var stockOptions = {
@@ -655,10 +654,6 @@
                 yAxis: []
             };
 
-            if(floating !== undefined && DataType.isNumber(floating)){
-                isForceFloating = true;
-            }
-
             _HighStock.setOptions({
                 "tooltip": {
                     "enabled": true === this.options("tooltip")
@@ -732,7 +727,7 @@
                     var tickNum = tickAmount;
                     var tickHalf = Math.floor(tickNum / 2);
 
-                    if(!isForceFloating){
+                    if(true !== floating){
                         increment = (maxPrice - minPrice) / tickNum;   
 
                         if(maxPrice - middle > 0 && minPrice - middle < 0){
@@ -761,9 +756,13 @@
                             positions.push(tick += increment);
                         }
                     }else{
-                        positions.unshift(middle - (middle * floating));
+                        var x = Math.abs(max.price - middle);
+                        var n = Math.abs(min.price - middle);
+                        var m = (Math.max(x, n) / middle) * 1.05;
+
+                        positions.unshift(middle - (middle * m));
                         positions.push(middle);
-                        positions.push(middle + (middle * floating));
+                        positions.push(middle + (middle * m));
                     }
                     
                     return positions;
