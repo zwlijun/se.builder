@@ -13,7 +13,7 @@
     //options -> tickAmount     刻度数量，默认为5
     //options -> width          宽度
     //options -> height         高度
-    //options -> floating       浮动，默认false
+    //options -> floating       浮动，默认true
     //options -> colors         颜色配置
     //           colors -> line     线条颜色，默认值为：rgba(24, 124, 243, 1)
     //           colors -> fill     填充颜色，默认值为：rgba(24, 124, 243, 0.05)
@@ -45,7 +45,7 @@
             tickAmount: 5,
             width: null,
             height: null,
-            floating: false,
+            floating: true,
             colors: {
                 line: "#187cf3",                    //#187cf3
                 fill: "rgba(24, 124, 243, 0.15)",   //#187cf3|0.05
@@ -743,26 +743,27 @@
                             increment = (middle - minPrice) / tickHalf;
                             // console.info("C: " + increment)
                         }
-
-                        tick = middle;
-                        for(var i = 0; i < tickHalf; i++){
-                            positions.unshift(tick -= increment);
-                        }
-
-                        positions.push(middle);
-
-                        tick = middle;
-                        for(var i = 0; i < tickHalf; i++){
-                            positions.push(tick += increment);
-                        }
                     }else{
                         var x = Math.abs(max.price - middle);
                         var n = Math.abs(min.price - middle);
-                        var m = (Math.max(x, n) / middle) * 1.05;
+                        var d = Math.max(x, n);
+                        var m = (d / middle) * 1.05;
+                        var k = middle * m;
+                        
+                        increment = k / tickHalf;
+                    }
 
-                        positions.unshift(middle - (middle * m));
-                        positions.push(middle);
-                        positions.push(middle + (middle * m));
+                    tick = middle;
+                    for(var i = 0; i < tickHalf; i++){
+                        positions.unshift(tick -= increment);
+                    }
+
+                    positions.push(middle);
+
+
+                    tick = middle;
+                    for(var i = 0; i < tickHalf; i++){
+                        positions.push(tick += increment);
                     }
                     
                     return positions;
