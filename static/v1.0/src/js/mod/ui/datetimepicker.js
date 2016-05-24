@@ -20,7 +20,7 @@
     });
 
     var _html_structs = ''
-                      + '<div class="mod-datetime-picker-frame hide<%=dtp.options.time ? "" : " notime"%>" data-datepicker="<%=dtp.identity%>" data-action-mousedown="dtp://picker/bubbles">'
+                      + '<div class="mod-datetime-picker-frame hide<%=dtp.options.time ? "" : " notime"%><%=dtp.options.mode == 1 ? " year-month" : ""%>" data-datepicker="<%=dtp.identity%>" data-action-mousedown="dtp://picker/bubbles">'
                       + '</div>'
                       + '';
     var _core_structs = ''
@@ -73,6 +73,27 @@
                       + '        <%}%>'
                       + '        </ul>'
                       + '      </div>'
+                      + '      <div class="mod-dtp-year-month">'
+                      + '        <div class="mod-dtp-years clearfix">'
+                      + '          <sup class="icofont prev" title="上一年" data-action-click="dtp://picker/year/prev#<%=dtp.identity%>,<%=dtp.name%>"></sup>'
+                      + '          <strong><%=dtp.fmt.year%></strong>'
+                      + '          <sub class="icofont next" title="下一年" data-action-click="dtp://picker/year/next#<%=dtp.identity%>,<%=dtp.name%>"></sub>'
+                      + '        </div>'
+                      + '        <div class="mod-dtp-months clearfix">'
+                      + '          <em class="<%=dtp.fmt.month == "01" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,0">01月</em>'
+                      + '          <em class="<%=dtp.fmt.month == "02" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,1">02月</em>'
+                      + '          <em class="<%=dtp.fmt.month == "03" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,2">03月</em>'
+                      + '          <em class="<%=dtp.fmt.month == "04" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,3">04月</em>'
+                      + '          <em class="<%=dtp.fmt.month == "05" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,4">05月</em>'
+                      + '          <em class="<%=dtp.fmt.month == "06" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,5">06月</em>'
+                      + '          <em class="<%=dtp.fmt.month == "07" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,6">07月</em>'
+                      + '          <em class="<%=dtp.fmt.month == "08" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,7">08月</em>'
+                      + '          <em class="<%=dtp.fmt.month == "09" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,8">09月</em>'
+                      + '          <em class="<%=dtp.fmt.month == "10" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,9">10月</em>'
+                      + '          <em class="<%=dtp.fmt.month == "11" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,10">11月</em>'
+                      + '          <em class="<%=dtp.fmt.month == "12" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,11">12月</em>'
+                      + '        </div>'
+                      + '      </div>'
                       + '    </div>'
                       + '    <div class="mod-datetime-picker-timebox">'
                       + '      <ul class="mod-dtp-time-view clearfix">'
@@ -83,44 +104,50 @@
                       + '      <div class="mod-dtp-time-picker clearfix">'
                       + '        <div class="mod-dtp-hours">'
                       + '          <sup class="icofont prev" data-action-click="dtp://picker/hour/prev#<%=dtp.identity%>,<%=dtp.name%>"></sup>'
-                      + '          <ul class="mod-time-chooser hour">'
-                      + '            <%for(var i = 0; i < 24; i++){%>'
-                      + '            <%var ts = (i < 10 ? "0" + i : i);%>'
-                      + '            <%if(i == dtp.hours){%>'
-                      + '            <li class="on"><%=ts%></li>'
-                      + '            <%}else{%>'
-                      + '            <li><%=ts%></li>'
-                      + '            <%}%>'
-                      + '            <%}%>'
-                      + '          </ul>'
+                      + '          <div class="mod-time-chooser">'
+                      + '            <ul class="hours">'
+                      + '              <%for(var i = 0; i < 24; i++){%>'
+                      + '              <%var ts = (i < 10 ? "0" + i : i);%>'
+                      + '              <%if(i == dtp.hours){%>'
+                      + '              <li class="on"><%=ts%></li>'
+                      + '              <%}else{%>'
+                      + '              <li><%=ts%></li>'
+                      + '              <%}%>'
+                      + '              <%}%>'
+                      + '            </ul>'
+                      + '          </div>'
                       + '          <sub class="icofont next" data-action-click="dtp://picker/hour/next#<%=dtp.identity%>,<%=dtp.name%>"></sub>'
                       + '        </div>'
                       + '        <div class="mod-dtp-minutes">'
                       + '          <sup class="icofont prev" data-action-click="dtp://picker/minute/prev#<%=dtp.identity%>,<%=dtp.name%>"></sup>'
-                      + '          <ul class="mod-time-chooser minute">'
-                      + '            <%for(var i = 0; i < 60; i++){%>'
-                      + '            <%var ts = (i < 10 ? "0" + i : i);%>'
-                      + '            <%if(i == dtp.minutes){%>'
-                      + '            <li class="on"><%=ts%></li>'
-                      + '            <%}else{%>'
-                      + '            <li><%=ts%></li>'
-                      + '            <%}%>'
-                      + '            <%}%>'
-                      + '          </ul>'
+                      + '          <div class="mod-time-chooser">'
+                      + '            <ul class="minutes">'
+                      + '              <%for(var i = 0; i < 60; i++){%>'
+                      + '              <%var ts = (i < 10 ? "0" + i : i);%>'
+                      + '              <%if(i == dtp.minutes){%>'
+                      + '              <li class="on"><%=ts%></li>'
+                      + '              <%}else{%>'
+                      + '              <li><%=ts%></li>'
+                      + '              <%}%>'
+                      + '              <%}%>'
+                      + '            </ul>'
+                      + '          </div>'
                       + '          <sub class="icofont next" data-action-click="dtp://picker/minute/next#<%=dtp.identity%>,<%=dtp.name%>"></sub>'
                       + '        </div>'
                       + '        <div class="mod-dtp-seconds">'
                       + '          <sup class="icofont prev" data-action-click="dtp://picker/second/prev#<%=dtp.identity%>,<%=dtp.name%>"></sup>'
-                      + '          <ul class="mod-time-chooser second">'
-                      + '            <%for(var i = 0; i < 60; i++){%>'
-                      + '            <%var ts = (i < 10 ? "0" + i : i);%>'
-                      + '            <%if(i == dtp.seconds){%>'
-                      + '            <li class="on"><%=ts%></li>'
-                      + '            <%}else{%>'
-                      + '            <li><%=ts%></li>'
-                      + '            <%}%>'
-                      + '            <%}%>'
-                      + '          </ul>'
+                      + '          <div class="mod-time-chooser">'
+                      + '            <ul class="seconds">'
+                      + '              <%for(var i = 0; i < 60; i++){%>'
+                      + '              <%var ts = (i < 10 ? "0" + i : i);%>'
+                      + '              <%if(i == dtp.seconds){%>'
+                      + '              <li class="on"><%=ts%></li>'
+                      + '              <%}else{%>'
+                      + '              <li><%=ts%></li>'
+                      + '              <%}%>'
+                      + '              <%}%>'
+                      + '            </ul>'
+                      + '          </div>'
                       + '          <sub class="icofont next" data-action-click="dtp://picker/second/next#<%=dtp.identity%>,<%=dtp.name%>"></sub>'
                       + '        </div>'
                       + '        <div class="mod-dtp-time-selected"></div>'
@@ -134,6 +161,8 @@
                       + '';
 
     var FillZero = function(str, len){
+        str = "" + str;
+
         var zero = len - str.length;
 
         var tmp = "";
@@ -165,8 +194,41 @@
                 picker.render().show(false).position(node[0]);
             },
             year: {
-                panel: function(data, node, e, type){
+                prev: function(data, node, e, type){
+                    var args = (data || "").split(",");
+                    var identity = args[0];
+                    var name = args[1];
 
+                    var dtp = DateTimePicker.getDateTimePicker(name);
+                    var dt = dtp.getDateTime();
+                    var year = dt.getFullYear();
+
+                    dt.setFullYear(year - 1);
+
+                    dtp.print(dtp.serialized(dt));
+                },
+                next: function(data, node, e, type){
+                    var args = (data || "").split(",");
+                    var identity = args[0];
+                    var name = args[1];
+
+                    var dtp = DateTimePicker.getDateTimePicker(name);
+                    var dt = dtp.getDateTime();
+                    var year = dt.getFullYear();
+
+                    dt.setFullYear(year + 1);
+                    
+                    dtp.print(dtp.serialized(dt));
+                },
+                panel: function(data, node, e, type){
+                    var args = (data || "").split(",");
+                    var identity = args[0];
+                    var name = args[1];
+
+                    var dtp = DateTimePicker.getDateTimePicker(name);
+                    var frame = dtp.getDateTimePickerFrame();
+
+                    dtp.mode(frame.hasClass("year-month") ? 0 : 1);
                 }
             },
             month: {
@@ -190,8 +252,30 @@
 
                     dtp.print(dtp.serialized(serializedData.next.datetime));
                 },
-                panel: function(data, node, e, type){
+                set: function(data, node, e, type){
+                    var args = (data || "").split(",");
+                    var identity = args[0];
+                    var name = args[1];
+                    var month = Number(args[2]);
 
+                    var dtp = DateTimePicker.getDateTimePicker(name);
+                    var dt = dtp.getDateTime();
+
+                    dt.setMonth(month);
+
+                    dtp.update(dt);
+                    dtp.print(dtp.serialized(dt));
+                    // dtp.mode(0);
+                },
+                panel: function(data, node, e, type){
+                    var args = (data || "").split(",");
+                    var identity = args[0];
+                    var name = args[1];
+
+                    var dtp = DateTimePicker.getDateTimePicker(name);
+                    var frame = dtp.getDateTimePickerFrame();
+
+                    dtp.mode(frame.hasClass("year-month") ? 0 : 1);
                 }
             },
             date: {
@@ -210,26 +294,16 @@
                     var dtp = DateTimePicker.getDateTimePicker(name);
                     var frame = $('[data-datepicker="' + identity + '"]');
 
-                    var hours = frame.find(".mod-dtp-time-view .mod-dtp-view-hour");
-                    var minutes = frame.find(".mod-dtp-time-view .mod-dtp-view-minute");
-                    var seconds = frame.find(".mod-dtp-time-view .mod-dtp-view-second");
+                    var hoursView = frame.find(".mod-dtp-view-hour");
+                    var minutesView = frame.find(".mod-dtp-view-minute");
+                    var secondsView = frame.find(".mod-dtp-view-second");
 
                     var iYear = parseInt(year, 10);
                     var iMonth = parseInt(month, 10) - 1;
                     var iDate = parseInt(date, 10);
-                    var iHours = 0;
-                    var iMinutes = 0;
-                    var iSeconds = 0;
-
-                    if(hours.length > 0){
-                        iHours = parseInt(hours.html());
-                    }
-                    if(minutes.length > 0){
-                        iMinutes = parseInt(minutes.html());
-                    }
-                    if(seconds.length > 0){
-                        iSeconds = parseInt(seconds.html());
-                    }
+                    var iHours = parseInt(hoursView.html(), 0);
+                    var iMinutes = parseInt(minutesView.html(), 0);
+                    var iSeconds = parseInt(secondsView.html(), 0);
 
                     var dt = new Date(iYear, iMonth, iDate, iHours, iMinutes, iSeconds);
 
@@ -238,26 +312,146 @@
             },
             hour: {
                 prev: function(data, node, e, type){
+                    var args = (data || "").split(",");
+                    var identity = args[0];
+                    var name = args[1];
 
+                    var dtp = DateTimePicker.getDateTimePicker(name);
+                    var frame = dtp.getDateTimePickerFrame();
+                    var panel = node.prev(".mod-time-chooser").find("ul");
+                    var hoursView = frame.find(".mod-dtp-view-hour");
+                    var minutesView = frame.find(".mod-dtp-view-minute");
+                    var secondsView = frame.find(".mod-dtp-view-second");
+                    
+                    var hours = parseInt(hoursView.html(), 0);
+                    var minutes = parseInt(minutesView.html(), 0);
+                    var seconds = parseInt(secondsView.html(), 0);
+
+                    hours = hours - 1;
+                    hours = hours < 0 ? 23 : hours;
+
+                    hoursView.html(FillZero(hours, 2));
+
+                    dtp.time(hours, minutes, seconds);
                 },
                 next: function(data, node, e, type){
-                    
+                    var args = (data || "").split(",");
+                    var identity = args[0];
+                    var name = args[1];
+
+                    var dtp = DateTimePicker.getDateTimePicker(name);
+                    var frame = dtp.getDateTimePickerFrame();
+                    var panel = node.prev(".mod-time-chooser").find("ul");
+                    var hoursView = frame.find(".mod-dtp-view-hour");
+                    var minutesView = frame.find(".mod-dtp-view-minute");
+                    var secondsView = frame.find(".mod-dtp-view-second");
+
+                    var hours = parseInt(hoursView.html(), 0);
+                    var minutes = parseInt(minutesView.html(), 0);
+                    var seconds = parseInt(secondsView.html(), 0);
+
+                    hours = hours + 1;
+                    hours = hours > 23 ? 0 : hours;
+
+                    hoursView.html(FillZero(hours, 2));
+
+                    dtp.time(hours, minutes, seconds);
                 }
             },
             minute: {
                 prev: function(data, node, e, type){
+                    var args = (data || "").split(",");
+                    var identity = args[0];
+                    var name = args[1];
 
+                    var dtp = DateTimePicker.getDateTimePicker(name);
+                    var frame = dtp.getDateTimePickerFrame();
+                    var panel = node.prev(".mod-time-chooser").find("ul");
+                    var hoursView = frame.find(".mod-dtp-view-hour");
+                    var minutesView = frame.find(".mod-dtp-view-minute");
+                    var secondsView = frame.find(".mod-dtp-view-second");
+
+                    var hours = parseInt(hoursView.html(), 0);
+                    var minutes = parseInt(minutesView.html(), 0);
+                    var seconds = parseInt(secondsView.html(), 0);
+
+                    minutes = minutes - 1;
+                    minutes = minutes < 0 ? 59 : minutes;
+
+                    minutesView.html(FillZero(minutes, 2));
+                    
+                    dtp.time(hours, minutes, seconds);
                 },
                 next: function(data, node, e, type){
+                    var args = (data || "").split(",");
+                    var identity = args[0];
+                    var name = args[1];
+
+                    var dtp = DateTimePicker.getDateTimePicker(name);
+                    var frame = dtp.getDateTimePickerFrame();
+                    var panel = node.prev(".mod-time-chooser").find("ul");
+                    var hoursView = frame.find(".mod-dtp-view-hour");
+                    var minutesView = frame.find(".mod-dtp-view-minute");
+                    var secondsView = frame.find(".mod-dtp-view-second");
+
+                    var hours = parseInt(hoursView.html(), 0);
+                    var minutes = parseInt(minutesView.html(), 0);
+                    var seconds = parseInt(secondsView.html(), 0);
+
+                    minutes = minutes + 1;
+                    minutes = minutes > 59 ? 0 : minutes;
+
+                    minutesView.html(FillZero(minutes, 2));
                     
+                    dtp.time(hours, minutes, seconds);
                 }
             },
             second: {
                 prev: function(data, node, e, type){
+                    var args = (data || "").split(",");
+                    var identity = args[0];
+                    var name = args[1];
 
+                    var dtp = DateTimePicker.getDateTimePicker(name);
+                    var frame = dtp.getDateTimePickerFrame();
+                    var panel = node.prev(".mod-time-chooser").find("ul");
+                    var hoursView = frame.find(".mod-dtp-view-hour");
+                    var minutesView = frame.find(".mod-dtp-view-minute");
+                    var secondsView = frame.find(".mod-dtp-view-second");
+
+                    var hours = parseInt(hoursView.html(), 0);
+                    var minutes = parseInt(minutesView.html(), 0);
+                    var seconds = parseInt(secondsView.html(), 0);
+
+                    seconds = seconds - 1;
+                    seconds = seconds < 0 ? 59 : seconds;
+
+                    secondsView.html(FillZero(seconds, 2));
+                    
+                    dtp.time(hours, minutes, seconds);
                 },
                 next: function(data, node, e, type){
+                    var args = (data || "").split(",");
+                    var identity = args[0];
+                    var name = args[1];
+
+                    var dtp = DateTimePicker.getDateTimePicker(name);
+                    var frame = dtp.getDateTimePickerFrame();
+                    var panel = node.prev(".mod-time-chooser").find("ul");
+                    var hoursView = frame.find(".mod-dtp-view-hour");
+                    var minutesView = frame.find(".mod-dtp-view-minute");
+                    var secondsView = frame.find(".mod-dtp-view-second");
+
+                    var hours = parseInt(hoursView.html(), 0);
+                    var minutes = parseInt(minutesView.html(), 0);
+                    var seconds = parseInt(secondsView.html(), 0);
+
+                    seconds = seconds + 1;
+                    seconds = seconds > 59 ? 0 : seconds;
+
+                    secondsView.html(FillZero(seconds, 2));
                     
+                    dtp.time(hours, minutes, seconds);
                 }
             },
             today: function(data, node, e, type){
@@ -287,6 +481,7 @@
             todayOnly: false,
             format: "%y-%M-%d",
             schema: null,
+            mode: 0,
             range: {
                 start: null,
                 end: null
@@ -333,6 +528,19 @@
             var ret = DateUtil.format(datetime, format, true);
 
             return ret;
+        },
+        mode: function(mode){
+            this.options({
+                "mode": mode
+            });
+
+            var frame = this.getDateTimePickerFrame();
+
+            if(1 === mode){
+                frame.addClass("year-month");
+            }else{
+                frame.removeClass("year-month");
+            }
         },
         getFormatInfo: function(datetime){
             var fmt = DateUtil.format(datetime, "%y%M%d%h%m%s%i", true);
@@ -425,12 +633,49 @@
 
             return data;
         },
+        getDateTimePickerFrame: function(){
+            var frame = $('[data-datepicker="' + this.identity + '"]');
+
+            return frame;
+        },
+        time: function(hours, minutes, seconds){
+            var frame = this.getDateTimePickerFrame();
+            var item = frame.find(".mod-time-chooser li")[0];
+            var itemHeight = Util.getBoundingClientRect(item).height;
+            var offsetItemHeight = 2 * itemHeight;
+            var hoursPanel = frame.find(".mod-time-chooser ul.hours");
+            var minutesPanel = frame.find(".mod-time-chooser ul.minutes");
+            var secondsPanel = frame.find(".mod-time-chooser ul.seconds");
+
+            var dt = this.datetime;
+
+            dt.setHours(hours);
+            dt.setMinutes(minutes);
+            dt.setSeconds(seconds);
+
+            this.update(dt);
+            this.serialized(dt);
+
+            hoursPanel.css({
+                "marginTop": -((hours * itemHeight) - offsetItemHeight) + "px"
+            });
+
+            minutesPanel.css({
+                "marginTop": -((minutes * itemHeight) - offsetItemHeight) + "px"
+            });
+
+            secondsPanel.css({
+                "marginTop": -((seconds * itemHeight) - offsetItemHeight) + "px"
+            });
+        },
         print: function(renderData){
             DATETIME_PICKER.render(true, _core_structs, renderData, {
                 callback: function(ret){
-                    var frame = $('[data-datepicker="' + this.identity + '"]');
+                    var frame = this.getDateTimePickerFrame();
+                    var data = ret.metaData;
 
                     frame.html(ret.result);
+                    this.time(data.hours, data.minutes, data.seconds);
                 },
                 args: [],
                 context: this
@@ -439,7 +684,7 @@
         render: function(target){
             var renderData = this.serialized(this.datetime);
 
-            var picker = $('[data-datepicker="' + this.identity + '"]');
+            var picker = this.getDateTimePickerFrame();
 
             if(picker.length === 0){
                 DATETIME_PICKER.render(true, _html_structs, renderData, {
@@ -465,6 +710,9 @@
         update: function(datetime){
             this.datetime = datetime;
         },
+        getDateTime: function(){
+            return this.datetime;
+        },
         today: function(){
             var date = new Date();
 
@@ -474,13 +722,11 @@
         done: function(){
             var serializedData = this.serialized();
 
-            console.info(this.options("schema"))
-
             Util.requestExternal(this.options("schema"), [serializedData.datetime, this.format(serializedData.datetime)]);
             this.hide();
         },
         position: function(target, offsetScrollDOM){
-            var picker = $('[data-datepicker="' + this.identity + '"]');
+            var picker = this.getDateTimePickerFrame();
             var pickerRect = Util.getBoundingClientRect(picker[0]);
             var rect = Util.getBoundingClientRect(target, offsetScrollDOM || document.body);
 
@@ -524,16 +770,22 @@
                   });
         },
         show: function(visible){
-            var picker = $('[data-datepicker="' + this.identity + '"]');
+            var picker = this.getDateTimePickerFrame();
 
             if(false === visible){
                 picker.addClass("hidden");
             }
 
             picker.removeClass("hide");
+
+            var data = this.serialized();
+
+            if(true == data.options.time){
+                this.time(data.hours, data.minutes, data.seconds);
+            }
         },
         hide: function(){
-            var picker = $('[data-datepicker="' + this.identity + '"]');
+            var picker = this.getDateTimePickerFrame();
             picker.addClass("hide");
         }
     };
@@ -547,11 +799,22 @@
             options: function(){
                 return dtp.options.apply(dtp, arguments);
             },
+            getDateTimePickerFrame: function(){
+                return dtp.getDateTimePickerFrame();
+            },
             parse: function(datetimeString){
                 return dtp.parse(datetimeString);
             },
             format: function(datatime){
                 return dtp.format(datetime);
+            },
+            getDateTime: function(){
+                return dtp.getDateTime();
+            },
+            mode: function(mode){
+                dtp.mode(mode);
+
+                return this;
             },
             serialized: function(datetime){
                 return dtp.serialized(datetime);
@@ -568,6 +831,11 @@
             },
             update: function(datetime){
                 dtp.update(datetime);
+
+                return this;
+            },
+            time: function(hours, minutes, seconds){
+                dtp.time(hours, minutes, seconds);
 
                 return this;
             },
@@ -618,7 +886,8 @@
             {"attr": "format", "name": "format", "dataType": "string"},
             {"attr": "range-start", "name": "range.start", "dataType": "date"},
             {"attr": "range-end", "name": "range.end", "dataType": "date"},
-            {"attr": "schema", "name": "schema", "dataType": "string"}
+            {"attr": "schema", "name": "schema", "dataType": "string"},
+            {"attr": "mode", "name": "mode", "dataType": "number"}
         ];
         var key = null;
         var value = null;
