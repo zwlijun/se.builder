@@ -205,6 +205,7 @@
 
                     dt.setFullYear(year - 1);
 
+                    dtp.update(dt);
                     dtp.print(dtp.serialized(dt));
                 },
                 next: function(data, node, e, type){
@@ -218,6 +219,7 @@
 
                     dt.setFullYear(year + 1);
                     
+                    dtp.update(dt);
                     dtp.print(dtp.serialized(dt));
                 },
                 panel: function(data, node, e, type){
@@ -239,8 +241,10 @@
 
                     var dtp = DateTimePicker.getDateTimePicker(name);
                     var serializedData = dtp.serialized();
+                    var dt = serializedData.prev.datetime;
 
-                    dtp.print(dtp.serialized(serializedData.prev.datetime));
+                    dtp.update(dt);
+                    dtp.print(dtp.serialized(dt));
                 },
                 next: function(data, node, e, type){
                     var args = (data || "").split(",");
@@ -249,8 +253,10 @@
 
                     var dtp = DateTimePicker.getDateTimePicker(name);
                     var serializedData = dtp.serialized();
+                    var dt = serializedData.next.datetime;
 
-                    dtp.print(dtp.serialized(serializedData.next.datetime));
+                    dtp.update(dt);
+                    dtp.print(dtp.serialized(dt));
                 },
                 set: function(data, node, e, type){
                     var args = (data || "").split(",");
@@ -307,6 +313,7 @@
 
                     var dt = new Date(iYear, iMonth, iDate, iHours, iMinutes, iSeconds);
 
+                    dtp.update(dt);
                     dtp.print(dtp.serialized(dt));
                 }
             },
