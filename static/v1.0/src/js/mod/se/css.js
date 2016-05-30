@@ -226,6 +226,49 @@
         return NaN == value ? NaN : parseFloat(value, 10);
     };
 
+    var RemoveStyleRules = function(el, styles){
+        if(el && el.style && el.style.cssText){
+            var ls = styles || [];
+            var cssText = (el.style.cssText || "").toLowerCase();
+            var size = ls.length;
+
+            var pattern = /([^:\s]+)[\s]*:[\s]*([^;]+);?/gmi;
+            var matcher = null;
+
+            pattern.lastIndex = 0;
+
+            var property = null;
+            var value = null;
+            var style = {};
+
+            while(null !== (matcher = pattern.exec(cssText))){
+                property = matcher[1];
+                value = matcher[2];
+
+                if(!property){
+                    continue;
+                }
+
+                style[property] = value;
+            }
+
+            for(var i = 0; i < size; i++){
+                if(ls[i] in style){
+                    delete style[ls[i]];
+                }
+            }
+
+            var newStyles = [];
+            for(var p in style){
+                if(style.hasOwnProperty(p)){
+                    newStyles.push(p + ": " + style[p]);
+                }
+            }
+
+            el.style.cssText = newStyles.join("; ");
+        }
+    };
+
     module.exports = {
         "hasProperty" : hasProperty,
         "getRealStyle": getRealStyle,
@@ -242,6 +285,7 @@
         "getIntValue": getIntValue,
         "getFloatValue": getFloatValue,
         "needAppendPrefix": needAppendPrefix,
-        "getVendorStyles": getVendorStyles
+        "getVendorStyles": getVendorStyles,
+        "removeStyleRules": RemoveStyleRules
     };
 });

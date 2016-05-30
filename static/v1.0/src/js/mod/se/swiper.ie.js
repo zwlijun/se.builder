@@ -14,16 +14,16 @@
     var Util            = require("mod/se/util");
     var Style           = require("mod/se/css");
     var Timer           = require("mod/se/timer");
+    var Tween           = require("mod/sa/tween");
 
     var HandleStack     = Listener.HandleStack;
 
     var _document = document;
     var _window = window;
 
-    var supportTouch    = ("ontouchstart" in window);
-    var startEvent = supportTouch ? "touchstart.swiper" : "mousedown.swiper";
-    var endEvent   = supportTouch ? "touchend.swiper"   : "mouseup.swiper";
-    var moveEvent  = supportTouch ? "touchmove.swiper"  : "mousemove.swiper";
+    var startEvent = "mousedown.swiper";
+    var endEvent   = "mouseup.swiper";
+    var moveEvent  = "mousemove.swiper";
 
     var SwiperSchema = {
         name: "swiper",
@@ -102,10 +102,7 @@
 
     var _TYPE_CLASSNAME = [
         "slider", 
-        "cube", 
-        "draw", 
-        "fade", 
-        "scale"
+        "fade"
     ];
 
     var _SwiperItemSelector = {
@@ -121,7 +118,7 @@
     };
 
     //DOM Options
-    //data-swiper-type      :: 类型 [slider | scale | fade | draw | cube]
+    //data-swiper-type      :: 类型 [slider | fade]
     //data-swiper-mode      :: 模式 [x | y | free]
     //data-swiper-distance  :: 滑屏距离（手指滑动多少个PX后触发切换）[number]
     //data-swiper-dots      :: 滑屏定位点或缩略图 [none | static | bottom | right]
@@ -133,6 +130,7 @@
     //data-swiper-interval  :: 自动播放时间隔周期 [number]，单位ms
     //data-swiper-duration  :: 滑屏切换时间 [number]，单位s
     //data-swiper-timing    :: 滑屏过渡效果 [ease | ease-in | ease-out | ease-in-out | cubic-bezier(n,n,n,n) | linear]
+    //data-swiper-tween     :: 滑屏过渡效果 @see Tween
     //data-swiper-delay     :: 滑屏延迟时长 [number]，单位s
     //data-swiper-unit      :: 尺寸单位 [% | em | px | pt| rem | ex | pc | in | cm | mm]
     var GetDefaultOptions = function(){
@@ -148,7 +146,8 @@
             "loop": true,                       //是否循环
             "interval": 4000,                   //自动播放时间隔周期
             "duration": 1,                      //滑屏时长 [n]s
-            "timing": "ease",                   //滑屏过渡类型 [ease | ease-in | ease-out | ease-in-out | cubic-bezier(n,n,n,n) | linear]
+            "timing": "ease",                   //滑屏过渡效果 [ease | ease-in | ease-out | ease-in-out | cubic-bezier(n,n,n,n) | linear]
+            "tween": Tween.Sine.easeOut,        //滑屏过渡效果 @see Tween
             "delay": 0,                         //滑屏延迟时长 [n]s
             "unit": "px"                        //尺寸单位 [% | em | px | pt| rem | ex | pc | in | cm | mm]
         };
@@ -168,6 +167,7 @@
             {"name": "interval", "dataType": "number", "defaultValue": "4000"},
             {"name": "duration", "dataType": "number", "defaultValue": "1"},
             {"name": "timing", "dataType": "string", "defaultValue": "ease"},
+            {"name": "tween", "dataType": "tween", "defaultValue": "Sine/easeOut"},
             {"name": "delay", "dataType": "number", "defaultValue": "0"},
             {"name": "unit", "dataType": "string", "defaultValue": "px"}
         ];
@@ -204,6 +204,18 @@
                 opts[attr.name] = value;
             }else if("boolean" == attr.dataType){
                 opts[attr.name] = ("1" === value);
+            }else if("tween" == attr.dataType){
+                var pck = value.split(/[\/\.]/);
+                var type = pck[0];
+                var fn = pck[1];
+                var tween = Tween.Sine.easeOut;
+
+                if(type in Tween){
+                    if(fn in Tween[type]){
+                        tween = Tween[type][fn];
+                    }
+                }
+                opts[attr.name] = tween;
             }else{
                 opts[attr.name] = value;
             }
@@ -281,6 +293,335 @@
         startEvent += "_" + name;
         moveEvent += "_" + name;
         endEvent += "_" + name;
+    };
+
+    _Swiper.EffectType = {
+        "slider": {
+            "ready": function(){
+                var body = this.body;
+                var selector = _SwiperItemSelector.selector;
+                var current = body.find(selector.current);
+                var before = body.find(selector.before);
+                var after = body.find(selector.after);
+
+                var rect = Util.getBoundingClientRect(current[0]);
+                var mode = this._dynamicMode;
+
+                current.css({
+                    "left": "0px",
+                    "top": "0px"
+                });
+
+                if("y" == mode){
+                    after.css({
+                        "left": "0px",
+                        "top": rect.bottom + "px"
+                    });
+                    before.css({
+                        "left": "0px",
+                        "top": "-" + rect.height + "px"
+                    });
+                }else{
+                    after.css({
+                        "top": "0px",
+                        "left": rect.width + "px"
+                    });
+                    before.css({
+                        "top": "0px",
+                        "left": "-" + rect.width + "px"
+                    });
+                }
+
+                return true;
+            },
+            "before": function(){
+                var tween = this.options("tween");
+
+                var body = this.body;
+                var selector = _SwiperItemSelector.selector;
+                var current = body.find(selector.current);
+                var before = body.find(selector.before);
+
+                var rect1 = Util.getBoundingClientRect(current[0]);
+                var rect2 = Util.getBoundingClientRect(before[0]);
+
+                _Swiper.EffectType.Animate.moveTo.apply(this, [current, 0, rect1.width, _Swiper.EffectType.slider]);
+                _Swiper.EffectType.Animate.moveTo.apply(this, [before, -rect1.width, rect2.width, _Swiper.EffectType.slider]);
+            },
+            "after": function(){
+                var body = this.body;
+                var selector = _SwiperItemSelector.selector;
+                var current = body.find(selector.current);
+                var after = body.find(selector.after);
+
+                var rect1 = Util.getBoundingClientRect(current[0]);
+                var rect2 = Util.getBoundingClientRect(after[0]);
+
+                _Swiper.EffectType.Animate.moveTo.apply(this, [current, 0, -rect1.width, _Swiper.EffectType.slider]);
+                _Swiper.EffectType.Animate.moveTo.apply(this, [after, rect1.width, -rect2.width, _Swiper.EffectType.slider]);
+            },
+            "restore": function(){
+                var body = this.body;
+                var selector = _SwiperItemSelector.selector;
+                var current = body.find(selector.current);
+                var before = body.find(selector.before);
+                var after = body.find(selector.after);
+
+                var styles = [
+                    "left",
+                    "top"
+                ];
+
+                Style.removeStyleRules(current[0], styles);
+                Style.removeStyleRules(before[0], styles);
+                Style.removeStyleRules(after[0], styles);
+            }
+        },
+        "fade": {
+            "ready": function(){
+                var body = this.body;
+                var selector = _SwiperItemSelector.selector;
+                var current = body.find(selector.current);
+                var before = body.find(selector.before);
+                var after = body.find(selector.after);
+
+                var rect = Util.getBoundingClientRect(current[0]);
+                var mode = this._dynamicMode;
+
+                current.css({
+                    "left": "0px",
+                    "top": "0px",
+                    "zIndex": 3,
+                    "opacity": 1,
+                    "filter": "alpha(opacity=100)"
+                });
+                after.css({
+                    "left": "0px",
+                    "top": "0px",
+                    "zIndex": 1,
+                    "opacity": 0,
+                    "filter": "alpha(opacity=0)"
+                });
+                before.css({
+                    "left": "0px",
+                    "top": "0px",
+                    "zIndex": 1,
+                    "opacity": 0,
+                    "filter": "alpha(opacity=0)"
+                });
+
+                return true;
+            },
+            "before": function(){
+                var tween = this.options("tween");
+
+                var body = this.body;
+                var selector = _SwiperItemSelector.selector;
+                var current = body.find(selector.current);
+                var before = body.find(selector.before);
+
+                before.css("zIndex", 2);
+
+                var rect1 = Util.getBoundingClientRect(current[0]);
+                var rect2 = Util.getBoundingClientRect(before[0]);
+
+                _Swiper.EffectType.Animate.fadeTo.apply(this, [current, 1, -1, _Swiper.EffectType.fade]);
+                _Swiper.EffectType.Animate.fadeTo.apply(this, [before, 0, 1, _Swiper.EffectType.fade]);
+            },
+            "after": function(){
+                var body = this.body;
+                var selector = _SwiperItemSelector.selector;
+                var current = body.find(selector.current);
+                var after = body.find(selector.after);
+
+                after.css("zIndex", 2);
+
+                var rect1 = Util.getBoundingClientRect(current[0]);
+                var rect2 = Util.getBoundingClientRect(after[0]);
+
+                _Swiper.EffectType.Animate.fadeTo.apply(this, [current, 1, -1, _Swiper.EffectType.fade]);
+                _Swiper.EffectType.Animate.fadeTo.apply(this, [after, 0, 1, _Swiper.EffectType.fade]);
+            },
+            "restore": function(){
+                var body = this.body;
+                var selector = _SwiperItemSelector.selector;
+                var current = body.find(selector.current);
+                var before = body.find(selector.before);
+                var after = body.find(selector.after);
+
+                var styles = [
+                    "left",
+                    "top",
+                    "zIndex",
+                    "opacity",
+                    "filter"
+                ];
+
+                Style.removeStyleRules(current[0], styles);
+                Style.removeStyleRules(before[0], styles);
+                Style.removeStyleRules(after[0], styles);
+            }
+        },
+        Animate: {
+            moveTo: function(target, start, changed, pck){
+                var swiper = this;
+                var realtime = swiper.realtime;
+                var mode = swiper._dynamicMode;
+                var tween = swiper.options("tween");
+                var time = 0;
+                var duration = realtime.duration * 1000;
+                var delay = realtime.delay * 1000;
+                var timer = null;
+                var property = "y" == mode ? "top" : "left";
+                var timeSlice = 1000 / 60;
+                var firstCall = true;
+
+                var _startup = function(){
+                    target.css(property, tween(time, start, changed, duration) + "px");
+
+                    if(time < duration){
+                        time += timeSlice;
+                        timer = setTimeout(_startup, timeSlice);
+                    }else{
+                        if(timer){
+                            clearTimeout(timer);
+                            timer = null;
+                        }
+
+                        if(pck && "restore" in pck){
+                            pck["restore"].apply(swiper, []);
+                        }
+
+                        if(target.hasClass("current")){
+                            swiper._exitend = true;
+                            swiper.exec("exitend", [target[0]]);
+                        }
+                        if(target.hasClass("maybe")){
+                            swiper._enterend = true;
+                            swiper.exec("enterend", [target[0]]);
+                        }
+
+                        swiper.setForceLocked(!(swiper._exitend && swiper._enterend));
+
+                        if(!swiper.isForceLocked()){
+                            swiper.setIndex(swiper.getNextIndex());
+
+                            swiper.render();
+
+                            swiper.exec("end", [target[0]]);
+                        }
+                    }
+                };
+
+                //处理事件回调
+                swiper.setForceLocked(true);
+                swiper._enterend = false;
+                swiper._exitend = false;
+
+                if(!swiper._enterstart && !swiper._exitstart){
+                    swiper.exec("start", [target[0]]);
+                }
+
+                if(target.hasClass("current")){
+                    swiper._enterstart = true;
+                    swiper.exec("exitstart", [target[0]]);
+                }
+                if(target.hasClass("maybe")){
+                    swiper._exitstart = true;
+                    swiper.exec("enterstart", [target[0]]);
+                }
+
+                setTimeout(_startup, delay);
+
+                swiper.setNextIndex(swiper.getIndex() + swiper._dir);
+            },
+            fadeTo: function(target, start, changed, pck){
+                var swiper = this;
+                var realtime = swiper.realtime;
+                var mode = swiper._dynamicMode;
+                var tween = swiper.options("tween");
+                var time = 0;
+                var duration = realtime.duration * 1000;
+                var delay = realtime.delay * 1000;
+                var timer = null;
+                var timeSlice = 1000 / 60;
+                var firstCall = true;
+
+                var _startup = function(){
+                    console.log(tween(time, start, changed, duration))
+                    target.css("opacity", tween(time, start, changed, duration));
+                    target.css("filter", "Alpha(Opacity=" + (tween(time, start, changed, duration) * 100) + ")");
+
+                    if(time < duration){
+                        time += timeSlice;
+                        timer = setTimeout(_startup, timeSlice);
+                    }else{
+                        if(timer){
+                            clearTimeout(timer);
+                            timer = null;
+                        }
+
+                        if(pck && "restore" in pck){
+                            pck["restore"].apply(swiper, []);
+                        }
+
+                        if(target.hasClass("current")){
+                            swiper._exitend = true;
+                            swiper.exec("exitend", [target[0]]);
+                        }
+                        if(target.hasClass("maybe")){
+                            swiper._enterend = true;
+                            swiper.exec("enterend", [target[0]]);
+                        }
+
+                        swiper.setForceLocked(!(swiper._exitend && swiper._enterend));
+
+                        if(!swiper.isForceLocked()){
+                            swiper.setIndex(swiper.getNextIndex());
+
+                            swiper.render();
+
+                            swiper.exec("end", [target[0]]);
+                        }
+                    }
+                };
+
+                //处理事件回调
+                swiper.setForceLocked(true);
+                swiper._enterend = false;
+                swiper._exitend = false;
+
+                if(!swiper._enterstart && !swiper._exitstart){
+                    swiper.exec("start", [target[0]]);
+                }
+
+                if(target.hasClass("current")){
+                    swiper._enterstart = true;
+                    swiper.exec("exitstart", [target[0]]);
+                }
+                if(target.hasClass("maybe")){
+                    swiper._exitstart = true;
+                    swiper.exec("enterstart", [target[0]]);
+                }
+
+                setTimeout(_startup, delay);
+
+                swiper.setNextIndex(swiper.getIndex() + swiper._dir);
+            }
+        },
+        apply: function(type, dir, swiper){
+            if(type in _Swiper.EffectType){
+                var effect = _Swiper.EffectType[type];
+
+                if(effect.ready.apply(swiper, [])){
+                    if(-1 == dir){
+                        effect.before.apply(swiper, []);
+                    }else if(1 == dir){
+                        effect.after.apply(swiper, []);
+                    }
+                }
+            }
+        }
     };
 
     _Swiper.prototype = {
@@ -467,8 +808,6 @@
 
             this.size = this.items.length;
             this.lastIndex = Math.max(this.size - 1, 0);
-
-            this.listen();
         },
         createViewport: function(){
             var viewport = this.viewport;
@@ -516,78 +855,6 @@
                 });
 
                 this.isbind = true;
-            }
-        },
-        listen: function(){
-            var items = this.getItems();
-            var size = this.getSize();
-            var item = null;
-            var flag = null;
-
-            var animation = [
-                "webkitAnimationStart", 
-                "mozAnimationStart", 
-                "MSAnimationStart", 
-                "oanimationstart", 
-                "animationstart",
-                "webkitAnimationEnd", 
-                "mozAnimationEnd", 
-                "MSAnimationEnd", 
-                "oanimationend", 
-                "animationend"
-            ];
-            var data = {
-                swiper: this
-            };
-
-            var body = this.body;
-
-            flag = body.attr("data-swiper-listen");
-
-            if("1" != flag){
-                body.on(animation.join(" "), data, function(e){
-                    e.stopPropagation();
-                    e.preventDefault();
-
-                    var data = e.data;
-                    var type = e.type;
-                    var swiper = data.swiper;
-
-                    type = type.toLowerCase();
-                    type = type.replace(/^(webkit|moz|ms|o)/, "");
-
-                    if(type in swiper){
-                        swiper[type].apply(swiper, [e, type]);
-                    }
-                });
-                body.attr("data-swiper-listen", "1");
-            }
-
-            for(var i = 0; i < size; i++){
-                item = $(this.getItem(i));
-                flag = item.attr("data-swiper-listen");
-
-                if("1" == flag){
-                    continue;
-                }
-
-                item.on(animation.join(" "), data, function(e){
-                    e.stopPropagation();
-                    e.preventDefault();
-
-                    var data = e.data;
-                    var type = e.type;
-                    var swiper = data.swiper;
-
-                    type = type.toLowerCase();
-                    type = type.replace(/^(webkit|moz|ms|o)/, "");
-
-                    if(type in swiper){
-                        swiper[type].apply(swiper, [e, type]);
-                    }
-                });
-
-                item.attr("data-swiper-listen", "1");
             }
         },
         move: function(e){
@@ -752,9 +1019,8 @@
             var className = [];
             var viewport = swiper.viewport;
             var aniamtions = {
-                "animationDuration": realtime.duration + "s",
-                "animationTimingFunction": realtime.timing,
-                "animationDelay": realtime.delay + "s"
+                "animationName": "iefixed",
+                "transform": "inherit"
             };
 
             className.push(realtime.type);
@@ -764,72 +1030,13 @@
             Style.map(swiper.body, aniamtions);
             Style.map(swiper.getItems(), aniamtions);
 
-            _Swiper.Settings.invoke(realtime.type, "render", [swiper, _dynamicMode]);
-
             viewport.removeClass(_CONTROL_CLASSNAME.join(" "))
                     .removeClass(_TYPE_CLASSNAME.join(" "))
                     .addClass(className.join(" "));
 
+            _Swiper.EffectType.apply(realtime.type, _dir, swiper);
+
             // viewport[0].className = className.join(" ");
-        },
-        animationstart: function(e, type){
-            var target = e.currentTarget;
-            var $node = $(target);
-            var realtime = this.realtime;
-
-            this.setForceLocked(true);
-
-            if("cube" == realtime.type){
-                this.exec("start", [target]);
-            }else{
-                this._enterend = false;
-                this._exitend = false;
-
-                if(!this._enterstart && !this._exitstart){
-                    this.exec("start", [target]);
-                }
-
-                if($node.hasClass("current")){
-                    this._enterstart = true;
-                    this.exec("exitstart", [target]);
-                }
-                if($node.hasClass("maybe")){
-                    this._exitstart = true;
-                    this.exec("enterstart", [target]);
-                }
-            }
-
-            this.setNextIndex(this.getIndex() + this._dir);
-        },
-        animationend: function(e, type){
-            var target = e.currentTarget;
-            var $node = $(target);
-            var realtime = this.realtime;
-
-            _Swiper.Settings.invoke(realtime.type, "restore", [this])
-
-            if("cube" == realtime.type){
-                this.setForceLocked(false);
-            }else{
-                if($node.hasClass("current")){
-                    this._exitend = true;
-                    this.exec("exitend", [target]);
-                }
-                if($node.hasClass("maybe")){
-                    this._enterend = true;
-                    this.exec("enterend", [target]);
-                }
-
-                this.setForceLocked(!(this._exitend && this._enterend));
-            }
-
-            if(!this.isForceLocked()){
-                this.setIndex(this.getNextIndex());
-
-                this.render();
-
-                this.exec("end", [target]);
-            }
         },
         initDots: function(){
             var dots = this.options("dots");
@@ -974,9 +1181,8 @@
             var className = [];
             var viewport = swiper.viewport;
             var aniamtions = {
-                "animationDuration": _duration + "s",
-                "animationTimingFunction": _timing,
-                "animationDelay": _delay + "s"
+                "animationName": "iefixed",
+                "transform": "inherit"
             };
 
             swiper.realtime = {
@@ -999,11 +1205,11 @@
             Style.map(swiper.body, aniamtions);
             Style.map(swiper.getItems(), aniamtions);
 
-            _Swiper.Settings.invoke(_type, "render", [swiper, _dynamicMode]);
-
             viewport.removeClass(_CONTROL_CLASSNAME.join(" "))
                     .removeClass(_TYPE_CLASSNAME.join(" "))
                     .addClass(className.join(" "));
+
+            _Swiper.EffectType.apply(_type, _dir, swiper);
 
             // viewport[0].className = className.join(" ");
         },
@@ -1187,9 +1393,6 @@
             this.createViewport();
             this.exec("create", []);
 
-            // for test
-            // _Swiper.Settings.invoke("cube", "render", [this, "x"])
-
             if(true === this.options("autoplay")){
                 this.play();
             }
@@ -1212,61 +1415,6 @@
         pause: function(){
             var timer = this._timer;
             timer.stop();
-        }
-    };
-
-    _Swiper.Settings = {
-        cube: {
-            render: function(swiper, mode){
-                var body = swiper.body;
-                var selector = _SwiperItemSelector.selector;
-                var current = body.find(selector.current);
-                var after = body.find(selector.after);
-                var before = body.find(selector.before);
-                var sizeof = swiper.sizeof();
-
-                var unit = sizeof.unit;
-                var width = sizeof.width;
-                var height = sizeof.height;
-
-                if("y" == mode){
-                    //front
-                    Style.css(current, "transform", "translateZ(" + (height / 2) + unit.height + ")");
-                    //bottom
-                    Style.css(after, "transform", "rotateX(-90deg) translateZ(" + (height / 2) + unit.height + ")");
-                    //top
-                    Style.css(before, "transform", "rotateX(90deg) translateZ(" + (height / 2) + unit.height + ")");
-                }else{
-                    //front
-                    Style.css(current, "transform", "translateZ(" + (width / 2) + unit.width + ")");
-                    //right
-                    Style.css(after, "transform", "rotateY(90deg) translateZ(" + (width / 2) + unit.width + ")");
-                    //left
-                    Style.css(before, "transform", "rotateY(-90deg) translateZ(" + (width / 2) + unit.width + ")");
-                }
-            },
-            restore: function(swiper){
-                var body = swiper.body;
-                var selector = _SwiperItemSelector.selector;
-                var current = body.find(selector.current);
-                var after = body.find(selector.after);
-                var before = body.find(selector.before);
-
-                var obj = {
-                    "transform": "initial"
-                };
-
-                Style.map(current, obj);
-                Style.map(after, obj);
-                Style.map(before, obj);
-            }
-        },
-        invoke: function(type, methodName, args){
-            if(type in _Swiper.Settings){
-                if(methodName in _Swiper.Settings[type]){
-                    _Swiper.Settings[type][methodName].apply(_Swiper.Settings[type], args || []);
-                }
-            }
         }
     };
 
@@ -1418,7 +1566,7 @@
     };
 
     module.exports = {
-        "version": "R16B0512",
+        "version": "R16B0527",
         createSwiper: function(name, options){
             return _Swiper.createSwiper(name, options);
         },
