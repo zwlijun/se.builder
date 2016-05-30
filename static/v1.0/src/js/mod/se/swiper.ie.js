@@ -548,7 +548,6 @@
                 var firstCall = true;
 
                 var _startup = function(){
-                    console.log(tween(time, start, changed, duration))
                     target.css("opacity", tween(time, start, changed, duration));
                     target.css("filter", "Alpha(Opacity=" + (tween(time, start, changed, duration) * 100) + ")");
 
