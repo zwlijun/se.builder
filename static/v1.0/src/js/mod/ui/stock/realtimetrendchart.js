@@ -1,3 +1,14 @@
+/**********************************************************
+ * Copyright (c) SESHENGHUO.COM All rights reserved       *
+ **********************************************************/
+
+/**
+ * 股票分时图
+ * @charset utf-8
+ * @author lijun
+ * @git: https://github.com/zwlijun/se.builder
+ * @date 2016.5
+ */
 ;define(function(require, exports, module){
     var DateUtil = require("mod/se/dateutil");
     var DataType = require("mod/se/datatype");

@@ -1,3 +1,14 @@
+/**********************************************************
+ * Copyright (c) SESHENGHUO.COM All rights reserved       *
+ **********************************************************/
+
+/**
+ * 股票图表
+ * @charset utf-8
+ * @author lijun
+ * @git: https://github.com/zwlijun/se.builder
+ * @date 2016.5
+ */
 ;define(function(require, exports, module){
     var HighStock           = require("lib/extra/highcharts/r4.2.3/highstock");
     var RealTimeTrendChart  = require("mod/ui/stock/realtimetrendchart");
