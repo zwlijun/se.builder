@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html data-page-alias="ui-component#logicbox">
+<head>
+<!--#include virtual="/static/basic/inc/meta.html"-->
+<!--#include virtual="/static/basic/inc/rem.html"-->
+<title>Mod/Logicbox</title>
+<!--#include virtual="/static/basic/inc/css_common_gm.html"-->
+</head>
+<body style="background: red;">
+  <div class="mod-logicbox-mask">
+    <div class="mod-logicbox-box abs-center">
+      
+    </div>
+  </div>
+<!--#include virtual="/static/basic/inc/js_common_z.html" -->  
+</body>
+</html>

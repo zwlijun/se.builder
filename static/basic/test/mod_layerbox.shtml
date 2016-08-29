@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html data-page-alias="ui-component#layerbox">
+<head>
+<!--#include virtual="/static/basic/inc/meta.html"-->
+<!--#include virtual="/static/basic/inc/rem.html"-->
+<title>Mod/Layerbox</title>
+<!--#include virtual="/static/basic/inc/css_common_gm.html"-->
+</head>
+<body style="background: red;">
+  <div class="mod-layerbox-mask confirm">
+    <div class="mod-layerbox-box abs-center">
+      <div class="mod-layerbox-content">确认要删除吗？</div>
+      <div class="mod-layerbox-buttons flexbox center middle">
+        <button type="button">取消</button>
+        <button type="button">确定</button>
+      </div>
+    </div>
+  </div>
+<!--#include virtual="/static/basic/inc/js_common_z.html" -->    
+</body>
+</html>

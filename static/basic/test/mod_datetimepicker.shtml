@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html data-page-alias="ui-component#layerbox">
+<head>
+<!--#include virtual="/static/basic/inc/meta.html"-->
+<!--#include virtual="/static/basic/inc/rem.html"-->
+<title>Mod/DateTimePicker</title>
+<!--#include virtual="/static/basic/inc/css_common_gm.html"-->
+<link rel="stylesheet" type="text/css" href="/static/basic/src/css/mod/datetimepicker.css">
+</head>
+<body>
+  <!-- <div class="mod-datetime-picker-frame">
+    <div class="mod-datetime-picker-body clearfix">
+      <div class="mod-datetime-picker-datebox">
+        <h6 class="mod-dtp-year clearfix">
+          <sup class="icofont prev" title="上一月"></sup>
+          <em title="点击选择年份">2016</em>
+          <span>/</span>
+          <cite title="点击选择月份">05</cite>
+          <span>/</span>
+          <i>12</i>
+          <sub class="icofont next" title="下一月"></sub>
+        </h6>
+        <div class="mod-dtp-date">
+          <ul class="mod-dtp-weeks clearfix">
+            <li>日</li>
+            <li>一</li>
+            <li>二</li>
+            <li>三</li>
+            <li>四</li>
+            <li>五</li>
+            <li>六</li>
+          </ul>
+          <ul class="mod-dtp-days clearfix">
+            <li class="disabled">1</li>
+            <li>2</li>
+            <li class="on">3</li>
+            <li>4</li>
+            <li>5</li>
+            <li class="cur">6</li>
+            <li>7</li>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
+            <li>7</li>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
+            <li>7</li>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
+            <li>7</li>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
+            <li>7</li>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
+            <li>7</li>
+          </ul>
+        </div>
+        <div class="mod-dtp-year-month">
+          <div class="mod-dtp-years clearfix">
+            <sup class="icofont prev" title="上一年"></sup>
+            <strong>2016</strong>
+            <sub class="icofont next" title="下一年"></sub>
+          </div>
+          <div class="mod-dtp-months clearfix">
+            <em>01月</em>
+            <em>02月</em>
+            <em>03月</em>
+            <em>04月</em>
+            <em class="on">05月</em>
+            <em>06月</em>
+            <em>07月</em>
+            <em>08月</em>
+            <em>09月</em>
+            <em>10月</em>
+            <em>11月</em>
+            <em>12月</em>
+          </div>
+        </div>
+      </div>
+      <div class="mod-datetime-picker-timebox">
+        <ul class="mod-dtp-time-view clearfix">
+          <li class="mod-dtp-view-hour">12</li>
+          <li class="mod-dtp-view-minute">00</li>
+          <li class="mod-dtp-view-second">10</li>
+        </ul>
+        <div class="mod-dtp-time-picker clearfix">
+          <div class="mod-dtp-hours">
+            <sup class="icofont prev"></sup>
+            <div class="mod-time-chooser">
+              <ul class="hour">
+                <li>00</li>
+                <li>01</li>
+                <li>02</li>
+                <li>03</li>
+                <li>04</li>
+                <li>05</li>
+                <li>06</li>
+                <li>07</li>
+                <li>08</li>
+                <li>09</li>
+                <li>10</li>
+                <li>11</li>
+                <li>12</li>
+                <li>13</li>
+                <li>14</li>
+                <li>15</li>
+                <li>16</li>
+              </ul>
+            </div>
+            <sub class="icofont next"></sub>
+          </div>
+          <div class="mod-dtp-minutes">
+            <sup class="icofont prev"></sup>
+            <div class="mod-time-chooser">
+              <ul class="minute">
+                <li>00</li>
+                <li>01</li>
+                <li>02</li>
+                <li>03</li>
+                <li>04</li>
+                <li>05</li>
+                <li>06</li>
+                <li>07</li>
+                <li>08</li>
+                <li>09</li>
+                <li>10</li>
+                <li>11</li>
+                <li>12</li>
+                <li>13</li>
+                <li>14</li>
+                <li>15</li>
+                <li>16</li>
+              </ul>
+            </div>
+            <sub class="icofont next"></sub>
+          </div>
+          <div class="mod-dtp-seconds">
+            <sup class="icofont prev"></sup>
+            <div class="mod-time-chooser">
+              <ul class="second">
+                <li>00</li>
+                <li>01</li>
+                <li>02</li>
+                <li>03</li>
+                <li>04</li>
+                <li>05</li>
+                <li>06</li>
+                <li>07</li>
+                <li>08</li>
+                <li>09</li>
+                <li>10</li>
+                <li>11</li>
+                <li>12</li>
+                <li>13</li>
+                <li>14</li>
+                <li>15</li>
+                <li>16</li>
+              </ul>
+            </div>
+            <sub class="icofont next"></sub>
+          </div>
+          <div class="mod-dtp-time-selected"></div>
+        </div>
+      </div>
+    </div>
+    <div class="mod-datetime-picker-footer clearfix">
+      <button type="button">今天</button>
+      <button type="submit">完成</button>
+    </div>
+  </div> -->
+  <input type="text" data-plugin="datatimepicker" data-datetimepicker-schema="dtpicker://set#aabbd" data-datetimepicker-format="%y-%M-%d %h:%m:%s" value="2015-10-12" name="aabbd" style="margin-left: 100px; margin-top: 500px" />
+<!--#include virtual="/static/basic/inc/js_common_z.html" -->  
+<script>
+$.dtpicker = {
+  set: function(name, datetime, datetimeFormat){
+    var input = $('input[name="' + name + '"]');
+
+
+    input.val(datetimeFormat)
+  }
+}
+seajs.use("logic/test/test_datetimepicker");
+</script>  
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html data-page-alias="data-dataset">
+<head>
+<!--#include virtual="/static/basic/inc/meta.html"-->
+<!--#include virtual="/static/basic/inc/rem.html"-->
+<title>Mod/SVG Shape</title>
+<!--#include virtual="/static/basic/inc/css_common_gm.html"-->
+</head>
+
+<body>
+<div id="svg_box"></div>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" version="1.1" name="tsvg_99" id="tsvg_99" x="0" y="0" width="240" height="80" viewBox="0 0 240 80" preserveAspectRatio="none" overflow="visible">
+  <path fill="#ff00ff" fill-opacity="0.3" d="" stroke-width="8" stroke="#00ffff"></path>
+</svg>
+<!--#include virtual="/static/basic/inc/js_common_z.html" -->  
+<script>
+seajs.use(["logic/test/test_svg"]);
+</script>
+</body>
+</html>

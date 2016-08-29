@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html data-page-alias="data-uicomponent">
+<head>
+<!--#include virtual="/static/basic/inc/meta.html"-->
+<!--#include virtual="/static/basic/inc/rem.html"-->
+<title>Mod/UI Component</title>
+<!--#include virtual="/static/basic/inc/css_common_gm.html"-->
+</head>
+
+<body>
+<button class="button" type="button">取消</button>
+<button class="button" type="submit">提交</button>
+<button type="button" class="button danger loading">删除</button>
+<!--#include virtual="/static/basic/inc/js_common_z.html" -->  
+<script>
+seajs.use(["logic/test/test_uicomponent"]);
+</script>
+</body>
+</html>
