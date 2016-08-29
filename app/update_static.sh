@@ -2,8 +2,8 @@
 
 STATIC_TARGET_DIR=$(pwd)
 STATIC_BASE_DIR=$(dirname $(dirname $(readlink -n "$0")))
-STATIC_BASE_VERSION=$1
-STATIC_TARGET_VERSION=$2
+STATIC_TARGET_VERSION=$1
+STATIC_BASE_VERSION=basic
 
 STATIC_BASE_PREFIX=${STATIC_BASE_DIR}/static/${STATIC_BASE_VERSION}
 STATIC_PREFIX=${STATIC_TARGET_DIR}/static/${STATIC_TARGET_VERSION}
@@ -31,7 +31,7 @@ ZEPTO_MIX=${STATIC_PREFIX}/src/js/lib/z.mix.js
 echo ${STATIC_BASE_PREFIX}
 echo ${STATIC_PREFIX}
 
-if [ "$#" -eq "2" ]; then
+if [ "$#" -eq "1" ]; then
     #create src dir
     #js源文件目录，lib - 基础库   mod - 公用模块  logic - 业务逻辑  extra - 第三方插件、引擎或库
     mkdir -p ${STATIC_PREFIX}/src/js/lib/extra
@@ -122,5 +122,5 @@ if [ "$#" -eq "2" ]; then
         echo "'${STATIC_TARGET_DIR}' is not a working copy"
     fi
 else
-    echo "请输入基础版本和目标版本，如：v1, v2, v2.1"
+    echo "请输入目标版本，如：v1, v2, v2.1"
 fi
