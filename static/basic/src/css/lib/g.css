@@ -627,7 +627,7 @@ textarea {
     height: .36rem;
     border: none;
     border-radius: .03rem;
-    background-color: #0CA735;
+    background-color: rgb(12, 167, 53);
     color: #fff;
     font-size: .14rem;
     cursor: pointer;
@@ -635,8 +635,8 @@ textarea {
     outline-width: 0;
 }
 .button[type="button"]{
-    background-color: #e6e6e6;
-    color: #666;
+    background-color: rgb(230, 230, 230);
+    color: #333;
 }
 .button[type="button"]:focus,
 .button[type="submit"]:focus{
@@ -646,34 +646,31 @@ textarea {
 .button[type="button"]:active{
     outline: none;
     outline-width: 0;
-    background-color: #e0e0e0;
-    color: #333;
+    background-color: rgba(230, 230, 230, 0.75);
 }
 .button[type="submit"]:active{
     outline: none;
     outline-width: 0;
-    background-color: #0FC33F;
-    color: #e6e6e6;
+    background-color: rgba(12, 167, 53, 0.75);
 }
 .button.danger{
-    background-color: #C10000;
+    background-color: rgb(193, 0, 0);
     color: #fff;
 }
 .button.danger:active{
     outline: none;
     outline-width: 0;
-    background-color: #EF0000;
-    color: #e6e6e6;
+    background-color: rgba(193, 0, 0, 0.75);
 }
 .button.disabled{
-    background-color: #999!important;
-    color: #ddd!important;
+    background-color: rgb(154, 154, 154)!important;
+    color: rgb(224, 224, 224)!important;
     text-shadow: 1px 1px 0px rgba(0,0,0,0.15);
     cursor: not-allowed;
 }
 .button.disabled:active{
-    background-color: #999!important;
-    color: #ddd!important;
+    background-color: rgb(154, 154, 154)!important;
+    color: rgb(224, 224, 224)!important;
     text-shadow: 1px 1px 0px rgba(0,0,0,0.15);
 }
 .button.loading:before{

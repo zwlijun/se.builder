@@ -47,14 +47,23 @@ cat ${BASED_COMBO_PATH} >> ${JQUERY_2X_MIX}
 echo ";/*! SE Config For SeaJS */" >> ${JQUERY_2X_MIX}
 cat ${BASED_SE_PATH} >> ${JQUERY_2X_MIX}
 
-echo ";/*! Zepto v${ZEPTO_VERSION} - zepto event ajax form ie - zeptojs.com/license */" > ${ZEPTO_MIX}
-cat ${BASED_ZEPTO_PATH} >> ${ZEPTO_MIX}
-echo ";/*! Sea.js ${SEAJS_VERSION} | seajs.org/LICENSE.md */" >> ${ZEPTO_MIX}
-cat ${BASED_SEAJS_PATH} >> ${ZEPTO_MIX}
-echo ";/*! SeaJS-Combo.js ${COMBO_VERSION} | seajs.org/LICENSE.md */" >> ${ZEPTO_MIX}
-cat ${BASED_COMBO_PATH} >> ${ZEPTO_MIX}
-echo ";/*! SE Config For SeaJS */" >> ${ZEPTO_MIX}
-cat ${BASED_SE_PATH} >> ${ZEPTO_MIX}
+echo ";/*! Zepto v${ZEPTO_116_VERSION} - zepto event ajax form ie - zeptojs.com/license */" > ${ZEPTO_116_MIX}
+cat ${BASED_ZEPTO_116_PATH} >> ${ZEPTO_116_MIX}
+echo ";/*! Sea.js ${SEAJS_VERSION} | seajs.org/LICENSE.md */" >> ${ZEPTO_116_MIX}
+cat ${BASED_SEAJS_PATH} >> ${ZEPTO_116_MIX}
+echo ";/*! SeaJS-Combo.js ${COMBO_VERSION} | seajs.org/LICENSE.md */" >> ${ZEPTO_116_MIX}
+cat ${BASED_COMBO_PATH} >> ${ZEPTO_116_MIX}
+echo ";/*! SE Config For SeaJS */" >> ${ZEPTO_116_MIX}
+cat ${BASED_SE_PATH} >> ${ZEPTO_116_MIX}
+
+echo ";/*! Zepto v${ZEPTO_120_VERSION} - zepto event ajax form ie - zeptojs.com/license */" > ${ZEPTO_120_MIX}
+cat ${BASED_ZEPTO_120_PATH} >> ${ZEPTO_120_MIX}
+echo ";/*! Sea.js ${SEAJS_VERSION} | seajs.org/LICENSE.md */" >> ${ZEPTO_120_MIX}
+cat ${BASED_SEAJS_PATH} >> ${ZEPTO_120_MIX}
+echo ";/*! SeaJS-Combo.js ${COMBO_VERSION} | seajs.org/LICENSE.md */" >> ${ZEPTO_120_MIX}
+cat ${BASED_COMBO_PATH} >> ${ZEPTO_120_MIX}
+echo ";/*! SE Config For SeaJS */" >> ${ZEPTO_120_MIX}
+cat ${BASED_SE_PATH} >> ${ZEPTO_120_MIX}
 
 #生成INC文件
 echo -n "<link id=\"seed_style\" rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_RELATIVE_DIR}/src/css/lib/gm.css\">" > ${STATIC_BASE_PREFIX}/inc/css_common_gm.html
@@ -63,6 +72,7 @@ echo -n "<link rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_RELATIVE_DIR
 echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_RELATIVE_DIR}/src/js/lib/j.1x.mix.js\"></script>" > ${STATIC_BASE_PREFIX}/inc/js_common_j.1.x.html
 echo -m "<!--[if lt IE 9]><script src=\"${STATIC_RELATIVE_DIR}/src/js/lib/extra/rem/r${REM_VERSION}/rem.js\"></script><![endif]-->" >> ${STATIC_BASE_PREFIX}/inc/js_common_j.1.x.html
 echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_RELATIVE_DIR}/src/js/lib/j.2x.mix.js\"></script>" > ${STATIC_BASE_PREFIX}/inc/js_common_j.2.x.html
-echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_RELATIVE_DIR}/src/js/lib/z.mix.js\"></script>" > ${STATIC_BASE_PREFIX}/inc/js_common_z.html
+echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_RELATIVE_DIR}/src/js/lib/z.116.mix.js\"></script>" > ${STATIC_BASE_PREFIX}/inc/js_common_z.116.html
+echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_RELATIVE_DIR}/src/js/lib/z.120.mix.js\"></script>" > ${STATIC_BASE_PREFIX}/inc/js_common_z.120.html
 echo -n "<!--[if lt IE 9]><script src=\"${STATIC_RELATIVE_DIR}/src/js/lib/extra/html5/r${HTML5_SHIV_VERSION}/html5shiv.js\"></script><![endif]-->" > ${STATIC_BASE_PREFIX}/inc/js_html5_shiv.html
 
