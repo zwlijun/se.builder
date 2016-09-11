@@ -8,7 +8,8 @@ STATIC_RELATIVE_DIR=/static/${STATIC_BASE_VERSION}
 
 JQUERY_1X_VERSION=1.12.3
 JQUERY_2X_VERSION=2.2.3
-ZEPTO_VERSION=1.1.6
+ZEPTO_116_VERSION=1.1.6
+ZEPTO_120_VERSION=1.2.0
 SEAJS_VERSION=3.0.0
 COMBO_VERSION=1.0.1
 HTML5_SHIV_VERSION=3.7.3
@@ -16,14 +17,16 @@ REM_VERSION=1.3.4
 
 BASED_JQUERY_1X_PATH=${STATIC_BASE_PREFIX}/src/js/lib/based/jquery/r${JQUERY_1X_VERSION}/jquery.js
 BASED_JQUERY_2X_PATH=${STATIC_BASE_PREFIX}/src/js/lib/based/jquery/r${JQUERY_2X_VERSION}/jquery.js
-BASED_ZEPTO_PATH=${STATIC_BASE_PREFIX}/src/js/lib/based/zepto/r${ZEPTO_VERSION}/zepto.js
+BASED_ZEPTO_116_PATH=${STATIC_BASE_PREFIX}/src/js/lib/based/zepto/r${ZEPTO_116_VERSION}/zepto.js
+BASED_ZEPTO_120_PATH=${STATIC_BASE_PREFIX}/src/js/lib/based/zepto/r${ZEPTO_120_VERSION}/zepto.js
 BASED_SEAJS_PATH=${STATIC_BASE_PREFIX}/src/js/lib/based/seajs/r${SEAJS_VERSION}/sea.js
 BASED_COMBO_PATH=${STATIC_BASE_PREFIX}/src/js/lib/based/seajs/plugins/combo/r${COMBO_VERSION}/combo.js
 BASED_SE_PATH=${STATIC_BASE_PREFIX}/src/js/lib/based/se.js
 
 JQUERY_1X_MIX=${STATIC_BASE_PREFIX}/src/js/lib/j.1x.mix.js
 JQUERY_2X_MIX=${STATIC_BASE_PREFIX}/src/js/lib/j.2x.mix.js
-ZEPTO_MIX=${STATIC_BASE_PREFIX}/src/js/lib/z.mix.js
+ZEPTO_116_MIX=${STATIC_BASE_PREFIX}/src/js/lib/z.116.mix.js
+ZEPTO_120_MIX=${STATIC_BASE_PREFIX}/src/js/lib/z.120.mix.js
 
 #合并模块样式
 cat ${STATIC_BASE_PREFIX}/src/css/lib/g.css > ${STATIC_BASE_PREFIX}/src/css/lib/gm.css
