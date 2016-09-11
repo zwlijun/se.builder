@@ -24,7 +24,7 @@
                          '    <div class="mod-layerbox-buttons flexbox center middle">' +
                          '      <%for(var i = 0; i < options.btns.length; i++){%>' +
                          '      <%var btn = options.btns[i];%>' +
-                         '      <button data-btn-for="layerbox" data-btn-index="<%=i%>,<%=options.name%>" data-action-click="Action://seui/mod/layerbox/btn#<%=i%>,<%=options.name%>" type="button" class="button <%=(btn.skin ? btn.skin : \"\")%>"><%=btn.label%></button>' +
+                         '      <button data-btn-for="layerbox" data-btn-index="<%=i%>,<%=options.name%>" data-action-click="layerbox://seui/mod/layerbox/btn#<%=i%>,<%=options.name%>" type="button" class="button <%=(btn.skin ? btn.skin : \"\")%>"><%=btn.label%></button>' +
                          '      <%}%>' +
                          '    </div>' +
                          '  </div>' +
@@ -32,7 +32,7 @@
                          '';
 
     var Action = {
-        "name": "Action",
+        "schema": "layerbox",
         "seui": {
             "mod": {
                 "layerbox": {

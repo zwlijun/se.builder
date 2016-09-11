@@ -13,7 +13,7 @@
     var Util = require("mod/se/util");
 
     var SheetProtocol = {
-        name: "actionsheet",
+        schema: "actionsheet",
         prevent: function(data, node, e, type){
             e.stopPropagation();
         },

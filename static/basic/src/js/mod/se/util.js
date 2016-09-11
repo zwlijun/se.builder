@@ -90,13 +90,13 @@
             return _util.execHandler(handler, _args);
         },
         source: function(data){
-            var name = data.name;
+            var schema = data.schema;
 
-            if(name){
-                if(!(name in $)){
-                    $[name] = data;
+            if(schema){
+                if(!(schema in $)){
+                    $[schema] = data;
                 }else{
-                    $.extend(true, $[name], data);
+                    $.extend(true, $[schema], data);
                 }
             }
         },
@@ -184,7 +184,7 @@
                 console.log("the target is not existed");
                 return false;
             }
-
+            
             if(settings){
                 _util.source(settings);
             }

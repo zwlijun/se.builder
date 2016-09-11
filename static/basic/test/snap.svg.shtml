@@ -9,7 +9,7 @@
 
 <body>
 <div id="svg_box"></div>
-<!--#include virtual="/static/basic/inc/js_common_z.html" -->  
+<!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
 <script>
 seajs.use(["logic/test/test_snap_svg"]);
 </script>

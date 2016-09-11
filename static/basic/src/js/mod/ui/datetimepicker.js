@@ -173,7 +173,7 @@
         return tmp + str;
     };
     var DateTimePickerProtocol = {
-        name: "dtp",
+        schema: "dtp",
         picker: {
             bubbles: function(data, node, e, type){
                 e.stopPropagation();

@@ -189,7 +189,7 @@
     </div>
   </div> -->
   <input type="text" data-plugin="datatimepicker" data-datetimepicker-schema="dtpicker://set#aabbd" data-datetimepicker-format="%y-%M-%d %h:%m:%s" value="2015-10-12" name="aabbd" style="margin-left: 100px; margin-top: 500px" />
-<!--#include virtual="/static/basic/inc/js_common_z.html" -->  
+<!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
 <script>
 $.dtpicker = {
   set: function(name, datetime, datetimeFormat){

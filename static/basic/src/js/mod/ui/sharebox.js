@@ -116,7 +116,7 @@
     };
 
     var ShareProtocol = {
-        name: "sharebox",
+        schema: "sharebox",
         share: {
             callout: function(data, node, e, type){
                 var args = (data || "").split(",");
