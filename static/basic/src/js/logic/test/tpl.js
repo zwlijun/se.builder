@@ -5,7 +5,11 @@
     var DataCache =  null;
     var CMD = null;
     var Util = null;
-    var ActionSheet = null;
+    var DataType = null;
+    var TemplateEngine = null;
+    var Request = null;
+    var Persistent = null;
+    var Session = null;
     
     var Logic = {
         init: function(){
@@ -20,13 +24,16 @@
 
             var expando = target.expando;
 
-            ErrorTypes = expando.errors;
-            RespTypes = expando.types;
-            ResponseProxy = expando.response;
-            DataCache =  expando.cache;
-            CMD = expando.cmd;
-            Util = expando.util;
-            ActionSheet = expando.sheet;
+            ErrorTypes      = expando.errors;
+            RespTypes       = expando.types;
+            ResponseProxy   = expando.response;
+            DataCache       = expando.cache;
+            CMD             = expando.cmd;
+            Util            = expando.util;
+            DataType        = expando.typeof;
+            TemplateEngine  = expando.template;
+            Persistent      = expando.persistent;
+            Session         = expando.session;
 
             //业务初始化入口
             Logic.init();
