@@ -51,15 +51,40 @@ var sea_callback = function(){
     }
 };
 
-// var bridge = {
-//     "key": "require path"
-// };
+var bridge = {
+    // "feature": {
+    //     "page": "..."
+    // }
+};
 
-// switch(feature){
-//    case "feature":
-//        requires.push(bridge.key);
-//    break;
-// }
+var nslookup = function(findObj, keys){
+    var obj = null;
+    var key = keys.shift(); 
+
+    if(key){
+        if(key in findObj){
+            obj = findObj[key] || null;
+
+            if(obj){
+                if(Object.prototype.toString.call(obj) === "[object String]"){
+                    return obj;
+                }
+                return nslookup(obj, keys);
+            }
+        }else{
+            return nslookup(findObj, keys);
+        }
+    }
+
+    return null;
+};
+
+var requireLogicFile = nslookup(bridge, [feature, page]);
+
+if(requireLogicFile){
+    requires.push(requireLogicFile);
+}
+
 seajs.use(requires, sea_callback);
 })();
 </script>
