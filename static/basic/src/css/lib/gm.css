@@ -1,18 +1,12 @@
-/*!
- *  Font Awesome 4.6.2 by @davegandy - http://fontawesome.io - @fontawesome
- *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
- */
 @font-face {
-  font-family: 'FontAwesome';
-  src: url('../../fonts/font-awesome/r4.6.2/fontawesome-webfont.eot');
-  src: url('../../fonts/font-awesome/r4.6.2/fontawesome-webfont.eot?#iefix') format('embedded-opentype'), 
-       url('../../fonts/font-awesome/r4.6.2/fontawesome-webfont.woff2') format('woff2'), 
-       url('../../fonts/font-awesome/r4.6.2/fontawesome-webfont.woff') format('woff'), 
-       url('../../fonts/font-awesome/r4.6.2/fontawesome-webfont.ttf') format('truetype'), 
-       url('../../fonts/font-awesome/r4.6.2/fontawesome-webfont.svg#fontawesomeregular') format('svg');
-  font-weight: normal;
-  font-style: normal;
+  font-family: "iconfont";
+  src: url('../../fonts/iconfont/r1.0.0/iconfont.eot?t=1474396129'); /* IE9*/
+  src: url('../../fonts/iconfont/r1.0.0/iconfont.eot?t=1474396129#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../../fonts/iconfont/r1.0.0/iconfont.woff?t=1474396129') format('woff'), /* chrome, firefox */
+       url('../../fonts/iconfont/r1.0.0/iconfont.ttf?t=1474396129') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+       url('../../fonts/iconfont/r1.0.0/iconfont.svg?t=1474396129#iconfont') format('svg'); /* iOS 4.1- */
 }
+
 /**
  * CSS RESET
  * @based on html5doctor.com Reset Stylesheet v1.6.1
@@ -177,12 +171,11 @@ textarea {
 
 }
 
-.icofont{
-  font-family: FontAwesome;
-  font-weight: normal;
+.icofont {
+  font-family: "iconfont";
   font-style: normal;
-  text-rendering: auto;
   -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
   -moz-osx-font-smoothing: grayscale;
 }
 .icofont:before{
@@ -224,7 +217,7 @@ textarea {
   color: #AAA;
 }
 .icofont.info:before{
-  content: "\f05a";
+  content: "\e63a";
   margin-right: 5px;
 }
 .icofont.question,
@@ -233,21 +226,21 @@ textarea {
 }
 .icofont.question:before,
 .icofont.confirm:before{
-  content: "\f059";
+  content: "\e63f";
   margin-right: 5px;
 }
 .icofont.alarm{
   color: #FF8D21;
 }
 .icofont.alarm:before{
-  content: "\f06a";
+  content: "\e626";
   margin-right: 5px;
 }
 .icofont.error{
   color: #FF1B1B;
 }
 .icofont.error:before{
-  content: "\f057";
+  content: "\e63b";
   margin-right: 5px;
 }
 .icofont.right,
@@ -258,64 +251,8 @@ textarea {
 .icofont.right:before,
 .icofont.success:before,
 .icofont.ok:before{
-  content: "\f058";
+  content: "\e623";
   margin-right: 5px;
-}
-.icofont.drag{}
-.icofont.drag:before{
-  content: "\f047";
-}
-.icofont.drag{}
-.icofont.drag:before{
-  content: "\f047";
-}
-.icofont.fold{}
-.icofont.fold:before{
-  content: "\f0fe";
-}
-.icofont.unfold{}
-.icofont.unfold:before{
-  content: "\f146";
-}
-.icofont.delete{}
-.icofont.delete:before{
-  content: "\f1f8";
-}
-.icofont.add{}
-.icofont.add:before{
-  content: "\f067";
-}
-.icofont.edit{}
-.icofont.edit:before{
-  content: "\f044";
-}
-.icofont.search{}
-.icofont.search:before{
-  content: "\f002";
-}
-.icofont.crop{}
-.icofont.crop:before{
-  content: "\f125";
-}
-.icofont.magic{}
-.icofont.magic:before{
-  content: "\f0d0";
-}
-.icofont.navicon{}
-.icofont.navicon:before{
-  content: "\f0c9";
-}
-.icofont.refresh{}
-.icofont.refresh:before{
-  content: "\f021";
-}
-.icofont.undo{}
-.icofont.undo:before{
-  content: "\f112";
-}
-.icofont.redo{}
-.icofont.redo:before{
-  content: "\f064";
 }
 
 .abs-center{
@@ -674,10 +611,10 @@ textarea {
     text-shadow: 1px 1px 0px rgba(0,0,0,0.15);
 }
 .button.loading:before{
-    content: "\f110";
+    content: "\e61c";
     letter-spacing: 0;
     margin-right: 12px;
-    font-family: FontAwesome;
+    font-family: iconfont;
     font-style: normal;
     font-weight: normal;
     text-rendering: auto;
@@ -1107,7 +1044,7 @@ textarea {
 	z-index: 10;
 }
 .mod-framebox-box > del:before{
-	content: "\f057";
+	content: "\e619";
 }
 .mod-framebox-box > del:hover{
 	color: #B30000;
@@ -1174,12 +1111,12 @@ textarea {
     color: #848484;
 }
 .mod-layerbox-content:before{
-    font: normal normal normal 14px/1 FontAwesome;
+    font: normal normal normal 14px/1 iconfont;
     font-size: inherit;
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    content: "\f05a";
+    content: "\e63a";
     display: block;
     font-size: .72rem;
     margin-bottom: .18rem;
@@ -1202,19 +1139,19 @@ textarea {
     color: #e6e6e6;
 }
 .mod-layerbox-mask.confirm .mod-layerbox-content:before{
-    content: "\f059";
+    content: "\e63f";
     color: #3C85FF;
 }
 .mod-layerbox-mask.alarm .mod-layerbox-content:before{
-    content: "\f06a";
+    content: "\e626";
     color: #FF8D21;
 }
 .mod-layerbox-mask.error .mod-layerbox-content:before{
-    content: "\f057";
+    content: "\e63b";
     color: #FF1B1B;
 }
 .mod-layerbox-mask.right .mod-layerbox-content:before{
-    content: "\f058";
+    content: "\e623";
     color: #00C102;
 }
 /**

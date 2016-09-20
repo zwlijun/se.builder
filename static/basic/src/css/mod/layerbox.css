@@ -26,12 +26,12 @@
     color: #848484;
 }
 .mod-layerbox-content:before{
-    font: normal normal normal 14px/1 FontAwesome;
+    font: normal normal normal 14px/1 iconfont;
     font-size: inherit;
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    content: "\f05a";
+    content: "\e63a";
     display: block;
     font-size: .72rem;
     margin-bottom: .18rem;
@@ -54,18 +54,18 @@
     color: #e6e6e6;
 }
 .mod-layerbox-mask.confirm .mod-layerbox-content:before{
-    content: "\f059";
+    content: "\e63f";
     color: #3C85FF;
 }
 .mod-layerbox-mask.alarm .mod-layerbox-content:before{
-    content: "\f06a";
+    content: "\e626";
     color: #FF8D21;
 }
 .mod-layerbox-mask.error .mod-layerbox-content:before{
-    content: "\f057";
+    content: "\e63b";
     color: #FF1B1B;
 }
 .mod-layerbox-mask.right .mod-layerbox-content:before{
-    content: "\f058";
+    content: "\e623";
     color: #00C102;
 }
