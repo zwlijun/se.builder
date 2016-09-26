@@ -82,7 +82,7 @@
 
                     if(meta.mask){
                         var _mask = $(".js-logicbox-mask-" + _name);
-                        Util.execAfterMergerHandler(meta.mask, [_name, _mask]);
+                        Util.execHandler(meta.mask, [_name, _mask]);
                     }
                 },
                 args: [name]
@@ -107,7 +107,7 @@
             box.html(content);
 
             if(options.update){
-                Util.execAfterMergerHandler(options.update, [name, mask]);
+                Util.execHandler(options.update, [name, mask]);
             }
         },
         visible : function(visible, handler){
@@ -124,7 +124,7 @@
             }
 
             if(handler){
-                Util.execAfterMergerHandler(handler, [name, mask]);
+                Util.execHandler(handler, [name, mask]);
             }
         },
         show: function(){

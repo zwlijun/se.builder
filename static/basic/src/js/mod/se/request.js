@@ -20,10 +20,10 @@
      */
     var HeadCallback = function(handler, args, runtime){
         try{
-            $.Util.execAfterMergerHandler(handler, args);
+            $.Util.execHandler(handler, args);
         }catch(e){          
             try{
-                $.Util.execAfterMergerHandler(runtime, ["parsererror"].concat(args[1]));
+                $.Util.execHandler(runtime, ["parsererror"].concat(args[1]));
             }catch(e){                
                 throw new Error("the runtime handler parse error. " + e.message);
             }

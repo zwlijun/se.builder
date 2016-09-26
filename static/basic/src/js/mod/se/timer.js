@@ -59,7 +59,7 @@
 
                         lastTime = time;
                         
-                        Util.execAfterMergerHandler(_ins.handler, [_ins]);
+                        Util.execHandler(_ins.handler, [_ins]);
                     }
 
                     if(true === _ins.isRunning){

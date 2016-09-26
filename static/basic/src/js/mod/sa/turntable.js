@@ -190,7 +190,7 @@
                 this.rAF = undefined;
                 this.isRunning = false;
 
-                Util.execAfterMergerHandler(this.complete, [this.prizes, this.angle]);
+                Util.execHandler(this.complete, [this.prizes, this.angle]);
             }
         },
         run : function(){

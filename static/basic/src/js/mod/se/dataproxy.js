@@ -42,7 +42,7 @@
                     delete data[codeKey];
                     delete data[msgKey];
 
-                    Util.execAfterMergerHandler(handler, [context, data, msg]);
+                    Util.execHandler(handler, [context, data, msg]);
                 }else{
                     if(exception.errorMap && (String(code) in exception.errorMap)){
                         Util.execHandler(exception.errorMap[String(code)], [context, data, msg]);
@@ -51,7 +51,7 @@
                     }
 
                     if(exception.handle){
-                        Util.execAfterMergerHandler(exception.handle, [context, code, msg]);
+                        Util.execHandler(exception.handle, [context, code, msg]);
                     }
                 }
             }else{
@@ -62,13 +62,13 @@
                 }
 
                 if(exception.handle){
-                    Util.execAfterMergerHandler(exception.handle, [context, -1, "服务器返回数据失败"]);
+                    Util.execHandler(exception.handle, [context, -1, "服务器返回数据失败"]);
                 }
             }
         },
         html: function(context, data, handler){
             if(data){
-                Util.execAfterMergerHandler(handler, [context, data]);
+                Util.execHandler(handler, [context, data]);
             }else{
                 CMD.fireError("0x03", "获取模板数据异常", ErrorTypes.ERROR, _config["errorHandler"]);
             }

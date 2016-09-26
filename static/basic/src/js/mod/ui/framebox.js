@@ -49,11 +49,11 @@
                             var closeHandler = ins.options.onclose;
                             var closeBeforeHandler = ins.options.onclosebefore;
 
-                            Util.execAfterMergerHandler(closeBeforeHandler, [ins, name, mask]);
+                            Util.execHandler(closeBeforeHandler, [ins, name, mask]);
 
                             ins.hide();
 
-                            Util.execAfterMergerHandler(closeHandler, [ins, name, mask]);
+                            Util.execHandler(closeHandler, [ins, name, mask]);
                         }
                     }
                 }
@@ -115,7 +115,7 @@
                     var mask = $(".js-framebox-mask-" + _name);
 
                     if(meta.onrender){
-                        Util.execAfterMergerHandler(meta.onrender, [_FrameBox.get(_name), _name, mask, "init"]);
+                        Util.execHandler(meta.onrender, [_FrameBox.get(_name), _name, mask, "init"]);
                     }
                 },
                 args: [name, ins]
@@ -160,7 +160,7 @@
             box.html(content);
 
             if(options.onrender){
-                Util.execAfterMergerHandler(meta.onrender, [_FrameBox.get(name), name, mask, "content"]);
+                Util.execHandler(meta.onrender, [_FrameBox.get(name), name, mask, "content"]);
             }
         },
         title: function(title){
@@ -172,7 +172,7 @@
             box.html(title);
 
             if(options.onrender){
-                Util.execAfterMergerHandler(meta.onrender, [_FrameBox.get(name), name, mask, "title"]);
+                Util.execHandler(meta.onrender, [_FrameBox.get(name), name, mask, "title"]);
             }
         },
         icon: function(cls, ico){
@@ -190,7 +190,7 @@
             }
 
             if(options.onrender){
-                Util.execAfterMergerHandler(meta.onrender, [_FrameBox.get(name), name, mask, "icon"]);
+                Util.execHandler(meta.onrender, [_FrameBox.get(name), name, mask, "icon"]);
             }
         },
         status: function(status){
@@ -202,7 +202,7 @@
             box.html(status);
 
             if(options.onrender){
-                Util.execAfterMergerHandler(meta.onrender, [_FrameBox.get(name), name, mask, "status"]);
+                Util.execHandler(meta.onrender, [_FrameBox.get(name), name, mask, "status"]);
             }
         },
         visible : function(visible, handler){
@@ -219,7 +219,7 @@
             }
 
             if(handler){
-                Util.execAfterMergerHandler(handler, [_FrameBox.get(name), name, mask]);
+                Util.execHandler(handler, [_FrameBox.get(name), name, mask]);
             }
         },
         show: function(){

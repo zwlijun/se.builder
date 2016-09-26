@@ -1,10 +1,10 @@
 @font-face {
   font-family: "iconfont";
-  src: url('../../fonts/iconfont/base/r1.0.0/iconfont.eot?t=1474396129'); /* IE9*/
-  src: url('../../fonts/iconfont/base/r1.0.0/iconfont.eot?t=1474396129#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('../../fonts/iconfont/base/r1.0.0/iconfont.woff?t=1474396129') format('woff'), /* chrome, firefox */
-       url('../../fonts/iconfont/base/r1.0.0/iconfont.ttf?t=1474396129') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-       url('../../fonts/iconfont/base/r1.0.0/iconfont.svg?t=1474396129#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('../../fonts/iconfont/base/r1.0.0/iconfont.eot?t=1474475532'); /* IE9*/
+  src: url('../../fonts/iconfont/base/r1.0.0/iconfont.eot?t=1474475532#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../../fonts/iconfont/base/r1.0.0/iconfont.woff?t=1474475532') format('woff'), /* chrome, firefox */
+       url('../../fonts/iconfont/base/r1.0.0/iconfont.ttf?t=1474475532') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+       url('../../fonts/iconfont/base/r1.0.0/iconfont.svg?t=1474475532#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 /**
@@ -172,14 +172,16 @@ textarea {
 }
 
 .icofont {
+  
+}
+.icofont:before,
+.icofont:after{
+  cursor: inherit;
   font-family: "iconfont";
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -webkit-text-stroke-width: 0.2px;
   -moz-osx-font-smoothing: grayscale;
-}
-.icofont:before{
-  cursor: inherit;
 }
 .icofont-spin {
   -webkit-transform-origin: center center;
@@ -756,6 +758,15 @@ textarea {
 .mod-datetime-picker-frame.notime .mod-datetime-picker-timebox{
 	display: none;
 }
+.mod-datetime-picker-frame.timeonly{
+	width: 1.81rem;
+}
+.mod-datetime-picker-frame.timeonly .mod-datetime-picker-datebox{
+	display: none;
+}
+.mod-datetime-picker-frame.timeonly .mod-datetime-picker-timebox{
+	border-left: 0;
+}
 .mod-datetime-picker-frame .mod-dtp-year-month{
 	display: none;
 }
@@ -831,11 +842,11 @@ textarea {
 }
 .mod-dtp-year .icofont.prev:before,
 .mod-dtp-years .icofont.prev:before{
-	content: "\f104";
+	content: "\e634";
 }
 .mod-dtp-year .icofont.next:before,
 .mod-dtp-years .icofont.next:before{
-	content: "\f105";
+	content: "\e60b";
 }
 .mod-dtp-weeks li,
 .mod-dtp-days li{
@@ -981,10 +992,10 @@ textarea {
 	z-index: 1;
 }
 .mod-dtp-time-picker .icofont.prev:before{
-	content: "\f106";
+	content: "\e635";
 }
 .mod-dtp-time-picker .icofont.next:before{
-	content: "\f107";
+	content: "\e62f";
 }
 .mod-time-chooser{
 	height: 1.65rem;

@@ -19,6 +19,15 @@
 .mod-datetime-picker-frame.notime .mod-datetime-picker-timebox{
 	display: none;
 }
+.mod-datetime-picker-frame.timeonly{
+	width: 1.81rem;
+}
+.mod-datetime-picker-frame.timeonly .mod-datetime-picker-datebox{
+	display: none;
+}
+.mod-datetime-picker-frame.timeonly .mod-datetime-picker-timebox{
+	border-left: 0;
+}
 .mod-datetime-picker-frame .mod-dtp-year-month{
 	display: none;
 }
@@ -94,11 +103,11 @@
 }
 .mod-dtp-year .icofont.prev:before,
 .mod-dtp-years .icofont.prev:before{
-	content: "\f104";
+	content: "\e634";
 }
 .mod-dtp-year .icofont.next:before,
 .mod-dtp-years .icofont.next:before{
-	content: "\f105";
+	content: "\e60b";
 }
 .mod-dtp-weeks li,
 .mod-dtp-days li{
@@ -244,10 +253,10 @@
 	z-index: 1;
 }
 .mod-dtp-time-picker .icofont.prev:before{
-	content: "\f106";
+	content: "\e635";
 }
 .mod-dtp-time-picker .icofont.next:before{
-	content: "\f107";
+	content: "\e62f";
 }
 .mod-time-chooser{
 	height: 1.65rem;

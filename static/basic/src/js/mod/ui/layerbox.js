@@ -37,6 +37,8 @@
             "mod": {
                 "layerbox": {
                     btn: function(data, node, e){
+                        e.stopPropagation();
+
                         var args = (data || "").split(",");
                         var index = Number(args[0]);
                         var name = args[1];
@@ -46,7 +48,7 @@
                         if(ins){
                             var handler = ins.options.btns[index].handler;
 
-                            Util.execAfterMergerHandler(handler, [ins, index, name]);
+                            Util.execHandler(handler, [ins, index, name]);
                         }
                     }
                 }
@@ -123,7 +125,7 @@
                 }else{
                     mask.addClass("hide");
                 }
-                Util.execAfterMergerHandler(handler, [this.name]);
+                Util.execHandler(handler, [this.name]);
             }
         },
         conf: function(options){

@@ -87,7 +87,7 @@
 
                     var dts = this.parse(g_time, __interval);
 
-                    Util.execAfterMergerHandler(handler, [dts]);
+                    Util.execHandler(handler, [dts]);
 
                     if(dts.stop){
                         _t.stop();

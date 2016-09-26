@@ -20,7 +20,7 @@
     });
 
     var _html_structs = ''
-                      + '<div class="mod-datetime-picker-frame hide<%=dtp.options.time ? "" : " notime"%><%=dtp.options.mode == 1 ? " year-month" : ""%>" data-datepicker="<%=dtp.identity%>" data-action-mousedown="dtp://picker/bubbles">'
+                      + '<div class="mod-datetime-picker-frame hide<%=dtp.options.timeOnly ? " timeonly" : (dtp.options.time ? "" : " notime")%><%=dtp.options.mode == 1 ? " year-month" : ""%>" data-datepicker="<%=dtp.identity%>" data-action-mousedown="dtp://picker/bubbles">'
                       + '</div>'
                       + '';
     var _core_structs = ''
@@ -155,7 +155,7 @@
                       + '    </div>'
                       + '  </div>'
                       + '  <div class="mod-datetime-picker-footer clearfix">'
-                      + '    <button type="button" data-action-click="dtp://picker/today#<%=dtp.identity%>,<%=dtp.name%>">今天</button>'
+                      + '    <button type="button" data-action-click="dtp://picker/today#<%=dtp.identity%>,<%=dtp.name%>">现在</button>'
                       + '    <button type="submit" data-action-click="dtp://picker/done#<%=dtp.identity%>,<%=dtp.name%>">完成</button>'
                       + '  </div>'
                       + '';
@@ -485,6 +485,7 @@
     var GetDefaultOptions = function(){
         return {
             time: false,
+            timeOnly: false,
             todayOnly: false,
             format: "%y-%M-%d",
             schema: null,
@@ -889,6 +890,7 @@
             {"attr": "name", "name": "name", "dataType": "string"},
             {"attr": "value", "name": "value", "dataType": "string"},
             {"attr": "time", "name": "time", "dataType": "boolean"},
+            {"attr": "time-only", "name": "timeOnly", "dataType": "boolean"},
             {"attr": "today-only", "name": "todayOnly", "dataType": "boolean"},
             {"attr": "format", "name": "format", "dataType": "string"},
             {"attr": "range-start", "name": "range.start", "dataType": "date"},
@@ -958,7 +960,7 @@
     };
 
     DateTimePicker.lookup = function(){
-        var plugins = $('[data-plugin="datatimepicker"]');
+        var plugins = $('[data-plugin="datetimepicker"]');
         var size = plugins.length;
         var plugin = null;
         var options = null;
@@ -983,7 +985,7 @@
     };
 
     (function(){
-        $(document).on("mousedown.datatimepicker", function(e){
+        $(document).on("mousedown.datetimepicker", function(e){
             for(var name in DateTimePicker.Cache){
                 DateTimePicker.Cache[name].hide();
             }

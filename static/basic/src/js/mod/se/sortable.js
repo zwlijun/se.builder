@@ -1108,7 +1108,7 @@
 
 		if (options[onName]) {
 			// options[onName].call(sortable, evt);
-			Util.execAfterMergerHandler(options[onName], [sortable, evt]);
+			Util.execHandler(options[onName], [sortable, evt]);
 		}
 	}
 
@@ -1133,7 +1133,7 @@
 
 		if (onMoveFn) {
 			// retVal = onMoveFn.call(sortable, evt);
-			retVal = Util.execAfterMergerHandler(onMoveFn, [sortable, evt]);
+			retVal = Util.execHandler(onMoveFn, [sortable, evt]);
 		}
 
 		return retVal;

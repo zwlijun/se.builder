@@ -76,7 +76,7 @@
                 this.gravity = e.accelerationIncludingGravity;
             }
 
-            Util.execAfterMergerHandler(this.handler, [e, this.gravity, this.accelerometer]);
+            Util.execHandler(this.handler, [e, this.gravity, this.accelerometer]);
 
         },
         //http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-EventListener

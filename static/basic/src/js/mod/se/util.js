@@ -55,7 +55,7 @@
         execHandler : function(handler, __args){
             if(handler && handler instanceof Object){
                 var callback = handler.callback || null;
-                var args = handler.args || [];
+                var args = [].concat(handler.args || []);
                 var context = handler.context || null;
                 var delay = handler.delay || -1;
 
@@ -80,14 +80,6 @@
                     }
                 }
             }
-        },
-        /**
-         * 合并参数后执行回调
-         * @param Object handler {Function callback, Array args, Object context, int delay}
-         * @param Array args 参数
-         */
-        execAfterMergerHandler : function(handler, _args){
-            return _util.execHandler(handler, _args);
         },
         source: function(data){
             var schema = data.schema;
@@ -409,13 +401,13 @@
             var img = new Image();
 
             img.onload = function(e){
-                _util.execAfterMergerHandler(callback, [img, img.naturalWidth, img.naturalHeight]);
+                _util.execHandler(callback, [img, img.naturalWidth, img.naturalHeight]);
 
                 img = null;
             }
 
             img.onerror = function(e){
-                _util.execAfterMergerHandler(callback, [null, 0, 0]);
+                _util.execHandler(callback, [null, 0, 0]);
 
                 img = null;
             }
@@ -431,11 +423,11 @@
             var reader = new FileReader();
 
             reader.onload = function(e){
-                _util.execAfterMergerHandler(handler, [e, e.target.result]);
+                _util.execHandler(handler, [e, e.target.result]);
             };
 
             reader.onerror = function(e){
-                _util.execAfterMergerHandler(handler, [e, null]);
+                _util.execHandler(handler, [e, null]);
             };
 
             blob = null;
@@ -451,11 +443,11 @@
             var reader = new FileReader();
             
             reader.onload = function(e){
-                _util.execAfterMergerHandler(handler, [e, e.target.result]);
+                _util.execHandler(handler, [e, e.target.result]);
             };
 
             reader.onerror = function(e){
-                _util.execAfterMergerHandler(handler, [e, null]);
+                _util.execHandler(handler, [e, null]);
             };
 
             blob = null;
@@ -511,9 +503,14 @@
                     var end = _util.getTime();
                     var elapsedTime = end - start;
 
-                    _util.execAfterMergerHandler(handle, [elapsedTime]);
+                    _util.execHandler(handle, [elapsedTime]);
                 }, milliseconds);
             }
+        },
+        removeURLHash: function(url){
+            var _url = (url || document.URL).replace(/#([\w\W]*)$/, "");
+            
+            return _url;
         }
     };
 

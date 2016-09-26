@@ -170,7 +170,7 @@
                     "height": (view.height + "px").replace("%px", "%")
                 });
 
-                Util.execAfterMergerHandler(handler, [index, tmp]);
+                Util.execHandler(handler, [index, tmp]);
 
                 tmp = null;
             });

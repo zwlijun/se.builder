@@ -91,10 +91,10 @@
                 };
 
                 if(_t.handle){
-                    ret["global"] = Util.execAfterMergerHandler(_t.handle, [o]); //全局
+                    ret["global"] = Util.execHandler(_t.handle, [o]); //全局
                 }
                 if(callback){
-                    ret["local"] = Util.execAfterMergerHandler(callback, [o]);  //局部
+                    ret["local"] = Util.execHandler(callback, [o]);  //局部
                 }
 
                 return ret;

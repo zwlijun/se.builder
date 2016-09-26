@@ -1341,7 +1341,7 @@
                 _this.backup(item);
                 _this.addSceneScreen(item.getAttribute("data-screen-id"), item);
 
-                Util.execAfterMergerHandler(handle, [index, item]);
+                Util.execHandler(handle, [index, item]);
             });
         }
     };

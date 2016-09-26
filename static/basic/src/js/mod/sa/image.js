@@ -96,12 +96,12 @@
                 ctx.drawImage(img, _x, _y, _w, _h);
 
                 ins.exec("load", [stage, ctx, ins.readImageData(_x, _y, _w, _h), _x, _y, _w, _h]);
-                //Util.execAfterMergerHandler(handler, [stage, ctx, ins.readImageData(_x, _y, _w, _h), _x, _y, _w, _h]);
+                //Util.execHandler(handler, [stage, ctx, ins.readImageData(_x, _y, _w, _h), _x, _y, _w, _h]);
             }
 
             img.onerror = function(){
                 ins.exec("error", [stage, ctx, null, _x, _y, _w, _h]);
-                //Util.execAfterMergerHandler(handler, [stage, ctx, null, _x, _y, _w, _h]);
+                //Util.execHandler(handler, [stage, ctx, null, _x, _y, _w, _h]);
             }
 
             img.crossOrigin = crossorigin || _Image.ORIGIN.EMPTY;

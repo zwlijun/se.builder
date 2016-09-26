@@ -311,7 +311,7 @@
             };
 
             _image.onerror = function(e){
-                Util.execAfterMergerHandler(_this.handle, [_this.ExifInfo, null, null, null]);
+                Util.execHandler(_this.handle, [_this.ExifInfo, null, null, null]);
             };
 
             if(settings.imageType == ImageFixTypes.IMAGE){
@@ -327,7 +327,7 @@
 
             var _base64 = ImageFix.ImageToDataURL(_this, _image, ImageInfo.width, ImageInfo.height);
 
-            Util.execAfterMergerHandler(_this.handle, [_this.ExifInfo, _base64])
+            Util.execHandler(_this.handle, [_this.ExifInfo, _base64])
         }
     };
 
