@@ -186,6 +186,7 @@
                 var picker = DateTimePicker.createDateTimePicker(options.name);
 
                 picker.options(options);
+                picker.plugin(node);
 
                 if(options.value){
                     picker.update(picker.parse(options.value));
@@ -479,6 +480,72 @@
 
                 dtp.done();
             }
+        },
+        datetime: {
+            sync: function(data, date, formatDate, plugin){
+                //data::  input|inputName1^inputName2,html|select
+                
+                var _target = (function(_data){
+                    var group = _data.split(",");
+                    var size = group.length;
+                    var value = null;
+                    var items = null;
+
+                    var map = {};
+
+                    for(var i = 0; i < size; i++){
+                        value = group[i];
+
+                        if(!value){
+                            continue;
+                        }
+
+                        items = value.split("|");
+
+                        map[items[0]] = (function(str){
+                            return str.split("^");
+                        })(items[1]);
+                    }
+
+                    return map;
+                })(data || "");
+
+                var processor = {
+                    input: function(names, date, formatDate){
+                        for(var i = 0; i < names.length; i++){
+                            $('input[name="' + names[i] + '"]').val(formatDate);
+                        }
+                    },
+                    html: function(names, date, formatDate){
+                        for(var i = 0; i < names.length; i++){
+                            $(names[i]).val(formatDate);
+                        }
+                    }
+                };
+
+                if(plugin && plugin.length > 0){
+                    var dom = plugin[0];
+                    var tagName = (dom.tagName).toUpperCase();
+
+                    switch(tagName){
+                        case "INPUT":
+                        case "TEXTAREA":
+                            plugin.val(formatDate);
+                            break;
+                        default:
+                            plugin.html(formatDate);
+                            break;
+                    }
+                }
+
+                for(var type in _target){
+                    if(_target.hasOwnProperty(type)){
+                        if(type in processor){
+                            processor[type].apply(null, [_target[type], date, formatDate]);
+                        }
+                    }
+                }
+            }
         }
     };
 
@@ -488,7 +555,7 @@
             timeOnly: false,
             todayOnly: false,
             format: "%y-%M-%d",
-            schema: null,
+            schema: "dtp://datetime/sync",
             mode: 0,
             range: {
                 start: null,
@@ -506,6 +573,7 @@
 
         this.datetime = new Date();
         this.serializedData = null;
+        this.pluginNode = null;
     };
 
     DateTimePicker.prototype = {
@@ -524,6 +592,16 @@
 
                 this.opts = $.extend(true, this.opts, args[0]);
             }
+        },
+        plugin: function(){
+            var args = arguments;
+            var size = args.length;
+
+            if(0 === size){
+                return $(this.pluginNode);
+            }
+
+            this.pluginNode = args[0];
         },
         parse: function(datetimeString){
             var format = this.options("format");
@@ -724,13 +802,13 @@
         today: function(){
             var date = new Date();
 
-            Util.requestExternal(this.options("schema"), [date, this.format(date)]);
+            Util.requestExternal(this.options("schema"), [date, this.format(date), this.plugin()]);
             this.hide();
         },
         done: function(){
             var serializedData = this.serialized();
 
-            Util.requestExternal(this.options("schema"), [serializedData.datetime, this.format(serializedData.datetime)]);
+            Util.requestExternal(this.options("schema"), [serializedData.datetime, this.format(serializedData.datetime), this.plugin()]);
             this.hide();
         },
         position: function(target, offsetScrollDOM){
@@ -806,6 +884,9 @@
         return {
             options: function(){
                 return dtp.options.apply(dtp, arguments);
+            },
+            plugin: function(){
+                return dtp.plugin.apply(dtp, arguments);
             },
             getDateTimePickerFrame: function(){
                 return dtp.getDateTimePickerFrame();
@@ -973,6 +1054,7 @@
             picker = DateTimePicker.createDateTimePicker(options.name);
 
             picker.options(options);
+            picker.plugin(plugin);
 
             if(options.value){
                 picker.update(picker.parse(options.value));
