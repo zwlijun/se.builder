@@ -26,6 +26,70 @@ var PreventDefaultLink = function(){
     });
 };
 
+var GoSchema = {
+    schema: "go",
+    //--------------------------
+    url: function(data, node, e, type){
+        var args = (data || "").split(",");
+        var url = args[0];
+
+        location.href = url;
+    },
+    open: function(data, node, e, type){
+        var args = (data || "").split(",");
+        var url = args[0];
+        var target = args[1] || "_blank";
+
+        window.open(url, target);
+    },
+    refresh: function(data, node, e, type){
+        var url = document.URL;
+
+        location.replace(url);
+    },
+    replace: function(data, node, e, type){
+        var args = (data || "").split(",");
+        var url = args[0];
+
+        location.replace(url);
+    },
+    tab: function(data, node, e, type){
+        var args = (data || "").split(",");
+        var name = args[0];
+        var requestHandler = null;
+
+        var menu = $('[data-tab-menu="' + name + '"]');
+        var body = $('[data-tab-body="' + name + '"]');
+
+        var menusRoot = menu.parents(".tab-menus");
+        var bodiesRoot = menusRoot.siblings(".tab-bodies");
+
+        var menus = menusRoot.find('[data-tab-menu]');
+        var bodies = bodiesRoot.find('[data-tab-body]');
+
+        menus.removeClass("on");
+        bodies.addClass("hide");
+
+        requestHandler = menu.attr("data-tab-request") || null;
+
+        menu.addClass("on");
+
+        if(requestHandler){
+            Util.requestExternal(requestHandler, [node, e, type, {
+                "name": name,
+                "menu": menu,
+                "body": body,
+                "root": {
+                    "menu": menusRoot,
+                    "body": bodiesRoot
+                }
+            }]);
+        }
+
+        body.removeClass("hide");
+    }
+};
+
 var _App = {
     _conf: {},
     conf: function(){
@@ -71,6 +135,8 @@ var _App = {
         Util.watchAction("body", [
             {type: "click", mapping: null, compatible: null}
         ], null);
+
+        Util.source(GoSchema);
 
         if(conf.message){
             CMD.setBubbleTips(conf.message);

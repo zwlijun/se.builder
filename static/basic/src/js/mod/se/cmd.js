@@ -299,12 +299,13 @@
      * 回调
      * @param Object cmd 命令
      * @param Object ajaxSetting ajax设置 ==> @see $.ajax(options)
+     * @param Object OriginCommand 原数据
      */
-    function CallBack(cmd, ajaxSetting){
+    function CallBack(cmd, ajaxSetting, OriginCommand){
         cmd.traditional = ajaxSetting.traditional || true;
         cmd.type = ajaxSetting.type || cmd.method;
 
-        cmd = $.extend(true, cmd, ajaxSetting);
+        cmd = $.extend(true, {}, cmd, ajaxSetting);
         cmd.xhrFields = ajaxSetting.xhrFields || {};
 
         if(true === cmd.cross){
@@ -314,6 +315,11 @@
         var fnBeforeSend = cmd.beforeSend;
         var fnComplete = cmd.complete;
         var fnError = cmd.error;
+
+        var context = cmd.context || {};
+
+        cmd.context["OriginCommand"] = OriginCommand;
+        cmd.context = context;
 
         var _beforeSend = function(xhr, settings){
             //ajaxSetting.loadingText
@@ -364,12 +370,21 @@
     function Exec(namespace, tplData, ajaxSetting){
         var cmd = GetCommand(namespace, tplData || null);
 
+        var context = ajaxSetting.context || {};
+
+        var OriginCommand = {
+            "namespace": namespace,
+            "data": tplData,
+            "settings": ajaxSetting,
+            "command": cmd
+        };
+
         if(null != cmd){
             switch(cmd.dataType){
                 case RespTypes.J:
                 case RespTypes.P:
                 case RespTypes.T:
-                    CallBack(cmd, ajaxSetting);
+                    CallBack(cmd, ajaxSetting, OriginCommand);
                 break;
                 case RespTypes.R:
                     SetRequestInfo(cmd.url, Request.serialized(cmd.data));

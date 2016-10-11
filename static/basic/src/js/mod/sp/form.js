@@ -23,7 +23,7 @@
     var ErrorTypes      = CMD.ErrorTypes;
     var RespTypes       = CMD.ResponseTypes;
     var ResponseProxy   = DataProxy.ResponseProxy;
-    var DataCache       =  DataProxy.DataCache;
+    var DataCache       = DataProxy.DataCache;
 
     var FormSchema = {
         "schema": "form",
@@ -382,7 +382,7 @@
      *                      "[retcode]": Handler
      *                  },
      *                  tips: true|false,
-     *                  handler: Handler
+     *                  handle: Handler
      *              },
      *              "conf": {
      *                  "code": "retCode",
@@ -420,9 +420,7 @@
         CMD.injectCommands(_commands);
     };
 
-    var GetFormConfigure = function(key){
-        var conf = _FormConf;
-
+    var GetDefaultConfigure = function(key){
         var DEFAULT_LOADING_CONF = {
             "show": true,
             "text": "正在提交数据，请稍候..."
@@ -437,6 +435,24 @@
                 CMD.fireError("0", msg || "操作成功", ErrorTypes.SUCCESS);
             }
         };
+
+        var conf = {
+            "loading": DEFAULT_LOADING_CONF,
+            "processor": DEFAULT_PROCESSOR_CONF
+        };
+
+        if(key in conf){
+            return conf[key];
+        }
+
+        return conf;
+    };
+
+    var GetFormConfigure = function(key){
+        var conf = _FormConf;
+
+        var DEFAULT_LOADING_CONF = GetDefaultConfigure("loading");
+        var DEFAULT_PROCESSOR_CONF = GetDefaultConfigure("processor");
 
         if(key in conf){
             var _fc = conf[key];
@@ -464,6 +480,9 @@
         "version": "R16B0923",
         configure: function(conf){
             Configure(conf);
+        },
+        getDefaultConfigure: function(key){
+            return GetDefaultConfigure(key);
         }
     }
 });

@@ -100,12 +100,18 @@
             var _namespace = null;
             var _method = null;
             var _data = null;
+            var _args = [].concat(args || []);
+
+            var context = {
+                "uri": uri,
+                "args": _args
+            };
 
             if(result){
                 _className = result[1];
                 _namespace = result[2];            
                 _data = result[4] || null;
-                 _class = $[_className] || null;
+                _class = $[_className] || null;
 
                 if(_class){
 
@@ -136,7 +142,7 @@
 
                     if(null != _class && (_method in _class)){
                         return {
-                            "result": _class[_method].apply(null, [_data].concat(args||[])),
+                            "result": _class[_method].apply(context, [_data].concat(_args)),
                             "code": 0,
                             "msg": "ok"
                         };

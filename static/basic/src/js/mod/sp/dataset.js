@@ -19,7 +19,7 @@
     var ErrorTypes      = CMD.ErrorTypes;
     var RespTypes       = CMD.ResponseTypes;
     var ResponseProxy   = DataProxy.ResponseProxy;
-    var DataCache       =  DataProxy.DataCache;
+    var DataCache       = DataProxy.DataCache;
 
     var DataSetTemplate = TemplateEngine.getTemplate("tpl_sp_dataset", {
         start: "<~",
@@ -58,6 +58,11 @@
             }
 
             DataSet.request(type, params, sourceData, Array.prototype.slice.call(arguments, 4));
+        },
+        more: function(data, node, e, type){
+            node.addClass("loading");
+
+            Util.requestExternal("dataset://request#" + data, [node, e, type]);
         }
     };
 
@@ -133,7 +138,7 @@
      *                      "[retcode]": Handler
      *                  },
      *                  tips: true|false,
-     *                  handler: Handler
+     *                  handle: Handler
      *              },
      *              "conf": {
      *                  "code": "retCode",
@@ -167,7 +172,7 @@
                 if(_req){
                     _commands = $.extend(true, {}, _commands, _req.command);
                 }else{
-                    console.warn("Register::Form configuration \"request\" attribute is missing.");
+                    console.warn("Register::DataSet configuration \"request\" attribute is missing.");
                 }
             }
         }
@@ -175,9 +180,7 @@
         CMD.injectCommands(_commands);
     };
 
-    var GetDataSetConfigure = function(key){
-        var conf = _DataSetConf;
-
+    var GetDefaultConfigure = function(key){
         var DEFAULT_LOADING_CONF = {
             "show": false,
             "text": "数据加载中，请稍候..."
@@ -203,10 +206,24 @@
 
             var noData = renderNode.siblings(".dataset-nodata");
             var moreData = renderNode.siblings(".dataset-pagebar");
-            var pageIndex = Number(ctx.param.page || ctx.param.pageIndex);
+            var pageIndex = Number(ctx.param.page || ctx.param.pageIndex || ctx.param.nowPage);
             var pageSize = Number(resp.pageSize || 20);
+            var pageKey = "page";
 
             noData.addClass("hide");
+
+            if("pageIndex" in ctx.param){
+                pageKey = "pageIndex";
+            }else if("nowPage" in ctx.param){
+                pageKey = "nowPage";
+            }else{
+                pageKey = "page";
+            }
+
+
+            if(moreData.length == 0){
+                moreData = renderNode.siblings(".dataset-moredata");
+            }
 
             if(true !== dsf.pagebar){
                 moreData.addClass("hide");
@@ -219,20 +236,20 @@
                 }
 
                 DataSetTemplate.render(false, tplId, dataSet, {
-                    callback: function(ret, _node, _more, _pageIndex, _dsf){
+                    callback: function(ret, _node, _more, _pageIndex, _dsf, _pageKey){
                         if(_pageIndex <= 1 || false === _dsf.append){
                             _node.html("");
                         }
                         _node.append(ret.result);
 
-                        _more.attr("data-request-page", _pageIndex + 1);
+                        _more.attr("data-request-" + _pageKey, _pageIndex + 1);
                         //----------------------------------------------------------------------------------
                         if(true === _dsf.pagebar){
                             _more.find(".page").removeClass("on");
                             _more.find('[data-page="' + _pageIndex + '"]').addClass("on");
                         }
                     },
-                    args: [renderNode, moreData, pageIndex, dsf]
+                    args: [renderNode, moreData, pageIndex, dsf, pageKey]
                 })
             }else{
                 if(pageIndex <= 1){
@@ -240,6 +257,28 @@
                 }
             }
         };
+
+        var conf = {
+            "loading": DEFAULT_LOADING_CONF,
+            "proxy": DEFAULT_PROXY_CONF,
+            "format": DEFAULT_FORMAT_CONF,
+            "processor": DEFAULT_PROCESSOR_CONF
+        };
+
+        if(key in conf){
+            return conf[key];
+        }
+
+        return conf;
+    };
+
+    var GetDataSetConfigure = function(key){
+        var conf = _DataSetConf;
+
+        var DEFAULT_LOADING_CONF = GetDefaultConfigure("loading");
+        var DEFAULT_PROXY_CONF = GetDefaultConfigure("proxy");
+        var DEFAULT_FORMAT_CONF = GetDefaultConfigure("format");
+        var DEFAULT_PROCESSOR_CONF = GetDefaultConfigure("processor");
 
         if(key in conf){
             var _dsf = conf[key];
@@ -280,6 +319,12 @@
         },
         template: function(){
             return DataSetTemplate;
+        },
+        getDataSetConfigure: function(key){
+            return GetDataSetConfigure(key);
+        },
+        getDefaultConfigure: function(key){
+            return GetDefaultConfigure(key);
         }
     }
 });
