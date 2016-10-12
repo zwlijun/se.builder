@@ -25,6 +25,52 @@
     var ResponseProxy   = DataProxy.ResponseProxy;
     var DataCache       = DataProxy.DataCache;
 
+    var SECRET_SEED = null;
+
+    var GetDefaultSecretSeed = function(){
+        var DEFAULT_SECRET_DIGITS = [2, -50, 5, 2, 11, 1, 19, 5, 6, 11, 1, 2, 6, 11, 2, 19, 5, 11, 6, -48, 4, -49, 11, 0, 15, 2, 15, 0];
+        var DEFAULT_SECRET_SEED = (function(digits, diff){
+            var size = digits.length;
+
+            var t2 = [];
+            for(var j = 0; j < size; j++){
+                t2.push(String.fromCharCode(digits[j]  + diff));
+            }
+            return t2.join("");
+        })(DEFAULT_SECRET_DIGITS, 1E2);
+
+        return DEFAULT_SECRET_SEED;
+    };
+
+    var SetSecretSeed = function(seed){
+        SECRET_SEED = seed;
+    };
+
+    var GetSecretSeed = function(){
+        return SECRET_SEED;
+    };
+
+    var GetSecretData = function(dataKey){
+        var SECRET_SEED = GetSecretSeed();
+
+        var SECRET = "" 
+                   + Util.getTime()
+                   + Util.GUID();
+
+        var SECRET_KEY =  MD5.encode(SECRET + SECRET_SEED, false);
+
+        var __A = {
+            secret: SECRET,
+            seckey: SECRET_KEY
+        };
+
+        if(dataKey && (dataKey in __A)){
+            return __A[dataKey];
+        }else{
+            return __A;
+        }
+    };
+
     var FormSchema = {
         "schema": "form",
         submit: function(data, node, e, type){
@@ -51,6 +97,7 @@
             var mobileInputID = args[0];
             var label = args[1];
             var time = Number(args[2] || 60);
+            var cls = args[3] || "disabled";
             var flag = node.attr("data-auth-flag") == "1";
 
             var mobileInput = $("#" + mobileInputID);
@@ -66,24 +113,10 @@
                 return ;
             }
 
-            var secretDigits = [2, -50, 5, 2, 11, 1, 19, 5, 6, 11, 1, 2, 6, 11, 2, 19, 5, 11, 6, -48, 4, -49, 11, 0, 15, 2, 15, 0];
-            var secretSeed = (function(digits, diff){
-                var size = digits.length;
-
-                var t2 = [];
-                for(var j = 0; j < size; j++){
-                    t2.push(String.fromCharCode(digits[j]  + diff));
-                }
-                return t2.join("");
-            })(secretDigits, 1E2);
-            var secret = "" 
-                       + Util.getTime()
-                       + Util.GUID();
-            var seckey =  MD5.encode(secret + secretSeed, false);
             var param = {
                 "mobile": mobile,
-                "secret": secret,
-                "seckey": seckey
+                "secret": GetSecretData("secret"),
+                "seckey": GetSecretData("seckey")
             };
 
             var formConfig = GetFormConfigure("mcode");
@@ -108,6 +141,7 @@
                     "loadingText": formConfig.loading.text,
                     "mobile": mobile,
                     "time": time,
+                    "cls": cls,
                     "source": sourceData,
                     "extra": extra
                 },
@@ -122,11 +156,88 @@
                             var cd = CountDown.getCountDown("mcode_" + mobileInputID, CountDown.toFPS(1000), {
                                 callback: function(ret, _node, _label, _time){
                                     if(ret.stop){
-                                        _node.removeClass("auth-disable");
+                                        _node.removeClass("auth-disable").removeClass(ctx.cls);
                                         _node.html(_label);
                                         _node.attr("data-auth-flag", "0");
                                     }else{
-                                        _node.addClass("auth-disable");
+                                        _node.addClass("auth-disable").addClass(ctx.cls);
+                                        _node.html(_label + "(" + Math.floor(ret.value) + ")");
+                                        _node.attr("data-auth-flag", "1");
+                                    }
+                                },
+                                args: [node, label, time]
+                            });
+                            var curDate = new Date();
+                            var cur = DateUtil.format(curDate, "%y-%M-%d %h:%m:%s");
+                            var target = DateUtil.dateAdd("s", DateUtil.parse(cur, "%y-%M-%d %h:%m:%s").date, ctx.time);
+
+                            cd.start(target, curDate, "s");
+                        }
+                    }, proxy.exception, proxy.conf);
+                }
+            })
+        },
+        verify: function(data, node, e, type){
+            e.preventDefault();
+
+            var args = data.split(",");
+            var verifyType = args[0];
+            var label = args[1];
+            var time = Number(args[2] || 60);
+            var cls = args[3] || "disabled";
+            var flag = node.attr("data-auth-flag") == "1";
+
+            if(flag){
+                return ;
+            }
+
+            var param = {
+                "secret": GetSecretData("secret"),
+                "seckey": GetSecretData("seckey")
+            };
+
+            var formConfig = GetFormConfigure("verify");
+
+            if(!formConfig.request){
+                throw new Error("Form configuration \"request\" attribute is missing.");
+            }
+
+            var extra = Array.prototype.slice.call(arguments, 4);
+            var sourceData = {
+                "data": data,
+                "node": node,
+                "event": e,
+                "type": type
+            };
+
+            CMD.exec(formConfig.request.name, param, {
+                context: {
+                    // "showLoading": true,
+                    // "loadingText": "正在获取短信验证码",
+                    "showLoading": formConfig.loading.show,
+                    "loadingText": formConfig.loading.text,
+                    "verifyType": verifyType,
+                    "time": time,
+                    "cls": cls,
+                    "source": sourceData,
+                    "extra": extra
+                },
+                success: function(data, status, xhr){
+                    var formConfig = GetFormConfigure("verify");
+                    var proxy = formConfig.proxy || {};
+
+                    ResponseProxy.json(this, data, {
+                        "callback": function(ctx, resp, msg){
+                            CMD.fireError("0x100103", msg || "验证码已发送，请注意查收", ErrorTypes.INFO);
+
+                            var cd = CountDown.getCountDown("mcode_" + ctx.verifyType, CountDown.toFPS(1000), {
+                                callback: function(ret, _node, _label, _time){
+                                    if(ret.stop){
+                                        _node.removeClass("auth-disable").removeClass(ctx.cls);
+                                        _node.html(_label);
+                                        _node.attr("data-auth-flag", "0");
+                                    }else{
+                                        _node.addClass("auth-disable").addClass(ctx.cls);
                                         _node.html(_label + "(" + Math.floor(ret.value) + ")");
                                         _node.attr("data-auth-flag", "1");
                                     }
@@ -150,7 +261,7 @@
             var mobileInputID = args[0];
             var label = args[1];
             var time = Number(args[2] || 60);
-            var cls = args[3];
+            var cls = args[3] || "disabled";
             var flag = node.attr("data-auth-flag") == "1";
 
             var mobileInput = $("#" + mobileInputID);
@@ -167,7 +278,9 @@
             }
 
             var param = {
-                "mobile": mobile
+                "mobile": mobile,
+                "secret": GetSecretData("secret"),
+                "seckey": GetSecretData("seckey")
             };
 
             var formConfig = GetFormConfigure("checkaccount");
@@ -257,46 +370,51 @@
                 },
                 args: [sourceData.node, sourceData.event]
             });
+            checker.set("mpv", {
+                callback: function(result){
+                    var checkResultItems = result.cri;
+                }
+            });
             checker.set("done", {
                 callback: function(result, cmd, forward, sourceData, extra){
                     var formData = result.data;
-                    var options = result.options;
-                    var settings = result.settings;
-                    var htmlForm = $(result.form);
+                    // var options = result.options;
+                    // var settings = result.settings;
+                    // var htmlForm = $(result.form);
 
-                    var setting = null;
+                    // var setting = null;
 
-                    for(var key in settings){
-                        setting = settings[key];
+                    // for(var key in settings){
+                    //     setting = settings[key];
 
-                        if("radio" == setting.type && setting.required){
-                            if(!formData[setting.name]){
-                                checker.exec("tips", [$(setting.node), setting.tips.empty, CheckTypes.EMPTY]);
-                                return ;
-                            }
-                        }
+                    //     if("radio" == setting.type && setting.required){
+                    //         if(!formData[setting.name]){
+                    //             checker.exec("tips", [$(setting.node), setting.tips.empty, CheckTypes.EMPTY]);
+                    //             return ;
+                    //         }
+                    //     }
 
-                        if("checkbox" == setting.type && setting.required){
-                            var group = htmlForm.find('[data-group="' + setting.group + '"]');
-                            var flag = 0;
-                            var item = null;
+                    //     if("checkbox" == setting.type && setting.required){
+                    //         var group = htmlForm.find('[data-group="' + setting.group + '"]');
+                    //         var flag = 0;
+                    //         var item = null;
 
-                            for(var i = 0; i < group.length; i++){
-                                item = group[i];
+                    //         for(var i = 0; i < group.length; i++){
+                    //             item = group[i];
 
-                                if(item.checked){
-                                    flag = 1;
-                                    break;
-                                }
-                            }
+                    //             if(item.checked){
+                    //                 flag = 1;
+                    //                 break;
+                    //             }
+                    //         }
 
-                            if(0 === flag){
-                                checker.exec("tips", [$(setting.node), setting.tips.empty, CheckTypes.EMPTY]);
+                    //         if(0 === flag){
+                    //             checker.exec("tips", [$(setting.node), setting.tips.empty, CheckTypes.EMPTY]);
 
-                                return ;
-                            }
-                        }
-                    }
+                    //             return ;
+                    //         }
+                    //     }
+                    // }
 
                     if("request" == forward){
                         //@todo
@@ -473,16 +591,26 @@
     };
 
     (function main(){
-        Util.source(FormSchema)
+        Util.source(FormSchema);
+        SetSecretSeed(GetDefaultSecretSeed());
     })();
 
     module.exports = {
-        "version": "R16B0923",
+        "version": "R16B1012",
         configure: function(conf){
             Configure(conf);
         },
         getDefaultConfigure: function(key){
             return GetDefaultConfigure(key);
+        },
+        setScretSeed: function(seed){
+            SetSecretSeed(seed);
+        },
+        getSecretSeed: function(){
+            return GetSecretSeed();
+        },
+        getSecretData: function(dataKey){
+            return GetSecretData(dataKey);
         }
     }
 });

@@ -1112,9 +1112,9 @@ textarea {
 .mod-layerbox-box{
     width: 85%;
     max-width: 500px;
-    padding: 8px;
     background-color: #fff;
-    border-radius: 7px;
+    border-radius: .05rem;
+    overflow: hidden;
 }
 .mod-layerbox-content{
     font-size: .32rem;
@@ -1122,32 +1122,34 @@ textarea {
     color: #848484;
 }
 .mod-layerbox-content:before{
-    font: normal normal normal 14px/1 iconfont;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    font-family: iconfont;
+    font-size: .72rem;
     content: "\e63a";
     display: block;
-    font-size: .72rem;
     margin-bottom: .18rem;
     color: #848484;
+    margin-top: .24rem;
 }
 .mod-layerbox-buttons{
-    margin-top: .14rem;
+    margin-top: .30rem;
 }
 .mod-layerbox-buttons .button{
     width: 100%;
-    margin-right: .06rem;
+    border-radius: 0;
+    font-size: .16rem;
+    border-top: 1px solid #e8e8e8;
+    border-right: 1px solid #e8e8e8;
+    background-color: #fff;
+    color: #949494;
+    height: .42rem;
 }
 .mod-layerbox-buttons .button:last-child{
-    background-color: #0CA735;
-    color: #fff;
-    margin-right: 0;
+    color: #0CA735;
+    border-right: 0;
+    border-right: none;
 }
 .mod-layerbox-buttons .button:last-child:active{
-    background-color: #0FC33F;
-    color: #e6e6e6;
+    color: #0FC33F;
 }
 .mod-layerbox-mask.confirm .mod-layerbox-content:before{
     content: "\e63f";

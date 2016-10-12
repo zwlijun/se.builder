@@ -211,6 +211,7 @@
         this.handleStack = new HandleStack();
         this.listner = new Listener({
             ontips : null,         //提示信息的回调{Function callback, Array args, Object context}
+            onmpv: null,           //多点验证回调{Function callback, Array args, Object context}
             ondone:null,           //校验完成的回调{Function callback, Array args, Object context}
             onbefore : null,       //校验前前的回调{Function callback, Array args, Object context}
             onbeforecheck : null,  //开始前校验的回调{Function callback, Array args, Object context}
@@ -591,8 +592,6 @@
                         }
                     }
                 }
-
-                this.setCheckResults(name, true, el, "", Types["OK"]);
                 
                 if(xss){
                     value = Request.filterScript(value);
@@ -603,6 +602,8 @@
 
                 if("checkbox" == type || "radio" == type){
                     options[name].push(value);
+                }else{
+                    this.setCheckResults(name, true, el, "", Types["OK"]);
                 }
 
                 data[name] = value;
@@ -630,7 +631,54 @@
                 return d;
             })(this.optionsMerge, data, options);
 
-            this.exec("done", [{
+            var setting = null;
+
+            for(var key in settings){
+                setting = settings[key];
+
+                if("radio" == setting.type && setting.required){
+                    if(!data[setting.name]){
+                        if(spv){
+                            this.exec("tips", [$(setting.node), setting.tips.empty, Types["EMPTY"]]);
+                            return null;
+                        }else{
+                            this.setCheckResults(setting.name, false, $(setting.node), setting.tips.empty, Types["EMPTY"]);
+                            continue;
+                        }
+                    }else{
+                        this.setCheckResults(setting.name, true, $(setting.node), "", Types["OK"]);
+                    }
+                }
+
+                if("checkbox" == setting.type && setting.required){
+                    var group = f.find('[data-group="' + setting.group + '"]');
+                    var flag = 0;
+                    var item = null;
+
+                    for(var i = 0; i < group.length; i++){
+                        item = group[i];
+
+                        if(item.checked){
+                            flag = 1;
+                            break;
+                        }
+                    }
+
+                    if(0 === flag){
+                        if(spv){
+                            this.exec("tips", [$(setting.node), setting.tips.empty, Types["EMPTY"]]);
+                            return null;
+                        }else{
+                            this.setCheckResults(setting.name, false, $(setting.node), setting.tips.empty, Types["EMPTY"]);
+                            continue;
+                        }
+                    }else{
+                        this.setCheckResults(setting.name, true, $(setting.node), "", Types["OK"]);
+                    }
+                }
+            }
+
+            var ___a = {
                 "form": f[0],
                 "action": f.attr("action"),
                 "method": f.attr("method"),
@@ -641,7 +689,16 @@
                 "spv": spv,
                 "crs": this.getCheckResultCRS(),
                 "cri": this.getCheckResultItems()
-            }]);
+            };
+
+            if(!spv){
+                if(this.getCheckResultCRS("failure") > 0){
+                    this.exec("mpv", [___a]);
+                    return ;
+                }
+            }
+
+            this.exec("done", [___a]);
 
             return true;
         },

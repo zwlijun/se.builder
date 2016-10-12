@@ -5,14 +5,16 @@
 <!--#include virtual="/static/basic/inc/rem.html"-->
 <title>Mod/Layerbox</title>
 <!--#include virtual="/static/basic/inc/css_common_gm.html"-->
+<link rel="stylesheet" type="text/css" href="/static/basic/src/css/mod/layerbox.css">
 </head>
 <body style="background: red;">
   <div class="mod-layerbox-mask confirm">
     <div class="mod-layerbox-box abs-center">
       <div class="mod-layerbox-content">确认要删除吗？</div>
       <div class="mod-layerbox-buttons flexbox center middle">
-        <button type="button">取消</button>
-        <button type="button">确定</button>
+        <button type="button" class="button">取消</button>
+        <button type="button" class="button">确定</button>
+        <button type="button" class="button">确定</button>
       </div>
     </div>
   </div>
