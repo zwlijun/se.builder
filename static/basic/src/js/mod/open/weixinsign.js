@@ -42,9 +42,7 @@
     };
 
     //---------------------------
-
     G["GetJSAPITemplateData"] = function(name, forceIndex){
-        var sets = MetaData.parse();
         var index = MetaData.getIndex();
         var meta = MetaData.random(name || "wechat", (undefined !== forceIndex ? forceIndex : (index < 0 ? undefined : index)));
 
@@ -79,6 +77,24 @@
             "options": options,
             "meta": meta
         };
+    };
+
+    var clone = function(obj, nobj){
+        var o = {};
+
+        for(var key in obj){
+            if(obj.hasOwnProperty(key)){
+                o[key] = obj[key];
+            }
+        }
+
+        for(var key in nobj){
+            if(nobj.hasOwnProperty(key)){
+                o[key] = nobj[key];
+            }
+        }
+
+        return o;
     };
 
     var APIMap = {
@@ -232,7 +248,6 @@
             context: WeiXinAPI
         });
     };
-
     var register = function(signAPI, data, _url){
         var url = _url || document.URL;
         var signURL = encodeURIComponent(url.replace(/(#[\w\W]*)/, ""));
@@ -307,18 +322,35 @@
         return WeiXinAPI;
     };
 
-    var sign = function(code, debug){
+    var sign = function(code, debug, onresponse){
         if(Env.support){
+            MetaData.parse();
             set_default();
             CMD.exec("weixin.bin.sign", null, {
                 context: {
                     "showLoading": false,
                     "debug": (true === debug),
-                    "code": String(code || "10")
+                    "code": String(code || "10"),
+                    "onresponse": onresponse || ({
+                        callback: function(data){
+                            if(data && ("forbidShare" in data) && (true === data.forbidShare || "true" == data.forbidShare)){
+                                var apiData = G["GetJSAPITemplateData"]();
+
+                                if(!apiData){
+                                    return ;
+                                }
+                                var meta = apiData.meta;
+
+                                meta.options("allow", false);
+                            }
+                        }
+                    })
                 },
                 success : function(data, status, xhr){
                     var result = String(data.code || data.retCode);
                     var msg = data.msg || data.retMsg;
+
+                    Util.execHandler(this.onresponse, [data]);
 
                     if(this.code === result){
                         configure(data, this.debug).success(APIMap.getItems());
@@ -385,9 +417,8 @@
 
             return this;
         },
-        sign: function(code, debug){
-            sign(code, debug);
-
+        sign: function(code, debug, onresponse){
+            sign(code, debug, onresponse);
             return this;
         }
     };

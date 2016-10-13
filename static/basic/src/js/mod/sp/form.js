@@ -100,7 +100,12 @@
             var cls = args[3] || "disabled";
             var flag = node.attr("data-auth-flag") == "1";
 
-            var mobileInput = $("#" + mobileInputID);
+            var mainKey = "mcode";
+            var mcodeKey = node.attr("data-mcode-key");
+
+            var form = node.parents("form");
+
+            var mobileInput = form.find("#" + mobileInputID);
             var mobile = mobileInput.val() || "";
 
             if(flag){
@@ -113,13 +118,17 @@
                 return ;
             }
 
+            if(mcodeKey){
+                mainKey += "." + mcodeKey;
+            }
+
             var param = {
                 "mobile": mobile,
                 "secret": GetSecretData("secret"),
                 "seckey": GetSecretData("seckey")
             };
 
-            var formConfig = GetFormConfigure("mcode");
+            var formConfig = GetFormConfigure(mainKey);
 
             if(!formConfig.request){
                 throw new Error("Form configuration \"request\" attribute is missing.");
@@ -142,18 +151,19 @@
                     "mobile": mobile,
                     "time": time,
                     "cls": cls,
+                    "mcode": mainKey,
                     "source": sourceData,
                     "extra": extra
                 },
                 success: function(data, status, xhr){
-                    var formConfig = GetFormConfigure("mcode");
+                    var formConfig = GetFormConfigure(this.mcode);
                     var proxy = formConfig.proxy || {};
 
                     ResponseProxy.json(this, data, {
                         "callback": function(ctx, resp, msg){
                             CMD.fireError("0x100103", msg || "验证码已发送，请注意查收", ErrorTypes.INFO);
 
-                            var cd = CountDown.getCountDown("mcode_" + mobileInputID, CountDown.toFPS(1000), {
+                            var cd = CountDown.getCountDown("mcode_" + mobileInputID + "." + ctx.mcode, CountDown.toFPS(1000), {
                                 callback: function(ret, _node, _label, _time){
                                     if(ret.stop){
                                         _node.removeClass("auth-disable").removeClass(ctx.cls);
@@ -187,8 +197,15 @@
             var cls = args[3] || "disabled";
             var flag = node.attr("data-auth-flag") == "1";
 
+            var mainKey = "verify";
+            var verifyKey = node.attr("data-verify-key");
+
             if(flag){
                 return ;
+            }
+
+            if(verifyKey){
+                mainKey += "." + verifyKey;
             }
 
             var param = {
@@ -196,7 +213,7 @@
                 "seckey": GetSecretData("seckey")
             };
 
-            var formConfig = GetFormConfigure("verify");
+            var formConfig = GetFormConfigure(mainKey);
 
             if(!formConfig.request){
                 throw new Error("Form configuration \"request\" attribute is missing.");
@@ -218,19 +235,20 @@
                     "loadingText": formConfig.loading.text,
                     "verifyType": verifyType,
                     "time": time,
+                    "verify": mainKey,
                     "cls": cls,
                     "source": sourceData,
                     "extra": extra
                 },
                 success: function(data, status, xhr){
-                    var formConfig = GetFormConfigure("verify");
+                    var formConfig = GetFormConfigure(this.verify);
                     var proxy = formConfig.proxy || {};
 
                     ResponseProxy.json(this, data, {
                         "callback": function(ctx, resp, msg){
                             CMD.fireError("0x100103", msg || "验证码已发送，请注意查收", ErrorTypes.INFO);
 
-                            var cd = CountDown.getCountDown("mcode_" + ctx.verifyType, CountDown.toFPS(1000), {
+                            var cd = CountDown.getCountDown("verify_" + ctx.verifyType + "." + ctx.verify, CountDown.toFPS(1000), {
                                 callback: function(ret, _node, _label, _time){
                                     if(ret.stop){
                                         _node.removeClass("auth-disable").removeClass(ctx.cls);
@@ -264,7 +282,12 @@
             var cls = args[3] || "disabled";
             var flag = node.attr("data-auth-flag") == "1";
 
-            var mobileInput = $("#" + mobileInputID);
+            var mainKey = "checkaccount";
+            var checkAccountKey = node.attr("data-checkaccount-key");
+
+            var form = node.parents("form");
+
+            var mobileInput = form.find("#" + mobileInputID);
             var mobile = mobileInput.val() || "";
 
             if(flag){
@@ -277,13 +300,17 @@
                 return ;
             }
 
+            if(checkAccountKey){
+                mainKey += "." + checkAccountKey;
+            }
+
             var param = {
                 "mobile": mobile,
                 "secret": GetSecretData("secret"),
                 "seckey": GetSecretData("seckey")
             };
 
-            var formConfig = GetFormConfigure("checkaccount");
+            var formConfig = GetFormConfigure(mainKey);
 
             if(!formConfig.request){
                 throw new Error("Form configuration \"request\" attribute is missing.");
@@ -305,19 +332,20 @@
                     "loadingText": formConfig.loading.text,
                     "mobile": mobile,
                     "time": time,
+                    "checkaccount": mainKey,
                     "cls": cls,
                     "source": sourceData,
                     "extra": extra
                 },
                 success: function(data, status, xhr){
-                    var formConfig = GetFormConfigure("checkaccount");
+                    var formConfig = GetFormConfigure(this.checkaccount);
                     var proxy = formConfig.proxy || {};
 
                     ResponseProxy.json(this, data, {
                         "callback": function(ctx, resp, msg){
                             CMD.fireError("0x100104", msg || "账号校验通过，请注意查收短信验证码", ErrorTypes.INFO);
 
-                            var cd = CountDown.getCountDown("mcode_" + mobileInputID, CountDown.toFPS(1000), {
+                            var cd = CountDown.getCountDown("checkaccount_" + mobileInputID + "." + ctx.checkaccount, CountDown.toFPS(1000), {
                                 callback: function(ret, _node, _label, _time){
                                     if(ret.stop){
                                         _node.removeClass("auth-disable").removeClass(ctx.cls);

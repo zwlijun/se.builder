@@ -10,9 +10,9 @@
  * @date 2015.1
  */
 ;define(function WeiXinAPI(require, exports, module){
-    var wx       = require("http://res.wx.qq.com/open/js/jweixin-1.0.0.js");
-    var Util     = require("mod/se/util");
-    var DataType = require("mod/se/datatype");
+    var WeiXinJSSDK         = require("http://res.wx.qq.com/open/js/jweixin-1.0.0.js");
+    var Util                = require("mod/se/util");
+    var DataType            = require("mod/se/datatype");
 
     /*
     <meta itemprop="type" content="share" itemfor="share" desc="分享类型说明">
@@ -228,12 +228,12 @@
         _errorList: [],
         _signErrorList: [],
         configure: function(options){
-            wx.config(options);
+            WeiXinJSSDK.config(options);
 
             return WeiXinAPI;
         },
         error: function(handler){
-            wx.error(function(res){
+            WeiXinJSSDK.error(function(res){
                 WeiXinAPI.readyState = -1;
                 try{
                     console.info(res);
@@ -258,7 +258,7 @@
          * }
          */
         success: function(api){
-            wx.ready(function(){
+            WeiXinJSSDK.ready(function(){
                 WeiXinAPI.readyState = 1;
                 WeiXinAPI.register(api);
                 WeiXinAPI.execReadyHandler();
@@ -316,7 +316,7 @@
         },
         register: function(api){
             for(var key in api){
-                if(api.hasOwnProperty(key) && (key in wx)){
+                if(api.hasOwnProperty(key) && (key in WeiXinJSSDK)){
                     Util.execHandler(api[key], [key]);
                 }
             }
@@ -324,9 +324,9 @@
             return WeiXinAPI;
         },
         invoke: function(name, options){
-            if(name in wx){
+            if(name in WeiXinJSSDK){
                 if(1 === WeiXinAPI.readyState){
-                    wx[name].apply(wx, [options]);
+                    WeiXinJSSDK[name].apply(WeiXinJSSDK, [options]);
                 }else if(0 === WeiXinAPI.readyState){
                     (function(n, o, c){
                         var fn = arguments.callee;
@@ -335,7 +335,7 @@
                             if(c < 2000){
                                 c++;
                                 if(1 === WeiXinAPI.readyState){
-                                    wx[n].apply(wx, [o]);
+                                    WeiXinJSSDK[n].apply(WeiXinJSSDK, [o]);
                                 }else{
                                     fn.apply(null, [n, o, c]);
                                     fn = null;
