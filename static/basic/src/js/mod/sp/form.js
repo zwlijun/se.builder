@@ -347,6 +347,18 @@
         bind: function(formType, formName, submitType, sourceData, extra){
             var checker = FormUtil.getInstance(formName);
 
+            checker.set("before", {
+                callback: function(form, spv){
+                    if(!spv){
+                        form.find(".form-field")
+                            .removeClass("v-ok")
+                            .removeClass("v-err")
+                            .find(".tips")
+                            .removeClass("out")
+                            .removeAttr("style");
+                        }
+                }
+            });
             checker.set("tips", {
                 callback: function(el, tips, type){
                     if(CheckTypes.MIN == type){
@@ -372,7 +384,45 @@
             });
             checker.set("mpv", {
                 callback: function(result){
+                    var checkResultCRS = result.crs;
                     var checkResultItems = result.cri;
+                    var item = null;
+                    var endEvents = [
+                        "webkitAnimationEnd", 
+                        "mozAnimationEnd", 
+                        "MSAnimationEnd", 
+                        "oanimationend", 
+                        "animationend",
+                    ];
+
+                    if(checkResultCRS["failure"] > 0){
+                        for(var key in checkResultItems){
+                            if(checkResultItems.hasOwnProperty(key)){
+                                item = checkResultItems[key];
+
+                                var field = item.element.parents(".form-field");
+                                var tips = field.find(".tips");
+                                var rect = null;
+
+                                if(item.verified){
+                                    field.addClass("v-ok");
+                                }else{
+                                    rect = Util.getBoundingClientRect(item.element[0]);
+
+                                    tips.one(endEvents.join(" "), function(e){
+                                        e.stopPropagation();
+                                        $(e.currentTarget).css("display", "none");
+                                    })
+
+                                    tips.html(item.message)
+                                        .css({
+                                            "top": (rect.height + 5) + "px"
+                                        }).addClass("out");
+                                    field.addClass("v-err");
+                                }
+                            }
+                        }
+                    }
                 }
             });
             checker.set("done", {

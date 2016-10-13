@@ -708,11 +708,11 @@
         check : function(){
             var chk = this.get("beforecheck");
             
-            this.exec("before", []);
+            this.exec("before", [this.form, this.spv]);
             
-            if((null == chk) ||                               //没有设置beforecheck
-               (null != chk && true !== chk.returnValue) ||   //没有设置returnValue属性或returnValue属性不为true
-               (null != chk && this.exe("beforecheck", []))   //有设置beforecheck并且条件为真
+            if((null == chk) ||                                                     //没有设置beforecheck
+               (null != chk && true !== chk.returnValue) ||                         //没有设置returnValue属性或returnValue属性不为true
+               (null != chk && this.exe("beforecheck", [this.form, this.spv]))      //有设置beforecheck并且条件为真
             ){
                 this.doCheck();
             }
