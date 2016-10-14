@@ -90,6 +90,79 @@ var GoSchema = {
     }
 };
 
+var InputSchema = {
+    schema: "input",
+    sync: {
+        radio: function(data, node, e, type){
+            var args = (data || "").split(",");
+            var name = args[0];
+            var container = args[1];
+            var containerNode = null;
+            var targetInput = null;
+
+            if(container){
+                containerNode = $(container);
+
+                if(containerNode.length == 0){
+                    containerNode = null;
+                }
+            }
+
+            if(containerNode){
+                targetInput = containerNode.find('input[name="' + name + '"]');
+            }else{
+                targetInput = $('input[name="' + name + '"]');
+            }
+
+            targetInput.val(node.val());
+        },
+        checkbox: function(data, node, e, type){
+            var args = (data || "").split(",");
+            var name = args[0];
+            var container = args[1];
+            var checkedValue = args[2];
+            var uncheckedValue = args[3];
+            var containerNode = null;
+            var targetInput = null;
+
+            if(container){
+                containerNode = $(container);
+
+                if(containerNode.length == 0){
+                    containerNode = null;
+                }
+            }
+
+            if(containerNode){
+                targetInput = containerNode.find('input[name="' + name + '"]');
+            }else{
+                targetInput = $('input[name="' + name + '"]');
+            }
+
+            var dom = node[0];
+
+            if(dom.checked){
+                targetInput.val(checkedValue);
+            }else{
+                targetInput.val(uncheckedValue);
+            }   
+        }
+    },
+    tab: {
+        radio: function(data, node, e, type){
+            var args = (data || "").split(",");
+            var type = args[0];
+            var val = node.val();
+
+            var tabs = $('[data-tabfor^="' + type + '."]');
+            var tab = $('[data-tabfor="' + type + '.' + val + '"]');
+
+            tabs.addClass("hide");
+            tab.removeClass("hide");
+        }
+    } 
+}
+
 var _App = {
     _conf: {},
     conf: function(){
@@ -133,10 +206,12 @@ var _App = {
         var alias = _App.conf("alias");
 
         Util.watchAction("body", [
-            {type: "click", mapping: null, compatible: null}
+            {type: "click", mapping: null, compatible: null},
+            {type: "input", mapping: null, compatible: null}
         ], null);
 
         Util.source(GoSchema);
+        Util.source(InputSchema);
 
         if(conf.message){
             CMD.setBubbleTips(conf.message);
