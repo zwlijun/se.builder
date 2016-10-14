@@ -26,6 +26,7 @@
 
             ErrorTypes      = expando.errors;
             RespTypes       = expando.types;
+            Request         = expando.request;
             ResponseProxy   = expando.response;
             DataCache       = expando.cache;
             CMD             = expando.cmd;
