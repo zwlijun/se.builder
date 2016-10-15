@@ -33,6 +33,10 @@ var GoSchema = {
         var args = (data || "").split(",");
         var url = args[0];
 
+        if(node && node.hasClass("disabled")){
+            return ;
+        }
+
         location.href = url;
     },
     open: function(data, node, e, type){
@@ -40,16 +44,28 @@ var GoSchema = {
         var url = args[0];
         var target = args[1] || "_blank";
 
+        if(node && node.hasClass("disabled")){
+            return ;
+        }
+
         window.open(url, target);
     },
     refresh: function(data, node, e, type){
         var url = document.URL;
+
+        if(node && node.hasClass("disabled")){
+            return ;
+        }
 
         location.replace(url);
     },
     replace: function(data, node, e, type){
         var args = (data || "").split(",");
         var url = args[0];
+
+        if(node && node.hasClass("disabled")){
+            return ;
+        }
 
         location.replace(url);
     },
@@ -66,6 +82,10 @@ var GoSchema = {
 
         var menus = menusRoot.find('[data-tab-menu]');
         var bodies = bodiesRoot.find('[data-tab-body]');
+
+        if(node && node.hasClass("disabled")){
+            return ;
+        }
 
         menus.removeClass("on");
         bodies.addClass("hide");
@@ -156,6 +176,10 @@ var InputSchema = {
 
             var tabs = $('[data-tabfor^="' + type + '."]');
             var tab = $('[data-tabfor="' + type + '.' + val + '"]');
+
+            if(node && (node[0].disabled || node.parents(".disabled").length > 0)){
+                return ;
+            }
 
             tabs.addClass("hide");
             tab.removeClass("hide");
