@@ -303,13 +303,16 @@ textarea {
 }
 
 .flexbox{
+    display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
     display: -webkit-flex;
-    display: -webkit-box;
     display: flex; 
 }
 .flexbox.wrap{
+       -moz-box-direction: normal;
+    -webkit-box-direction: normal;
+       -moz-box-lines: multiple;
     -webkit-box-lines: multiple;
     -webkit-flex-wrap: wrap;
        -moz-flex-wrap: wrap;
@@ -318,6 +321,9 @@ textarea {
             flex-wrap: wrap;
 }
 .flexbox.nowrap{
+       -moz-box-direction: normal;
+    -webkit-box-direction: normal;  
+       -moz-box-lines: single;
     -webkit-box-lines: single;
     -webkit-flex-wrap: nowrap;
        -moz-flex-wrap: nowrap;
@@ -326,6 +332,8 @@ textarea {
             flex-wrap: nowrap;
 }
 .flexbox.wrap-r{
+       -moz-box-direction: reverse;
+    -webkit-box-direction: reverse;  
     -webkit-flex-wrap: wrap-reverse;
        -moz-flex-wrap: wrap-reverse;
         -ms-flex-wrap: wrap-reverse;
@@ -333,30 +341,42 @@ textarea {
             flex-wrap: wrap-reverse;
 }
 .flexbox.vertical{
+       -moz-box-direction: normal;
     -webkit-box-direction: normal;
+          -moz-box-orient: vertical;
        -webkit-box-orient: vertical;
         -ms-flex-direction: column;
+       -moz-flex-direction: column; 
     -webkit-flex-direction: column;
             flex-direction: column;
 }
 .flexbox.vertical-r{
+       -moz-box-direction: reverse;
     -webkit-box-direction: reverse;
+          -moz-box-orient: vertical;
        -webkit-box-orient: vertical;
         -ms-flex-direction: column-reverse;
+       -moz-flex-direction: column-reverse;
     -webkit-flex-direction: column-reverse;
             flex-direction: column-reverse;
 }
 .flexbox.horizontal{
+       -moz-box-direction: normal;
     -webkit-box-direction: normal;
+          -moz-box-orient: horizontal;
        -webkit-box-orient: horizontal;
         -ms-flex-direction: row;
+       -moz-flex-direction: row;
     -webkit-flex-direction: row;
             flex-direction: row;
 }
 .flexbox.horizontal-r{
+       -moz-box-direction: reverse;
     -webkit-box-direction: reverse;
+          -moz-box-orient: horizontal;
        -webkit-box-orient: horizontal;
         -ms-flex-direction: row-reverse;
+       -moz-flex-direction: row-reverse; 
     -webkit-flex-direction: row-reverse;
             flex-direction: row-reverse;
 }
