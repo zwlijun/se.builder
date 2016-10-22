@@ -4,3 +4,113 @@
  .app-header{}
  .app-body{}
  .app-footer{}
+ /**
+ * tab面板基础结构
+ */
+/**
+================================================
+<div class="tab-frame">
+  <ul class="tab-menus flexbox middle justify">
+    <li class="on" data-tab-menu="menu1" data-action-click="go://tab#menu1" data-tab-request="">menu1</li>
+    <li data-tab-menu="menu2" data-action-click="go://tab#menu2" data-tab-request="">menu2</li> 
+  </ul>
+  <div class="tab-bodies">
+    <div class="tab-body" data-tab-body="menu1">
+    </div>
+    <div class="tab-body" data-tab-body="menu2">
+    </div>
+  </div>
+</div>
+================================================
+ */
+.tab-frame{
+  
+}
+.tab-menus{
+  list-style: none;
+}
+.tab-menus li{
+  position: relative;
+  height: 100%;
+}
+.tab-menus li.on{
+  
+}
+.tab-menus li.on:after{
+  content: "";
+  display: block;
+  width: 100%;
+  position: absolute;
+  border-bottom: 1px solid #ff5400;
+  bottom: 0;
+  left: 0;
+}
+.tab-menus.m1 li{
+  width: 30%;
+}
+.tab-menus.m2 li{
+  width: 50%;
+}
+.tab-menus.m3 li{
+  width: 33.3333%;
+}
+.tab-menus.m4 li{
+  width: 25%;
+}
+.tab-menus.m5 li{
+  width: 20%;
+}
+.tab-bodies{
+  
+}
+.tab-body{
+
+}
+
+/**
+ * 数据列表面板基础结构
+ */
+/**
+================================================
+<div class="dataset">
+  <div class="dataset-items">
+    <div class="dataset-item"></div>
+    <div class="dataset-item"></div>
+  </div>
+  <div class="dataset-nodata">
+    <span class="icofont info">暂无数据</span>
+  </div>
+  <div class="dataset-moredata">
+    <span class="icofont">点击加载更多</span>
+  </div>
+</div>
+================================================
+ */
+.dataset{
+
+}
+.dataset-items{
+
+}
+.dataset-item{
+
+}
+.dataset-nodata{
+
+}
+.dataset-moredata{
+
+}
+.dataset-moredata.loading .icofont:before{
+  content: "\e61c";
+  display: inline-block;
+  margin-right: .06rem;
+  -webkit-transform-origin: center center;
+            transform-origin: center center;
+    -webkit-animation: icofont-spin 2s infinite linear;
+            animation: icofont-spin 2s infinite linear;
+}
+
+.dataset-moredata:active{
+  background-color: rgba(0, 0, 0, .15);
+}
