@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html data-page-alias="ui-component#logicbox">
+<head>
+<!--#include virtual="/static/basic/inc/meta.html"-->
+<!--#include virtual="/static/basic/inc/rem.html"-->
+<title>Mod/LivePlayer</title>
+<link rel="stylesheet" type="text/css" href="/static/basic/src/css/lib/g.css">
+<link rel="stylesheet" type="text/css" href="/static/basic/src/css/mod/liveplayer.css">
+</head>
+<body>
+<!--   <div class="liveplayer-frame live">
+    <div class="liveplayer-navbar flexbox middle justify">
+      <a href="#" class="icofont"></a>
+      <span class="ellipsis">腾讯是国内最大也是最早的即时通信开发商，QQ和微信已经成为每个互联网用户必不可少的应用</span>
+      <cite>[999999人在线]</cite>
+    </div>
+    <div class="liveplayer-controlbar">
+      <div class="liveplayer-progressbar">
+        <div class="liveplayer-progressbar-seeked" style="width: 32%"></div>
+      </div>
+      <div class="liveplayer-control flexbox middle justify">
+        <div class="liveplayer-control-state flexbox middle left play">
+          <cite class="icofont"></cite>
+          <span>00:12:25/00:55:00</span>
+        </div>
+        <div class="liveplayer-control-player flexbox middle right">
+          <cite class="icofont pip restore"></cite>
+          <cite class="icofont fullscreen"></cite>
+        </div>
+      </div>
+    </div>
+    <div class="liveplayer-media">
+      <video src="" preload="auto" poster="http://avc.qcloud.com/demo/webim/biggroup/mobile/img/back-img2.png"></video>
+      <div class="liveplayer-media-mask flexbox middle center"></div>
+    </div>
+    <div class="liveplayer-pip-zone">
+      <video src="" preload="auto" poster="http://avc.qcloud.com/demo/webim/biggroup/mobile/img/back-img2.png"></video>
+      <div class="liveplayer-pip-mask flexbox middle center"></div>
+    </div>
+  </div> -->
+<div id="lp0" data-liveplayer="test_liveplayer"></div>
+<!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
+<script>
+seajs.use(["logic/test/test_liveplayer"]);
+</script> 
+</body>
+</html>

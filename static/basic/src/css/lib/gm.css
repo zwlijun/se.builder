@@ -1,10 +1,10 @@
 @font-face {
   font-family: "iconfont";
-  src: url('../../fonts/iconfont/base/r1.0.0/iconfont.eot?t=1474475532'); /* IE9*/
-  src: url('../../fonts/iconfont/base/r1.0.0/iconfont.eot?t=1474475532#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('../../fonts/iconfont/base/r1.0.0/iconfont.woff?t=1474475532') format('woff'), /* chrome, firefox */
-       url('../../fonts/iconfont/base/r1.0.0/iconfont.ttf?t=1474475532') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-       url('../../fonts/iconfont/base/r1.0.0/iconfont.svg?t=1474475532#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('../../fonts/iconfont/base/r1.0.0/iconfont.eot?t=R161022'); /* IE9*/
+  src: url('../../fonts/iconfont/base/r1.0.0/iconfont.eot?t=R161022#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../../fonts/iconfont/base/r1.0.0/iconfont.woff?t=R161022') format('woff'), /* chrome, firefox */
+       url('../../fonts/iconfont/base/r1.0.0/iconfont.ttf?t=R161022') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+       url('../../fonts/iconfont/base/r1.0.0/iconfont.svg?t=R161022#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 /**
@@ -169,6 +169,12 @@ textarea {
         -ms-user-drag: none;
             user-drag: none;
 
+}
+
+.ellipsis{
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .icofont {
@@ -1187,6 +1193,216 @@ textarea {
     content: "\e623";
     color: #00C102;
 }
+.liveplayer-frame{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 4.46rem;
+	overflow: hidden;
+}
+.liveplayer-navbar{
+	background-color: rgba(0, 0, 0, .45);
+	color: #fff;
+	width: 100%;
+	height: .64rem;
+	font-size: .32rem;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 5;
+}
+.liveplayer-navbar > a,
+.liveplayer-navbar > a:visited,
+.liveplayer-navbar > a:hover,
+.liveplayer-navbar > a:active{
+	text-decoration: none;
+	display: block;
+	width: .64rem;
+	height: 100%;
+	line-height: .64rem;
+	text-align: center;
+	font-size: .28rem;
+	color: #fff;
+}
+.liveplayer-navbar > a:before{
+	content: "\e607";
+}
+.liveplayer-navbar > span{
+	display: block;
+	-webkit-flex: 1;
+			flex: 1;
+	height: 100%;
+	line-height: .64rem;
+	margin-left: .04rem;
+}
+.liveplayer-navbar > cite{
+	display: block;
+	text-align: right;
+	font-style: normal;
+	width: auto;
+	margin: 0 .08rem;
+}
+.liveplayer-controlbar{
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, .45);
+	color: #fff;
+	width: 100%;
+	height: .76rem;
+	font-size: .18rem;
+	z-index: 5;
+}
+.liveplayer-progressbar{
+	height: .06rem;
+	width: 100%;
+	background-color: rgba(255, 255, 255, .65);
+}
+.liveplayer-progressbar-seeked{
+	height: 100%;
+	background-color: rgba(0, 101, 255, .65);
+}
+.liveplayer-control{
+	height: .70rem;
+}
+.liveplayer-control-state{
+
+}
+.liveplayer-control-state .icofont{
+	display: block;
+	font-style: normal;
+	width: .56rem;
+	height: .56rem;
+	text-align: center;
+	line-height: .56rem;
+	font-size: .32rem;
+	margin-left: .08rem;
+}
+.liveplayer-control-state.pause .icofont:before{
+	content: "\e64c";
+}
+.liveplayer-control-state.play .icofont:before,
+.liveplayer-frame.live .liveplayer-control-state.play .icofont:before{
+	content: "\e64b";
+}
+.liveplayer-frame.vod .liveplayer-control-state.play .icofont:before{
+	content: "\e649";
+}
+.liveplayer-control-player{
+
+}
+.liveplayer-control-player .icofont{
+	display: block;
+	font-style: normal;
+	width: .56rem;
+	height: .56rem;
+	text-align: center;
+	line-height: .56rem;
+	font-size: .32rem;
+	margin-right: .08rem;
+}
+.liveplayer-control-player .pip{
+
+}
+.liveplayer-control-player .pip:before{
+	content: "\e650";
+}
+.liveplayer-control-player .pip.restore:before{
+	content: "\e64f";
+}
+.liveplayer-control-player .fullscreen{
+
+}
+.liveplayer-control-player .fullscreen:before{
+	content: "\e64e";
+}
+.liveplayer-master{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	overflow: hidden;
+	background-color: rgba(0, 0, 0, .75);
+}
+.liveplayer-master video{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 1;
+}
+.liveplayer-master-mask{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 2;
+	background-color: transparent;
+}
+.liveplayer-master.pause .liveplayer-master-mask{
+	background-color: rgba(0, 0, 0, .35);
+}
+
+.liveplayer-frame .liveplayer-navbar,
+.liveplayer-frame .liveplayer-controlbar{
+	-webkit-transition: all ease .4s;
+			transition: all ease .4s;
+	-webkit-transform: translateY(0) translateZ(0);
+			transform: translateY(0) translateZ(0);
+}
+.liveplayer-frame.hidebars{
+
+}
+.liveplayer-frame.hidebars .liveplayer-navbar{
+	-webkit-transform: translateY(-100%) translateZ(0);
+			transform: translateY(-100%) translateZ(0);
+}
+.liveplayer-frame.hidebars .liveplayer-controlbar{
+	-webkit-transform: translateY(100%) translateZ(0);
+			transform: translateY(100%) translateZ(0);
+}
+
+.liveplayer-pip-zone{
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 2;
+	width: 30%;
+	height: 30%;
+	background-color: rgba(0, 0, 0, .75);
+}
+.liveplayer-pip-zone video{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	overflow: hidden;
+	position: absolute;
+	z-index: 1;
+}
+.liveplayer-pip-mask{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 2;
+	background-color: transparent;
+}
+:-webkit-full-screen video {
+  width: 100%;
+  height: 100%;
+}
+
+
+
 /**
  * Loading模块
  * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox

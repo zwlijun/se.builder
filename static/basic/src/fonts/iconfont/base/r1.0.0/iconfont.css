@@ -1,10 +1,10 @@
 
 @font-face {font-family: "iconfont";
-  src: url('iconfont.eot?t=1475384275'); /* IE9*/
-  src: url('iconfont.eot?t=1475384275#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('iconfont.woff?t=1475384275') format('woff'), /* chrome, firefox */
-  url('iconfont.ttf?t=1475384275') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('iconfont.svg?t=1475384275#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('iconfont.eot?t=1477146722'); /* IE9*/
+  src: url('iconfont.eot?t=1477146722#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1477146722') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1477146722') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1477146722#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -22,6 +22,7 @@
 .ico-like:before { content: "\e605"; }
 .ico-shezhi:before { content: "\e606"; }
 .ico-zuofanhui:before { content: "\e607"; }
+.ico-zanting:before { content: "\e649"; }
 .ico-add:before { content: "\e608"; }
 .ico-telephone:before { content: "\e609"; }
 .ico-iconshare:before { content: "\e60a"; }
@@ -31,10 +32,12 @@
 .ico-weibo1:before { content: "\e60e"; }
 .ico-search:before { content: "\e60f"; }
 .ico-web:before { content: "\e610"; }
+.ico-pictureinpicture:before { content: "\e64f"; }
 .ico-minus:before { content: "\e611"; }
 .ico-service:before { content: "\e612"; }
 .ico-share:before { content: "\e613"; }
 .ico-iconfontyonghuming:before { content: "\e614"; }
+.ico-jingyin:before { content: "\e64a"; }
 .ico-phone:before { content: "\e615"; }
 .ico-gerenziliao:before { content: "\e616"; }
 .ico-share1:before { content: "\e617"; }
@@ -47,16 +50,21 @@
 .ico-cc-mic:before { content: "\e61d"; }
 .ico-cc-mic-close:before { content: "\e61e"; }
 .ico-move:before { content: "\e61f"; }
+.ico-tingzhi:before { content: "\e64b"; }
 .ico-magic02:before { content: "\e620"; }
 .ico-qq:before { content: "\e621"; }
 .ico-shoucang:before { content: "\e622"; }
 .ico-success:before { content: "\e623"; }
+.ico-bofang:before { content: "\e64c"; }
 .ico-xingming:before { content: "\e646"; }
 .ico-arrow-down:before { content: "\e640"; }
 .ico-password:before { content: "\e624"; }
+.ico-shengyin:before { content: "\e64d"; }
+.ico-rectangle:before { content: "\e650"; }
 .ico-zhibokecheng2:before { content: "\e625"; }
 .ico-warn:before { content: "\e626"; }
 .ico-arrow1:before { content: "\e641"; }
+.ico-quanping:before { content: "\e64e"; }
 .ico-777:before { content: "\e647"; }
 .ico-uploadshangchuan:before { content: "\e627"; }
 .ico-downloadxiazai:before { content: "\e628"; }
