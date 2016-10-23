@@ -17,7 +17,7 @@
     var Timer           = require("mod/se/timer");
     var HandleStack     = Listener.HandleStack;
 
-    var LivePlayerTemplate = TemplateEngine.getTemplate("mod_logicbox", {
+    var LivePlayerTemplate = TemplateEngine.getTemplate("mod_liveplayer", {
         "root": "liveplayer"
     }); 
 
