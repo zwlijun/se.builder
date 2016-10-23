@@ -51,10 +51,11 @@
                       + '  </div>'
                       + '  <div class="liveplayer-master">'
                       + '    <video '
-                      + '      src="<%=liveplayer.master.source%>"'
                       + '      <%=liveplayer.master.loop ? " loop" : ""%>'
                       + '      <%=liveplayer.master.preload ? " preload" : ""%>'
                       + '      <%=liveplayer.master.autoplay ? " autoplay" : ""%> '
+                      + '      <%=liveplayer.master.muted ? " muted" : ""%> '
+                      + '      src="<%=liveplayer.master.source%>" '
                       + '      poster="<%=liveplayer.master.poster%>" '
                       + '      x-webkit-airplay="true" '
                       + '      webkit-playsinline="true" '
@@ -66,9 +67,13 @@
                       + '  </div>'
                       + '  <%if(liveplayer.allowPIP && "live" == liveplayer.type){%>'
                       + '  <div class="liveplayer-pip-zone">'
-                      + '    <video src="<%=liveplayer.pip.source%>" '
-                      + '      autoplay '
-                      + '      preload="auto" '
+                      + '    <video '
+                      + '      <%=liveplayer.pip.loop ? " loop" : ""%>'
+                      + '      <%=liveplayer.pip.preload ? " preload" : ""%>'
+                      + '      <%=liveplayer.pip.autoplay ? " autoplay" : ""%> '
+                      + '      <%=liveplayer.pip.muted ? " muted" : ""%> '
+                      + '      src="<%=liveplayer.pip.source%>" '
+                      + '      poster="<%=liveplayer.pip.poster%>" '
                       + '      x-webkit-airplay="true" '
                       + '      webkit-playsinline="true" '
                       + '      playsinline="true" '
@@ -179,10 +184,16 @@
                 poster: "",
                 preload: true,
                 loop: false,
-                autoplay: true
+                autoplay: true,
+                muted: false
             },
             pip: {
-                source: ""
+                source: "",
+                poster: "",
+                preload: true,
+                loop: false,
+                autoplay: true,
+                muted: true
             }
         };
 
@@ -545,6 +556,7 @@
             var container = $('[data-liveplayer="' + name + '"]');
 
             var attrs = function(){
+                // @see GetDefaultOptions();
                 var _conf = [
                     {name: "type", dataType: "string"},
                     {name: "name", dataType: "string"},
@@ -563,7 +575,13 @@
                     {name: "master-preload", dataType: "boolean"},
                     {name: "master-loop", dataType: "boolean"},
                     {name: "master-autoplay", dataType: "boolean"},
-                    {name: "pip-source", dataType: "string"}
+                    {name: "master-muted", dataType: "boolean"},
+                    {name: "pip-source", dataType: "string"},
+                    {name: "pip-poster", dataType: "string"},
+                    {name: "pip-preload", dataType: "boolean"},
+                    {name: "pip-loop", dataType: "boolean"},
+                    {name: "pip-autoplay", dataType: "boolean"},
+                    {name: "pip-muted", dataType: "boolean"}
                 ];
 
                 return _conf;
