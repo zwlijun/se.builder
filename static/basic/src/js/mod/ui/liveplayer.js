@@ -34,29 +34,31 @@
                       + '    </div>'
                       + '    <div class="liveplayer-control flexbox middle justify">'
                       + '      <div class="liveplayer-control-state flexbox middle left <%=liveplayer.master.autoplay ? "play" : "pause"%>">'
-                      + '        <cite class="icofont" data-action-click="liveplayer://swapState#<%=liveplayer.name%>"></cite>'
+                      + '        <cite class="liveplayer-button-play icofont" data-action-click="liveplayer://swapState#<%=liveplayer.name%>"></cite>'
                       + '        <%if("live" != liveplayer.type){%>'
                       + '        <span class="liveplayer-timeseek">00:00:00/00:00:00</span>'
                       + '        <%}%>'
                       + '      </div>'
                       + '      <div class="liveplayer-control-player flexbox middle right">'
                       + '        <%if(liveplayer.allowPIP && "live" == liveplayer.type){%>'
-                      + '        <cite class="icofont pip" data-action-click="liveplayer://pipSwap#<%=liveplayer.name%>"></cite>'
+                      + '        <cite class="liveplayer-button-pip icofont pip" data-action-click="liveplayer://pipSwap#<%=liveplayer.name%>"></cite>'
                       + '        <%}%>'
                       + '        <%if(liveplayer.allowFullScreen){%>'
-                      + '        <cite class="icofont fullscreen" data-action-click="liveplayer://fullscreen#<%=liveplayer.name%>"></cite>'
+                      + '        <cite class="liveplayer-button-fullscreen icofont fullscreen" data-action-click="liveplayer://fullscreen#<%=liveplayer.name%>"></cite>'
                       + '        <%}%>'
                       + '      </div>'
                       + '    </div>'
                       + '  </div>'
                       + '  <div class="liveplayer-master">'
                       + '    <video src="<%=liveplayer.master.source%>"<%=liveplayer.master.loop ? " loop" : ""%><%=liveplayer.master.preload ? " preload" : ""%><%=liveplayer.master.autoplay ? " autoplay" : ""%> poster="<%=liveplayer.master.poster%>" webkit-playsinline playsinline x5-video-player-type="h5"></video>'
-                      + '    <div class="liveplayer-master-mask flexbox middle center" data-action-click="liveplayer://swapBars#<%=liveplayer.name%>"></div>'
+                      + '    <div class="liveplayer-master-mask flexbox middle center" data-action-click="liveplayer://swapBars#<%=liveplayer.name%>">'
+                      + '    </div>'
                       + '  </div>'
                       + '  <%if(liveplayer.allowPIP && "live" == liveplayer.type){%>'
                       + '  <div class="liveplayer-pip-zone">'
                       + '    <video src="<%=liveplayer.pip.source%>" autoplay preload="auto" webkit-playsinline playsinline x5-video-player-type="h5"></video>'
-                      + '    <div class="liveplayer-pip-mask flexbox middle center"></div>'
+                      + '    <div class="liveplayer-pip-mask flexbox middle center">'
+                      + '    </div>'
                       + '  </div>'
                       + '  <%}%>'
                       + '</div>'
@@ -227,6 +229,26 @@
 
                     this.updateTimeSeek(currentTime, duration);
                     this.updateProgress(s);
+                },
+                "pause": function(){
+                    var frame = this.getLivePlayerFrame();
+                    var watcher = this.watch();
+
+                    watcher.stop();
+                    frame.removeClass("hidebars");
+                },
+                "playing": function(){
+                    var watcher = this.watch();
+
+                    watcher.start();
+                },
+                "ended": function(){
+                    var frame = this.getLivePlayerFrame();
+                    var playButton = this.getLivePlayerButton("play");
+                    var cs = playButton.parents(".liveplayer-control-state");
+
+                    cs.removeClass("play pause").addClass("pause");
+                    frame.removeClass("hidebars");
                 }
             },
             "pip": {
@@ -319,6 +341,12 @@
             var name = this.options("name");
 
             return $("#" + name);
+        },
+        getLivePlayerButton: function(type){
+            var frame = this.getLivePlayerFrame();
+            var button = frame.find(".liveplayer-button-" + type);
+
+            return button;
         },
         getLivePlayerMasterZone: function(){
             var frame = this.getLivePlayerFrame();
@@ -439,9 +467,7 @@
         watch: function(){
             var name = this.options("name");
             var time = this.options("time");
-            var timer = Timer.getTimer("liveplayer_" + name, Timer.toFPS(time));
-
-            timer.setTimerHandler({
+            var timer = Timer.getTimer("liveplayer_" + name, Timer.toFPS(time), {
                 callback: function(_timer){
                     var frame = this.getLivePlayerFrame();
 
@@ -660,92 +686,98 @@
         var player = LivePlayer.LivePlayers[name] || (LivePlayer.LivePlayers[name] = new LivePlayer(_opts));
 
         var _exports = {
-            set: function(type, option){
+            "set": function(type, option){
                 player.set(type, option);
 
                 return this;
             },
-            getHandleStack: function(){
+            "getHandleStack": function(){
                 return player.getHandleStack();
             },
-            getLivePlayerFrame: function(){
+            "getLivePlayerName": function(){
+                return name;
+            },
+            "getLivePlayerFrame": function(){
                 return player.getLivePlayerFrame();
             },
-            getLivePlayerMasterZone: function(){
+            "getLivePlayerButton": function(type){
+                return player.getLivePlayerButton(type);
+            },
+            "getLivePlayerMasterZone": function(){
                 return player.getLivePlayerMasterZone();
             },
-            getLivePlayerMasterVideo: function(isDOM){
+            "getLivePlayerMasterVideo": function(isDOM){
                 return player.getLivePlayerMasterVideo(isDOM);
             },
-            getLivePlayerMasterMask: function(){
+            "getLivePlayerMasterMask": function(){
                 return player.getLivePlayerMasterMask();
             },
-            getLivePlayerPIPZone: function(){
+            "getLivePlayerPIPZone": function(){
                 return player.getLivePlayerPIPZone();
             },
-            getLivePlayerPIPVideo: function(isDOM){
+            "getLivePlayerPIPVideo": function(isDOM){
                 return player.getLivePlayerPIPVideo(isDOM);
             },
-            getLivePlayerPIPMask: function(){
+            "getLivePlayerPIPMask": function(){
                 return player.getLivePlayerPIPMask();
             },
-            updateBackURL: function(url){
+            "updateBackURL": function(url){
                 player.updateBackURL(url);
 
                 return this;
             },
-            updateProgress: function(percent){
+            "updateProgress": function(percent){
                 player.updateProgress(percent);
 
                 return this;
             },
-            updateTitle: function(title){
+            "updateTitle": function(title){
                 player.updateTitle(title);
 
                 return this;
             },
-            updateTimeSeek: function(current, duration){
+            "updateTimeSeek": function(current, duration){
                 player.updateTimeSeek(current, duration);
 
                 return this;
             },
-            updateOnlineUsers: function(num){
+            "updateOnlineUsers": function(num){
                 player.updateOnlineUsers(num);
 
                 return this;
             },
-            render: function(selector){
+            "render": function(selector){
                 player.render(selector);
 
                 return this;
             },
-            restore: function(){
+            "restore": function(){
                 player.restore();
 
                 return this;
             },
-            options: function(){
+            "options": function(){
                 return player.options.apply(player, arguments);
             },
-            play: function(){
+            "play": function(){
                 player.play();
 
                 return this;
             },
-            pause: function(){
+            "pause": function(){
                 player.pause();
 
                 return this;
             },
-            size: function(width, height){
+            "size": function(width, height){
                 player.size(width, height);
 
                 return this;
             },
-            parse: function(name){
+            "parse": function(name){
                 return player.parse(name);
             },
-            watch: function(){
+            "watch": function(){
                 return player.watch();
             }
         };
