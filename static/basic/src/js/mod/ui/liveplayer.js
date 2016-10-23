@@ -149,11 +149,12 @@
             title: "&nbsp;",
             width: "100%",
             height: "4.46rem",
-            time: 8000,
+            time: 3000,
             showOnlineUsers: true,
             allowFullScreen: true,
             allowPIP: true,
-            onlineUsersTemplate: "[%num%人在线]",
+            allowMaxOnlineUsers: 200, 
+            onlineUsersTemplate: "[%num%人在线]",  //变量名：%max% - 允许最大用户接入数  %num% - 当前在线人数
             master: {
                 source: "",
                 poster: "",
@@ -402,8 +403,12 @@
         updateOnlineUsers: function(num){
             var node = this.getLivePlayerOnlineUsersNode();
             var tpl = this.options("onlineUsersTemplate");
+            var max = this.options("allowMaxOnlineUsers");
 
-            node.html(tpl.replace("%num%", num));
+            var online = tpl.replace("%num%", num)
+                            .replace("%max%", max);
+
+            node.html(online);
         },
         updateTimeSeek: function(current, total){
             var node = this.getLivePlayerTimeSeekNode();
@@ -508,6 +513,7 @@
                     {name: "showOnlineUsers", dataType: "boolean"},
                     {name: "allowFullScreen", dataType: "boolean"},
                     {name: "allowPIP", dataType: "boolean"},
+                    {name: "allowMaxOnlineUsers", dataType: "number"},
                     {name: "onlineUsersTemplate", dataType: "string"},
                     {name: "master-source", dataType: "string"},
                     {name: "master-poster", dataType: "string"},
