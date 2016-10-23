@@ -580,29 +580,31 @@
             var name = this.options("name");
             var container = $('[data-liveplayer="' + name + '"]');
 
-            LivePlayerTemplate.render(true, HTML_TEMPLATE, this.options(), {
-                callback: function(ret, _container){
-                    _container.html(ret.result);
+            if(container.find(".liveplayer-frame").length === 0){
+                LivePlayerTemplate.render(true, HTML_TEMPLATE, this.options(), {
+                    callback: function(ret, _container){
+                        _container.html(ret.result);
 
-                    Util.delay(50, {
-                        callback: function(et, _node){
-                            this.listen();
+                        Util.delay(50, {
+                            callback: function(et, _node){
+                                this.listen();
 
-                            Util.registAction(_node, [
-                                {type: "click", mapping: null, compatible: null}
-                            ], null);
+                                Util.registAction(_node, [
+                                    {type: "click", mapping: null, compatible: null}
+                                ], null);
 
-                            Util.source(LivePlayerSchema);
+                                Util.source(LivePlayerSchema);
 
-                            this.watch().start();
-                        },
-                        args: [_container],
-                        context: this
-                    });
-                },
-                args: [container],
-                context: this
-            });
+                                this.watch().start();
+                            },
+                            args: [_container],
+                            context: this
+                        });
+                    },
+                    args: [container],
+                    context: this
+                });
+            }
         },
         restore: function(){
             var master = this.getLivePlayerMasterVideo(true);
