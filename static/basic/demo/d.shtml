@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-page-alias="demo"<!--#include virtual="/static/v1.0/inc/rem_dattr.html"-->>
+<html data-page-alias="platform.app.project.module.feature.page"<!--#include virtual="/static/v1.0/inc/rem_dattr.html"-->>
 <head>
 <!--#include virtual="/static/v1.0/inc/meta.html"-->
 <!--#include virtual="/static/v1.0/inc/rem.html"-->
