@@ -18,8 +18,8 @@
     }); 
 
     var _layerbox_html = '' +
-                         '<div class="mod-layerbox-mask hide js-layerbox-mask-<%=options.name%> <%=options.type%> <%=(options.skin ? options.skin : "")%>">' +
-                         '  <div class="mod-layerbox-box abs-center">' +
+                         '<div class="mod-layerbox-mask flexbox middle center hide js-layerbox-mask-<%=options.name%> <%=options.type%> <%=(options.skin ? options.skin : "")%>">' +
+                         '  <div class="mod-layerbox-box">' +
                          '    <div class="mod-layerbox-content"><%=options.text%></div>' +
                          '    <div class="mod-layerbox-buttons flexbox center middle">' +
                          '      <%for(var i = 0; i < options.btns.length; i++){%>' +
@@ -61,7 +61,7 @@
         "CONFIRM": "confirm",
         "ALARM": "alarm",
         "ERROR": "error",
-        "RIGHT": "right"
+        "RIGHT": "success"
     };
 
     var GET_DEFAULT_OPTIONS = function(){

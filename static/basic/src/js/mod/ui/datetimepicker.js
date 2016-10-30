@@ -866,7 +866,7 @@
 
             var data = this.serialized();
 
-            if(true == data.options.time){
+            if(true === data.options.time || true === data.options.timeOnly){
                 this.time(data.hours, data.minutes, data.seconds);
             }
         },

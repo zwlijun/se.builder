@@ -18,8 +18,8 @@
     }); 
 
     var _logicbox_html = '' +
-                         '<div class="mod-logicbox-mask hide js-logicbox-mask-<%=options.name%> <%=(options.skin ? options.skin : "")%>">' +
-                         '  <div class="mod-logicbox-box abs-center">' +
+                         '<div class="mod-logicbox-mask flexbox middle center hide js-logicbox-mask-<%=options.name%> <%=(options.skin ? options.skin : "")%>">' +
+                         '  <div class="mod-logicbox-box">' +
                          '  </div>' +
                          '</div>' +
                          '';

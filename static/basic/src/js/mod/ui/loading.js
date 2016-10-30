@@ -42,7 +42,7 @@
                '</svg>' +  
                '';   
     var _loading_html = '' +
-                        '<div class="mod-loading-box abs-center">' +
+                        '<div class="mod-loading-box">' +
                         '  <div class="mod-loading-ani flexbox center middle">' +
                         _svg + 
                         '  </div>' +
@@ -50,7 +50,7 @@
                         '</div>'
                         '';
     var _mask_html = '' +
-                     '<div class="mod-loading-mask hide js-loading-mask-${name}">' +
+                     '<div class="mod-loading-mask flexbox middle center hide js-loading-mask-${name}">' +
                      _loading_html +
                      '</div>' + 
                      '';
@@ -104,7 +104,7 @@
 
                 mask = $(".js-loading-mask-" + name);
             }else{
-                mask[0].className = "mod-loading-mask hide js-loading-mask-" + name;
+                mask[0].className = "mod-loading-mask flexbox middle center hide js-loading-mask-" + name;
             }
 
             if(true === options.embed){

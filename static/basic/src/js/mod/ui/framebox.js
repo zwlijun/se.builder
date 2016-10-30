@@ -18,8 +18,8 @@
     });
 
     var _framebox_html = '' +
-                         '<div class="mod-framebox-mask js-framebox-mask-<%=options.name%> <%=(options.skin ? options.skin : "")%>">' +
-                         '  <div class="mod-framebox-box abs-center">' +
+                         '<div class="mod-framebox-mask flexbox middle center js-framebox-mask-<%=options.name%> <%=(options.skin ? options.skin : "")%>">' +
+                         '  <div class="mod-framebox-box">' +
                          '    <del class="icofont<%=(options.close ? "" : " hide")%>" title="关闭/Close" data-close-for="framebox" data-action-click="framebox://seui/mod/framebox/close#<%=options.name%>"></del>' +
                          '    <h3 class="mod-framebox-titlebar<%=(options.titleBar ? "" : " hide")%>">' +
                          '      <i class="<%=(options.iconClass ? options.iconClass : "")%>"><%=options.icon ? options.icon : ""%></i>' +

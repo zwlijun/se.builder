@@ -188,7 +188,8 @@
       <button type="submit">完成</button>
     </div>
   </div> -->
-  <input type="text" data-plugin="datetimepicker" data-datetimepicker-schema="dtpicker://set#aabbd" data-datetimepicker-format="%y-%M-%d %h:%m:%s" data-datetimepicker-time="1" data-datetimepicker-time-only="1" value="2015-10-12" name="aabbd" style="margin-left: 100px; margin-top: 500px" />
+  <input type="text" data-plugin="datetimepicker" data-datetimepicker-schema="dtpicker://set#aabbd" data-datetimepicker-format="%h:%m" data-datetimepicker-time="1" data-datetimepicker-time-only="1" value="14:31" name="aabbd" style="margin-left: 100px; margin-top: 500px" />
+  <input type="text" data-plugin="datetimepicker" data-datetimepicker-schema="dtpicker://set#aabbe" data-datetimepicker-format="%h:%m" data-datetimepicker-time="1" data-datetimepicker-time-only="1" value="14:31" name="aabbe" style="margin-left: 100px; margin-top: 500px" />
 <!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
 <script>
 $.dtpicker = {

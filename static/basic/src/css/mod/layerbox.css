@@ -67,7 +67,7 @@
     content: "\e63b";
     color: #FF1B1B;
 }
-.mod-layerbox-mask.right .mod-layerbox-content:before{
+.mod-layerbox-mask.success .mod-layerbox-content:before{
     content: "\e623";
     color: #00C102;
 }
