@@ -41,7 +41,7 @@
 <div id="lp0" 
       data-liveplayer="test_liveplayer" 
       data-liveplayer-name="test_liveplayer" 
-      data-liveplayer-type="vod" 
+      data-liveplayer-type="live" 
       data-liveplayer-back="http:///" 
       data-liveplayer-title="2017考研 政治新大纲系统精讲提分班" 
       data-liveplayer-width="100%" 

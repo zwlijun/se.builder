@@ -164,7 +164,36 @@
             }
         }
     };
-
+    /**
+    <element
+      data-liveplayer="播放器实例名称" 
+      data-liveplayer-name="播放器实例名称" 
+      data-liveplayer-type="播放器类型，[vod|live]" 
+      data-liveplayer-back="返回URL" 
+      data-liveplayer-title="视频标题" 
+      data-liveplayer-width="宽度，默认：100%" 
+      data-liveplayer-height="高度，默认：4.46rem" 
+      data-liveplayer-time="控制条及标题栏停留时长，默认：3000毫秒" 
+      data-liveplayer-showOnlineUsers="是否允许显示在线用户数，1 - 允许显示， 0 - 不显示" 
+      data-liveplayer-allowFullScreen="是否显示全屏菜单，1 - 显示， 0 - 不显示" 
+      data-liveplayer-allowPIP="是否允许显示画中画，1 - 显示， 0 - 不显示" 
+      data-liveplayer-allowMaxOnlineUsers="允许的最大在线人数，如：300" 
+      data-liveplayer-onlineUsersTemplate="最大在线人数模板，如：[%num%/%max%人在线]；变量名：%max% - 允许最大用户接入数  %num% - 当前在线人数" 
+      data-liveplayer-master-source="主视频地址" 
+      data-liveplayer-master-poster="主视频poster图片地址" 
+      data-liveplayer-master-preload="是设置否预加载，1 - 设置属性 0 - 不设置" 
+      data-liveplayer-master-loop="是否设置循环播放，1 - 循环， 0 - 单播" 
+      data-liveplayer-master-autoplay="是否设置为自动播放， 1 - 自动播放， 0 - 需要点击播放" 
+      data-liveplayer-master-multed="是否设置为禁用， 1 - 不禁音， 0 - 禁音" 
+      data-liveplayer-master-playlist="回放地址列表，多个地址间用英文逗号“,”分隔，没有时为空或不设置该属性"
+      data-liveplayer-pip-source="画中画视频地址" 
+      data-liveplayer-pip-poster="画中画poster图片地址" 
+      data-liveplayer-pip-preload="是设置否预加载，1 - 设置属性 0 - 不设置" 
+      data-liveplayer-pip-loop="是否设置循环播放，1 - 循环， 0 - 单播" 
+      data-liveplayer-pip-autoplay="是否设置为自动播放， 1 - 自动播放， 0 - 需要点击播放" 
+      data-liveplayer-pip-multed="是否设置为禁用， 1 - 不禁音， 0 - 禁音" 
+    ></element>
+    **/
     var GetDefaultOptions = function(){
         var options = {
             type: "live",
@@ -185,7 +214,8 @@
                 preload: true,
                 loop: false,
                 autoplay: true,
-                muted: false
+                muted: false,
+                playlist: ""
             },
             pip: {
                 source: "",
@@ -213,6 +243,7 @@
         this.opts = $.extend(true, {}, GetDefaultOptions(), options || {});
 
         this.isListened = false;
+        this.playList = [];
 
         this.handleStack = new HandleStack();
         this.events = {
@@ -271,12 +302,18 @@
                     watcher.start();
                 },
                 "ended": function(){
+                    var next = this.getNextPlayURL();
                     var frame = this.getLivePlayerFrame();
                     var playButton = this.getLivePlayerButton("play");
                     var cs = playButton.parents(".liveplayer-control-state");
 
-                    cs.removeClass("play pause").addClass("pause");
-                    frame.removeClass("hidebars");
+                    if(!next){
+                        cs.removeClass("play pause").addClass("pause");
+                        frame.removeClass("hidebars");
+                        this.reload(false);
+                    }else{
+                        this.load(next, true);
+                    }
                 }
             },
             "pip": {
@@ -492,6 +529,45 @@
 
             progressbar.css("width", percent);
         },
+        parsePlayList: function(){
+            var master = this.options("master");
+            var pbs = master.playlist || "";
+
+            if("" == pbs){
+                return [];
+            }else{
+                if(pbs.indexOf(",") == -1){
+                    return [pbs];
+                }else{
+                    return pbs.split(",");
+                }
+            }
+        },
+        registPlayList: function(playList){
+            this.playList = playList;
+        },
+        getPlayList: function(){
+            return this.playList;
+        },
+        getNextPlayURL: function(isReverse){
+            var list = [].concat(this.getPlayList());
+            var url = "";
+
+            if(true === isReverse){
+                url = list.pop();
+            }else{
+                url = list.shift();
+            }
+
+            if(url){
+                this.registPlayList(list);
+            }else{
+                url = "";
+                this.registPlayList([]);
+            }
+
+            return url;
+        },
         watch: function(){
             var name = this.options("name");
             var time = this.options("time");
@@ -576,6 +652,7 @@
                     {name: "master-loop", dataType: "boolean"},
                     {name: "master-autoplay", dataType: "boolean"},
                     {name: "master-muted", dataType: "boolean"},
+                    {name: "master-playlist", dataType: "string"},
                     {name: "pip-source", dataType: "string"},
                     {name: "pip-poster", dataType: "string"},
                     {name: "pip-preload", dataType: "boolean"},
@@ -672,6 +749,26 @@
                     context: this
                 });
             }
+        },
+        load: function(source, isPlay){
+            var video = this.getLivePlayerMasterVideo(true);
+
+            if(video){
+                video.setAttribute("src", source);
+
+                if(true === isPlay){
+                    video.play();
+                }else{
+                  video.pause();
+                }
+            }
+        },
+        reload: function(isPlay){
+            var video = this.options("master");
+            var source = video.source;
+
+            this.registPlayList(this.parsePlayList());
+            this.load(source, true === isPlay);
         },
         restore: function(){
             var master = this.getLivePlayerMasterVideo(true);
@@ -781,6 +878,20 @@
 
                 return this;
             },
+            "parsePlayList": function(){
+                return player.parsePlayList();
+            },
+            "registPlayList": function(list){
+                player.registPlayList(list);
+
+                return this;
+            },
+            "getPlayList": function(){
+                return player.getPlayList();
+            },
+            "getNextPlayURL": function(){
+                return player.getNextPlayURL();
+            },
             "render": function(selector){
                 player.render(selector);
 
@@ -793,6 +904,16 @@
             },
             "options": function(){
                 return player.options.apply(player, arguments);
+            },
+            "load": function(source, isPlay){
+                player.load(source, isPlay);
+
+                return this;
+            },
+            "reload": function(isPlay){
+                player.reload(isPlay);
+
+                return this;
             },
             "play": function(){
                 player.play();
@@ -829,7 +950,7 @@
     };
 
     module.exports = {
-        "version": "R16B1023",
+        "version": "R16B1029",
         createLivePlayer: function(name, options){
             return LivePlayer.createLivePlayer(name, options);
         },

@@ -78,7 +78,7 @@ var GoSchema = {
         var body = $('[data-tab-body="' + name + '"]');
 
         var menusRoot = menu.parents(".tab-menus");
-        var bodiesRoot = menusRoot.siblings(".tab-bodies");
+        var bodiesRoot = body.parents(".tab-bodies");
 
         var menus = menusRoot.find('[data-tab-menu]');
         var bodies = bodiesRoot.find('[data-tab-body]');
