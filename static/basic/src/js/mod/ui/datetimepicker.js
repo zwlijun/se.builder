@@ -216,7 +216,7 @@
                 e.stopPropagation();
             },
             call: function(data, node, e, type){
-                var options = Util.parsePluginOptions("dtpicker", GetOptionDataStruct(), GetDefaultOptions());
+                var options = Util.parsePluginOptions(node, "dtpicker", GetOptionDataStruct(), GetDefaultOptions());
                 var picker = DateTimePicker.getDateTimePicker(options.name);
 
                 picker.options(options);
@@ -1441,7 +1441,7 @@
         for(var i = 0; i < size; i++){
             plugin = plugins[i];
 
-            options = Util.parsePluginOptions("dtpicker", GetOptionDataStruct(), GetDefaultOptions());
+            options = Util.parsePluginOptions($(plugin), "dtpicker", GetOptionDataStruct(), GetDefaultOptions());
             picker = DateTimePicker.createDateTimePicker(options.name);
 
             picker.options(options);

@@ -518,11 +518,13 @@
             
             return _url;
         },
-        parsePluginOptions: function(key, dataStruct, defaultOptions){
+        parsePluginOptions: function(plugin, key, dataStruct, defaultOptions){
             //dataStruct::[]
             //{property: String, dataType: [number|string|boolean|array]}
+            
+            plugin = $(plugin);
+
             var opts = {};
-            var plugin = $('[data-plugin^="' + key + '"]');
             var pluginKey = plugin.attr("data-plugin");
             var pluginName = pluginKey.indexOf(".") == -1 ? "non-name" : pluginKey.substring(key.length + 1);
             var size = dataStruct.length;
