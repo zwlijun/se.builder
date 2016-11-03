@@ -19,146 +19,182 @@
         "root": "dtp"
     });
 
-    var _html_structs = ''
-                      + '<div class="mod-datetime-picker-frame hide<%=dtp.options.timeOnly ? " timeonly" : (dtp.options.time ? "" : " notime")%><%=dtp.options.mode == 1 ? " year-month" : ""%>" data-datepicker="<%=dtp.identity%>" data-action-mousedown="dtp://picker/bubbles">'
-                      + '</div>'
-                      + '';
-    var _core_structs = ''
-                      + '  <div class="mod-datetime-picker-body clearfix">'
-                      + '    <div class="mod-datetime-picker-datebox">'
-                      + '      <h6 class="mod-dtp-year clearfix">'
-                      + '        <sup class="icofont prev" title="上一月" data-action-click="dtp://picker/month/prev#<%=dtp.identity%>,<%=dtp.name%>"></sup>'
-                      + '        <em title="点击选择年份" data-action-click="dtp://picker/year/panel#<%=dtp.identity%>,<%=dtp.name%>"><%=dtp.fmt.year%></em>'
-                      + '        <span>/</span>'
-                      + '        <cite title="点击选择月份" data-action-click="dtp://picker/month/panel#<%=dtp.identity%>,<%=dtp.name%>"><%=dtp.fmt.month%></cite>'
-                      + '        <span>/</span>'
-                      + '        <i><%=dtp.fmt.date%></i>'
-                      + '        <sub class="icofont next" title="下一月" data-action-click="dtp://picker/month/next#<%=dtp.identity%>,<%=dtp.name%>"></sub>'
-                      + '      </h6>'
-                      + '      <div class="mod-dtp-date">'
-                      + '        <ul class="mod-dtp-weeks clearfix">'
-                      + '          <li>日</li>'
-                      + '          <li>一</li>'
-                      + '          <li>二</li>'
-                      + '          <li>三</li>'
-                      + '          <li>四</li>'
-                      + '          <li>五</li>'
-                      + '          <li>六</li>'
-                      + '        </ul>'
-                      + '        <ul class="mod-dtp-days clearfix">'
-                      + '        <%'
-                      + '        var prev = dtp.prev;'
-                      + '        var next = dtp.next;'
-                      + '        var first = dtp.first;'
-                      + '        var today = dtp.today;'
-                      + '        var prevDays = prev.leapYear.monthDays;'
-                      + '        var nextDays = next.leapYear.monthDays;'
-                      + '        var currentDays = dtp.leapYear.monthDays;'
-                      + '        var firstDay = first.day;'
-                      + '        %>'
-                      + '        <%for(var i = firstDay; i > 0; i--){%>'
-                      + '          <li class="ligthgray<%=dtp.options.todayOnly ? " disabled" : ""%>" data-action-click="dtp://picker/date/set#<%=dtp.identity%>,<%=dtp.name%>,<%=prev.fmt.year%>,<%=prev.fmt.month%>,<%=(prevDays - i)%>"><%=(prevDays - i)%></li>'
-                      + '        <%}%>'
-                      + '        <%for(var j = 1; j <= currentDays; j++){%>'
-                      + '        <%if(j === today.date && dtp.year === today.year && dtp.month === today.month){%>'
-                      + '          <li class="cur" data-action-click="dtp://picker/date/set#<%=dtp.identity%>,<%=dtp.name%>,<%=dtp.fmt.year%>,<%=dtp.fmt.month%>,<%=j%>"><%=j%></li>'
-                      + '        <%}else if(j == dtp.date){%>'
-                      + '          <li class="on" data-action-click="dtp://picker/date/set#<%=dtp.identity%>,<%=dtp.name%>,<%=dtp.fmt.year%>,<%=dtp.fmt.month%>,<%=j%>"><%=j%></li>'
-                      + '        <%}else{%>'
-                      + '          <li class="" data-action-click="dtp://picker/date/set#<%=dtp.identity%>,<%=dtp.name%>,<%=dtp.fmt.year%>,<%=dtp.fmt.month%>,<%=j%>"><%=j%></li>'
-                      + '        <%}%>'
-                      + '        <%}%>'
-                      + '        <%for(var k = j, m = 1; k <= (42 - firstDay); k++, m++){%>'
-                      + '          <li class="ligthgray<%=dtp.options.todayOnly ? " disabled" : ""%>" data-action-click="dtp://picker/date/set#<%=dtp.identity%>,<%=dtp.name%>,<%=next.fmt.year%>,<%=next.fmt.month%>,<%=m%>"><%=m%></li>'
-                      + '        <%}%>'
-                      + '        </ul>'
-                      + '      </div>'
-                      + '      <div class="mod-dtp-year-month">'
-                      + '        <div class="mod-dtp-years clearfix">'
-                      + '          <sup class="icofont prev" title="上一年" data-action-click="dtp://picker/year/prev#<%=dtp.identity%>,<%=dtp.name%>"></sup>'
-                      + '          <strong><%=dtp.fmt.year%></strong>'
-                      + '          <sub class="icofont next" title="下一年" data-action-click="dtp://picker/year/next#<%=dtp.identity%>,<%=dtp.name%>"></sub>'
-                      + '        </div>'
-                      + '        <div class="mod-dtp-months clearfix">'
-                      + '          <em class="<%=dtp.fmt.month == "01" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,0">01月</em>'
-                      + '          <em class="<%=dtp.fmt.month == "02" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,1">02月</em>'
-                      + '          <em class="<%=dtp.fmt.month == "03" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,2">03月</em>'
-                      + '          <em class="<%=dtp.fmt.month == "04" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,3">04月</em>'
-                      + '          <em class="<%=dtp.fmt.month == "05" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,4">05月</em>'
-                      + '          <em class="<%=dtp.fmt.month == "06" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,5">06月</em>'
-                      + '          <em class="<%=dtp.fmt.month == "07" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,6">07月</em>'
-                      + '          <em class="<%=dtp.fmt.month == "08" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,7">08月</em>'
-                      + '          <em class="<%=dtp.fmt.month == "09" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,8">09月</em>'
-                      + '          <em class="<%=dtp.fmt.month == "10" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,9">10月</em>'
-                      + '          <em class="<%=dtp.fmt.month == "11" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,10">11月</em>'
-                      + '          <em class="<%=dtp.fmt.month == "12" ? "on" : ""%>" data-action-click="dtp://picker/month/set#<%=dtp.identity%>,<%=dtp.name%>,11">12月</em>'
-                      + '        </div>'
-                      + '      </div>'
-                      + '    </div>'
-                      + '    <div class="mod-datetime-picker-timebox">'
-                      + '      <ul class="mod-dtp-time-view clearfix">'
-                      + '        <li class="mod-dtp-view-hour"><%=dtp.fmt.hours%></li>'
-                      + '        <li class="mod-dtp-view-minute"><%=dtp.fmt.minutes%></li>'
-                      + '        <li class="mod-dtp-view-second"><%=dtp.fmt.seconds%></li>'
-                      + '      </ul>'
-                      + '      <div class="mod-dtp-time-picker clearfix">'
-                      + '        <div class="mod-dtp-hours">'
-                      + '          <sup class="icofont prev" data-action-click="dtp://picker/hour/prev#<%=dtp.identity%>,<%=dtp.name%>"></sup>'
-                      + '          <div class="mod-time-chooser">'
-                      + '            <ul class="hours">'
-                      + '              <%for(var i = 0; i < 24; i++){%>'
-                      + '              <%var ts = (i < 10 ? "0" + i : i);%>'
-                      + '              <%if(i == dtp.hours){%>'
-                      + '              <li class="on"><%=ts%></li>'
-                      + '              <%}else{%>'
-                      + '              <li><%=ts%></li>'
-                      + '              <%}%>'
-                      + '              <%}%>'
-                      + '            </ul>'
-                      + '          </div>'
-                      + '          <sub class="icofont next" data-action-click="dtp://picker/hour/next#<%=dtp.identity%>,<%=dtp.name%>"></sub>'
-                      + '        </div>'
-                      + '        <div class="mod-dtp-minutes">'
-                      + '          <sup class="icofont prev" data-action-click="dtp://picker/minute/prev#<%=dtp.identity%>,<%=dtp.name%>"></sup>'
-                      + '          <div class="mod-time-chooser">'
-                      + '            <ul class="minutes">'
-                      + '              <%for(var i = 0; i < 60; i++){%>'
-                      + '              <%var ts = (i < 10 ? "0" + i : i);%>'
-                      + '              <%if(i == dtp.minutes){%>'
-                      + '              <li class="on"><%=ts%></li>'
-                      + '              <%}else{%>'
-                      + '              <li><%=ts%></li>'
-                      + '              <%}%>'
-                      + '              <%}%>'
-                      + '            </ul>'
-                      + '          </div>'
-                      + '          <sub class="icofont next" data-action-click="dtp://picker/minute/next#<%=dtp.identity%>,<%=dtp.name%>"></sub>'
-                      + '        </div>'
-                      + '        <div class="mod-dtp-seconds">'
-                      + '          <sup class="icofont prev" data-action-click="dtp://picker/second/prev#<%=dtp.identity%>,<%=dtp.name%>"></sup>'
-                      + '          <div class="mod-time-chooser">'
-                      + '            <ul class="seconds">'
-                      + '              <%for(var i = 0; i < 60; i++){%>'
-                      + '              <%var ts = (i < 10 ? "0" + i : i);%>'
-                      + '              <%if(i == dtp.seconds){%>'
-                      + '              <li class="on"><%=ts%></li>'
-                      + '              <%}else{%>'
-                      + '              <li><%=ts%></li>'
-                      + '              <%}%>'
-                      + '              <%}%>'
-                      + '            </ul>'
-                      + '          </div>'
-                      + '          <sub class="icofont next" data-action-click="dtp://picker/second/next#<%=dtp.identity%>,<%=dtp.name%>"></sub>'
-                      + '        </div>'
-                      + '        <div class="mod-dtp-time-selected"></div>'
-                      + '      </div>'
-                      + '    </div>'
-                      + '  </div>'
-                      + '  <div class="mod-datetime-picker-footer clearfix">'
-                      + '    <button type="button" data-action-click="dtp://picker/today#<%=dtp.identity%>,<%=dtp.name%>">现在</button>'
-                      + '    <button type="submit" data-action-click="dtp://picker/done#<%=dtp.identity%>,<%=dtp.name%>">完成</button>'
-                      + '  </div>'
-                      + '';
+    var _html_picker_frame = ''
+                           + '<div class="flexbox top justify mod-dtpicker-frame mode <%=dtp.mode.name%> hide" data-datepicker="<%=dtp.identity%>" data-action-mousedown="dtp://picker/bubbles">'
+                           + '  <figure class="mod-dtpicker-datebox"></figure>'
+                           + '  <figure class="mod-dtpicker-timebox"></figure>'
+                           + '</div>'
+                           + '';
+
+    var _html_picker_datebox = ''
+                             + '  <figcaption class="mod-dtpicker-date-choosen flexbox middle justify">'
+                             + '    <sup class="icofont prev" title="上一月" data-action-click="dtp://datetime/month/prev#<%=dtp.name%>"></sup>'
+                             + '    <span class="select-year" data-action-click="dtp://panel/swap#<%=dtp.name%>"><%=dtp.fmt.year%></span>'
+                             + '    <em class="separator ym" data-action-click="dtp://panel/swap#<%=dtp.name%>">/</em>'
+                             + '    <span class="select-month" data-action-click="dtp://panel/swap#<%=dtp.name%>"><%=dtp.fmt.month%></span>'
+                             + '    <em class="separator md" data-action-click="dtp://panel/swap#<%=dtp.name%>">/</em>'
+                             + '    <span class="select-date" data-action-click="dtp://panel/swap#<%=dtp.name%>"><%=dtp.fmt.date%></span>'
+                             + '    <sub class="icofont next" title="下一月" data-action-click="dtp://datetime/month/next#<%=dtp.name%>"></sub>'
+                             + '  </figcaption>'
+                             + '  <ul class="mod-dtpicker-weeks flexbox middle left">'
+                             + '    <li>日</li>'
+                             + '    <li>一</li>'
+                             + '    <li>二</li>'
+                             + '    <li>三</li>'
+                             + '    <li>四</li>'
+                             + '    <li>五</li>'
+                             + '    <li>六</li>'
+                             + '  </ul>'
+                             + '  <ul class="mod-dtpicker-date-panel flexbox middle left wrap">'
+                             + '    <%'
+                             + '    var prev = dtp.prev;'
+                             + '    var next = dtp.next;'
+                             + '    var first = dtp.first;'
+                             + '    var today = dtp.today;'
+                             + '    var prevDays = prev.leapYear.monthDays;'
+                             + '    var nextDays = next.leapYear.monthDays;'
+                             + '    var currentDays = dtp.leapYear.monthDays;'
+                             + '    var firstDay = first.day;'
+                             + '    %>'
+                             + '    <%for(var i = firstDay - 1; i >= 0; i--){%>'
+                             + '    <li class="gray" data-action-click="dtp://datetime/date/set#<%=dtp.name%>,prev,<%=(prevDays - i)%>"><%=(prevDays - i)%></li>'
+                             + '    <%}%>'
+                             + '    <%for(var j = 1; j <= currentDays; j++){%>'
+                             + '      <%if(j === today.date && dtp.year === today.year && dtp.month === today.month){%>'
+                             + '        <li class="today" data-action-click="dtp://datetime/date/set#<%=dtp.name%>,cur,<%=j%>"><%=j%></li>'
+                             + '      <%}else if(j === dtp.date){%>'
+                             + '        <li class="cur" data-action-click="dtp://datetime/date/set#<%=dtp.name%>,cur,<%=j%>"><%=j%></li>'
+                             + '      <%}else{%>'
+                             + '        <li data-action-click="dtp://datetime/date/set#<%=dtp.name%>,cur,<%=j%>"><%=j%></li>'
+                             + '      <%}%>'
+                             + '    <%}%>'
+                             + '    <%for(var k = 1; k <= (42 - currentDays - firstDay); k++){%>'
+                             + '    <li class="gray" data-action-click="dtp://datetime/date/set#<%=dtp.name%>,next,<%=k%>"><%=k%></li>'
+                             + '    <%}%>'
+                             + '  </ul>'
+                             + '  <div class="mod-dtpicker-year-month<%=(3 === dtp.mode.value ? "" : " hide")%>">'
+                             + '    <div class="mod-dtpicker-years flexbox middle justify">'
+                             + '      <sup class="icofont prev" title="上一年" data-action-click="dtp://datetime/year/prev#<%=dtp.name%>"></sup>'
+                             + '      <strong><%=dtp.fmt.year%></strong>'
+                             + '      <sub class="icofont next" title="下一年" data-action-click="dtp://datetime/year/next#<%=dtp.name%>"></sub>'
+                             + '    </div>'
+                             + '    <div class="mod-dtpicker-months flexbox middle left wrap">'
+                             + '      <em class="<%=dtp.fmt.month == "01" ? "on" : ""%>" data-action-click="dtp://datetime/month/set#<%=dtp.name%>,0">01月</em>'
+                             + '      <em class="<%=dtp.fmt.month == "02" ? "on" : ""%>" data-action-click="dtp://datetime/month/set#<%=dtp.name%>,1">02月</em>'
+                             + '      <em class="<%=dtp.fmt.month == "03" ? "on" : ""%>" data-action-click="dtp://datetime/month/set#<%=dtp.name%>,2">03月</em>'
+                             + '      <em class="<%=dtp.fmt.month == "04" ? "on" : ""%>" data-action-click="dtp://datetime/month/set#<%=dtp.name%>,3">04月</em>'
+                             + '      <em class="<%=dtp.fmt.month == "05" ? "on" : ""%>" data-action-click="dtp://datetime/month/set#<%=dtp.name%>,4">05月</em>'
+                             + '      <em class="<%=dtp.fmt.month == "06" ? "on" : ""%>" data-action-click="dtp://datetime/month/set#<%=dtp.name%>,5">06月</em>'
+                             + '      <em class="<%=dtp.fmt.month == "07" ? "on" : ""%>" data-action-click="dtp://datetime/month/set#<%=dtp.name%>,6">07月</em>'
+                             + '      <em class="<%=dtp.fmt.month == "08" ? "on" : ""%>" data-action-click="dtp://datetime/month/set#<%=dtp.name%>,7">08月</em>'
+                             + '      <em class="<%=dtp.fmt.month == "09" ? "on" : ""%>" data-action-click="dtp://datetime/month/set#<%=dtp.name%>,8">09月</em>'
+                             + '      <em class="<%=dtp.fmt.month == "10" ? "on" : ""%>" data-action-click="dtp://datetime/month/set#<%=dtp.name%>,9">10月</em>'
+                             + '      <em class="<%=dtp.fmt.month == "11" ? "on" : ""%>" data-action-click="dtp://datetime/month/set#<%=dtp.name%>,10">11月</em>'
+                             + '      <em class="<%=dtp.fmt.month == "12" ? "on" : ""%>" data-action-click="dtp://datetime/month/set#<%=dtp.name%>,11">12月</em>'
+                             + '    </div>'
+                             + '  </div>'
+                             + '';
+
+    var _html_picker_timebox = ''
+                             + '  <figcaption class="mod-dtpicker-time-choosen flexbox middle center">'
+                             + '    <span class="select-hour"><%=dtp.fmt.hours%></span>'
+                             + '    <em class="separator hm">:</em>'
+                             + '    <span class="select-minute"><%=dtp.fmt.minutes%></span>'
+                             + '    <em class="separator ms">:</em>'
+                             + '    <span class="select-second"><%=dtp.fmt.seconds%></span>'
+                             + '  </figcaption>'
+                             + '  <div class="mod-dtpicker-time-panel flexbox middle justify">'
+                             + '    <div class="mod-dtpicker-time-options hours">'
+                             + '      <div class="icofont prev" data-action-click="dtp://datetime/hour/prev#<%=dtp.name%>"></div>'
+                             + '      <div class="mod-dtpicker-time-values">'
+                             + '        <ul>'
+                             + '          <li class="empty"></li>'
+                             + '          <li class="empty"></li>'
+                             + '          <%'
+                             + '          var step = dtp.options.step.hour;'
+                             + '          step = Math.min(Math.max(1, step), 23);'
+                             + '          %>'
+                             + '          <%for(var i = 0; i < 24; i+=step){%>'
+                             + '          <li<%=(i === dtp.hours ? " class=\\"on\\"" : "")%> data-action-click="dtp://datetime/hour/set#<%=dtp.name%>,<%=i%>"><%=(i < 10 ? "0" + i : i)%></li>'
+                             + '          <%}%>'
+                             + '          <li class="empty"></li>'
+                             + '          <li class="empty"></li>'
+                             + '        </ul>'
+                             + '      </div>'
+                             + '      <div class="icofont next" data-action-click="dtp://datetime/hour/next#<%=dtp.name%>"></div>'
+                             + '    </div>'
+                             + '    <div class="mod-dtpicker-time-options minutes">'
+                             + '      <div class="icofont prev" data-action-click="dtp://datetime/minute/prev#<%=dtp.name%>"></div>'
+                             + '      <div class="mod-dtpicker-time-values">'
+                             + '        <ul>'
+                             + '          <li class="empty"></li>'
+                             + '          <li class="empty"></li>'
+                             + '          <%'
+                             + '          var step = dtp.options.step.minute;'
+                             + '          step = Math.min(Math.max(1, step), 59);'
+                             + '          %>'
+                             + '          <%for(var i = 0; i < 60; i+=step){%>'
+                             + '          <li<%=(i === dtp.minutes ? " class=\\"on\\"" : "")%> data-action-click="dtp://datetime/minute/set#<%=dtp.name%>,<%=i%>"><%=(i < 10 ? "0" + i : i)%></li>'
+                             + '          <%}%>'
+                             + '          <li class="empty"></li>'
+                             + '          <li class="empty"></li>'
+                             + '        </ul>'
+                             + '      </div>'
+                             + '      <div class="icofont next" data-action-click="dtp://datetime/minute/next#<%=dtp.name%>"></div>'
+                             + '    </div>'
+                             + '    <div class="mod-dtpicker-time-options seconds">'
+                             + '      <div class="icofont prev" data-action-click="dtp://datetime/second/prev#<%=dtp.name%>"></div>'
+                             + '      <div class="mod-dtpicker-time-values">'
+                             + '        <ul>'
+                             + '          <li class="empty"></li>'
+                             + '          <li class="empty"></li>'
+                             + '          <%'
+                             + '          var step = dtp.options.step.second;'
+                             + '          step = Math.min(Math.max(1, step), 59);'
+                             + '          %>'
+                             + '          <%for(var i = 0; i < 60; i+=step){%>'
+                             + '          <li<%=(i === dtp.seconds ? " class=\\"on\\"" : "")%> data-action-click="dtp://datetime/second/set#<%=dtp.name%>,<%=i%>"><%=(i < 10 ? "0" + i : i)%></li>'
+                             + '          <%}%>'
+                             + '          <li class="empty"></li>'
+                             + '          <li class="empty"></li>'
+                             + '        </ul>'
+                             + '      </div>'
+                             + '      <div class="icofont next" data-action-click="dtp://datetime/second/next#<%=dtp.name%>"></div>'
+                             + '    </div>'
+                             + '    <div class="mod-dtpicker-time-options fixed-time">'
+                             + '      <div class="icofont prev" data-action-click="dtp://datetime/time/prev#<%=dtp.name%>"></div>'
+                             + '      <div class="mod-dtpicker-time-values">'
+                             + '        <ul>'
+                             + '          <li class="empty"></li>'
+                             + '          <li class="empty"></li>'
+                             + '          <%'
+                             + '          var hourStep = dtp.options.step.hour;'
+                             + '              hourStep = Math.min(Math.max(1, hourStep), 23);'
+                             + '          var minuteStep = dtp.options.step.minute;'
+                             + '              minuteStep = Math.min(Math.max(1, minuteStep), 59);'
+                             + '          var arr = [];'
+                             + '          for(var h = 0; h < 24; h+= hourStep){'
+                             + '              for(var m = 0; m < 60; m+= minuteStep){'
+                             + '                  arr.push((h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m));'
+                             + '              }'
+                             + '          }'
+                             + '          for(var a = 0; a < arr.length; a++){'
+                             + '          %>'
+                             + '          <%if((dtp.fmt.hours + ":" + dtp.fmt.minutes) == arr[a]){%>'
+                             + '          <li class="on" data-action-click="dtp://datetime/time/set#<%=dtp.name%>,<%=arr[a]%>"><%=arr[a]%></li>'
+                             + '          <%}else{%>'
+                             + '          <li data-action-click="dtp://datetime/time/set#<%=dtp.name%>,<%=arr[a]%>"><%=arr[a]%></li>'
+                             + '          <%}%>'
+                             + '          <%}%>'
+                             + '          <li class="empty"></li>'
+                             + '          <li class="empty"></li>'
+                             + '        </ul>'
+                             + '      </div>'
+                             + '      <div class="icofont next" data-action-click="dtp://datetime/time/next#<%=dtp.name%>"></div>'
+                             + '    </div>'
+                             + '    <div class="mod-dtpicker-time-selected"></div>'
+                             + '  </div>'
+                             + '';
 
     var FillZero = function(str, len){
         str = "" + str;
@@ -172,6 +208,7 @@
 
         return tmp + str;
     };
+
     var DateTimePickerProtocol = {
         schema: "dtp",
         picker: {
@@ -179,401 +216,702 @@
                 e.stopPropagation();
             },
             call: function(data, node, e, type){
-                var args = (data || "").split(",");
-                var name = args[0];
-
-                var options = DateTimePicker.getPluginOptions(node);
-                var picker = DateTimePicker.createDateTimePicker(options.name);
+                var options = Util.parsePluginOptions("dtpicker", GetOptionDataStruct(), GetDefaultOptions());
+                var picker = DateTimePicker.getDateTimePicker(options.name);
 
                 picker.options(options);
-                picker.plugin(node);
 
                 if(options.value){
-                    picker.update(picker.parse(options.value));
+                    picker.update(
+                        picker.parse(options.value)
+                    );
                 }
 
                 picker.render().show(false).position(node[0]);
+            }
+        },
+        panel: {
+            swap: function(data, node, e, type){
+                var args = (data || "").split(",");
+                var name = args[0];
+
+                var picker = DateTimePicker.getDateTimePicker(name);
+                var panel = picker.getDateTimePickerYearMonthPanel();
+                var mode = picker.mode();
+
+                if(DateTimePicker.MODE.YEAR_MONTH.VALUE === mode.value){
+                    return ;
+                }
+
+                panel.toggleClass("hide");
+            }
+        },
+        datetime: {
+            month: {
+                prev: function(data, node, e, type){
+                    var args = (data || "").split(",");
+                    var name = args[0];
+
+                    var picker = DateTimePicker.getDateTimePicker(name);
+                    var choosen = picker.getDateTimePickerChoosenValue();
+                    var choosenDate = choosen.dateValue;
+
+                    choosenDate.setMonth(choosenDate.getMonth() - 1);
+
+                    picker.update(choosenDate)
+                          .renderDateBox(picker.serialized(choosenDate));
+                },
+                next: function(data, node, e, type){
+                    var args = (data || "").split(",");
+                    var name = args[0];
+
+                    var picker = DateTimePicker.getDateTimePicker(name);
+                    var choosen = picker.getDateTimePickerChoosenValue();
+                    var choosenDate = choosen.dateValue;
+
+                    choosenDate.setMonth(choosenDate.getMonth() + 1);
+
+                    picker.update(choosenDate)
+                          .renderDateBox(picker.serialized(choosenDate));
+                },
+                set: function(data, node, e, type){
+                    var args = (data || "").split(",");
+                    var name = args[0];
+                    var month = Number(args[1]);
+
+                    var picker = DateTimePicker.getDateTimePicker(name);
+                    var choosen = picker.getDateTimePickerChoosenValue();
+                    var choosenDate = choosen.dateValue;
+
+                    choosenDate.setMonth(month);
+
+                    picker.update(choosenDate)
+                          .renderDateBox(picker.serialized(choosenDate))
+                          .getDateTimePickerYearMonthPanel()
+                          .removeClass("hide");;
+                }
             },
             year: {
                 prev: function(data, node, e, type){
                     var args = (data || "").split(",");
-                    var identity = args[0];
-                    var name = args[1];
+                    var name = args[0];
 
-                    var dtp = DateTimePicker.getDateTimePicker(name);
-                    var dt = dtp.getDateTime();
-                    var year = dt.getFullYear();
+                    var picker = DateTimePicker.getDateTimePicker(name);
+                    var choosen = picker.getDateTimePickerChoosenValue();
+                    var choosenDate = choosen.dateValue;
 
-                    dt.setFullYear(year - 1);
+                    choosenDate.setFullYear(choosenDate.getFullYear() - 1);
 
-                    dtp.update(dt);
-                    dtp.print(dtp.serialized(dt));
+                    picker.update(choosenDate)
+                          .renderDateBox(picker.serialized(choosenDate))
+                          .getDateTimePickerYearMonthPanel()
+                          .removeClass("hide");
                 },
                 next: function(data, node, e, type){
                     var args = (data || "").split(",");
-                    var identity = args[0];
-                    var name = args[1];
+                    var name = args[0];
 
-                    var dtp = DateTimePicker.getDateTimePicker(name);
-                    var dt = dtp.getDateTime();
-                    var year = dt.getFullYear();
+                    var picker = DateTimePicker.getDateTimePicker(name);
+                    var choosen = picker.getDateTimePickerChoosenValue();
+                    var choosenDate = choosen.dateValue;
 
-                    dt.setFullYear(year + 1);
-                    
-                    dtp.update(dt);
-                    dtp.print(dtp.serialized(dt));
-                },
-                panel: function(data, node, e, type){
-                    var args = (data || "").split(",");
-                    var identity = args[0];
-                    var name = args[1];
+                    choosenDate.setFullYear(choosenDate.getFullYear() + 1);
 
-                    var dtp = DateTimePicker.getDateTimePicker(name);
-                    var frame = dtp.getDateTimePickerFrame();
-
-                    dtp.mode(frame.hasClass("year-month") ? 0 : 1);
-                }
-            },
-            month: {
-                prev: function(data, node, e, type){
-                    var args = (data || "").split(",");
-                    var identity = args[0];
-                    var name = args[1];
-
-                    var dtp = DateTimePicker.getDateTimePicker(name);
-                    var serializedData = dtp.serialized();
-                    var dt = serializedData.prev.datetime;
-
-                    dtp.update(dt);
-                    dtp.print(dtp.serialized(dt));
-                },
-                next: function(data, node, e, type){
-                    var args = (data || "").split(",");
-                    var identity = args[0];
-                    var name = args[1];
-
-                    var dtp = DateTimePicker.getDateTimePicker(name);
-                    var serializedData = dtp.serialized();
-                    var dt = serializedData.next.datetime;
-
-                    dtp.update(dt);
-                    dtp.print(dtp.serialized(dt));
-                },
-                set: function(data, node, e, type){
-                    var args = (data || "").split(",");
-                    var identity = args[0];
-                    var name = args[1];
-                    var month = Number(args[2]);
-
-                    var dtp = DateTimePicker.getDateTimePicker(name);
-                    var dt = dtp.getDateTime();
-
-                    dt.setMonth(month);
-
-                    dtp.update(dt);
-                    dtp.print(dtp.serialized(dt));
-                    // dtp.mode(0);
-                },
-                panel: function(data, node, e, type){
-                    var args = (data || "").split(",");
-                    var identity = args[0];
-                    var name = args[1];
-
-                    var dtp = DateTimePicker.getDateTimePicker(name);
-                    var frame = dtp.getDateTimePickerFrame();
-
-                    dtp.mode(frame.hasClass("year-month") ? 0 : 1);
+                    picker.update(choosenDate)
+                          .renderDateBox(picker.serialized(choosenDate))
+                          .getDateTimePickerYearMonthPanel()
+                          .removeClass("hide");
                 }
             },
             date: {
                 set: function(data, node, e, type){
                     var args = (data || "").split(",");
-                    var identity = args[0];
-                    var name = args[1];
-                    var year = args[2];
-                    var month = args[3];
-                    var date = args[4];
+                    var name = args[0];
+                    var type = args[1];
+                    var value = Number(args[2]);
 
-                    if(node.hasClass("disabled")){
-                        return ;
+                    var picker = DateTimePicker.getDateTimePicker(name);
+                    var choosen = picker.getDateTimePickerChoosenValue();
+                    var choosenDate = choosen.dateValue;
+
+                    if("prev" == type){
+                        choosenDate.setMonth(choosenDate.getMonth() - 1);
+                    }else if("next" == type){
+                        choosenDate.setMonth(choosenDate.getMonth() + 1);
                     }
 
-                    var dtp = DateTimePicker.getDateTimePicker(name);
-                    var frame = $('[data-datepicker="' + identity + '"]');
+                    choosenDate.setDate(value);
 
-                    var hoursView = frame.find(".mod-dtp-view-hour");
-                    var minutesView = frame.find(".mod-dtp-view-minute");
-                    var secondsView = frame.find(".mod-dtp-view-second");
-
-                    var iYear = parseInt(year, 10);
-                    var iMonth = parseInt(month, 10) - 1;
-                    var iDate = parseInt(date, 10);
-                    var iHours = parseInt(hoursView.html(), 0);
-                    var iMinutes = parseInt(minutesView.html(), 0);
-                    var iSeconds = parseInt(secondsView.html(), 0);
-
-                    var dt = new Date(iYear, iMonth, iDate, iHours, iMinutes, iSeconds);
-
-                    dtp.update(dt);
-                    dtp.print(dtp.serialized(dt));
+                    picker.update(choosenDate)
+                          .renderDateBox(picker.serialized(choosenDate));
                 }
             },
             hour: {
                 prev: function(data, node, e, type){
                     var args = (data || "").split(",");
-                    var identity = args[0];
-                    var name = args[1];
+                    var name = args[0];
 
-                    var dtp = DateTimePicker.getDateTimePicker(name);
-                    var frame = dtp.getDateTimePickerFrame();
-                    var panel = node.prev(".mod-time-chooser").find("ul");
-                    var hoursView = frame.find(".mod-dtp-view-hour");
-                    var minutesView = frame.find(".mod-dtp-view-minute");
-                    var secondsView = frame.find(".mod-dtp-view-second");
-                    
-                    var hours = parseInt(hoursView.html(), 0);
-                    var minutes = parseInt(minutesView.html(), 0);
-                    var seconds = parseInt(secondsView.html(), 0);
+                    var picker = DateTimePicker.getDateTimePicker(name);
+                    var choosen = picker.getDateTimePickerChoosenValue();
+                    var choosenDate = choosen.dateValue;
 
-                    hours = hours - 1;
-                    hours = hours < 0 ? 23 : hours;
+                    var timeOptions = picker.getDateTimePickerTimeOptions("hours");
+                    var size = timeOptions.length;
+                    var timeOption = null;
+                    var currentIndex = 0;
+                    var prevIndex = 0;
+                    var prevTimeOption = null;
 
-                    hoursView.html(FillZero(hours, 2));
+                    for(var i = 0; i < size; i++){
+                        timeOption = $(timeOptions[i]);
 
-                    dtp.time(hours, minutes, seconds);
+                        if(timeOption.hasClass("on")){
+                            currentIndex = i;
+                            break;
+                        }
+                    }
+
+                    if(0 === currentIndex){
+                        prevIndex = size - 1;
+                    }else{
+                        prevIndex = currentIndex - 1;
+                    }
+
+                    prevTimeOption = $(timeOptions[prevIndex]);
+
+                    var hours = Number(prevTimeOption.html());
+
+                    choosenDate.setHours(hours);
+
+                    picker.update(choosenDate)
+                          .renderTimeBox(picker.serialized(choosenDate));
                 },
                 next: function(data, node, e, type){
                     var args = (data || "").split(",");
-                    var identity = args[0];
-                    var name = args[1];
+                    var name = args[0];
 
-                    var dtp = DateTimePicker.getDateTimePicker(name);
-                    var frame = dtp.getDateTimePickerFrame();
-                    var panel = node.prev(".mod-time-chooser").find("ul");
-                    var hoursView = frame.find(".mod-dtp-view-hour");
-                    var minutesView = frame.find(".mod-dtp-view-minute");
-                    var secondsView = frame.find(".mod-dtp-view-second");
+                    var picker = DateTimePicker.getDateTimePicker(name);
+                    var choosen = picker.getDateTimePickerChoosenValue();
+                    var choosenDate = choosen.dateValue;
 
-                    var hours = parseInt(hoursView.html(), 0);
-                    var minutes = parseInt(minutesView.html(), 0);
-                    var seconds = parseInt(secondsView.html(), 0);
+                    var timeOptions = picker.getDateTimePickerTimeOptions("hours");
+                    var size = timeOptions.length;
+                    var timeOption = null;
+                    var currentIndex = 0;
+                    var nextIndex = 0;
+                    var nextTimeOption = null;
 
-                    hours = hours + 1;
-                    hours = hours > 23 ? 0 : hours;
+                    for(var i = 0; i < size; i++){
+                        timeOption = $(timeOptions[i]);
 
-                    hoursView.html(FillZero(hours, 2));
+                        if(timeOption.hasClass("on")){
+                            currentIndex = i;
+                            break;
+                        }
+                    }
 
-                    dtp.time(hours, minutes, seconds);
+                    if(size - 1 === currentIndex){
+                        nextIndex = 0;
+                    }else{
+                        nextIndex = currentIndex + 1;
+                    }
+
+                    nextTimeOption = $(timeOptions[nextIndex]);
+
+                    var hours = Number(nextTimeOption.html());
+
+                    choosenDate.setHours(hours);
+
+                    picker.update(choosenDate)
+                          .renderTimeBox(picker.serialized(choosenDate));
+                },
+                set: function(data, node, e, type){
+                    var args = (data || "").split(",");
+                    var name = args[0];
+                    var value = Number(args[1]);
+
+                    var picker = DateTimePicker.getDateTimePicker(name);
+                    var choosen = picker.getDateTimePickerChoosenValue();
+                    var choosenDate = choosen.dateValue;
+
+                    choosenDate.setHours(value);
+
+                    picker.update(choosenDate)
+                          .renderTimeBox(picker.serialized(choosenDate));
                 }
             },
             minute: {
                 prev: function(data, node, e, type){
                     var args = (data || "").split(",");
-                    var identity = args[0];
-                    var name = args[1];
+                    var name = args[0];
 
-                    var dtp = DateTimePicker.getDateTimePicker(name);
-                    var frame = dtp.getDateTimePickerFrame();
-                    var panel = node.prev(".mod-time-chooser").find("ul");
-                    var hoursView = frame.find(".mod-dtp-view-hour");
-                    var minutesView = frame.find(".mod-dtp-view-minute");
-                    var secondsView = frame.find(".mod-dtp-view-second");
+                    var picker = DateTimePicker.getDateTimePicker(name);
+                    var choosen = picker.getDateTimePickerChoosenValue();
+                    var choosenDate = choosen.dateValue;
 
-                    var hours = parseInt(hoursView.html(), 0);
-                    var minutes = parseInt(minutesView.html(), 0);
-                    var seconds = parseInt(secondsView.html(), 0);
+                    var timeOptions = picker.getDateTimePickerTimeOptions("minutes");
+                    var size = timeOptions.length;
+                    var timeOption = null;
+                    var currentIndex = 0;
+                    var prevIndex = 0;
+                    var prevTimeOption = null;
 
-                    minutes = minutes - 1;
-                    minutes = minutes < 0 ? 59 : minutes;
+                    for(var i = 0; i < size; i++){
+                        timeOption = $(timeOptions[i]);
 
-                    minutesView.html(FillZero(minutes, 2));
-                    
-                    dtp.time(hours, minutes, seconds);
+                        if(timeOption.hasClass("on")){
+                            currentIndex = i;
+                            break;
+                        }
+                    }
+
+                    if(0 === currentIndex){
+                        prevIndex = size - 1;
+                    }else{
+                        prevIndex = currentIndex - 1;
+                    }
+
+                    prevTimeOption = $(timeOptions[prevIndex]);
+
+                    var minutes = Number(prevTimeOption.html());
+
+                    choosenDate.setMinutes(minutes);
+
+                    picker.update(choosenDate)
+                          .renderTimeBox(picker.serialized(choosenDate));
                 },
                 next: function(data, node, e, type){
                     var args = (data || "").split(",");
-                    var identity = args[0];
-                    var name = args[1];
+                    var name = args[0];
 
-                    var dtp = DateTimePicker.getDateTimePicker(name);
-                    var frame = dtp.getDateTimePickerFrame();
-                    var panel = node.prev(".mod-time-chooser").find("ul");
-                    var hoursView = frame.find(".mod-dtp-view-hour");
-                    var minutesView = frame.find(".mod-dtp-view-minute");
-                    var secondsView = frame.find(".mod-dtp-view-second");
+                    var picker = DateTimePicker.getDateTimePicker(name);
+                    var choosen = picker.getDateTimePickerChoosenValue();
+                    var choosenDate = choosen.dateValue;
 
-                    var hours = parseInt(hoursView.html(), 0);
-                    var minutes = parseInt(minutesView.html(), 0);
-                    var seconds = parseInt(secondsView.html(), 0);
+                    var timeOptions = picker.getDateTimePickerTimeOptions("minutes");
+                    var size = timeOptions.length;
+                    var timeOption = null;
+                    var currentIndex = 0;
+                    var nextIndex = 0;
+                    var nextTimeOption = null;
 
-                    minutes = minutes + 1;
-                    minutes = minutes > 59 ? 0 : minutes;
+                    for(var i = 0; i < size; i++){
+                        timeOption = $(timeOptions[i]);
 
-                    minutesView.html(FillZero(minutes, 2));
-                    
-                    dtp.time(hours, minutes, seconds);
+                        if(timeOption.hasClass("on")){
+                            currentIndex = i;
+                            break;
+                        }
+                    }
+
+                    if(size - 1 === currentIndex){
+                        nextIndex = 0;
+                    }else{
+                        nextIndex = currentIndex + 1;
+                    }
+
+                    nextTimeOption = $(timeOptions[nextIndex]);
+
+                    var minutes = Number(nextTimeOption.html());
+
+                    choosenDate.setMinutes(minutes);
+
+                    picker.update(choosenDate)
+                          .renderTimeBox(picker.serialized(choosenDate));
+                },
+                set: function(data, node, e, type){
+                    var args = (data || "").split(",");
+                    var name = args[0];
+                    var value = Number(args[1]);
+
+                    var picker = DateTimePicker.getDateTimePicker(name);
+                    var choosen = picker.getDateTimePickerChoosenValue();
+                    var choosenDate = choosen.dateValue;
+
+                    choosenDate.setMinutes(value);
+
+                    picker.update(choosenDate)
+                          .renderTimeBox(picker.serialized(choosenDate));
                 }
             },
             second: {
                 prev: function(data, node, e, type){
                     var args = (data || "").split(",");
-                    var identity = args[0];
-                    var name = args[1];
+                    var name = args[0];
 
-                    var dtp = DateTimePicker.getDateTimePicker(name);
-                    var frame = dtp.getDateTimePickerFrame();
-                    var panel = node.prev(".mod-time-chooser").find("ul");
-                    var hoursView = frame.find(".mod-dtp-view-hour");
-                    var minutesView = frame.find(".mod-dtp-view-minute");
-                    var secondsView = frame.find(".mod-dtp-view-second");
+                    var picker = DateTimePicker.getDateTimePicker(name);
+                    var choosen = picker.getDateTimePickerChoosenValue();
+                    var choosenDate = choosen.dateValue;
 
-                    var hours = parseInt(hoursView.html(), 0);
-                    var minutes = parseInt(minutesView.html(), 0);
-                    var seconds = parseInt(secondsView.html(), 0);
+                    var timeOptions = picker.getDateTimePickerTimeOptions("seconds");
+                    var size = timeOptions.length;
+                    var timeOption = null;
+                    var currentIndex = 0;
+                    var prevIndex = 0;
+                    var prevTimeOption = null;
 
-                    seconds = seconds - 1;
-                    seconds = seconds < 0 ? 59 : seconds;
+                    for(var i = 0; i < size; i++){
+                        timeOption = $(timeOptions[i]);
 
-                    secondsView.html(FillZero(seconds, 2));
-                    
-                    dtp.time(hours, minutes, seconds);
+                        if(timeOption.hasClass("on")){
+                            currentIndex = i;
+                            break;
+                        }
+                    }
+
+                    if(0 === currentIndex){
+                        prevIndex = size - 1;
+                    }else{
+                        prevIndex = currentIndex - 1;
+                    }
+
+                    prevTimeOption = $(timeOptions[prevIndex]);
+
+                    var seconds = Number(prevTimeOption.html());
+
+                    choosenDate.setSeconds(seconds);
+
+                    picker.update(choosenDate)
+                          .renderTimeBox(picker.serialized(choosenDate));
                 },
                 next: function(data, node, e, type){
                     var args = (data || "").split(",");
-                    var identity = args[0];
-                    var name = args[1];
+                    var name = args[0];
 
-                    var dtp = DateTimePicker.getDateTimePicker(name);
-                    var frame = dtp.getDateTimePickerFrame();
-                    var panel = node.prev(".mod-time-chooser").find("ul");
-                    var hoursView = frame.find(".mod-dtp-view-hour");
-                    var minutesView = frame.find(".mod-dtp-view-minute");
-                    var secondsView = frame.find(".mod-dtp-view-second");
+                    var picker = DateTimePicker.getDateTimePicker(name);
+                    var choosen = picker.getDateTimePickerChoosenValue();
+                    var choosenDate = choosen.dateValue;
 
-                    var hours = parseInt(hoursView.html(), 0);
-                    var minutes = parseInt(minutesView.html(), 0);
-                    var seconds = parseInt(secondsView.html(), 0);
-
-                    seconds = seconds + 1;
-                    seconds = seconds > 59 ? 0 : seconds;
-
-                    secondsView.html(FillZero(seconds, 2));
-                    
-                    dtp.time(hours, minutes, seconds);
-                }
-            },
-            today: function(data, node, e, type){
-                var args = (data || "").split(",");
-                var identity = args[0];
-                var name = args[1];
-
-                var dtp = DateTimePicker.getDateTimePicker(name);
-
-                dtp.today();
-            },
-            done: function(data, node, e, type){
-                var args = (data || "").split(",");
-                var identity = args[0];
-                var name = args[1];
-
-                var dtp = DateTimePicker.getDateTimePicker(name);
-
-                dtp.done();
-            }
-        },
-        datetime: {
-            sync: function(data, date, formatDate, plugin){
-                //data::  input|inputName1^inputName2,html|select
-                
-                var _target = (function(_data){
-                    var group = _data.split(",");
-                    var size = group.length;
-                    var value = null;
-                    var items = null;
-
-                    var map = {};
+                    var timeOptions = picker.getDateTimePickerTimeOptions("seconds");
+                    var size = timeOptions.length;
+                    var timeOption = null;
+                    var currentIndex = 0;
+                    var nextIndex = 0;
+                    var nextTimeOption = null;
 
                     for(var i = 0; i < size; i++){
-                        value = group[i];
+                        timeOption = $(timeOptions[i]);
 
-                        if(!value){
-                            continue;
-                        }
-
-                        items = value.split("|");
-
-                        map[items[0]] = (function(str){
-                            return str.split("^");
-                        })(items[1]);
-                    }
-
-                    return map;
-                })(data || "");
-
-                var processor = {
-                    input: function(names, date, formatDate){
-                        for(var i = 0; i < names.length; i++){
-                            $('input[name="' + names[i] + '"]').val(formatDate);
-                        }
-                    },
-                    html: function(names, date, formatDate){
-                        for(var i = 0; i < names.length; i++){
-                            $(names[i]).val(formatDate);
-                        }
-                    }
-                };
-
-                if(plugin && plugin.length > 0){
-                    var dom = plugin[0];
-                    var tagName = (dom.tagName).toUpperCase();
-
-                    switch(tagName){
-                        case "INPUT":
-                        case "TEXTAREA":
-                            plugin.val(formatDate);
+                        if(timeOption.hasClass("on")){
+                            currentIndex = i;
                             break;
-                        default:
-                            plugin.html(formatDate);
-                            break;
+                        }
                     }
+
+                    if(size - 1 === currentIndex){
+                        nextIndex = 0;
+                    }else{
+                        nextIndex = currentIndex + 1;
+                    }
+
+                    nextTimeOption = $(timeOptions[nextIndex]);
+
+                    var seconds = Number(nextTimeOption.html());
+
+                    choosenDate.setSeconds(seconds);
+
+                    picker.update(choosenDate)
+                          .renderTimeBox(picker.serialized(choosenDate));
+                },
+                set: function(data, node, e, type){
+                    var args = (data || "").split(",");
+                    var name = args[0];
+                    var value = Number(args[1]);
+
+                    var picker = DateTimePicker.getDateTimePicker(name);
+                    var choosen = picker.getDateTimePickerChoosenValue();
+                    var choosenDate = choosen.dateValue;
+
+                    choosenDate.setSeconds(value);
+
+                    picker.update(choosenDate)
+                          .renderTimeBox(picker.serialized(choosenDate));
+                }
+            },
+            time: {
+                prev: function(data, node, e, type){
+                    var args = (data || "").split(",");
+                    var name = args[0];
+
+                    var picker = DateTimePicker.getDateTimePicker(name);
+
+                    var timeOptions = picker.getDateTimePickerTimeOptions("fixed-time");
+                    var size = timeOptions.length;
+                    var timeOption = null;
+                    var currentIndex = 0;
+                    var prevIndex = 0;
+                    var prevTimeOption = null;
+
+                    for(var i = 0; i < size; i++){
+                        timeOption = $(timeOptions[i]);
+
+                        if(timeOption.hasClass("on")){
+                            currentIndex = i;
+                            break;
+                        }
+                    }
+
+                    if(0 === currentIndex){
+                        prevIndex = size - 1;
+                    }else{
+                        prevIndex = currentIndex - 1;
+                    }
+
+                    prevTimeOption = $(timeOptions[prevIndex]);
+
+                    Util.requestExternal("dtp://datetime/time/set#" + name + "," + prevTimeOption.html(), [node, e, type]);
+                },
+                next: function(data, node, e, type){
+                    var args = (data || "").split(",");
+                    var name = args[0];
+
+                    var picker = DateTimePicker.getDateTimePicker(name);
+
+                    var timeOptions = picker.getDateTimePickerTimeOptions("fixed-time");
+                    var size = timeOptions.length;
+                    var timeOption = null;
+                    var currentIndex = 0;
+                    var nextIndex = 0;
+                    var nextTimeOption = null;
+
+                    for(var i = 0; i < size; i++){
+                        timeOption = $(timeOptions[i]);
+
+                        if(timeOption.hasClass("on")){
+                            currentIndex = i;
+                            break;
+                        }
+                    }
+
+                    if(size - 1 === currentIndex){
+                        nextIndex = 0;
+                    }else{
+                        nextIndex = currentIndex + 1;
+                    }
+
+                    nextTimeOption = $(timeOptions[nextIndex]);
+
+                    Util.requestExternal("dtp://datetime/time/set#" + name + "," + nextTimeOption.html(), [node, e, type]);
+                },
+                set: function(data, node, e, type){
+                    var args = (data || "").split(",");
+                    var name = args[0];
+                    var time = args[1];
+                    var items = time.split(":");
+                    var hours = Number(items[0]);
+                    var minutes = Number(items[1]); 
+
+                    var picker = DateTimePicker.getDateTimePicker(name);
+                    var choosen = picker.getDateTimePickerChoosenValue();
+                    var choosenDate = choosen.dateValue;
+
+                    choosenDate.setHours(hours);
+                    choosenDate.setMinutes(minutes);
+
+                    picker.update(choosenDate)
+                          .renderTimeBox(picker.serialized(choosenDate));
+                }
+            }
+        },
+        sync: function(data, date, formatDate, plugin){
+            //data::  input|inputName1^inputName2,html|select
+            
+            var _target = (function(_data){
+                var group = _data.split(",");
+                var size = group.length;
+                var value = null;
+                var items = null;
+
+                var map = {};
+
+                for(var i = 0; i < size; i++){
+                    value = group[i];
+
+                    if(!value){
+                        continue;
+                    }
+
+                    items = value.split("|");
+
+                    map[items[0]] = (function(str){
+                        return str.split("^");
+                    })(items[1]);
                 }
 
-                for(var type in _target){
-                    if(_target.hasOwnProperty(type)){
-                        if(type in processor){
-                            processor[type].apply(null, [_target[type], date, formatDate]);
-                        }
+                return map;
+            })(data || "");
+
+            var processor = {
+                input: function(names, date, formatDate){
+                    for(var i = 0; i < names.length; i++){
+                        $('input[name="' + names[i] + '"]').val(formatDate);
+                    }
+                },
+                html: function(names, date, formatDate){
+                    for(var i = 0; i < names.length; i++){
+                        $(names[i]).val(formatDate);
+                    }
+                }
+            };
+
+            if(plugin && plugin.length > 0){
+                var dom = plugin[0];
+                var tagName = (dom.tagName).toUpperCase();
+
+                switch(tagName){
+                    case "INPUT":
+                    case "TEXTAREA":
+                        plugin.val(formatDate);
+                        break;
+                    default:
+                        plugin.html(formatDate);
+                        break;
+                }
+            }
+
+            for(var type in _target){
+                if(_target.hasOwnProperty(type)){
+                    if(type in processor){
+                        processor[type].apply(null, [_target[type], date, formatDate]);
                     }
                 }
             }
         }
     };
+    /**
+     
+     <element 
+        data-plugin="dtpicker[.name]"
+        data-dtpicker-mode="[0|1|2|3|4|5|6|7]" 
+        data-dtpicker-theme="" 
+        data-dtpicker-format="%y-%M-%d"
+        data-dtpicker-value="" 
+        data-dtpicker-sync="dtp://picker/sync" 
+        data-dtpicker-range-date-start="" 
+        data-dtpicker-range-date-end="" 
+        data-dtpicker-range-time-start="" 
+        data-dtpicker-range-time-end="" 
+        data-dtpicker-filter-years="" 
+        data-dtpicker-filter-months="" 
+        data-dtpicker-filter-dates="" 
+        data-dtpicker-filter-hours="" 
+        data-dtpicker-filter-minutes="" 
+        data-dtpicker-filter-seconds="" 
+        data-dtpicker-filter-weekends="0" 
+        data-dtpicker-filter-weekdays="0" 
+        data-dtpicker-step-hour="0"
+        data-dtpicker-step-minute="0"
+        data-dtpicker-step-second="0"
+     ></element>
+
+     */
 
     var GetDefaultOptions = function(){
         return {
-            time: false,
-            timeOnly: false,
-            todayOnly: false,
-            format: "%y-%M-%d",
-            schema: "dtp://datetime/sync",
-            mode: 0,
-            range: {
-                start: null,
-                end: null
+            mode: 0,  //控件模式
+            theme: "",  //外观样式
+            value: "",  //初始值
+            sync: "dtp://sync", //选择后自动同步显示到指定的位置
+            format: "%y-%M-%d", //格式化
+            range: { //范围选择
+                date: {
+                    start: null, //2016-01-01
+                    end: null    //2016-12-31
+                },
+                time: {
+                    start: null,    //06:30:00
+                    end: null       //21:00:00
+                }
+            },
+            filter: {   //过滤器，筛选掉设置中的值
+                years: [],
+                months: [],
+                dates: [],
+                hours: [],
+                minutes: [],
+                seconds: [],
+                weekends: false,
+                weekdays: false
+            },
+            step: {     //计步器
+                hour: 0,
+                minute: 0,
+                second: 0
             }
         };
     };
 
-    var DateTimePicker = function(name){
+    var GetOptionDataStruct = function(){
+        var dataStruct = [
+            {"property": "mode", "dataType": "number"},
+            {"property": "theme", "dataType": "string"},
+            {"property": "format", "dataType": "string"},
+            {"property": "value", "dataType": "string"},
+            {"property": "sync", "dataType": "string"},
+            {"property": "range-date-start", "dataType": "string"},
+            {"property": "range-date-end", "dataType": "string"},
+            {"property": "range-time-start", "dataType": "string"},
+            {"property": "range-time-end", "dataType": "string"},
+            {"property": "filter-years", "dataType": "array"},
+            {"property": "filter-months", "dataType": "array"},
+            {"property": "filter-dates", "dataType": "array"},
+            {"property": "filter-hours", "dataType": "array"},
+            {"property": "filter-minutes", "dataType": "array"},
+            {"property": "filter-seconds", "dataType": "array"},
+            {"property": "filter-weekends", "dataType": "boolean"},
+            {"property": "filter-weekdays", "dataType": "boolean"},
+            {"property": "step-hour", "dataType": "number"},
+            {"property": "step-minute", "dataType": "number"},
+            {"property": "step-second", "dataType": "number"}
+        ];
+
+        return dataStruct;
+    };
+
+    var DateTimePicker = function(){
         this.namespace = "dtp";
-        this.name = name;
-        this.identity = this.namespace + "." + this.name;
+        this.name = null;
+        this.identity = null;
 
         this.opts = GetDefaultOptions();
 
-        this.datetime = new Date();
+        this.currentDatetime = new Date();
         this.serializedData = null;
-        this.pluginNode = null;
+    };
+
+    DateTimePicker.MODE = {
+        "DATETIME": {
+            "VALUE": 0, 
+            "NAME": "datetime"
+        },       
+        "DATE": {
+            "VALUE": 1,   
+            "NAME": "date"
+        },       
+        "TIME": {
+            "VALUE": 2,
+            "NAME": "time"
+        },
+        "YEAR_MONTH":{
+            "VALUE": 3,
+            "NAME": "year-month"
+        },
+        "HOUR_MINUTE": {
+            "VALUE": 4,
+            "NAME": "hour-minute"
+        },
+        "SHORT_DATETIME": {
+            "VALUE": 5,
+            "NAME": "short-datetime"
+        },
+        "FIXED_DATATIME": {
+            "VALUE": 6,
+            "NAME": "fixed-datetime"
+        },
+        "FIXED_TIME": {
+            "VALUE": 7,
+            "NAME": "fixed-time"
+        }
     };
 
     DateTimePicker.prototype = {
@@ -593,16 +931,6 @@
                 this.opts = $.extend(true, this.opts, args[0]);
             }
         },
-        plugin: function(){
-            var args = arguments;
-            var size = args.length;
-
-            if(0 === size){
-                return $(this.pluginNode);
-            }
-
-            this.pluginNode = args[0];
-        },
         parse: function(datetimeString){
             var format = this.options("format");
             var ret = DateUtil.parse(datetimeString, format);
@@ -616,17 +944,39 @@
             return ret;
         },
         mode: function(mode){
+            var conf = DateTimePicker.MODE;
+            var tmp = null;
+            var clsList = [];
+
+            mode = mode || this.options("mode");
+
+            for(type in conf){
+                if(conf.hasOwnProperty(type)){
+                    clsList.push(conf[type].NAME);
+
+                    if(mode === conf[type].VALUE){
+                        tmp = conf[type];
+                    }
+                }
+            }
+
+            if(!tmp){
+                return null;
+            }
+
             this.options({
                 "mode": mode
             });
 
             var frame = this.getDateTimePickerFrame();
+            
+            frame.removeClass(clsList.join(" "))
+                 .addClass(tmp.NAME);
 
-            if(1 === mode){
-                frame.addClass("year-month");
-            }else{
-                frame.removeClass("year-month");
-            }
+            return {
+                "value": tmp.VALUE,
+                "name": tmp.NAME
+            };
         },
         getFormatInfo: function(datetime){
             var fmt = DateUtil.format(datetime, "%y%M%d%h%m%s%i", true);
@@ -653,6 +1003,8 @@
                 return this.serializedData;
             }
 
+            var mode = this.mode();
+
             var year = dt.getFullYear();
             var month = dt.getMonth();
             var date = dt.getDate();
@@ -677,6 +1029,7 @@
                 "name": this.name,
                 "identity": this.identity,
                 "options": this.options(),
+                "mode": mode,
                 ///////////////////////////////////////////////
                 "datetime": dt,
                 "leapYear": DateUtil.leapYear(dt),
@@ -724,56 +1077,109 @@
 
             return frame;
         },
-        time: function(hours, minutes, seconds){
+        getDateTimePickerDateBox: function(){
             var frame = this.getDateTimePickerFrame();
-            var item = frame.find(".mod-time-chooser li")[0];
-            var itemHeight = Util.getBoundingClientRect(item).height;
-            var offsetItemHeight = 2 * itemHeight;
-            var hoursPanel = frame.find(".mod-time-chooser ul.hours");
-            var minutesPanel = frame.find(".mod-time-chooser ul.minutes");
-            var secondsPanel = frame.find(".mod-time-chooser ul.seconds");
+            var box = frame.find(".mod-dtpicker-datebox");
 
-            var dt = this.datetime;
-
-            dt.setHours(hours);
-            dt.setMinutes(minutes);
-            dt.setSeconds(seconds);
-
-            this.update(dt);
-            this.serialized(dt);
-
-            hoursPanel.css({
-                "marginTop": -((hours * itemHeight) - offsetItemHeight) + "px"
-            });
-
-            minutesPanel.css({
-                "marginTop": -((minutes * itemHeight) - offsetItemHeight) + "px"
-            });
-
-            secondsPanel.css({
-                "marginTop": -((seconds * itemHeight) - offsetItemHeight) + "px"
-            });
+            return box;
         },
-        print: function(renderData){
-            DATETIME_PICKER.render(true, _core_structs, renderData, {
-                callback: function(ret){
-                    var frame = this.getDateTimePickerFrame();
-                    var data = ret.metaData;
+        getDateTimePickerTimeBox: function(){
+            var frame = this.getDateTimePickerFrame();
+            var box = frame.find(".mod-dtpicker-timebox");
 
-                    frame.html(ret.result);
-                    this.time(data.hours, data.minutes, data.seconds);
-                },
-                args: [],
-                context: this
-            });
+            return box;
+        },
+        getDateTimePickerYearMonthPanel: function(){
+            var box = this.getDateTimePickerDateBox();
+            var panel = box.find(".mod-dtpicker-year-month");
+
+            return panel;
+        },
+        getDateTimePickerChoosenYearNode: function(){
+            var box = this.getDateTimePickerDateBox();
+            var node = box.find(".select-year");
+
+            return node;
+        },
+        getDateTimePickerChoosenMonthNode: function(){
+            var box = this.getDateTimePickerDateBox();
+            var node = box.find(".select-month");
+
+            return node;
+        },
+        getDateTimePickerChoosenDateNode: function(){
+            var box = this.getDateTimePickerDateBox();
+            var node = box.find(".select-date");
+
+            return node;
+        },
+        getDateTimePickerChoosenHourNode: function(){
+            var box = this.getDateTimePickerTimeBox();
+            var node = box.find(".select-hour");
+
+            return node;
+        },
+        getDateTimePickerChoosenMinuteNode: function(){
+            var box = this.getDateTimePickerTimeBox();
+            var node = box.find(".select-minute");
+
+            return node;
+        },
+        getDateTimePickerChoosenSecondNode: function(){
+            var box = this.getDateTimePickerTimeBox();
+            var node = box.find(".select-second");
+
+            return node;
+        },
+        getDateTimePickerChoosenValue: function(){
+            var yearNode = this.getDateTimePickerChoosenYearNode();
+            var monthNode = this.getDateTimePickerChoosenMonthNode();
+            var dateNode = this.getDateTimePickerChoosenDateNode();
+            var hourNode = this.getDateTimePickerChoosenHourNode();
+            var minuteNode = this.getDateTimePickerChoosenMinuteNode();
+            var secondNode = this.getDateTimePickerChoosenSecondNode();
+
+            var year = yearNode.html();
+            var month = monthNode.html();
+            var date = dateNode.html();
+            var hour = hourNode.html();
+            var minute = minuteNode.html();
+            var second = secondNode.html();
+
+            var iYear = Number(year);
+            var iMonth = Number(month) - 1;
+            var iDate = Number(date);
+            var iHour = Number(hour);
+            var iMinute = Number(minute);
+            var iSecond = Number(second);
+
+            var d = new Date(iYear, iMonth, iDate, iHour, iMinute, iSecond);
+            var format = this.options("format");
+            var dateString = DateUtil.format(d, format);
+
+            return {
+                "year": iYear,
+                "month": iMonth,
+                "date": iDate,
+                "hours": iHour,
+                "minutes": iMinute,
+                "seconds": iSecond,
+                "formatValue": dateString,
+                "dateValue": d
+            };
+        },
+        getDateTimePickerTimeOptions: function(type){
+            var box = this.getDateTimePickerTimeBox();
+            var options = box.find(".mod-dtpicker-time-options." + type + " .mod-dtpicker-time-values li:not(.empty)");
+
+            return options;
         },
         render: function(target){
-            var renderData = this.serialized(this.datetime);
-
+            var renderData = this.serialized(this.currentDatetime);
             var picker = this.getDateTimePickerFrame();
 
             if(picker.length === 0){
-                DATETIME_PICKER.render(true, _html_structs, renderData, {
+                DATETIME_PICKER.render(true, _html_picker_frame, renderData, {
                     callback: function(ret, _target){
                         $(_target).append(ret.result);
 
@@ -783,33 +1189,85 @@
                         ], null);
 
                         Util.source(DateTimePickerProtocol);
-
-                        this.print(ret.metaData);
+                        this.core(ret.metaData);
                     },
                     args: [target || document.body],
                     context: this
                 });
             }else{
-                this.print(renderData);
+                this.core(renderData);
             }
         },
+        renderDateBox: function(renderData){
+            DATETIME_PICKER.render(true, _html_picker_datebox, renderData, {
+                callback: function(ret){
+                    var dateBox = this.getDateTimePickerDateBox();
+
+                    dateBox.html(ret.result);
+
+                    var metaData = ret.metaData;
+                    var plugin = $('[data-plugin="dtpicker.' + this.name + '"]');
+
+                    plugin.attr("data-dtpicker-value", this.format(metaData.datetime));
+                    Util.requestExternal(this.options("sync"), [metaData.datetime, this.format(metaData.datetime), plugin]);
+                },
+                args: [],
+                context: this
+            });
+        },
+        renderTimeBox: function(renderData){
+            DATETIME_PICKER.render(true, _html_picker_timebox, renderData, {
+                callback: function(ret){
+                    var timeBox = this.getDateTimePickerTimeBox();
+                    
+                    timeBox.html(ret.result);
+                    this.locate("hours")
+                        .locate("minutes")
+                        .locate("seconds")
+                        .locate("fixed-time");
+
+                    var metaData = ret.metaData;
+                    var plugin = $('[data-plugin="dtpicker.' + this.name + '"]');
+
+                    plugin.attr("data-dtpicker-value", this.format(metaData.datetime));
+                    Util.requestExternal(this.options("sync"), [metaData.datetime, this.format(metaData.datetime), plugin]);
+                },
+                args: [],
+                context: this
+            });
+        },
+        core: function(renderData){
+            this.renderDateBox(renderData);
+            this.renderTimeBox(renderData);
+        },
         update: function(datetime){
-            this.datetime = datetime;
+            this.currentDatetime = datetime;
         },
-        getDateTime: function(){
-            return this.datetime;
+        getCurrentDateTime: function(){
+            return this.currentDatetime;
         },
-        today: function(){
-            var date = new Date();
+        locate: function(type){
+            var timeOptions = this.getDateTimePickerTimeOptions(type);
+            var size = timeOptions.length;
+            var timeOption = null;
+            var currentIndex = 0;
 
-            Util.requestExternal(this.options("schema"), [date, this.format(date), this.plugin()]);
-            this.hide();
-        },
-        done: function(){
-            var serializedData = this.serialized();
+            for(var i = 0; i < size; i++){
+                timeOption = $(timeOptions[i]);
 
-            Util.requestExternal(this.options("schema"), [serializedData.datetime, this.format(serializedData.datetime), this.plugin()]);
-            this.hide();
+                if(timeOption.hasClass("on")){
+                    currentIndex = i;
+                    break;
+                }
+            }
+
+            var option = timeOptions[currentIndex];
+            var optionHeight = Util.getBoundingClientRect(option).height;
+            var parent = option.parentNode.parentNode;
+
+            parent.scrollTop = optionHeight * currentIndex;
+
+            return this;
         },
         position: function(target, offsetScrollDOM){
             var picker = this.getDateTimePickerFrame();
@@ -864,11 +1322,10 @@
 
             picker.removeClass("hide");
 
-            var data = this.serialized();
-
-            if(true === data.options.time || true === data.options.timeOnly){
-                this.time(data.hours, data.minutes, data.seconds);
-            }
+            this.locate("hours")
+                .locate("minutes")
+                .locate("seconds")
+                .locate("fixed-time");
         },
         hide: function(){
             var picker = this.getDateTimePickerFrame();
@@ -879,17 +1336,14 @@
     DateTimePicker.Cache = {};
 
     DateTimePicker.createDateTimePicker = function(name){
-        var dtp = DateTimePicker.Cache[name] || (DateTimePicker.Cache[name] = new DateTimePicker(name));
+        var dtp = DateTimePicker.Cache[name] || (DateTimePicker.Cache[name] = new DateTimePicker());
+
+        dtp.name = name;
+        dtp.identity = dtp.namespace + "." + name;
 
         return {
             options: function(){
                 return dtp.options.apply(dtp, arguments);
-            },
-            plugin: function(){
-                return dtp.plugin.apply(dtp, arguments);
-            },
-            getDateTimePickerFrame: function(){
-                return dtp.getDateTimePickerFrame();
             },
             parse: function(datetimeString){
                 return dtp.parse(datetimeString);
@@ -897,24 +1351,47 @@
             format: function(datatime){
                 return dtp.format(datetime);
             },
-            getDateTime: function(){
-                return dtp.getDateTime();
-            },
             mode: function(mode){
-                dtp.mode(mode);
-
-                return this;
+                return dtp.mode(mode);
             },
             serialized: function(datetime){
                 return dtp.serialized(datetime);
             },
-            print: function(serializedData){
-                dtp.print(serializedData);
-
-                return this;
+            getDateTimePickerFrame: function(){
+                return dtp.getDateTimePickerFrame();
+            },
+            getDateTimePickerDateBox: function(){
+                return dtp.getDateTimePickerDateBox();
+            },
+            getDateTimePickerTimeBox: function(){
+                return dtp.getDateTimePickerTimeBox();
+            },
+            getDateTimePickerYearMonthPanel: function(){
+                return dtp.getDateTimePickerYearMonthPanel();
+            },
+            getDateTimePickerChoosenValue: function(){
+                return dtp.getDateTimePickerChoosenValue();
+            },
+            getDateTimePickerTimeOptions: function(type){
+                return dtp.getDateTimePickerTimeOptions(type);
             },
             render: function(target){
                 dtp.render(target);
+
+                return this;
+            },
+            renderDateBox: function(renderData){
+                dtp.renderDateBox(renderData);
+
+                return this;
+            },
+            renderTimeBox: function(renderData){
+                dtp.renderTimeBox(renderData);
+
+                return this;
+            },
+            core: function(renderData){
+                dtp.core(renderData);
 
                 return this;
             },
@@ -923,23 +1400,11 @@
 
                 return this;
             },
-            time: function(hours, minutes, seconds){
-                dtp.time(hours, minutes, seconds);
-
-                return this;
+            getCurrentDateTime: function(){
+                return dtp.getCurrentDateTime();
             },
-            today: function(){
-                dtp.today();
-
-                return this;
-            },
-            done: function(){
-                dtp.done();
-
-                return this;
-            },
-            position: function(target){
-                dtp.position(target);
+            position: function(target, offsetScrollDOM){
+                dtp.position(target, offsetScrollDOM);
 
                 return this;
             },
@@ -966,82 +1431,8 @@
         return null
     };
 
-    DateTimePicker.getPluginOptions = function(plugin){
-        var keys = [
-            {"attr": "name", "name": "name", "dataType": "string"},
-            {"attr": "value", "name": "value", "dataType": "string"},
-            {"attr": "time", "name": "time", "dataType": "boolean"},
-            {"attr": "time-only", "name": "timeOnly", "dataType": "boolean"},
-            {"attr": "today-only", "name": "todayOnly", "dataType": "boolean"},
-            {"attr": "format", "name": "format", "dataType": "string"},
-            {"attr": "range-start", "name": "range.start", "dataType": "date"},
-            {"attr": "range-end", "name": "range.end", "dataType": "date"},
-            {"attr": "schema", "name": "schema", "dataType": "string"},
-            {"attr": "mode", "name": "mode", "dataType": "number"}
-        ];
-        var key = null;
-        var value = null;
-        var opts = {};
-        var node = $(plugin);
-        var name = null;
-
-        for(var i = 0; i < keys.length; i++){
-            key = keys[i];
-
-            if("name" == key.attr){
-                value = node.attr(key.attr) || node.attr("data-datetimepicker-" + key.attr) || "default";
-            }else if("value" == key.attr){
-                value = node.val() || node.attr("data-datetimepicker-" + key.attr);
-            }else{
-                value = node.attr("data-datetimepicker-" + key.attr);
-            }
-
-
-            if(!value){
-                continue;
-            }
-
-            name = key.name;
-
-            if("boolean" == key.dataType){
-                value = "1" === value;
-            }else if("number" == key.dataType){
-                value = Number(value);
-
-                if(isNaN(value)){
-                    continue;
-                }
-            }else if("date" == key.dataType){
-                var d = DateUtil.parse(value, opts["format"] || "%y-%M-%d");
-
-                if(!d.ok){
-                    continue;
-                }
-
-                value = d.date;
-            }
-
-            if(name.indexOf(".") != -1){
-                var tmp = (key.name).split(".");
-                var tmpKey = tmp[0];
-                var tmpField = tmp[1];
-
-                if(tmpKey in opts){
-                    opts[tmpKey][tmpField] = value;
-                }else{
-                    opts[tmpKey] = {};
-                    opts[tmpKey][tmpField] = value;
-                }
-            }else{
-                opts[name] = value;
-            }
-        }
-
-        return opts;
-    };
-
     DateTimePicker.lookup = function(){
-        var plugins = $('[data-plugin="datetimepicker"]');
+        var plugins = $('[data-plugin^="dtpicker"]');
         var size = plugins.length;
         var plugin = null;
         var options = null;
@@ -1050,17 +1441,18 @@
         for(var i = 0; i < size; i++){
             plugin = plugins[i];
 
-            options = DateTimePicker.getPluginOptions(plugin);
+            options = Util.parsePluginOptions("dtpicker", GetOptionDataStruct(), GetDefaultOptions());
             picker = DateTimePicker.createDateTimePicker(options.name);
 
             picker.options(options);
-            picker.plugin(plugin);
 
             if(options.value){
-                picker.update(picker.parse(options.value));
+                picker.update(
+                    picker.parse(options.value)
+                );
             }
 
-            picker.render().hide()
+            picker.render().hide();
 
             $(plugin).attr("data-action-click", "dtp://picker/call");
         }
@@ -1069,13 +1461,16 @@
     (function(){
         $(document).on("mousedown.datetimepicker", function(e){
             for(var name in DateTimePicker.Cache){
-                DateTimePicker.Cache[name].hide();
+                if(DateTimePicker.Cache.hasOwnProperty(name)){
+                    DateTimePicker.Cache[name].hide();
+                }
             }
-        })
+        });
     })()
 
     module.exports = {
         version: "R16B0520",
+        MODE: DateTimePicker.MODE,
         create: DateTimePicker.createDateTimePicker,
         lookup: DateTimePicker.lookup,
         getDateTimePicker: DateTimePicker.getDateTimePicker

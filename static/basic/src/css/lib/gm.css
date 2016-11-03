@@ -768,278 +768,276 @@ textarea {
  * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox
  * @file logicbox.css
  */
-.mod-datetime-picker-frame{
+.mod-dtpicker-frame{
 	position: absolute;
 	z-index: 59999;
-}
-.mod-datetime-picker-frame{
-	font-size: .14rem;
-	width: 4.05rem;
+	overflow: hidden;
 	border: 1px solid #e5e5e5;
+	border-bottom: 0;
+	border-bottom: none;
 	background-color: #fff;
 }
-.mod-datetime-picker-frame.notime{
-	width: 2.24rem;
+.mod-dtpicker-frame [data-action-click]{
+	cursor: pointer;
 }
-.mod-datetime-picker-frame.notime .mod-datetime-picker-timebox{
-	display: none;
-}
-.mod-datetime-picker-frame.timeonly{
-	width: 1.81rem;
-}
-.mod-datetime-picker-frame.timeonly .mod-datetime-picker-datebox{
-	display: none;
-}
-.mod-datetime-picker-frame.timeonly .mod-datetime-picker-timebox{
-	border-left: 0;
-}
-.mod-datetime-picker-frame .mod-dtp-year-month{
-	display: none;
-}
-.mod-datetime-picker-frame.year-month .mod-dtp-date{
-	display: none;
-}
-.mod-datetime-picker-frame.year-month .mod-dtp-year-month{
+
+.mod-dtpicker-datebox{
+	width: 2.16rem;
 	display: block;
+	position: relative;
 }
-.mod-datetime-picker-body{
-	height: 2.66rem;
+.mod-dtpicker-date-choosen{
+	border-bottom: 1px solid #e5e5e5;
+	height: .36rem;
+	font-size: .20rem;
 }
-.mod-datetime-picker-footer{
-	height: .42rem;
-	line-height: .42rem;
-	border-top: 1px solid #e5e5e5;
-	padding: 0 .12rem;
-}
-.mod-datetime-picker-footer button{
-	height: .24rem;
-	width: .72rem;
-	font-size: .14rem;
-	margin-top: .09rem;
-}
-.mod-datetime-picker-footer button[type="button"]{
-	float: left;
-}
-.mod-datetime-picker-footer button[type="submit"]{
-	float: right;
-}
-.mod-datetime-picker-datebox,
-.mod-datetime-picker-timebox{
-	float: left;
-}
-.mod-datetime-picker-frame ul{
-	list-style: none;
-}
-.mod-datetime-picker-datebox{
-	width: 2.24rem;
-}
-.mod-dtp-year{
-	font-weight: 300;
-	font-style: normal;
+.mod-dtpicker-date-choosen .prev,
+.mod-dtpicker-date-choosen .next{
+	display: block;
+	width: .36rem;
 	height: .36rem;
 	line-height: .36rem;
 	text-align: center;
-	border-bottom: 1px solid #e5e5e5;
 }
-.mod-dtp-year sup{
-	float: left;
-}
-.mod-dtp-year sub{
-	float: right;
-}
-.mod-dtp-year em,
-.mod-dtp-year cite,
-.mod-dtp-year i{
-	font-style: normal;
-	font-size: .18rem;
-	cursor: pointer;
-}
-.mod-dtp-year i{
-	cursor: default;
-}
-.mod-dtp-year span{
-	margin: 0 .02rem;
-}
-.mod-dtp-year sup,
-.mod-dtp-year sub{
-	display: inline-block;
-	width: 0.28rem;
-	cursor: pointer;
-}
-.mod-dtp-year .icofont.prev:before,
-.mod-dtp-years .icofont.prev:before{
+.mod-dtpicker-date-choosen .prev:before{
 	content: "\e634";
 }
-.mod-dtp-year .icofont.next:before,
-.mod-dtp-years .icofont.next:before{
+.mod-dtpicker-date-choosen .next:before{
 	content: "\e60b";
 }
-.mod-dtp-weeks li,
-.mod-dtp-days li{
-	width: .31rem;
+.mod-dtpicker-date-choosen .separator{
+	font-style: normal;
+}
+.mod-dtpicker-weeks{
+	background-color: #f8f8f8;
+}
+.mod-dtpicker-weeks,
+.mod-dtpicker-date-panel{
+	list-style: none;
+	width: 100%;
+}
+.mod-dtpicker-weeks > li,
+.mod-dtpicker-date-panel > li{
+	width: .30rem;
+	height: .24rem;
+	line-height: .24rem;
+	font-size: .14rem;
+	text-align: center;
+	border-right: 1px solid #e5e5e5;
+	border-bottom: 1px solid #e5e5e5;
+}
+.mod-dtpicker-weeks > li:nth-child(7n),
+.mod-dtpicker-date-panel > li:nth-child(7n){
+	border-right: 0;
+}
+.mod-dtpicker-date-panel > li.cur{
+	background-color: #d6ffd8;
+}
+.mod-dtpicker-date-panel > li.today{
+	background-color: #d7e6ff;
+
+}
+.mod-dtpicker-date-panel > li.gray{
+	color: #a9a9a9;
+}
+.mod-dtpicker-date-panel > li.disabled{
+	background-color: #fcfcfc;
+	color: #d6d6d6;
+}
+.mod-dtpicker-year-month{
+	position: absolute;
+	left: 0;
+	top: .36rem;
+	width: 100%;
+	height: 100%;
+	background-color: #fbfbfb;
+	border-top: 1px solid #e5e5e5;
+}
+.mod-dtpicker-years{
+	height: .42rem;
+}
+.mod-dtpicker-years > strong{
+	font-size: .36rem;
+	font-weight: normal;
+}
+.mod-dtpicker-years .prev,
+.mod-dtpicker-years .next{
+	font-size: .36rem;
+}
+.mod-dtpicker-years .prev:before{
+	content: "\e634";
+}
+.mod-dtpicker-years .next:before{
+	content: "\e60b";
+}
+.mod-dtpicker-months{
+	border-top: 1px solid #e5e5e5;
+}
+.mod-dtpicker-months em{
+	display: block;
+	width: .71333rem;
 	height: .32rem;
 	line-height: .32rem;
-	text-align: center;
-	float: left;
-	border-right: 1px solid #e5e5e5;
-}
-.mod-dtp-weeks li:last-child{
-	border-right: 0;
-}
-.mod-dtp-days li{
-	border-top: 1px solid #e5e5e5;
-	cursor: pointer;
-}
-.mod-dtp-days li:nth-child(7n){
-	border-right: 0;
-}
-.mod-dtp-days li.disabled{
-	cursor: not-allowed;
-	background-color: #eaeaea;
-	color: #aaa;
-}
-.mod-dtp-days li.on{
-	background-color: rgba(39, 154, 243, 0.15);
-}
-
-.mod-dtp-days li.cur{
-	background-color: rgba(191, 255, 188, 0.15);
-}
-.mod-dtp-days li.ligthgray{
-	color: #ccc;
-}
-
-.mod-dtp-year-month{
-	background-color: #f5f5f5;
-	height: 2.29rem;
-}
-
-.mod-dtp-years{
-	font-size: .36rem;
-	text-align: center;
-	height: .64rem;
-	line-height: .64rem;
-	color: #666;
-}
-.mod-dtp-years sup{
-	float: left;
-	margin-left: .08rem;
-	cursor: pointer;
-}
-.mod-dtp-years sub{
-	float: right;
-	margin-right: .08rem;
-	cursor: pointer;
-}
-.mod-dtp-years strong{
-	font-size: .48rem;
-}
-.mod-dtp-months{
-	margin-top: .12rem;
-	padding-top: .12rem;
-	border-top: 1px dashed #e5e5e5;
-}
-.mod-dtp-months em{
 	font-style: normal;
-	display: block;
-	width: 25%;
-	height: .36rem;
-	line-height: .36rem;
-	float: left;
 	text-align: center;
-	cursor: pointer;
+	border-right: 1px solid #e5e5e5;
+	border-bottom: 1px solid #e5e5e5;
 }
-.mod-dtp-months em.on{
-	background-color: rgba(39, 154, 243, 0.15);
+.mod-dtpicker-months em:nth-child(3n){
+	border-right: 0;
+	border-right: none;
 }
-.mod-dtp-months em:hover{
-	background-color: #fcfcfc;
+.mod-dtpicker-months em.on{
+	background-color: #d6ffd8;
 }
 
-.mod-datetime-picker-timebox{
-	width: 1.8rem;
+.mod-dtpicker-timebox{
 	border-left: 1px solid #e5e5e5;
 }
-.mod-dtp-time-view{
+.mod-dtpicker-time-choosen{
+	border-bottom: 1px solid #e5e5e5;
 	height: .36rem;
-	line-height: .36rem;
-	border-bottom: 1px solid #e5e5e5;
+	font-size: .16rem;
+	padding: 0 .06rem;
 }
-.mod-dtp-view-minute{
+.mod-dtpicker-time-choosen .separator{
+	font-style: normal;
+	margin: 0 .08rem;
+}
+.mod-dtpicker-time-panel{
 	position: relative;
 }
-.mod-dtp-view-minute:before,
-.mod-dtp-view-minute:after{
-	content: ":";
+.mod-dtpicker-time-selected{
 	position: absolute;
-}
-.mod-dtp-view-minute:before{
+	width: 100%;
+	top: .74rem;
 	left: 0;
-}
-.mod-dtp-view-minute:after{
-	right: 0;
-
-}
-.mod-dtp-time-view li,
-.mod-dtp-hours,
-.mod-dtp-minutes,
-.mod-dtp-seconds{
-	float: left;
-	width: .60rem;
-	text-align: center;
-}
-.mod-datetime-picker-timebox sup,
-.mod-datetime-picker-timebox sub{
-	display: block;
-	height: .32rem;
-	line-height: .32rem;
-	text-align: center;
-	cursor: pointer;
-}
-.mod-datetime-picker-timebox sup{
-	border-bottom: 1px solid #e5e5e5;
-}
-.mod-dtp-time-picker{
-	width: 100%;
-	position: relative;
-}
-.mod-dtp-hours,
-.mod-dtp-minutes,
-.mod-dtp-seconds{
-	position: relative;
-	z-index: 2;
-}
-.mod-dtp-time-selected{
-	position: absolute;
-	width: 100%;
-	height: .32rem;
-	top: 0.99rem;
-	background-color: rgba(39, 154, 243, 0.15);
+	height: .24rem;
+	border-top: 1px solid #d6ffd8;
+	border-bottom: 1px solid #d6ffd8;
 	z-index: 1;
 }
-.mod-dtp-time-picker .icofont.prev:before{
+.mod-dtpicker-time-options{
+	width: .42rem;
+	position: relative;
+	z-index: 3;
+}
+.mod-dtpicker-time-options.fixed-time{
+	display: none;
+	width: .86rem;
+}
+.mod-dtpicker-time-panel.fixed .separator.ms,
+.mod-dtpicker-time-panel.fixed .select-second,
+.mod-dtpicker-time-panel.fixed .mod-dtpicker-time-selected{
+	display: none;
+}
+.mod-dtpicker-time-options .prev{
+	border-bottom: 1px solid #e5e5e5;
+}
+.mod-dtpicker-time-options .next{
+	border-top: 1px solid #e5e5e5;
+	border-bottom: 1px solid #e5e5e5;
+}
+.mod-dtpicker-time-options .prev,
+.mod-dtpicker-time-options .next{
+	text-align: center;
+	width: 100%;
+	height: .24rem;
+	line-height: .24rem;
+	font-size: .20rem;
+}
+.mod-dtpicker-time-options .prev:before{
 	content: "\e635";
 }
-.mod-dtp-time-picker .icofont.next:before{
+.mod-dtpicker-time-options .next:before{
 	content: "\e62f";
 }
-.mod-time-chooser{
-	height: 1.65rem;
+.mod-dtpicker-time-values{
+	height: 1.24rem;
 	overflow: hidden;
+	overflow-y: auto;
 }
-.mod-time-chooser ul{
-	-webkit-transition: margin-top 0.4s ease;
-	   -moz-transition: margin-top 0.4s ease;
-	    -ms-transition: margin-top 0.4s ease;
-	    	transition: margin-top 0.4s ease;
-	margin-top: 0;
+.mod-dtpicker-time-values ul{
+	list-style: none;
+	width: 100%;
 }
-.mod-time-chooser li{
-	height: .32rem;
-	border-bottom: 1px solid #e5e5e5;
+.mod-dtpicker-time-values ul li{
+	width: 100%;
+	height: .24rem;
+	line-height: .24rem;
 	text-align: center;
-	line-height: .32rem;
+	border-bottom: 1px solid transparent;
 }
+
+.mod-dtpicker-frame.mode.datetime{
+
+}
+
+.mod-dtpicker-frame.mode.date .mod-dtpicker-timebox{
+	display: none;
+}
+
+.mod-dtpicker-frame.mode.time .mod-dtpicker-datebox{
+	display: none;
+}
+.mod-dtpicker-frame.mode.time .mod-dtpicker-timebox{
+	border-left: 0;
+	border-left: none;
+}
+
+.mod-dtpicker-frame.mode.year-month .mod-dtpicker-year-month{
+	display: block;
+}
+.mod-dtpicker-frame.mode.year-month .mod-dtpicker-timebox{
+	display: none;
+}
+
+.mod-dtpicker-frame.mode.hour-minute .mod-dtpicker-datebox{
+	display: none;
+}
+.mod-dtpicker-frame.mode.hour-minute .mod-dtpicker-timebox{
+	border-left: 0;
+	border-left: none;
+}
+.mod-dtpicker-frame.mode.hour-minute .separator.ms,
+.mod-dtpicker-frame.mode.hour-minute .select-second,
+.mod-dtpicker-frame.mode.hour-minute .mod-dtpicker-time-options.seconds{
+	display: none;
+}
+
+.mod-dtpicker-frame.mode.short-datetime .separator.ms,
+.mod-dtpicker-frame.mode.short-datetime .select-second,
+.mod-dtpicker-frame.mode.short-datetime .mod-dtpicker-time-options.seconds{
+	display: none;
+}
+
+.mod-dtpicker-frame.mode.fixed-datetime .separator.ms,
+.mod-dtpicker-frame.mode.fixed-datetime .select-second,
+.mod-dtpicker-frame.mode.fixed-datetime .mod-dtpicker-time-options{
+	display: none;
+}
+.mod-dtpicker-frame.mode.fixed-datetime .mod-dtpicker-time-options.fixed-time{
+	display: block;
+}
+
+.mod-dtpicker-frame.mode.fixed-time .mod-dtpicker-datebox,
+.mod-dtpicker-frame.mode.fixed-time .separator.ms,
+.mod-dtpicker-frame.mode.fixed-time .select-second,
+.mod-dtpicker-frame.mode.fixed-time .mod-dtpicker-time-options{
+	display: none;
+}
+.mod-dtpicker-frame.mode.fixed-time .mod-dtpicker-timebox{
+	border-left: 0;
+	border-left: none;
+}
+.mod-dtpicker-frame.mode.fixed-time .mod-dtpicker-time-options.fixed-time{
+	display: block;
+}
+
+
+
+
+
 
 
 

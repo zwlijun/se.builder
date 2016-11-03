@@ -517,6 +517,89 @@
             var _url = (url || document.URL).replace(/#([\w\W]*)$/, "");
             
             return _url;
+        },
+        parsePluginOptions: function(key, dataStruct, defaultOptions){
+            //dataStruct::[]
+            //{property: String, dataType: [number|string|boolean|array]}
+            var opts = {};
+            var plugin = $('[data-plugin^="' + key + '"]');
+            var pluginKey = plugin.attr("data-plugin");
+            var pluginName = pluginKey.indexOf(".") == -1 ? "non-name" : pluginKey.substring(key.length + 1);
+            var size = dataStruct.length;
+            var data = null;
+            var attr = null;
+            var property = null;
+            var value = null;
+
+            var convert = function(value, type){
+                var v = "";
+
+                switch(type){
+                    case "number":
+                        v = Number(value);
+
+                        if(isNaN(v)){
+                            v = NaN;
+                        }
+                    break;
+                    case "boolean":
+                        v = false;
+
+                        if("1" == value || "true" == value){
+                            v = true;
+                        }
+                    break;
+                    case "array":
+                        v = value.split(",");
+                    break;
+                    default:
+                        v = value;
+                    break;
+                }
+
+                return v;
+            };
+
+            for(var i = 0; i < size; i++){
+                data = dataStruct[i];
+                property = data.property;
+                attr = plugin.attr("data-" + key + "-" + property);
+
+                if(!attr){
+                    continue;
+                }
+
+                value = convert(attr, data.dataType);
+
+                if(NaN === value){
+                    continue;
+                }
+
+                if(property.indexOf("-") == -1){
+                    opts[property] = value;
+                }else{
+                    var keys = property.split("-");
+                    var _key = null;
+                    var _tmp = opts;
+
+                    for(var j = 0; j < keys.length - 1; j++){
+                        _key = keys[j];
+
+                        if(!(_key in _tmp)){
+                            _tmp[_key] = {};
+                        }
+                        _tmp = _tmp[_key];
+                    }
+
+                    _tmp[keys[keys.length - 1]] = convert(attr, data.dataType);
+                }
+            }
+
+            var o = $.extend(true, defaultOptions || {}, opts);
+
+            o["name"] = pluginName;
+
+            return o;
         }
     };
 

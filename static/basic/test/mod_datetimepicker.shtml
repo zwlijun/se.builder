@@ -8,7 +8,190 @@
 <link rel="stylesheet" type="text/css" href="/static/basic/src/css/mod/datetimepicker.css">
 </head>
 <body>
-  <!-- <div class="mod-datetime-picker-frame">
+  <div class="mod-dtpicker-frame flexbox top justify mode year-month hide" style="left: 50px; top: 50px;">
+    <figure class="mod-dtpicker-datebox">
+      <figcaption class="mod-dtpicker-date-choosen flexbox middle justify">
+        <sup class="icofont prev" title="上一月"></sup>
+        <span class="select-year">2016</span>
+        <em class="separator ym">/</em>
+        <span class="select-month">11</span>
+        <em class="separator md">/</em>
+        <span class="select-date">02</span>
+        <sub class="icofont next" title="下一月"></sub>
+      </figcaption>
+      <ul class="mod-dtpicker-weeks flexbox middle left">
+        <li>日</li>
+        <li>一</li>
+        <li>二</li>
+        <li>三</li>
+        <li>四</li>
+        <li>五</li>
+        <li>六</li>
+      </ul>
+      <ul class="mod-dtpicker-date-panel flexbox middle left wrap">
+        <li class="disabled">01</li>
+        <li>02</li>
+        <li>03</li>
+        <li class="today">04</li>
+        <li>05</li>
+        <li>06</li>
+        <li>07</li>
+        <li class="cur">08</li>
+        <li>09</li>
+        <li>10</li>
+        <li>11</li>
+        <li>12</li>
+        <li>13</li>
+        <li>14</li>
+        <li>15</li>
+        <li>16</li>
+        <li>17</li>
+        <li>18</li>
+        <li>19</li>
+        <li>20</li>
+        <li>21</li>
+        <li>22</li>
+        <li>23</li>
+        <li>24</li>
+        <li>25</li>
+        <li>26</li>
+        <li>27</li>
+        <li>28</li>
+        <li>29</li>
+        <li>30</li>
+        <li>31</li>
+        <li>32</li>
+        <li>33</li>
+        <li>34</li>
+        <li>35</li>
+        <li class="gray">36</li>
+        <li class="gray">37</li>
+        <li class="gray">38</li>
+        <li class="gray">39</li>
+        <li class="gray">40</li>
+        <li class="gray">41</li>
+        <li class="gray">42</li>
+      </ul>
+      <div class="mod-dtpicker-year-month">
+        <div class="mod-dtpicker-years flexbox middle justify">
+          <sup class="icofont prev" title="上一年"></sup>
+          <strong>2016</strong>
+          <sub class="icofont next" title="下一年"></sub>
+        </div>
+        <div class="mod-dtpicker-months flexbox middle left wrap">
+          <em>01月</em>
+          <em>02月</em>
+          <em>03月</em>
+          <em>04月</em>
+          <em class="on">05月</em>
+          <em>06月</em>
+          <em>07月</em>
+          <em>08月</em>
+          <em>09月</em>
+          <em>10月</em>
+          <em>11月</em>
+          <em>12月</em>
+        </div>
+      </div>
+    </figure>
+    <figure class="mod-dtpicker-timebox">
+      <figcaption class="mod-dtpicker-time-choosen flexbox middle center">
+        <span class="select-hour">20</span>
+        <em class="separator hm">:</em>
+        <span class="select-minute">37</span>
+        <em class="separator ms">:</em>
+        <span class="select-second">08</span>
+      </figcaption>
+      <div class="mod-dtpicker-time-panel flexbox middle justify">
+        <div class="mod-dtpicker-time-options hours">
+          <div class="icofont prev"></div>
+          <div class="mod-dtpicker-time-values">
+            <ul>
+              <li></li>
+              <li></li>
+              <li>01</li>
+              <li>02</li>
+              <li>03</li>
+              <li>04</li>
+              <li>05</li>
+              <li>06</li>
+              <li>07</li>
+              <li>08</li>
+              <li>09</li>
+              <li>10</li>
+              <li>11</li>
+              <li>12</li>
+              <li></li>
+              <li></li>
+            </ul>
+          </div>
+          <div class="icofont next"></div>
+        </div>
+        <div class="mod-dtpicker-time-options minutes">
+          <div class="icofont prev"></div>
+          <div class="mod-dtpicker-time-values">
+            <ul>
+              <li>01</li>
+              <li>02</li>
+              <li>03</li>
+              <li>04</li>
+              <li>05</li>
+              <li>06</li>
+              <li>07</li>
+              <li>08</li>
+              <li>09</li>
+              <li>10</li>
+              <li>11</li>
+              <li>12</li>
+            </ul>
+          </div>
+          <div class="icofont next"></div>
+        </div>
+        <div class="mod-dtpicker-time-options seconds">
+          <div class="icofont prev"></div>
+          <div class="mod-dtpicker-time-values">
+            <ul>
+              <li>01</li>
+              <li>02</li>
+              <li>03</li>
+              <li>04</li>
+              <li>05</li>
+              <li>06</li>
+              <li>07</li>
+              <li>08</li>
+              <li>09</li>
+              <li>10</li>
+              <li>11</li>
+              <li>12</li>
+            </ul>
+          </div>
+          <div class="icofont next"></div>
+        </div>
+        <div class="mod-dtpicker-time-options fixed-time">
+          <div class="icofont prev"></div>
+          <div class="mod-dtpicker-time-values">
+            <ul>
+              <li>01:00</li>
+              <li>02:00</li>
+              <li>03:00</li>
+              <li>04:00</li>
+              <li>05:00</li>
+              <li>06:00</li>
+              <li>07:00</li>
+              <li>08:00</li>
+              <li>09:00</li>
+              <li>10:00</li>
+              <li>11:00</li>
+              <li>12:00</li>
+            </ul>
+          </div>
+          <div class="icofont next"></div>
+        </div>
+        <div class="mod-dtpicker-time-selected"></div>
+      </div>
+    </figure>
+  </div>
+  <div class="mod-datetime-picker-frame mod-dtp-mode-fix-time hide">
     <div class="mod-datetime-picker-body clearfix">
       <div class="mod-datetime-picker-datebox">
         <h6 class="mod-dtp-year clearfix">
@@ -104,6 +287,31 @@
           <li class="mod-dtp-view-second">10</li>
         </ul>
         <div class="mod-dtp-time-picker clearfix">
+          <div class="mod-dtp-fixtime">
+            <sup class="icofont prev"></sup>
+            <div class="mod-time-chooser">
+              <ul class="time">
+                <li>00:30</li>
+                <li>01:30</li>
+                <li>02:30</li>
+                <li>03:30</li>
+                <li>04:30</li>
+                <li>05:30</li>
+                <li>06:30</li>
+                <li>07:30</li>
+                <li>08:30</li>
+                <li>09:30</li>
+                <li>10:30</li>
+                <li>11:30</li>
+                <li>12:30</li>
+                <li>13:30</li>
+                <li>14:30</li>
+                <li>15:30</li>
+                <li>16:30</li>
+              </ul>
+            </div>
+            <sub class="icofont next"></sub>
+          </div>
           <div class="mod-dtp-hours">
             <sup class="icofont prev"></sup>
             <div class="mod-time-chooser">
@@ -183,13 +391,40 @@
         </div>
       </div>
     </div>
-    <div class="mod-datetime-picker-footer clearfix">
-      <button type="button">今天</button>
-      <button type="submit">完成</button>
-    </div>
-  </div> -->
-  <input type="text" data-plugin="datetimepicker" data-datetimepicker-schema="dtpicker://set#aabbd" data-datetimepicker-format="%h:%m" data-datetimepicker-time="1" data-datetimepicker-time-only="1" value="14:31" name="aabbd" style="margin-left: 100px; margin-top: 500px" />
-  <input type="text" data-plugin="datetimepicker" data-datetimepicker-schema="dtpicker://set#aabbe" data-datetimepicker-format="%h:%m" data-datetimepicker-time="1" data-datetimepicker-time-only="1" value="14:31" name="aabbe" style="margin-left: 100px; margin-top: 500px" />
+  </div>
+  <input type="text" 
+    data-plugin="datetimepicker" 
+    data-datetimepicker-mode="1"
+    data-datetimepicker-schema="dtpicker://set#aabbd" 
+    data-datetimepicker-format="%h:%m" 
+    data-datetimepicker-time="1" 
+    data-datetimepicker-time-only="0" 
+    value="14:31" 
+    name="aabbd" 
+    style="margin-left: 100px; margin-top: 500px" />
+  <input name="inste" type="text"
+    data-plugin="dtpicker.test"
+        data-dtpicker-mode="7" 
+        data-dtpicker-theme="aa" 
+        data-dtpicker-format="%y-%M-%d %h:%m:%s"
+        data-dtpicker-value="2016-11-08 06:30:00" 
+        data-dtpicker-sync="dtp://sync" 
+        data-dtpicker-range-date-start="2016-11-12" 
+        data-dtpicker-range-date-end="2018-11-12" 
+        data-dtpicker-range-time-start="11:20:22" 
+        data-dtpicker-range-time-end="" 
+        data-dtpicker-filter-years="" 
+        data-dtpicker-filter-months="" 
+        data-dtpicker-filter-dates="" 
+        data-dtpicker-filter-hours="1,2,3,4,5" 
+        data-dtpicker-filter-minutes="" 
+        data-dtpicker-filter-seconds="" 
+        data-dtpicker-filter-weekends="0" 
+        data-dtpicker-filter-weekdays="0" 
+        data-dtpicker-step-hour="0"
+        data-dtpicker-step-minute="5"
+        data-dtpicker-step-second="30"
+  />
 <!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
 <script>
 $.dtpicker = {
@@ -200,6 +435,117 @@ $.dtpicker = {
     input.val(datetimeFormat)
   }
 }
+
+var getPluginOptions = function(key, dataStruct, defaultOptions){
+    //dataStruct::[]
+    //{property: String, dataType: [number|string|boolean|array]}
+    var opts = {};
+    var plugin = $('[data-plugin^="' + key + '"]');
+    var pluginKey = plugin.attr("data-plugin");
+    var pluginName = pluginKey.indexOf(".") == -1 ? "default" : pluginKey.substring(key.length + 1);
+    var size = dataStruct.length;
+    var data = null;
+    var attr = null;
+    var property = null;
+    var value = null;
+
+    var convert = function(value, type){
+        var v = "";
+
+        switch(type){
+            case "number":
+                v = Number(value);
+
+                if(isNaN(v)){
+                    v = NaN;
+                }
+            break;
+            case "boolean":
+                v = false;
+
+                if("1" == value || "true" == value){
+                    v = true;
+                }
+            break;
+            case "array":
+                v = value.split(",");
+            break;
+            default:
+                v = value;
+            break;
+        }
+
+        return v;
+    };
+
+    for(var i = 0; i < size; i++){
+        data = dataStruct[i];
+        property = data.property;
+        attr = plugin.attr("data-" + key + "-" + property);
+
+        if(!attr){
+            continue;
+        }
+
+        value = convert(attr, data.dataType);
+
+        if(NaN === value){
+            continue;
+        }
+
+        if(property.indexOf("-") == -1){
+            opts[property] = value;
+        }else{
+            var keys = property.split("-");
+            var _key = null;
+            var _tmp = opts;
+
+            for(var j = 0; j < keys.length - 1; j++){
+                _key = keys[j];
+
+                if(!(_key in _tmp)){
+                    _tmp[_key] = {};
+                }
+                _tmp = _tmp[_key];
+            }
+
+            _tmp[keys[keys.length - 1]] = convert(attr, data.dataType);
+        }
+    }
+
+    var o = $.extend(true, defaultOptions || {}, opts);
+
+    o["name"] = pluginName;
+
+    return o;
+}
+
+var dataStruct = [
+    {"property": "mode", "dataType": "number"},
+    {"property": "theme", "dataType": "string"},
+    {"property": "format", "dataType": "string"},
+    {"property": "value", "dataType": "string"},
+    {"property": "sync", "dataType": "string"},
+    {"property": "range-date-start", "dataType": "string"},
+    {"property": "range-date-end", "dataType": "string"},
+    {"property": "range-time-start", "dataType": "string"},
+    {"property": "range-time-end", "dataType": "string"},
+    {"property": "filter-years", "dataType": "array"},
+    {"property": "filter-months", "dataType": "array"},
+    {"property": "filter-dates", "dataType": "array"},
+    {"property": "filter-hours", "dataType": "array"},
+    {"property": "filter-minutes", "dataType": "array"},
+    {"property": "filter-seconds", "dataType": "array"},
+    {"property": "filter-weekends", "dataType": "boolean"},
+    {"property": "filter-weekdays", "dataType": "boolean"},
+    {"property": "step-hour", "dataType": "number"},
+    {"property": "step-minute", "dataType": "number"},
+    {"property": "step-second", "dataType": "number"}
+];
+
+// console.log(getPluginOptions("dtpicker", dataStruct, {
+//   value: "2017-10-12"
+// }));
 seajs.use("logic/test/test_datetimepicker");
 </script>  
 </body>

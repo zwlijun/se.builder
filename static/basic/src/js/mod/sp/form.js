@@ -374,19 +374,10 @@
     var _DataForm = {
         bind: function(formType, formName, submitType, sourceData, extra){
             var checker = FormUtil.getInstance(formName);
+            var fc = GetFormConfigure(formType);
+            var check = fc.check;
 
-            checker.set("before", {
-                callback: function(form, spv){
-                    if(!spv){
-                        form.find(".form-field")
-                            .removeClass("v-ok")
-                            .removeClass("v-err")
-                            .find(".tips")
-                            .removeClass("out")
-                            .removeAttr("style");
-                        }
-                }
-            });
+            checker.set("before", check.before);
             checker.set("tips", {
                 callback: function(el, tips, type){
                     if(CheckTypes.MIN == type){
@@ -410,49 +401,7 @@
                 },
                 args: [sourceData.node, sourceData.event]
             });
-            checker.set("mpv", {
-                callback: function(result){
-                    var checkResultCRS = result.crs;
-                    var checkResultItems = result.cri;
-                    var item = null;
-                    var endEvents = [
-                        "webkitAnimationEnd", 
-                        "mozAnimationEnd", 
-                        "MSAnimationEnd", 
-                        "oanimationend", 
-                        "animationend",
-                    ];
-
-                    if(checkResultCRS["failure"] > 0){
-                        for(var key in checkResultItems){
-                            if(checkResultItems.hasOwnProperty(key)){
-                                item = checkResultItems[key];
-
-                                var field = item.element.parents(".form-field");
-                                var tips = field.find(".tips");
-                                var rect = null;
-
-                                if(item.verified){
-                                    field.addClass("v-ok");
-                                }else{
-                                    rect = Util.getBoundingClientRect(item.element[0]);
-
-                                    tips.one(endEvents.join(" "), function(e){
-                                        e.stopPropagation();
-                                        $(e.currentTarget).css("display", "none");
-                                    })
-
-                                    tips.html(item.message)
-                                        .css({
-                                            "top": (rect.height + 5) + "px"
-                                        }).addClass("out");
-                                    field.addClass("v-err");
-                                }
-                            }
-                        }
-                    }
-                }
-            });
+            checker.set("mpv", check.mpv);
             checker.set("done", {
                 callback: function(result, cmd, forward, sourceData, extra){
                     var formData = result.data;
@@ -565,6 +514,10 @@
      *              "show": [true|false],
      *              "text": "正在提交数据，请稍候..."
      *          },
+     *          "check": {
+     *              "before": null,
+     *              "mpv": null
+     *          },
      *          "processor": function(ctx, resp, msg){
      *              try{
      *                  ctx.form.reset();
@@ -632,9 +585,68 @@
             }
         };
 
+        var DEFAULT_CHECK_BEFORE_CONF = {
+            callback: function(form, spv){
+                if(!spv){
+                    form.find(".form-field")
+                        .removeClass("v-ok")
+                        .removeClass("v-err")
+                        .find(".tips")
+                        .removeClass("out")
+                        .removeAttr("style");
+                }
+            }
+        };
+
+        var DEFAULT_CHECK_MPV_CONF = {
+            callback: function(result){
+                var checkResultCRS = result.crs;
+                var checkResultItems = result.cri;
+                var item = null;
+                var endEvents = [
+                    "webkitAnimationEnd", 
+                    "mozAnimationEnd", 
+                    "MSAnimationEnd", 
+                    "oanimationend", 
+                    "animationend",
+                ];
+
+                if(checkResultCRS["failure"] > 0){
+                    for(var key in checkResultItems){
+                        if(checkResultItems.hasOwnProperty(key)){
+                            item = checkResultItems[key];
+
+                            var field = item.element.parents(".form-field");
+                            var tips = field.find(".tips");
+                            var rect = null;
+
+                            if(item.verified){
+                                field.addClass("v-ok");
+                            }else{
+                                rect = Util.getBoundingClientRect(item.element[0]);
+
+                                tips.one(endEvents.join(" "), function(e){
+                                    e.stopPropagation();
+                                    $(e.currentTarget).css("display", "none");
+                                })
+
+                                tips.html(item.message)
+                                    .css({
+                                        "top": (rect.height + 5) + "px"
+                                    }).addClass("out");
+                                field.addClass("v-err");
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
         var conf = {
             "loading": DEFAULT_LOADING_CONF,
-            "processor": DEFAULT_PROCESSOR_CONF
+            "processor": DEFAULT_PROCESSOR_CONF,
+            "before": DEFAULT_CHECK_BEFORE_CONF,
+            "mpv": DEFAULT_CHECK_MPV_CONF
         };
 
         if(key in conf){
@@ -649,6 +661,8 @@
 
         var DEFAULT_LOADING_CONF = GetDefaultConfigure("loading");
         var DEFAULT_PROCESSOR_CONF = GetDefaultConfigure("processor");
+        var DEFAULT_CHECK_BEFORE_CONF = GetDefaultConfigure("before");
+        var DEFAULT_CHECK_MPV_CONF = GetDefaultConfigure("mpv");
 
         if(key in conf){
             var _fc = conf[key];
@@ -656,12 +670,17 @@
             var loading = _fc.loading || DEFAULT_LOADING_CONF;
             var proc = _fc.processor || DEFAULT_PROCESSOR_CONF;
             var proxy = _fc.proxy || null;
+            var check = _fc.check || {};
+
+            check.before = check.before || DEFAULT_CHECK_BEFORE_CONF;
+            check.mpv = check.mpv || DEFAULT_CHECK_MPV_CONF;
 
             return {
                 "request": req,
                 "loading": loading,
                 "processor": proc,
-                "proxy": proxy
+                "proxy": proxy,
+                "check": check
             }
         }
 
@@ -674,7 +693,7 @@
     })();
 
     module.exports = {
-        "version": "R16B1012",
+        "version": "R16B1103",
         configure: function(conf){
             Configure(conf);
         },
