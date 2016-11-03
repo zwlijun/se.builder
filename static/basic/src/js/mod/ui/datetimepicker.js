@@ -20,7 +20,7 @@
     });
 
     var _html_picker_frame = ''
-                           + '<div class="flexbox top justify mod-dtpicker-frame mode <%=dtp.mode.name%> hide" data-datepicker="<%=dtp.identity%>" data-action-mousedown="dtp://picker/bubbles">'
+                           + '<div class="flexbox top justify mod-dtpicker-frame mode <%=dtp.mode.name%> <%=dtp.options.theme%> hide" data-datepicker="<%=dtp.identity%>" data-action-mousedown="dtp://picker/bubbles">'
                            + '  <figure class="mod-dtpicker-datebox"></figure>'
                            + '  <figure class="mod-dtpicker-timebox"></figure>'
                            + '</div>'
