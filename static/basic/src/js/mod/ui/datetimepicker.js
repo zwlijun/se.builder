@@ -1469,7 +1469,7 @@
     })()
 
     module.exports = {
-        version: "R16B0520",
+        version: "R16B1104",
         MODE: DateTimePicker.MODE,
         create: DateTimePicker.createDateTimePicker,
         lookup: DateTimePicker.lookup,
