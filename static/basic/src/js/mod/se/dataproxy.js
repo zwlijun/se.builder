@@ -45,24 +45,24 @@
                     Util.execHandler(handler, [context, data, msg]);
                 }else{
                     if(exception.errorMap && (String(code) in exception.errorMap)){
-                        Util.execHandler(exception.errorMap[String(code)], [context, data, msg]);
+                        Util.execHandler(exception.errorMap[String(code)], [context, code, msg, data]);
                     }else{
                         CMD.fireError(code || "0x02", msg || "系统繁忙，请稍候再试", ErrorTypes.ERROR, errorHandler, false === exception.tips);
                     }
 
                     if(exception.handle){
-                        Util.execHandler(exception.handle, [context, code, msg]);
+                        Util.execHandler(exception.handle, [context, code, msg, data]);
                     }
                 }
             }else{
                 if(exception.errorMap && ("noresponse" in exception.errorMap)){
-                    Util.execHandler(exception.errorMap["noresponse"], [context, -1, "服务器返回数据失败"]);
+                    Util.execHandler(exception.errorMap["noresponse"], [context, -1, "服务器返回数据失败", null]);
                 }else{
                     CMD.fireError("0x01", "服务器返回数据失败", ErrorTypes.ERROR, errorHandler, false === exception.tips);
                 }
 
                 if(exception.handle){
-                    Util.execHandler(exception.handle, [context, -1, "服务器返回数据失败"]);
+                    Util.execHandler(exception.handle, [context, -1, "服务器返回数据失败", null]);
                 }
             }
         },
