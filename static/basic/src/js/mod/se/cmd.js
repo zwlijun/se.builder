@@ -308,6 +308,8 @@
         cmd = $.extend(true, {}, cmd, ajaxSetting);
         cmd.xhrFields = ajaxSetting.xhrFields || {};
 
+        cmd.context = cmd.context || {};
+
         if(true === cmd.cross){
             cmd.xhrFields["withCredentials"] = true;
         }
@@ -316,7 +318,7 @@
         var fnComplete = cmd.complete;
         var fnError = cmd.error;
 
-        var context = cmd.context || {};
+        var context = cmd.context;
 
         cmd.context["OriginCommand"] = OriginCommand;
         cmd.context = context;

@@ -412,6 +412,9 @@
                 return this;
             }
         },
+        available: function(){
+            return (true === Env.support);
+        },
         register: function(signAPI, data, _url){
             register(signAPI, data, _url);
 
