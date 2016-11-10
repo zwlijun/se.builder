@@ -60,7 +60,9 @@
                       + '      x-webkit-airplay="true" '
                       + '      webkit-playsinline="true" '
                       + '      playsinline="true" '
+                      + '      <%if(true === liveplayer.x5.h5){%>'
                       + '      x5-video-player-type="h5"'
+                      + '      <%}%>'
                       + '    ></video>'
                       + '    <div class="liveplayer-master-mask flexbox middle center" data-action-click="liveplayer://swapBars#<%=liveplayer.name%>">'
                       + '    </div>'
@@ -77,7 +79,6 @@
                       + '      x-webkit-airplay="true" '
                       + '      webkit-playsinline="true" '
                       + '      playsinline="true" '
-                      + '      x5-video-player-type="h5"'
                       + '    ></video>'
                       + '    <div class="liveplayer-pip-mask flexbox middle center">'
                       + '    </div>'
@@ -192,6 +193,7 @@
       data-liveplayer-pip-loop="是否设置循环播放，1 - 循环， 0 - 单播" 
       data-liveplayer-pip-autoplay="是否设置为自动播放， 1 - 自动播放， 0 - 需要点击播放" 
       data-liveplayer-pip-multed="是否设置为禁用， 1 - 不禁音， 0 - 禁音" 
+      data-liveplayer-x5-h5="设置腾讯X5内核播放器H5属性 1 - 设置 0 - 不设置"
     ></element>
     **/
     var GetDefaultOptions = function(){
@@ -224,6 +226,9 @@
                 loop: false,
                 autoplay: true,
                 muted: true
+            },
+            x5: {
+              h5: false
             }
         };
 
@@ -658,7 +663,8 @@
                     {name: "pip-preload", dataType: "boolean"},
                     {name: "pip-loop", dataType: "boolean"},
                     {name: "pip-autoplay", dataType: "boolean"},
-                    {name: "pip-muted", dataType: "boolean"}
+                    {name: "pip-muted", dataType: "boolean"},
+                    {name: "x5-h5", dataType: "boolean"}
                 ];
 
                 return _conf;
