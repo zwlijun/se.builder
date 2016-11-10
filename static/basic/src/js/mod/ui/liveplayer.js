@@ -488,6 +488,16 @@
 
             return node;
         },
+        updateMasterSource: function(source){
+            var video = this.getLivePlayerMasterVideo();
+
+            video.attr("src", source);
+        },
+        updatePIPSource: function(source){
+            var video = this.getLivePlayerPIPVideo();
+
+            video.attr("src", source);
+        },
         updateBackURL: function(url){
             var node = this.getLivePlayerBackNode();
 
@@ -814,6 +824,10 @@
                 "width": width,
                 "height": height
             });
+        },
+        destory: function(){
+            var frame = this.getLivePlayerFrame();
+            frame.remove();
         }
     };
 
@@ -858,6 +872,16 @@
             },
             "getLivePlayerPIPMask": function(){
                 return player.getLivePlayerPIPMask();
+            },
+            "updateMasterSource": function(source){
+                player.updateMasterSource(source);
+
+                return this;
+            },
+            "updatePIPSource": function(source){
+                player.updatePIPSource(source);
+
+                return this;
             },
             "updateBackURL": function(url){
                 player.updateBackURL(url);
@@ -941,6 +965,12 @@
             },
             "watch": function(){
                 return player.watch();
+            },
+            "destory": function(){
+                player.destory();
+
+                LivePlayer.LivePlayers[name] = null;
+                delete LivePlayer.LivePlayers[name];
             }
         };
 
@@ -962,6 +992,27 @@
         },
         getLivePlayer: function(name){
             return LivePlayer.getLivePlayer(name);
+        },
+        destory: function(name){
+            var player = null;
+
+            if(name){
+                var player = LivePlayer.getLivePlayer(name);
+
+                if(player){
+                    player.destory();
+                }
+            }else{
+                for(var _name in LivePlayer.LivePlayers){
+                    if(LivePlayer.LivePlayers.hasOwnProperty(_name)){
+                        player = LivePlayer.getLivePlayer(_name);
+
+                        if(player){
+                            player.destory();
+                        }
+                    }
+                }
+            }
         }
     };
 });
