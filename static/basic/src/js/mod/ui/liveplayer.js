@@ -15,7 +15,9 @@
     var DataType        = require("mod/se/datatype");
     var Listener        = require("mod/se/listener");
     var Timer           = require("mod/se/timer");
+    var Detect          = require("mod/se/detect");
     var HandleStack     = Listener.HandleStack;
+    var Env             = Detect.env;
 
     var LivePlayerTemplate = TemplateEngine.getTemplate("mod_liveplayer", {
         "root": "liveplayer"
@@ -293,6 +295,14 @@
 
                     this.updateTimeSeek(currentTime, duration);
                     this.updateProgress(s);
+
+                    if(Env.browser.tbs.major > 0){
+                        var diff = duration - currentTime;
+
+                        if(diff < 1){
+                            this.next();
+                        }
+                    }
                 },
                 "pause": function(){
                     var frame = this.getLivePlayerFrame();
@@ -307,17 +317,8 @@
                     watcher.start();
                 },
                 "ended": function(){
-                    var next = this.getNextPlayURL();
-                    var frame = this.getLivePlayerFrame();
-                    var playButton = this.getLivePlayerButton("play");
-                    var cs = playButton.parents(".liveplayer-control-state");
-
-                    if(!next){
-                        cs.removeClass("play pause").addClass("pause");
-                        frame.removeClass("hidebars");
-                        this.reload(false);
-                    }else{
-                        this.load(next, true);
+                    if(Env.browser.tbs.major <= 0){
+                        this.next();
                     }
                 }
             },
@@ -786,6 +787,22 @@
             this.registPlayList(this.parsePlayList());
             this.load(source, true === isPlay);
         },
+        next: function(){
+            var next = this.getNextPlayURL();
+            var frame = this.getLivePlayerFrame();
+            var playButton = this.getLivePlayerButton("play");
+            var cs = playButton.parents(".liveplayer-control-state");
+            var master = this.options("master");
+            var isLoop = master.loop;
+
+            if(!next){
+                cs.removeClass("play pause").addClass("pause");
+                frame.removeClass("hidebars");
+                this.reload(isLoop);
+            }else{
+                this.load(next, true);
+            }
+        },
         restore: function(){
             var master = this.getLivePlayerMasterVideo(true);
             var duration = master.duration;
@@ -935,13 +952,8 @@
             "options": function(){
                 return player.options.apply(player, arguments);
             },
-            "load": function(source, isPlay){
-                player.load(source, isPlay);
-
-                return this;
-            },
-            "reload": function(isPlay){
-                player.reload(isPlay);
+            "next": function(){
+                player.next();
 
                 return this;
             },

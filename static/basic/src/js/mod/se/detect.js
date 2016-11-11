@@ -99,7 +99,7 @@
             "tbs": "TBS/(\\d+)",
             "aliapp": "AliApp\\(AP/(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)"
         },
-        engine: {
+        "engine": {
             "trident": "Trident/(\\d+)\\.(\\d+)",
             "webkit": "WebKit/(\\d+)\\.(\\d+)",
             "gecko": "Gecko/(\\d+)",
