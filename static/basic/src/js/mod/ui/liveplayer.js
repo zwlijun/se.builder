@@ -170,7 +170,6 @@
     /**
     <element
       data-liveplayer="播放器实例名称" 
-      data-liveplayer-name="播放器实例名称" 
       data-liveplayer-type="播放器类型，[vod|live]" 
       data-liveplayer-back="返回URL" 
       data-liveplayer-title="视频标题" 
@@ -201,7 +200,6 @@
     var GetDefaultOptions = function(){
         var options = {
             type: "live",
-            name: "liveplayer",
             back: "#",
             title: "&nbsp;",
             width: "100%",
@@ -246,11 +244,12 @@
     //6. canplay
     //7. canplaythrough
 
-    var LivePlayer = function(options){
+    var LivePlayer = function(name, options){
         this.opts = $.extend(true, {}, GetDefaultOptions(), options || {});
 
         this.isListened = false;
         this.playList = [];
+        this.name = name;
 
         this.handleStack = new HandleStack();
         this.events = {
@@ -290,18 +289,23 @@
                     var duration = master.duration;
                     var currentTime = master.currentTime;
 
-                    var percent = currentTime / duration;
-                    var s = Math.min(percent * 100, 100) + "%";
+                    if(duration > 0){
+                        var percent = currentTime / duration;
+                        var s = Math.min(percent * 100, 100) + "%";
 
-                    this.updateTimeSeek(currentTime, duration);
-                    this.updateProgress(s);
+                        this.updateTimeSeek(currentTime, duration);
+                        this.updateProgress(s);
 
-                    if(Env.browser.tbs.major > 0){
-                        var diff = duration - currentTime;
+                        // if(this.isVOD()){
+                        //     if(Env.browser.tbs.major > 0){
+                        //         var diff = duration - currentTime;
 
-                        if(diff < 1){
-                            this.next();
-                        }
+                        //         if(diff < 1){
+                        //             this.pause();
+                        //             this.next();
+                        //         }
+                        //     }
+                        // }
                     }
                 },
                 "pause": function(){
@@ -317,8 +321,10 @@
                     watcher.start();
                 },
                 "ended": function(){
-                    if(Env.browser.tbs.major <= 0){
-                        this.next();
+                    if(this.isVOD()){
+                        // if(Env.browser.tbs.major <= 0){
+                            this.next();
+                        // }
                     }
                 }
             },
@@ -371,6 +377,9 @@
         getHandleStack: function(){
             return this.handleStack;
         },
+        getLivePlayerName: function(){
+            return this.name;
+        },
         options: function(){
             var args = arguments;
             var size = args.length;
@@ -408,8 +417,13 @@
 
             return list;
         },
+        getLivePlayerPlugin: function(){
+            var name = this.getLivePlayerName();
+
+            return $('[data-liveplayer="' + name + '"]')
+        },
         getLivePlayerFrame: function(){
-            var name = this.options("name");
+            var name = this.getLivePlayerName();
 
             return $("#" + name);
         },
@@ -548,19 +562,30 @@
         parsePlayList: function(){
             var master = this.options("master");
             var pbs = master.playlist || "";
+            var items = pbs.split(",");
+            var size = items.length;
+            var url = null;
+            var list = [];
 
-            if("" == pbs){
-                return [];
-            }else{
-                if(pbs.indexOf(",") == -1){
-                    return [pbs];
-                }else{
-                    return pbs.split(",");
+            for(var i = 0; i < size; i++){
+                url = items[i];
+
+                if(!url){
+                    continue;
                 }
+
+                list.push(url);
             }
+
+            return list;
         },
-        registPlayList: function(playList){
-            this.playList = playList;
+        updatePlayList: function(playList){
+            this.playList = [].concat(playList);
+
+            // console.log("------------------------------");
+            // console.log(arguments.callee.caller);
+            // console.log(this.playList);
+            // console.log("------------------------------");
         },
         getPlayList: function(){
             return this.playList;
@@ -570,22 +595,27 @@
             var url = "";
 
             if(true === isReverse){
-                url = list.pop();
+                url = list.pop() || "";
             }else{
-                url = list.shift();
+                url = list.shift() || "";
             }
 
-            if(url){
-                this.registPlayList(list);
-            }else{
-                url = "";
-                this.registPlayList([]);
-            }
+            this.updatePlayList(list);
 
             return url;
         },
+        isLive: function(){
+            var type = this.options("type");
+
+            return "live" == type;
+        },
+        isVOD: function(){
+            var type = this.options("type");
+
+            return "vod" == type;
+        },
         watch: function(){
-            var name = this.options("name");
+            var name = this.getLivePlayerName();
             var time = this.options("time");
             var timer = Timer.getTimer("liveplayer_" + name, Timer.toFPS(time), {
                 callback: function(_timer){
@@ -607,7 +637,7 @@
             var type = e.type;
             var origin = data.origin;
             var ins = data.liveplayer;
-            var name = ins.options("name");
+            var name = ins.getLivePlayerName();
             var processor = ins.LivePlayerProcessor;
 
             e.preventDefault();
@@ -644,14 +674,13 @@
                 this.isListened = true;
             }
         },
-        parse: function(name){
-            var container = $('[data-liveplayer="' + name + '"]');
+        parse: function(){
+            var container = this.getLivePlayerPlugin();
 
             var attrs = function(){
                 // @see GetDefaultOptions();
                 var _conf = [
                     {name: "type", dataType: "string"},
-                    {name: "name", dataType: "string"},
                     {name: "back", dataType: "string"},
                     {name: "title", dataType: "string"},
                     {name: "width", dataType: "string"},
@@ -737,12 +766,27 @@
 
             return $.extend(true, {}, GetDefaultOptions(), objs);
         },
+        updateAttribute: function(attrName, attrValue){
+            var container = this.getLivePlayerPlugin();
+
+            container.attr("data-liveplayer-" + attrName, attrValue);
+
+            this.options(this.parse());
+        },
         render: function(){
-            var name = this.options("name");
-            var container = $('[data-liveplayer="' + name + '"]');
+            var container = this.getLivePlayerPlugin();
 
             if(container.find(".liveplayer-frame").length === 0){
-                LivePlayerTemplate.render(true, HTML_TEMPLATE, this.options(), {
+                this.options(this.parse());
+
+                var metaData = $.extend({}, this.options(), {
+                    "name": this.getLivePlayerName()
+                });
+
+                //解析其它播放列表
+                this.updatePlayList(this.parsePlayList()); 
+
+                LivePlayerTemplate.render(true, HTML_TEMPLATE, metaData, {
                     callback: function(ret, _container){
                         _container.html(ret.result);
 
@@ -765,6 +809,9 @@
                     args: [container],
                     context: this
                 });
+            }else{
+                //解析其它播放列表
+                this.updatePlayList(this.parsePlayList());
             }
         },
         load: function(source, isPlay){
@@ -784,7 +831,11 @@
             var video = this.options("master");
             var source = video.source;
 
-            this.registPlayList(this.parsePlayList());
+            this.updatePlayList(this.parsePlayList());
+
+            // console.log("reload::source = " + source);
+            // console.log(this.getPlayList());
+
             this.load(source, true === isPlay);
         },
         next: function(){
@@ -794,6 +845,9 @@
             var cs = playButton.parents(".liveplayer-control-state");
             var master = this.options("master");
             var isLoop = master.loop;
+
+            // console.log("next::source = " + next);
+            // console.log(this.getPlayList())
 
             if(!next){
                 cs.removeClass("play pause").addClass("pause");
@@ -812,26 +866,16 @@
         },
         play: function(){
             var master = this.getLivePlayerMasterVideo(true);
-            var pip = this.getLivePlayerPIPVideo(true);
 
             if(master){
                 master.play();
             }
-
-            if(pip){
-                pip.play();
-            }
         },
         pause: function(){
             var master = this.getLivePlayerMasterVideo(true);
-            var pip = this.getLivePlayerPIPVideo(true);
 
             if(master){
                 master.pause();
-            }
-
-            if(pip){
-                pip.pause();
             }
         },
         size: function(width, height){
@@ -852,7 +896,7 @@
 
     LivePlayer.createLivePlayer = function(name, options){
         var _opts = options || {};
-        var player = LivePlayer.LivePlayers[name] || (LivePlayer.LivePlayers[name] = new LivePlayer(_opts));
+        var player = LivePlayer.LivePlayers[name] || (LivePlayer.LivePlayers[name] = new LivePlayer(name, _opts));
 
         var _exports = {
             "set": function(type, option){
@@ -864,7 +908,7 @@
                 return player.getHandleStack();
             },
             "getLivePlayerName": function(){
-                return name;
+                return player.getLivePlayerName();
             },
             "getLivePlayerFrame": function(){
                 return player.getLivePlayerFrame();
@@ -925,11 +969,16 @@
 
                 return this;
             },
+            "updateAttribute": function(attrName, attrValue){
+                player.updateAttribute(attrName, attrValue);
+
+                return this;
+            },
             "parsePlayList": function(){
                 return player.parsePlayList();
             },
-            "registPlayList": function(list){
-                player.registPlayList(list);
+            "updatePlayList": function(list){
+                player.updatePlayList(list);
 
                 return this;
             },
@@ -952,6 +1001,12 @@
             "options": function(){
                 return player.options.apply(player, arguments);
             },
+            "isLive": function(){
+                return player.isLive();
+            },
+            "isVOD": function(){
+                return player.isVOD();
+            },
             "next": function(){
                 player.next();
 
@@ -972,8 +1027,8 @@
 
                 return this;
             },
-            "parse": function(name){
-                return player.parse(name);
+            "parse": function(){
+                return player.parse();
             },
             "watch": function(){
                 return player.watch();
