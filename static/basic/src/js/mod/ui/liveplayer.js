@@ -771,7 +771,6 @@
 
             if(video){
                 video.setAttribute("src", source);
-                video.currentTime = 0;
 
                 if(true === isPlay){
                     video.play();
