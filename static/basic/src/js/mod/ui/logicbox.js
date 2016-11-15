@@ -32,7 +32,7 @@
             "hide": null,
             "mask": {
                 callback: function(name, mask){
-                    mask.on("click", function(e){
+                    mask.on("mousedown", function(e){
                         e.stopPropagation();
 
                         var ins = _LogicBox.get(name);
@@ -44,7 +44,7 @@
                         ins = null;
                     });
 
-                    mask.find(".mod-logicbox-box").on("click", function(e){
+                    mask.find(".mod-logicbox-box").on("mousedown", function(e){
                         e.stopPropagation();
                     });
                 }
