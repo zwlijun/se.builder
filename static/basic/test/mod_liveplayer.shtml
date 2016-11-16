@@ -17,6 +17,7 @@
     <div class="liveplayer-controlbar">
       <div class="liveplayer-progressbar">
         <div class="liveplayer-progressbar-seeked" style="width: 32%"></div>
+        <div class="liveplayer-progressbar-seeked-bar" style="left: 32%"></div>
       </div>
       <div class="liveplayer-control flexbox middle justify">
         <div class="liveplayer-control-state flexbox middle left play">
@@ -40,8 +41,7 @@
   </div> -->
 <div id="lp0" 
       data-liveplayer="test_liveplayer" 
-      data-liveplayer-name="test_liveplayer" 
-      data-liveplayer-type="live" 
+      data-liveplayer-type="vod" 
       data-liveplayer-back="http:///" 
       data-liveplayer-title="2017考研 政治新大纲系统精讲提分班" 
       data-liveplayer-width="100%" 

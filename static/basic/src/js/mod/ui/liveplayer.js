@@ -24,15 +24,16 @@
     }); 
 
     var HTML_TEMPLATE = ''
-                      + '<div class="liveplayer-frame <%=liveplayer.type%>" id="<%=liveplayer.name%>" style="width: <%=liveplayer.width%>; height: <%=liveplayer.height%>;">'
+                      + '<div class="liveplayer-frame disable-select <%=liveplayer.type%>" id="<%=liveplayer.name%>" style="width: <%=liveplayer.width%>; height: <%=liveplayer.height%>;">'
                       + '  <div class="liveplayer-navbar flexbox middle justify">'
                       + '    <a href="<%=liveplayer.back%>" class="liveplayer-back icofont"></a>'
                       + '    <span class="liveplayer-title ellipsis"><%=liveplayer.title%></span>'
                       + '    <cite class="liveplayer-onlineusers<%=liveplayer.showOnlineUsers ? "" : " hide"%>"></cite>'
                       + '  </div>'
                       + '  <div class="liveplayer-controlbar">'
-                      + '    <div class="liveplayer-progressbar<%="live" == liveplayer.type ? " hidden" : ""%>">'
+                      + '    <div class="liveplayer-progressbar<%="live" == liveplayer.type ? " hidden" : ""%>" data-action-touchstart="liveplayer://progress/seek#<%=liveplayer.name%>">'
                       + '      <div class="liveplayer-progressbar-seeked" style="width: 0%"></div>'
+                      + '      <div class="liveplayer-progressbar-seeked-bar"></div>'
                       + '    </div>'
                       + '    <div class="liveplayer-control flexbox middle justify">'
                       + '      <div class="liveplayer-control-state flexbox middle left <%=liveplayer.master.autoplay ? "play" : "pause"%>">'
@@ -88,6 +89,10 @@
                       + '  <%}%>'
                       + '</div>'
                       + '';
+
+    var _seek_start = ("ontouchstart" in document) ? "touchstart.liveplayer" : "mousedown.liveplayer";
+    var _seek_move = ("ontouchmove" in document) ? "touchmove.liveplayer" : "mousemove.liveplayer";
+    var _seek_end = ("ontouchend" in document) ? "touchend.liveplayer" : "mouseup.liveplayer";
 
     var LivePlayerSchema = {
         schema: "liveplayer",
@@ -164,6 +169,21 @@
                 master.mozRequestFullScreen();
             }else if(master.webkitRequestFullscreen){
                 master.webkitRequestFullscreen();
+            }
+        },
+        progress: {
+            seek: function(data, node, e, type){
+                var evt = ("changedTouches" in e ? e["changedTouches"][0] : e);
+                var args = (data || "").split(",");
+                var name = args[0];
+
+                var player = LivePlayer.getLivePlayer(name);
+
+                if(player.isLive()){
+                    return ;
+                }
+
+                player.seekToMouse(evt.pageX);
             }
         }
     };
@@ -469,15 +489,23 @@
 
             return mask;
         },
-        getLivePlayerProgressBar: function(isSeek){
+        getLivePlayerProgressBar: function(){
             var frame = this.getLivePlayerFrame();
             var bar = frame.find(".liveplayer-progressbar");
 
-            if(isSeek){
-                bar = bar.find(".liveplayer-progressbar-seeked");
-            }
-
             return bar;
+        },
+        getLivePlayerProgressSeekNode: function(){
+            var pb = this.getLivePlayerProgressBar();
+            var node = pb.find(".liveplayer-progressbar-seeked");
+
+            return node;
+        },
+        getLivePlayerProgressSeekBarNode: function(){
+            var pb = this.getLivePlayerProgressBar();
+            var node = pb.find(".liveplayer-progressbar-seeked-bar");
+
+            return node;
         },
         getLivePlayerBackNode: function(){
             var frame = this.getLivePlayerFrame();
@@ -555,9 +583,17 @@
             node.html(format(current) + "/" + format(total));
         },
         updateProgress: function(percent){
-            var progressbar = this.getLivePlayerProgressBar(true);
+            var progressSeekNode = this.getLivePlayerProgressSeekNode();
+            var progressSeekBarNode = this.getLivePlayerProgressSeekBarNode();
 
-            progressbar.css("width", percent);
+            var inum = Number(percent.replace("%", "")) / 100;
+            var frame = this.getLivePlayerFrame();
+            var frameRect = Util.getBoundingClientRect(frame[0]);
+            var seekRect = Util.getBoundingClientRect(progressSeekBarNode[0]);
+            var pos = inum * frameRect.width - seekRect.width;
+
+            progressSeekNode.css("width", percent);
+            progressSeekBarNode.css("left", pos + "px");
         },
         parsePlayList: function(){
             var master = this.options("master");
@@ -773,6 +809,70 @@
 
             this.options(this.parse());
         },
+        seekToMouse: function(pageX){
+            var frame = this.getLivePlayerFrame();
+            var master = this.getLivePlayerMasterVideo(true);
+            var rect = Util.getBoundingClientRect(frame[0]);
+
+            var left = rect.left;
+            var width = rect.width;
+            var pos = pageX - left;
+
+            var duration = master.duration;
+            var percent = pos / width;
+            var targetTime = Number(Number(duration * percent).toFixed(3));
+
+            master.currentTime = targetTime;
+
+            var percent = master.currentTime / duration;
+            var s = Math.min(percent * 100, 100) + "%";
+
+            this.updateTimeSeek(master.currentTime, duration);
+            this.updateProgress(s);
+        },
+        seekstart: function(e){
+            var data = e.data;
+            var player = data.liveplayer;
+            var ctx = {
+                liveplayer: player
+            };
+
+            // var evt = ("changedTouches" in e ? e["changedTouches"][0] : e);
+
+
+            $(document).on(_seek_move + "_" + player.getLivePlayerName(), "", ctx, player.seekmove)
+                       .on(_seek_end + "_" + player.getLivePlayerName(), "", ctx, player.seekstop);
+        },
+        seekmove: function(e){
+            var data = e.data;
+            var player = data.liveplayer;
+            var ctx = {
+                liveplayer: player
+            };
+
+            var evt = ("changedTouches" in e ? e["changedTouches"][0] : e);
+
+            player.seekToMouse(evt.pageX);            
+        },
+        seekstop: function(e){
+            var data = e.data;
+            var player = data.liveplayer;
+
+            $(document).off(_seek_move + "_" + player.getLivePlayerName())
+                       .off(_seek_end + "_" + player.getLivePlayerName());
+        },
+        bindSeekEvent: function(){
+            if(this.isLive()){
+                return ;
+            }
+
+            var seekBarNode = this.getLivePlayerProgressSeekBarNode();
+            var ctx = {
+                liveplayer: this
+            };
+
+            seekBarNode.on(_seek_start + "_" + this.getLivePlayerName(), "", ctx, this.seekstart);
+        },
         render: function(){
             var container = this.getLivePlayerPlugin();
 
@@ -795,12 +895,16 @@
                                 this.listen();
 
                                 Util.registAction(_node, [
-                                    {type: "click", mapping: null, compatible: null}
+                                    {type: "click", mapping: null, compatible: null},
+                                    {type: "touchstart", mapping: "mousedown", compatible: null},
+                                    {type: "touchmove", mapping: "mousemove", compatible: null},
+                                    {type: "touchend", mapping: "mouseup", compatible: null}
                                 ], null);
 
                                 Util.source(LivePlayerSchema);
 
                                 this.watch().start();
+                                this.bindSeekEvent();
                             },
                             args: [_container],
                             context: this
@@ -971,6 +1075,11 @@
             },
             "updateAttribute": function(attrName, attrValue){
                 player.updateAttribute(attrName, attrValue);
+
+                return this;
+            },
+            "seekToMouse": function(pageX){
+                player.seekToMouse(pageX);
 
                 return this;
             },

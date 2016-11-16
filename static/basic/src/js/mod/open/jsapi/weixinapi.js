@@ -140,12 +140,16 @@
                         }
                     }
 
+                    if(!items.title){
+                        items.title = document.title || "";
+                    }
+
                     if(!items.description){
-                        items.title = items.description;
+                        items.description = items.title;
                     }
 
                     if(!items.link){
-                        items.link = (document.URL).replace(/#.*$/, "");
+                        items.link = Util.removeURLHash();
                     }
 
                     if(DataType.isUndefined(items.allow)){

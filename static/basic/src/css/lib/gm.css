@@ -1256,10 +1256,19 @@ textarea {
 	height: .06rem;
 	width: 100%;
 	background-color: rgba(255, 255, 255, .65);
+	position: relative;
 }
 .liveplayer-progressbar-seeked{
 	height: 100%;
 	background-color: rgba(0, 101, 255, .65);
+}
+.liveplayer-progressbar-seeked-bar{
+	width: .18rem;
+	height: .18rem;
+	border-radius: 100%;
+	position: absolute;
+	top: -.06rem;
+	background-color: rgba(0, 101, 255, .85);
 }
 .liveplayer-control{
 	height: .70rem;
@@ -1363,6 +1372,9 @@ textarea {
 .liveplayer-frame.hidebars .liveplayer-controlbar{
 	-webkit-transform: translateY(100%) translateZ(0);
 			transform: translateY(100%) translateZ(0);
+}
+.liveplayer-frame.hidebars .liveplayer-controlbar .liveplayer-progressbar-seeked-bar{
+	display: none;
 }
 
 .liveplayer-pip-zone{
