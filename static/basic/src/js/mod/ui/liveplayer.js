@@ -1001,57 +1001,79 @@
     };
 
     LivePlayer.canPlaySource = function(source){
-        var mimeType = LivePlayer.SOURCE_MIME_TYPES(source);
+        var mimeTypes = LivePlayer.SOURCE_MIME_TYPES(source);
 
-        if("unknown" == mimeType){
+        if(!mimeTypes){
             return false;
         }
 
         var video = document.createElement("video");
-        var canplay = video.canPlayType(mimeType);
+        var canplay = "";
+        var supported = false;
+
+        for(var i = 0; i < mimeTypes.length; i++){
+            canplay = video.canPlayType(mimeTypes[i]);
+
+            if(!!canplay){
+                supported = true;
+            }
+        }
 
         video = null;
-        return (!!canplay);
+        
+        return supported;
     };
 
     LivePlayer.SOURCE_MIME_TYPES = function(source){
         var urlInfo = Request.parseURL(source);
         var fileName = urlInfo.filename;
         var ext = fileName.replace(/^[^\.]+\./, "");
-        var mimeType = "unknown";
+        var mimeTypes = null;
 
         switch(ext.toLowerCase()){
             case "mp4":
             case "mp4v":
             case "mpg4":
-                mimeType = "video/mp4";
+                mimeTypes = [
+                    "video/mp4"
+                ];
             break;
             case "mpeg":
             case "mpg":
             case "mpe":
             case "m1v":
             case "m2v":
-                mimeType = "video/mpeg";
+                mimeTypes = [
+                    "video/mpeg"
+                ];
             break;
             case "ogv":
             case "ogg":
-                mimeType = "video/ogg";
+                mimeTypes = [
+                    "video/ogg"
+                ];
             break;
             case "webm":
-                mimeType = "video/webm";
+                mimeTypes = [
+                    "video/webm"
+                ];
             break;
             case "flv":
-                mimeType = "video/x-flv";
+                mimeTypes = [
+                    "video/x-flv"
+                ];
             break;
             case "m3u8":
-                mimeType = "application/vnd.apple.mpegurl";
+                mimeTypes = [
+                    "application/vnd.apple.mpegurl"
+                ];
             break;
             default:
-                mimeType = "unknown";
+                mimeTypes = null;
             break;
         }
 
-        return mimeType;
+        return mimeTypes;
     };
 
     LivePlayer.LivePlayers = {};
