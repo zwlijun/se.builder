@@ -16,6 +16,7 @@
     var Listener        = require("mod/se/listener");
     var Timer           = require("mod/se/timer");
     var Detect          = require("mod/se/detect");
+    var Request         = require("mod/se/request");
     var HandleStack     = Listener.HandleStack;
     var Env             = Detect.env;
 
@@ -990,10 +991,67 @@
                 "height": height
             });
         },
+        canPlaySource: function(source){
+            return LivePlayer.canPlaySource(source);
+        },
         destory: function(){
             var frame = this.getLivePlayerFrame();
             frame.remove();
         }
+    };
+
+    LivePlayer.canPlaySource = function(source){
+        var mimeType = LivePlayer.SOURCE_MIME_TYPES(source);
+
+        if("unknown" == mimeType){
+            return false;
+        }
+
+        var video = document.createElement("video");
+        var canplay = video.canPlayType(mimeType);
+
+        video = null;
+        return (!!canplay);
+    };
+
+    LivePlayer.SOURCE_MIME_TYPES = function(source){
+        var urlInfo = Request.parseURL(source);
+        var fileName = urlInfo.filename;
+        var ext = fileName.replace(/^[^\.]+\./, "");
+        var mimeType = "unknown";
+
+        switch(ext.toLowerCase()){
+            case "mp4":
+            case "mp4v":
+            case "mpg4":
+                mimeType = "video/mp4";
+            break;
+            case "mpeg":
+            case "mpg":
+            case "mpe":
+            case "m1v":
+            case "m2v":
+                mimeType = "video/mpeg";
+            break;
+            case "ogv":
+            case "ogg":
+                mimeType = "video/ogg";
+            break;
+            case "webm":
+                mimeType = "video/webm";
+            break;
+            case "flv":
+                mimeType = "video/x-flv";
+            break;
+            case "m3u8":
+                mimeType = "application/vnd.apple.mpegurl";
+            break;
+            default:
+                mimeType = "unknown";
+            break;
+        }
+
+        return mimeType;
     };
 
     LivePlayer.LivePlayers = {};
@@ -1142,6 +1200,9 @@
             "watch": function(){
                 return player.watch();
             },
+            "canPlaySource": function(source){
+                return player.canPlaySource(source);
+            },
             "destory": function(){
                 player.destory();
 
@@ -1168,6 +1229,9 @@
         },
         getLivePlayer: function(name){
             return LivePlayer.getLivePlayer(name);
+        },
+        canPlaySource: function(source){
+            return LivePlayer.canPlaySource(source);
         },
         destory: function(name){
             var player = null;
