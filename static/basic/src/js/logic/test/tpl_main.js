@@ -26,6 +26,21 @@ var PreventDefaultLink = function(){
     });
 };
 
+var SecurityURL = {
+    verify: function(url){
+        var info = Request.parseURL(url);
+        var host = info.host;
+
+        var pattern = /(seshenghuo\.com)$/i
+
+        if(pattern.test(host)){
+            return url;
+        }
+
+        return "";
+    }
+};
+
 var GoSchema = {
     schema: "go",
     //--------------------------
@@ -68,6 +83,28 @@ var GoSchema = {
         }
 
         location.replace(url);
+    },
+    sego: function(data, node, e, type){
+        var args = (data || "").split(",");
+        var name = args[0] || "segoto";
+        var url = Request.getParameter(name);
+
+        if(url){
+            try{
+                url = decodeURIComponent(url);
+                url = SecurityURL.verify(url);
+            }catch(e){
+                url = "";
+            }
+        }
+
+        if(node && node.hasClass("disabled")){
+            return ;
+        }
+
+        if(url){
+            location.href = url;
+        }
     },
     tab: function(data, node, e, type){
         var args = (data || "").split(",");

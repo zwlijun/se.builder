@@ -48,6 +48,50 @@
             return str;
         },
         /**
+         * 格式化代码
+         * @param String code 需要格式化的代码
+         * @param String formatter 格式，如：4, 4-4-2, 3-3-8-4, 3-4-4
+         *                         如果代码超过格式设置的值，那么后面的格式形式以最后一个格式方式为准
+         *                         默认值为：4
+         * @param String chr 格式间隔字符，默认为值为：英文空格字符
+         * @return String code
+         */
+        formatCode: function(code, formatter, chr){
+            var scode = (code || "") + "";
+            var sformatter = formatter || "4";
+            var schr = chr || " ";
+            var len = scode.length;
+
+            var __a = sformatter.split("-");
+            var formatterArray = [];
+            var formatterIndex = 0;
+            var formatterValue = 0;
+            var formatterLatestIndex = __a.length - 1;
+            var tmp = null;
+            var codeItems = [];
+
+            for(var i = 0; i < __a.length; i++){
+                formatterArray.push(Number(__a[i]));
+            }
+
+            do{
+                formatterValue = formatterArray[formatterIndex];
+                tmp = scode.substr(0, formatterValue);
+                scode = scode.substring(formatterValue);
+                len = scode.length;
+
+                codeItems.push(tmp);
+
+                ++formatterIndex;
+
+                if(formatterIndex > formatterLatestIndex){
+                    formatterIndex = formatterLatestIndex;
+                }
+            }while(!!len);
+
+            return codeItems.join(schr);
+        },
+        /**
          * 执行回调
          * @param Object handler {Function callback, Array args, Object context, int delay}
          * @param * __args 附加参数，些参数将会置于 handler.args 之前
