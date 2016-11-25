@@ -31,6 +31,7 @@
                       + '    <span class="liveplayer-title ellipsis"><%=liveplayer.title%></span>'
                       + '    <cite class="liveplayer-onlineusers<%=liveplayer.showOnlineUsers ? "" : " hide"%>"></cite>'
                       + '  </div>'
+                      + '  <%if(!liveplayer.master.controls){%>'
                       + '  <div class="liveplayer-controlbar">'
                       + '    <div class="liveplayer-progressbar<%="live" == liveplayer.type ? " hidden" : ""%>" data-action-touchstart="liveplayer://progress/seek#<%=liveplayer.name%>">'
                       + '      <div class="liveplayer-progressbar-seeked" style="width: 0%"></div>'
@@ -53,12 +54,14 @@
                       + '      </div>'
                       + '    </div>'
                       + '  </div>'
-                      + '  <div class="liveplayer-master">'
+                      + '  <%}%>'
+                      + '  <div class="liveplayer-master" data-action-click="liveplayer://swapBars#<%=liveplayer.name%>">'
                       + '    <video '
                       + '      <%=liveplayer.master.loop ? " loop" : ""%>'
                       + '      <%=liveplayer.master.preload ? " preload" : ""%>'
                       + '      <%=liveplayer.master.autoplay ? " autoplay" : ""%> '
                       + '      <%=liveplayer.master.muted ? " muted" : ""%> '
+                      + '      <%=liveplayer.master.controls ? " controls" : ""%> '
                       + '      src="<%=liveplayer.master.source%>" '
                       + '      poster="<%=liveplayer.master.poster%>" '
                       + '      x-webkit-airplay="true" '
@@ -68,7 +71,7 @@
                       + '      x5-video-player-type="h5"'
                       + '      <%}%>'
                       + '    ></video>'
-                      + '    <div class="liveplayer-master-mask flexbox middle center" data-action-click="liveplayer://swapBars#<%=liveplayer.name%>">'
+                      + '    <div class="liveplayer-master-mask flexbox middle center hide">'
                       + '    </div>'
                       + '  </div>'
                       + '  <%if(liveplayer.allowPIP && "live" == liveplayer.type){%>'
@@ -84,7 +87,7 @@
                       + '      webkit-playsinline="true" '
                       + '      playsinline="true" '
                       + '    ></video>'
-                      + '    <div class="liveplayer-pip-mask flexbox middle center">'
+                      + '    <div class="liveplayer-pip-mask flexbox middle center hide">'
                       + '    </div>'
                       + '  </div>'
                       + '  <%}%>'
@@ -209,6 +212,8 @@
       data-liveplayer-master-autoplay="是否设置为自动播放， 1 - 自动播放， 0 - 需要点击播放" 
       data-liveplayer-master-multed="是否设置为禁用， 1 - 不禁音， 0 - 禁音" 
       data-liveplayer-master-playlist="回放地址列表，多个地址间用英文逗号“,”分隔，没有时为空或不设置该属性"
+      data-liveplayer-master-controls="是否显示控制条， 1 - 显示， 0 - 不显示"
+      data-liveplayer-master-native="是否使用系统默认样式， 1 - 系统， 0 - 自定义"
       data-liveplayer-pip-source="画中画视频地址" 
       data-liveplayer-pip-poster="画中画poster图片地址" 
       data-liveplayer-pip-preload="是设置否预加载，1 - 设置属性 0 - 不设置" 
@@ -238,6 +243,8 @@
                 loop: false,
                 autoplay: true,
                 muted: false,
+                controls: false,
+                native: false,
                 playlist: ""
             },
             pip: {
@@ -735,6 +742,8 @@
                     {name: "master-autoplay", dataType: "boolean"},
                     {name: "master-muted", dataType: "boolean"},
                     {name: "master-playlist", dataType: "string"},
+                    {name: "master-controls", dataType: "boolean"},
+                    {name: "master-native", dataType: "boolean"},
                     {name: "pip-source", dataType: "string"},
                     {name: "pip-poster", dataType: "string"},
                     {name: "pip-preload", dataType: "boolean"},

@@ -52,12 +52,14 @@
       data-liveplayer-allowPIP="1" 
       data-liveplayer-allowMaxOnlineUsers="300" 
       data-liveplayer-onlineUsersTemplate="[%num%/%max%人在线]" 
-      data-liveplayer-master-source="http://static.zuiku.com/res/media/video/movie.mp4" 
+      data-liveplayer-master-source="http://data.gearedu.com/dialogs/16453/16453.mp4" 
       data-liveplayer-master-poster="" 
       data-liveplayer-master-preload="1" 
       data-liveplayer-master-loop="0" 
-      data-liveplayer-master-autoplay="1" 
-      data-liveplayer-pip-source="http://static.zuiku.com/res/media/video/movie.mp4" ></div>
+      data-liveplayer-master-autoplay="1"
+      data-liveplayer-master-controls="1"  
+      data-liveplayer-master-native="1"
+      data-liveplayer-pip-source="http://data.gearedu.com/dialogs/16453/16453.mp4" ></div>
 <!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
 <script>
 seajs.use(["logic/test/test_liveplayer"]);
