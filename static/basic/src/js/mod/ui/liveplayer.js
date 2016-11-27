@@ -24,30 +24,35 @@
         "root": "liveplayer"
     }); 
 
+    var MediaError = ("MediaError" in window) ? window["MediaError"] : {
+        MEDIA_ERR_ABORTED: 1,
+        MEDIA_ERR_NETWORK: 2,
+        MEDIA_ERR_DECODE: 3,
+        MEDIA_ERR_SRC_NOT_SUPPORTED: 4
+    };
+
     var HTML_TEMPLATE = ''
                       + '<div class="liveplayer-frame disable-select <%=liveplayer.type%>" id="<%=liveplayer.name%>" style="width: <%=liveplayer.width%>; height: <%=liveplayer.height%>;">'
+                      + '  <%if("none" != liveplayer.appearance){%>'
                       + '  <div class="liveplayer-navbar flexbox middle justify">'
                       + '    <a href="<%=liveplayer.back%>" class="liveplayer-back icofont"></a>'
                       + '    <span class="liveplayer-title ellipsis"><%=liveplayer.title%></span>'
-                      + '    <cite class="liveplayer-onlineusers<%=liveplayer.showOnlineUsers ? "" : " hide"%>"></cite>'
                       + '  </div>'
-                      + '  <%if(!liveplayer.master.controls){%>'
+                      + '  <%}%>'
+                      + '  <%if(liveplayer.controls && "define" == liveplayer.appearance){%>'
                       + '  <div class="liveplayer-controlbar">'
                       + '    <div class="liveplayer-progressbar<%="live" == liveplayer.type ? " hidden" : ""%>" data-action-touchstart="liveplayer://progress/seek#<%=liveplayer.name%>">'
                       + '      <div class="liveplayer-progressbar-seeked" style="width: 0%"></div>'
                       + '      <div class="liveplayer-progressbar-seeked-bar"></div>'
                       + '    </div>'
                       + '    <div class="liveplayer-control flexbox middle justify">'
-                      + '      <div class="liveplayer-control-state flexbox middle left <%=liveplayer.master.autoplay ? "play" : "pause"%>">'
+                      + '      <div class="liveplayer-control-state flexbox middle left <%=liveplayer.autoplay ? "play" : "pause"%>">'
                       + '        <cite class="liveplayer-button-play icofont" data-action-click="liveplayer://swapState#<%=liveplayer.name%>"></cite>'
                       + '        <%if("live" != liveplayer.type){%>'
                       + '        <span class="liveplayer-timeseek">00:00:00/00:00:00</span>'
                       + '        <%}%>'
                       + '      </div>'
                       + '      <div class="liveplayer-control-player flexbox middle right">'
-                      + '        <%if(liveplayer.allowPIP && "live" == liveplayer.type){%>'
-                      + '        <cite class="liveplayer-button-pip icofont pip" data-action-click="liveplayer://pipSwap#<%=liveplayer.name%>"></cite>'
-                      + '        <%}%>'
                       + '        <%if(liveplayer.allowFullScreen){%>'
                       + '        <cite class="liveplayer-button-fullscreen icofont fullscreen" data-action-click="liveplayer://fullscreen#<%=liveplayer.name%>"></cite>'
                       + '        <%}%>'
@@ -57,40 +62,31 @@
                       + '  <%}%>'
                       + '  <div class="liveplayer-master" data-action-click="liveplayer://swapBars#<%=liveplayer.name%>">'
                       + '    <video '
-                      + '      <%=liveplayer.master.loop ? " loop" : ""%>'
-                      + '      <%=liveplayer.master.preload ? " preload" : ""%>'
-                      + '      <%=liveplayer.master.autoplay ? " autoplay" : ""%> '
-                      + '      <%=liveplayer.master.muted ? " muted" : ""%> '
-                      + '      <%=liveplayer.master.controls ? " controls" : ""%> '
-                      + '      src="<%=liveplayer.master.source%>" '
-                      + '      poster="<%=liveplayer.master.poster%>" '
-                      + '      x-webkit-airplay="true" '
+                      + '      <%=liveplayer.loop ? " loop" : ""%> '
+                      + '      <%=liveplayer.autoplay ? " autoplay" : ""%> '
+                      + '      <%=liveplayer.muted ? " muted" : ""%> '
+                      + '      <%=(liveplayer.controls &&  "native" == liveplayer.appearance) ? " controls" : ""%> '
+                      + '      preload="<%=liveplayer.preload%>" '
+                      + '      poster="<%=liveplayer.poster%>" '
+                      + '      x-webkit-airplay="allow" '
                       + '      webkit-playsinline="true" '
                       + '      playsinline="true" '
-                      + '      <%if(true === liveplayer.x5.h5){%>'
+                      + '      <%if(liveplayer.x5h5){%>'
                       + '      x5-video-player-type="h5"'
                       + '      <%}%>'
-                      + '    ></video>'
-                      + '    <div class="liveplayer-master-mask flexbox middle center hide">'
+                      + '    >'
+                      + '    <%if(liveplayer.meta){%>'
+                      + '      <%if(liveplayer.meta.type){%>'
+                      + '      <source src="<%=liveplayer.meta.source%>" type="<%=liveplayer.meta.type%>" />'
+                      + '      <%}else{%>'
+                      + '      <source src="<%=liveplayer.meta.source%>" />'
+                      + '      <%}%>'
+                      + '    <%}%>'
+                      + '    </video>'
+                      + '    <div class="liveplayer-master-mask flexbox middle center<%=liveplayer.autoplay ? " hide" : ""%>">'
+                      + '       <ins class="icofont" data-action-click="liveplayer://play#<%=liveplayer.name%>"></ins>'
                       + '    </div>'
                       + '  </div>'
-                      + '  <%if(liveplayer.allowPIP && "live" == liveplayer.type){%>'
-                      + '  <div class="liveplayer-pip-zone">'
-                      + '    <video '
-                      + '      <%=liveplayer.pip.loop ? " loop" : ""%>'
-                      + '      <%=liveplayer.pip.preload ? " preload" : ""%>'
-                      + '      <%=liveplayer.pip.autoplay ? " autoplay" : ""%> '
-                      + '      <%=liveplayer.pip.muted ? " muted" : ""%> '
-                      + '      src="<%=liveplayer.pip.source%>" '
-                      + '      poster="<%=liveplayer.pip.poster%>" '
-                      + '      x-webkit-airplay="true" '
-                      + '      webkit-playsinline="true" '
-                      + '      playsinline="true" '
-                      + '    ></video>'
-                      + '    <div class="liveplayer-pip-mask flexbox middle center hide">'
-                      + '    </div>'
-                      + '  </div>'
-                      + '  <%}%>'
                       + '</div>'
                       + '';
 
@@ -107,38 +103,14 @@
             var name = args[0];
 
             var player = LivePlayer.getLivePlayer(name);
-            var parent = node.parents(".liveplayer-control-state");
+            var state = player.getLivePlayerMasterControlState();
 
             if(player){
-                if(parent.hasClass("play")){
+                if(state.hasClass("play")){
                     player.pause();
-
-                    parent.removeClass("play")
-                          .addClass("pause");
-                }else if(parent.hasClass("pause")){
+                }else if(state.hasClass("pause")){
                     player.play();
-
-                    parent.removeClass("pause")
-                          .addClass("play");
-
                 }
-            }
-        },
-        pipSwap: function(data, node, e, type){
-            e.stopPropagation();
-
-            var args = (data || "").split(",");
-            var name = args[0];
-
-            var player = LivePlayer.getLivePlayer(name);
-            var zone = player.getLivePlayerPIPZone();
-
-            if(node.hasClass("restore")){
-                zone.removeClass("hide");
-                node.removeClass("restore");
-            }else{
-                zone.addClass("hide");
-                node.addClass("restore");
             }
         },
         swapBars: function(data, node, e, type){
@@ -156,6 +128,18 @@
             timer.stop();
             if(!frame.hasClass("hidebars")){
                 timer.start();
+            }
+        },
+        play: function(data, node, e, type){
+            e.stopPropagation();
+
+            var args = (data || "").split(",");
+            var name = args[0];
+
+            var player = LivePlayer.getLivePlayer(name);
+
+            if(!node.hasClass("liveplayer-error")){
+                player.play();
             }
         },
         fullscreen: function(data, node, e, type){
@@ -199,28 +183,23 @@
       data-liveplayer-title="视频标题" 
       data-liveplayer-width="宽度，默认：100%" 
       data-liveplayer-height="高度，默认：4.46rem" 
+      
       data-liveplayer-time="控制条及标题栏停留时长，默认：3000毫秒" 
-      data-liveplayer-showOnlineUsers="是否允许显示在线用户数，1 - 允许显示， 0 - 不显示" 
-      data-liveplayer-allowFullScreen="是否显示全屏菜单，1 - 显示， 0 - 不显示" 
-      data-liveplayer-allowPIP="是否允许显示画中画，1 - 显示， 0 - 不显示" 
-      data-liveplayer-allowMaxOnlineUsers="允许的最大在线人数，如：300" 
-      data-liveplayer-onlineUsersTemplate="最大在线人数模板，如：[%num%/%max%人在线]；变量名：%max% - 允许最大用户接入数  %num% - 当前在线人数" 
-      data-liveplayer-master-source="主视频地址" 
-      data-liveplayer-master-poster="主视频poster图片地址" 
-      data-liveplayer-master-preload="是设置否预加载，1 - 设置属性 0 - 不设置" 
-      data-liveplayer-master-loop="是否设置循环播放，1 - 循环， 0 - 单播" 
-      data-liveplayer-master-autoplay="是否设置为自动播放， 1 - 自动播放， 0 - 需要点击播放" 
-      data-liveplayer-master-multed="是否设置为禁用， 1 - 不禁音， 0 - 禁音" 
-      data-liveplayer-master-playlist="回放地址列表，多个地址间用英文逗号“,”分隔，没有时为空或不设置该属性"
-      data-liveplayer-master-controls="是否显示控制条， 1 - 显示， 0 - 不显示"
-      data-liveplayer-master-native="是否使用系统默认样式， 1 - 系统， 0 - 自定义"
-      data-liveplayer-pip-source="画中画视频地址" 
-      data-liveplayer-pip-poster="画中画poster图片地址" 
-      data-liveplayer-pip-preload="是设置否预加载，1 - 设置属性 0 - 不设置" 
-      data-liveplayer-pip-loop="是否设置循环播放，1 - 循环， 0 - 单播" 
-      data-liveplayer-pip-autoplay="是否设置为自动播放， 1 - 自动播放， 0 - 需要点击播放" 
-      data-liveplayer-pip-multed="是否设置为禁用， 1 - 不禁音， 0 - 禁音" 
-      data-liveplayer-x5-h5="设置腾讯X5内核播放器H5属性 1 - 设置 0 - 不设置"
+
+      data-liveplayer-allowFullScreen="是否允许显示全屏菜单，1 - 显示， 0 - 不显示" 
+      data-liveplayer-allowAdjustVolume="是否允许调节音量， 1 - 允许， 0 - 不允许"
+      
+      data-liveplayer-volume="默认音量 7"
+      data-liveplayer-source="视频地址，格式：mimetype:media_source" 
+      data-liveplayer-poster="视频poster图片地址" 
+      data-liveplayer-preload="预加载，auto - 当页面加载后载入整个视频 meta - 当页面加载后只载入元数据 none - 当页面加载后不载入视频" 
+      data-liveplayer-loop="是否设置循环播放，1 - 循环， 0 - 单播" 
+      data-liveplayer-autoplay="是否设置为自动播放， 1 - 自动播放， 0 - 需要点击播放" 
+      data-liveplayer-multed="是否设置为禁用， 1 - 不禁音， 0 - 禁音" 
+      data-liveplayer-nextlist="其他播放地址列表，多个地址间用英文逗号“,”分隔，没有时为空或不设置该属性，地址格式：mimetype:media_source"
+      data-liveplayer-controls="是否显示控制条， 1 - 显示， 0 - 不显示"
+      data-liveplayer-appearance="播放器外观，define - 自定义 native - 系统默认样式 none - 无外观仅播放窗口"
+      data-liveplayer-x5h5="设置腾讯X5内核播放器H5属性 1 - 设置 0 - 不设置"
     ></element>
     **/
     var GetDefaultOptions = function(){
@@ -231,33 +210,19 @@
             width: "100%",
             height: "4.46rem",
             time: 3000,
-            showOnlineUsers: true,
             allowFullScreen: true,
-            allowPIP: true,
-            allowMaxOnlineUsers: 200, 
-            onlineUsersTemplate: "[%num%人在线]",  //变量名：%max% - 允许最大用户接入数  %num% - 当前在线人数
-            master: {
-                source: "",
-                poster: "",
-                preload: true,
-                loop: false,
-                autoplay: true,
-                muted: false,
-                controls: false,
-                native: false,
-                playlist: ""
-            },
-            pip: {
-                source: "",
-                poster: "",
-                preload: true,
-                loop: false,
-                autoplay: true,
-                muted: true
-            },
-            x5: {
-              h5: false
-            }
+            allowAdjustVolume: true,
+            volume: 7,
+            source: "",
+            poster: "",
+            preload: "auto",
+            loop: false,
+            autoplay: true,
+            muted: false,
+            controls: true,
+            appearance: "define",
+            nextlist: "",
+            x5h5: false
         };
 
         return options;
@@ -276,8 +241,10 @@
         this.opts = $.extend(true, {}, GetDefaultOptions(), options || {});
 
         this.isListened = false;
-        this.playList = [];
+        this.nextPlayList = [];
+        this.nextPlayIndex = 0;
         this.name = name;
+        this.allowHideBars = true;
 
         this.handleStack = new HandleStack();
         this.events = {
@@ -311,53 +278,76 @@
     LivePlayer.prototype = {
         //默认处理器
         LivePlayerProcessor: {
-            "master": {
-                "timeupdate": function(){
-                    var master = this.getLivePlayerMasterVideo(true);
-                    var duration = master.duration;
-                    var currentTime = master.currentTime;
+            "timeupdate": function(e){
+                var master = this.getLivePlayerMasterVideo(true);
+                var duration = master.duration;
+                var currentTime = master.currentTime;
 
-                    if(duration > 0){
-                        var percent = currentTime / duration;
-                        var s = Math.min(percent * 100, 100) + "%";
+                if(duration > 0){
+                    var percent = currentTime / duration;
+                    var s = Math.min(percent * 100, 100) + "%";
 
-                        this.updateTimeSeek(currentTime, duration);
-                        this.updateProgress(s);
+                    this.updateTimeSeek(currentTime, duration);
+                    this.updateProgress(s);
 
-                        // if(this.isVOD()){
-                        //     if(Env.browser.tbs.major > 0){
-                        //         var diff = duration - currentTime;
-
-                        //         if(diff < 1){
-                        //             this.pause();
-                        //             this.next();
-                        //         }
-                        //     }
-                        // }
+                    if(master.error){
+                        this.error(master.error);
                     }
-                },
-                "pause": function(){
-                    var frame = this.getLivePlayerFrame();
-                    var watcher = this.watch();
 
-                    watcher.stop();
-                    frame.removeClass("hidebars");
-                },
-                "playing": function(){
-                    var watcher = this.watch();
+                    // if(this.isVOD()){
+                    //     if(Env.browser.tbs.major > 0){
+                    //         var diff = duration - currentTime;
 
-                    watcher.start();
-                },
-                "ended": function(){
-                    if(this.isVOD()){
-                        // if(Env.browser.tbs.major <= 0){
-                            this.next();
-                        // }
-                    }
+                    //         if(diff < 1){
+                    //             this.pause();
+                    //             this.next();
+                    //         }
+                    //     }
+                    // }
                 }
             },
-            "pip": {
+            "pause": function(e){
+                var frame = this.getLivePlayerFrame();
 
+                this.watch().stop();
+                frame.removeClass("hidebars");
+            },
+            "playing": function(e){
+                var mask = this.getLivePlayerMasterMask();
+
+                if(this.allowHideBars){
+                    this.watch().start();
+                }
+
+                mask.addClass("hide");
+            },
+            "ended": function(e){
+                if(this.isVOD()){
+                    // if(Env.browser.tbs.major <= 0){
+                        this.next();
+                    // }
+                }
+            },
+            "error": function(e){
+                var master = this.getLivePlayerMasterVideo(true);
+
+                if(master.error){
+                    this.error(master.error);
+                }
+            },
+            "abort": function(e){
+                var master = this.getLivePlayerMasterVideo(true);
+
+                if(master.error){
+                    this.error(master.error);
+                }
+            },
+            "emptied": function(e){
+                var master = this.getLivePlayerMasterVideo(true);
+
+                if(master.error){
+                    this.error(master.error);
+                }
             }
         },
         /**
@@ -479,23 +469,11 @@
 
             return mask;
         },
-        getLivePlayerPIPZone: function(){
+        getLivePlayerMasterControlState: function(){
             var frame = this.getLivePlayerFrame();
-            var mask = frame.find(".liveplayer-pip-zone");
+            var state = frame.find(".liveplayer-control-state");
 
-            return mask;
-        },
-        getLivePlayerPIPVideo: function(isDOM){
-            var frame = this.getLivePlayerFrame();
-            var master = frame.find(".liveplayer-pip-zone video");
-
-            return isDOM ? master[0] : master;
-        },
-        getLivePlayerPIPMask: function(){
-            var frame = this.getLivePlayerFrame();
-            var mask = frame.find(".liveplayer-pip-zone .liveplayer-pip-mask");
-
-            return mask;
+            return state;
         },
         getLivePlayerProgressBar: function(){
             var frame = this.getLivePlayerFrame();
@@ -527,27 +505,42 @@
 
             return node;
         },
-        getLivePlayerOnlineUsersNode: function(){
-            var frame = this.getLivePlayerFrame();
-            var node = frame.find(".liveplayer-onlineusers");
-
-            return node;
-        },
         getLivePlayerTimeSeekNode: function(){
             var frame = this.getLivePlayerFrame();
             var node = frame.find(".liveplayer-timeseek");
 
             return node;
         },
+        parseMasterSource: function(source){
+            var pattern = /^(([a-z0-9\-\_\+\.]+\/[a-z0-9\-\_\+\.]+)\:)?([\w\W]+)$/gi;
+                pattern.lastIndex = 0;
+            var matcher = pattern.exec(source);
+
+            if(matcher){
+                return {
+                    "type": matcher[2] || "",
+                    "source": matcher[3]
+                }
+            }
+
+            return null;
+        },
         updateMasterSource: function(source){
             var video = this.getLivePlayerMasterVideo();
+            var sourceInfo = this.parseMasterSource(source);
 
-            video.attr("src", source);
-        },
-        updatePIPSource: function(source){
-            var video = this.getLivePlayerPIPVideo();
-
-            video.attr("src", source);
+            if(sourceInfo){
+                if(sourceInfo.type){
+                    video.removeAttr("src")
+                         .html('<source src="' + sourceInfo.source + '" type="' + sourceInfo.type + '" />');
+                }else{
+                    video.removeAttr("src")
+                         .html('<source src="' + sourceInfo.source + '" />');
+                }
+            }else{
+                console.info("a")
+                this.error(LivePlayer.Error.MEDIA_ERR_NO_SOURCE);
+            }
         },
         updateBackURL: function(url){
             var node = this.getLivePlayerBackNode();
@@ -558,16 +551,6 @@
             var node = this.getLivePlayerTitleNode();
 
             node.html(title);
-        },
-        updateOnlineUsers: function(num){
-            var node = this.getLivePlayerOnlineUsersNode();
-            var tpl = this.options("onlineUsersTemplate");
-            var max = this.options("allowMaxOnlineUsers");
-
-            var online = tpl.replace("%num%", num)
-                            .replace("%max%", max);
-
-            node.html(online);
         },
         updateTimeSeek: function(current, total){
             var node = this.getLivePlayerTimeSeekNode();
@@ -594,25 +577,26 @@
             var progressSeekNode = this.getLivePlayerProgressSeekNode();
             var progressSeekBarNode = this.getLivePlayerProgressSeekBarNode();
 
-            var inum = Number(percent.replace("%", "")) / 100;
-            var frame = this.getLivePlayerFrame();
-            var frameRect = Util.getBoundingClientRect(frame[0]);
-            var seekRect = Util.getBoundingClientRect(progressSeekBarNode[0]);
-            var pos = inum * frameRect.width - seekRect.width;
+            if(progressSeekNode.length > 0){
+                var inum = Number(percent.replace("%", "")) / 100;
+                var frame = this.getLivePlayerFrame();
+                var frameRect = Util.getBoundingClientRect(frame[0]);
+                var seekRect = Util.getBoundingClientRect(progressSeekBarNode[0]);
+                var pos = inum * frameRect.width - seekRect.width;
 
-            progressSeekNode.css("width", percent);
-            progressSeekBarNode.css("left", pos + "px");
+                progressSeekNode.css("width", percent);
+                progressSeekBarNode.css("left", pos + "px");
+            }
         },
-        parsePlayList: function(){
-            var master = this.options("master");
-            var pbs = master.playlist || "";
-            var items = pbs.split(",");
+        parseNextPlayList: function(){
+            var nextlist = this.options("nextlist") || "";
+            var items = nextlist.split(",");
             var size = items.length;
             var url = null;
             var list = [];
 
             for(var i = 0; i < size; i++){
-                url = items[i];
+                url = this.parseMasterSource(items[i]);
 
                 if(!url){
                     continue;
@@ -623,19 +607,19 @@
 
             return list;
         },
-        updatePlayList: function(playList){
-            this.playList = [].concat(playList);
+        updateNextPlayList: function(nextlist){
+            this.nextPlayList = [].concat(nextlist);
 
             // console.log("------------------------------");
             // console.log(arguments.callee.caller);
-            // console.log(this.playList);
+            // console.log(this.nextPlayList);
             // console.log("------------------------------");
         },
-        getPlayList: function(){
-            return this.playList;
+        getNextPlayList: function(){
+            return this.nextPlayList;
         },
         getNextPlayURL: function(isReverse){
-            var list = [].concat(this.getPlayList());
+            var list = [].concat(this.getNextPlayList());
             var url = "";
 
             if(true === isReverse){
@@ -644,7 +628,7 @@
                 url = list.shift() || "";
             }
 
-            this.updatePlayList(list);
+            this.updateNextPlayList(list);
 
             return url;
         },
@@ -679,7 +663,6 @@
         dispatcher: function(e){
             var data = e.data;
             var type = e.type;
-            var origin = data.origin;
             var ins = data.liveplayer;
             var name = ins.getLivePlayerName();
             var processor = ins.LivePlayerProcessor;
@@ -687,35 +670,24 @@
             e.preventDefault();
             e.stopPropagation();
 
-            if(origin in processor){
-                if((type in processor[origin]) && processor[origin][type]){
-                    processor[origin][type].apply(ins);
-                }
+            if((type in processor) && processor[type]){
+                processor[type].apply(ins, [e]);
             }
 
-            ins.exec(type, [origin, name]);
+            ins.exec(type, [e, name]);
         },
         listen: function(){
             if(true !== this.isListened){
                 var events = this.getLivePlayerEvents();
                 var master = this.getLivePlayerMasterVideo();
-                var pip = this.getLivePlayerPIPVideo();
 
                 if(master.length > 0){
                     master.on(events.join(" "), "", {
-                        origin: "master",
-                        liveplayer: this,
+                        liveplayer: this
                     }, this.dispatcher);
-                }
 
-                if(pip.length > 0){
-                    pip.on(events.join(" "), "", {
-                        origin: "pip",
-                        liveplayer: this,
-                    }, this.dispatcher);
+                    this.isListened = true;
                 }
-
-                this.isListened = true;
             }
         },
         parse: function(){
@@ -723,6 +695,27 @@
 
             var attrs = function(){
                 // @see GetDefaultOptions();
+                // var options = {
+                //     type: "live",
+                //     back: "#",
+                //     title: "&nbsp;",
+                //     width: "100%",
+                //     height: "4.46rem",
+                //     time: 3000,
+                //     allowFullScreen: true,
+                //     allowAdjustVolume: true,
+                //     volume: 7,
+                //     source: "",
+                //     poster: "",
+                //     preload: "auto",
+                //     loop: false,
+                //     autoplay: true,
+                //     muted: false,
+                //     controls: true,
+                //     appearance: "define",
+                //     nextlist: "",
+                //     x5h5: false
+                // };
                 var _conf = [
                     {name: "type", dataType: "string"},
                     {name: "back", dataType: "string"},
@@ -730,27 +723,19 @@
                     {name: "width", dataType: "string"},
                     {name: "height", dataType: "string"},
                     {name: "time", dataType: "number"},
-                    {name: "showOnlineUsers", dataType: "boolean"},
                     {name: "allowFullScreen", dataType: "boolean"},
-                    {name: "allowPIP", dataType: "boolean"},
-                    {name: "allowMaxOnlineUsers", dataType: "number"},
-                    {name: "onlineUsersTemplate", dataType: "string"},
-                    {name: "master-source", dataType: "string"},
-                    {name: "master-poster", dataType: "string"},
-                    {name: "master-preload", dataType: "boolean"},
-                    {name: "master-loop", dataType: "boolean"},
-                    {name: "master-autoplay", dataType: "boolean"},
-                    {name: "master-muted", dataType: "boolean"},
-                    {name: "master-playlist", dataType: "string"},
-                    {name: "master-controls", dataType: "boolean"},
-                    {name: "master-native", dataType: "boolean"},
-                    {name: "pip-source", dataType: "string"},
-                    {name: "pip-poster", dataType: "string"},
-                    {name: "pip-preload", dataType: "boolean"},
-                    {name: "pip-loop", dataType: "boolean"},
-                    {name: "pip-autoplay", dataType: "boolean"},
-                    {name: "pip-muted", dataType: "boolean"},
-                    {name: "x5-h5", dataType: "boolean"}
+                    {name: "allowAdjustVolume", dataType: "boolean"},
+                    {name: "volume", dataType: "number"},
+                    {name: "source", dataType: "string"},
+                    {name: "poster", dataType: "string"},
+                    {name: "preload", dataType: "string"},
+                    {name: "loop", dataType: "boolean"},
+                    {name: "autoplay", dataType: "boolean"},
+                    {name: "muted", dataType: "boolean"},
+                    {name: "controls", dataType: "boolean"},
+                    {name: "appearance", dataType: "string"},
+                    {name: "nextlist", dataType: "string"},
+                    {name: "x5h5", dataType: "boolean"}
                 ];
 
                 return _conf;
@@ -848,7 +833,8 @@
             };
 
             // var evt = ("changedTouches" in e ? e["changedTouches"][0] : e);
-
+            player.allowHideBars = false;
+            player.watch().stop();
 
             $(document).on(_seek_move + "_" + player.getLivePlayerName(), "", ctx, player.seekmove)
                        .on(_seek_end + "_" + player.getLivePlayerName(), "", ctx, player.seekstop);
@@ -867,6 +853,9 @@
         seekstop: function(e){
             var data = e.data;
             var player = data.liveplayer;
+
+            player.allowHideBars = true;
+            player.watch().start();
 
             $(document).off(_seek_move + "_" + player.getLivePlayerName())
                        .off(_seek_end + "_" + player.getLivePlayerName());
@@ -890,11 +879,12 @@
                 this.options(this.parse());
 
                 var metaData = $.extend({}, this.options(), {
-                    "name": this.getLivePlayerName()
+                    "name": this.getLivePlayerName(),
+                    "meta": this.parseMasterSource(this.options("source"))
                 });
 
                 //解析其它播放列表
-                this.updatePlayList(this.parsePlayList()); 
+                this.updateNextPlayList(this.parseNextPlayList()); 
 
                 LivePlayerTemplate.render(true, HTML_TEMPLATE, metaData, {
                     callback: function(ret, _container){
@@ -903,6 +893,7 @@
                         Util.delay(50, {
                             callback: function(et, _node){
                                 this.listen();
+                                this.setVolume(this.options("volume"));
 
                                 Util.registAction(_node, [
                                     {type: "click", mapping: null, compatible: null},
@@ -913,7 +904,11 @@
 
                                 Util.source(LivePlayerSchema);
 
-                                this.watch().start();
+                                if(this.options("autoplay")){
+                                    this.watch().start();
+                                }else{
+                                    this.watch();
+                                }
                                 this.bindSeekEvent();
                             },
                             args: [_container],
@@ -925,30 +920,29 @@
                 });
             }else{
                 //解析其它播放列表
-                this.updatePlayList(this.parsePlayList());
+                this.updateNextPlayList(this.parseNextPlayList());
             }
         },
         load: function(source, isPlay){
-            var video = this.getLivePlayerMasterVideo(true);
+            var video = this.getLivePlayerMasterVideo();
 
-            if(video){
-                video.setAttribute("src", source);
+            if(video.length > 0){
+                this.updateMasterSource(source)
 
                 if(true === isPlay){
-                    video.play();
+                    this.play();
                 }else{
-                  video.pause();
+                  this.pause();
                 }
             }
         },
         reload: function(isPlay){
-            var video = this.options("master");
-            var source = video.source;
-
-            this.updatePlayList(this.parsePlayList());
+            var source = this.options("source");
+            
+            this.updateNextPlayList(this.parseNextPlayList());
 
             // console.log("reload::source = " + source);
-            // console.log(this.getPlayList());
+            // console.log(this.getNextPlayList());
 
             this.load(source, true === isPlay);
         },
@@ -957,11 +951,10 @@
             var frame = this.getLivePlayerFrame();
             var playButton = this.getLivePlayerButton("play");
             var cs = playButton.parents(".liveplayer-control-state");
-            var master = this.options("master");
-            var isLoop = master.loop;
+            var isLoop = this.options("loop");
 
             // console.log("next::source = " + next);
-            // console.log(this.getPlayList())
+            // console.log(this.getNextPlayList())
 
             if(!next){
                 cs.removeClass("play pause").addClass("pause");
@@ -980,18 +973,57 @@
         },
         play: function(){
             var master = this.getLivePlayerMasterVideo(true);
+            var state = this.getLivePlayerMasterControlState();
 
             if(master){
                 master.play();
+
+                state.removeClass("pause")
+                     .addClass("play");
             }
         },
         pause: function(){
             var master = this.getLivePlayerMasterVideo(true);
+            var state = this.getLivePlayerMasterControlState();
 
             if(master){
                 master.pause();
+
+                state.removeClass("play")
+                     .addClass("pause");
             }
         },
+        //---------- NATIVE PROPERTIES SET BEGIN ---------------
+        setVolume: function(volume){
+            var master = this.getLivePlayerMasterVideo(true);
+
+            if(master){
+                master.volume = Number(Number(volume / 10).toFixed(1));
+            }
+        },
+        getVolume: function(){
+            var master = this.getLivePlayerMasterVideo(true);
+
+            if(master){
+                return master.volume;
+            }
+        },
+        setCrossOrigin: function(crossOrigin){
+            var master = this.getLivePlayerMasterVideo(true);
+
+            if(master){
+                // anonymous, use-credentials
+                master.crossOrigin = crossOrigin;
+            }
+        },
+        getCrossOrigin: function(){
+            var master = this.getLivePlayerMasterVideo(true);
+
+            if(master){
+                return master.crossOrigin;
+            }
+        },
+        //---------- NATIVE PROPERTIES SET END ---------------
         size: function(width, height){
             var frame = this.getLivePlayerFrame();
 
@@ -1003,9 +1035,54 @@
         canPlaySource: function(source){
             return LivePlayer.canPlaySource(source);
         },
+        error: function(err){
+            switch(err.code){
+                case MediaError.MEDIA_ERR_ABORTED:
+                    err = LivePlayer.Error.MEDIA_ERR_ABORTED;
+                break;
+                case MediaError.MEDIA_ERR_NETWORK:
+                    err = LivePlayer.Error.MEDIA_ERR_NETWORK;
+                break;
+                case MediaError.MEDIA_ERR_DECODE:
+                    err = LivePlayer.Error.MEDIA_ERR_DECODE;
+                break;
+                case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                    err = LivePlayer.Error.MEDIA_ERR_SRC_NOT_SUPPORTED;
+                break;
+            }
+
+            var mask = this.getLivePlayerMasterMask();
+            var ins = mask.find("ins");
+
+            mask.addClass("liveplayer-error").removeClass("hide");
+            ins.html(err.code + ": " + err.message);
+        },
         destory: function(){
             var frame = this.getLivePlayerFrame();
             frame.remove();
+        }
+    };
+
+    LivePlayer.Error = {
+        "MEDIA_ERR_NO_SOURCE": {
+            "code": "E0001",
+            "message": "解析播放地址失败，正确格式：[媒体类型:]播放地址。如：video/mp4:source.mp4或source.mp4"
+        },
+        "MEDIA_ERR_ABORTED": {
+            "code": "E1001",
+            "message": "已取消视频源的请求"
+        },
+        "MEDIA_ERR_NETWORK": {
+            "code": "E1002",
+            "message": "网络出现故障"
+        },
+        "MEDIA_ERR_DECODE": {
+            "code": "E1003",
+            "message": "媒体解码失败"
+        },
+        "MEDIA_ERR_SRC_NOT_SUPPORTED": {
+            "code": "E1004",
+            "message": "不支持的媒体地址"
         }
     };
 
@@ -1058,6 +1135,7 @@
             break;
             case "ogv":
             case "ogg":
+            case "ogm":
                 mimeTypes = [
                     "video/ogg"
                 ];
@@ -1118,22 +1196,11 @@
             "getLivePlayerMasterMask": function(){
                 return player.getLivePlayerMasterMask();
             },
-            "getLivePlayerPIPZone": function(){
-                return player.getLivePlayerPIPZone();
-            },
-            "getLivePlayerPIPVideo": function(isDOM){
-                return player.getLivePlayerPIPVideo(isDOM);
-            },
-            "getLivePlayerPIPMask": function(){
-                return player.getLivePlayerPIPMask();
+            "getLivePlayerMasterControlState": function(){
+                return player.getLivePlayerMasterControlState();
             },
             "updateMasterSource": function(source){
                 player.updateMasterSource(source);
-
-                return this;
-            },
-            "updatePIPSource": function(source){
-                player.updatePIPSource(source);
 
                 return this;
             },
@@ -1157,11 +1224,6 @@
 
                 return this;
             },
-            "updateOnlineUsers": function(num){
-                player.updateOnlineUsers(num);
-
-                return this;
-            },
             "updateAttribute": function(attrName, attrValue){
                 player.updateAttribute(attrName, attrValue);
 
@@ -1172,16 +1234,16 @@
 
                 return this;
             },
-            "parsePlayList": function(){
-                return player.parsePlayList();
+            "parseNextPlayList": function(){
+                return player.parseNextPlayList();
             },
-            "updatePlayList": function(list){
-                player.updatePlayList(list);
+            "updateNextPlayList": function(list){
+                player.updateNextPlayList(list);
 
                 return this;
             },
-            "getPlayList": function(){
-                return player.getPlayList();
+            "getNextPlayList": function(){
+                return player.getNextPlayList();
             },
             "getNextPlayURL": function(){
                 return player.getNextPlayURL();
@@ -1220,6 +1282,22 @@
 
                 return this;
             },
+            "setVolume": function(volume){
+                player.setVolume(volume);
+
+                return this;
+            },
+            "getVolume": function(){
+                return player.getVolume();
+            }, 
+            "setCrossOrigin": function(crossOrigin){
+                player.setCrossOrigin(crossOrigin);
+
+                return this;
+            },
+            "getCrossOrigin": function(){
+                return player.getCrossOrigin();
+            },
             "size": function(width, height){
                 player.size(width, height);
 
@@ -1234,11 +1312,18 @@
             "canPlaySource": function(source){
                 return player.canPlaySource(source);
             },
+            "error": function(errObj){
+                player.error(errObj);
+
+                return this;
+            },
             "destory": function(){
                 player.destory();
 
                 LivePlayer.LivePlayers[name] = null;
                 delete LivePlayer.LivePlayers[name];
+
+                return this;
             }
         };
 
@@ -1254,7 +1339,7 @@
     };
 
     module.exports = {
-        "version": "R16B1029",
+        "version": "R16B1127",
         createLivePlayer: function(name, options){
             return LivePlayer.createLivePlayer(name, options);
         },

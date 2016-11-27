@@ -3,8 +3,7 @@
 
 	var player = LivePlayer.createLivePlayer("test_liveplayer");
 
-	player.options(player.parse(player.getLivePlayerName()));
+	// player.options(player.parse(player.getLivePlayerName()));
     player.render();
 
-    player.updateOnlineUsers(37);
 });

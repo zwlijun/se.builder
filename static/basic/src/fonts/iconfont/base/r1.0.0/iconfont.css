@@ -1,10 +1,10 @@
 
 @font-face {font-family: "iconfont";
-  src: url('iconfont.eot?t=1477146722'); /* IE9*/
-  src: url('iconfont.eot?t=1477146722#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('iconfont.woff?t=1477146722') format('woff'), /* chrome, firefox */
-  url('iconfont.ttf?t=1477146722') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('iconfont.svg?t=1477146722#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('iconfont.eot?t=1480266262394'); /* IE9*/
+  src: url('iconfont.eot?t=1480266262394#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1480266262394') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1480266262394') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1480266262394#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -15,84 +15,168 @@
   -webkit-text-stroke-width: 0.2px;
   -moz-osx-font-smoothing: grayscale;
 }
+
 .ico-drag:before { content: "\e601"; }
+
 .ico-favorfill:before { content: "\e602"; }
+
 .ico-favor:before { content: "\e603"; }
+
 .ico-likefill:before { content: "\e604"; }
+
 .ico-like:before { content: "\e605"; }
+
 .ico-shezhi:before { content: "\e606"; }
+
 .ico-zuofanhui:before { content: "\e607"; }
+
 .ico-zanting:before { content: "\e649"; }
+
 .ico-add:before { content: "\e608"; }
+
 .ico-telephone:before { content: "\e609"; }
+
 .ico-iconshare:before { content: "\e60a"; }
+
 .ico-arrow:before { content: "\e60b"; }
+
 .ico-weibo:before { content: "\e60c"; }
+
 .ico-home:before { content: "\e60d"; }
+
 .ico-weibo1:before { content: "\e60e"; }
+
 .ico-search:before { content: "\e60f"; }
+
 .ico-web:before { content: "\e610"; }
+
 .ico-pictureinpicture:before { content: "\e64f"; }
+
 .ico-minus:before { content: "\e611"; }
+
 .ico-service:before { content: "\e612"; }
+
 .ico-share:before { content: "\e613"; }
+
 .ico-iconfontyonghuming:before { content: "\e614"; }
+
 .ico-jingyin:before { content: "\e64a"; }
+
 .ico-phone:before { content: "\e615"; }
+
 .ico-gerenziliao:before { content: "\e616"; }
+
 .ico-share1:before { content: "\e617"; }
+
 .ico-clock:before { content: "\e600"; }
+
 .ico-delete:before { content: "\e618"; }
+
 .ico-close:before { content: "\e619"; }
+
+.ico-play:before { content: "\e651"; }
+
 .ico-comment:before { content: "\e61a"; }
+
 .ico-address:before { content: "\e61b"; }
+
 .ico-loading:before { content: "\e61c"; }
+
 .ico-cc-mic:before { content: "\e61d"; }
+
 .ico-cc-mic-close:before { content: "\e61e"; }
+
 .ico-move:before { content: "\e61f"; }
+
 .ico-tingzhi:before { content: "\e64b"; }
+
 .ico-magic02:before { content: "\e620"; }
+
 .ico-qq:before { content: "\e621"; }
+
 .ico-shoucang:before { content: "\e622"; }
+
 .ico-success:before { content: "\e623"; }
+
 .ico-bofang:before { content: "\e64c"; }
+
 .ico-xingming:before { content: "\e646"; }
+
 .ico-arrow-down:before { content: "\e640"; }
+
 .ico-password:before { content: "\e624"; }
+
 .ico-shengyin:before { content: "\e64d"; }
+
 .ico-rectangle:before { content: "\e650"; }
+
 .ico-zhibokecheng2:before { content: "\e625"; }
+
 .ico-warn:before { content: "\e626"; }
+
 .ico-arrow1:before { content: "\e641"; }
+
 .ico-quanping:before { content: "\e64e"; }
+
 .ico-777:before { content: "\e647"; }
+
 .ico-uploadshangchuan:before { content: "\e627"; }
+
 .ico-downloadxiazai:before { content: "\e628"; }
+
 .ico-qrcode:before { content: "\e629"; }
+
 .ico-edit:before { content: "\e62a"; }
+
 .ico-riqi:before { content: "\e62b"; }
+
 .ico-check:before { content: "\e62c"; }
+
 .ico-yanse:before { content: "\e62d"; }
+
 .ico-weixin:before { content: "\e62e"; }
+
 .ico-arrow-left-empty-copy-copy-copy:before { content: "\e62f"; }
+
 .ico-dropdown:before { content: "\e630"; }
+
 .ico-androidarrowdropup:before { content: "\e631"; }
+
 .ico-arrow-left-thin:before { content: "\e642"; }
+
 .ico-crop:before { content: "\e632"; }
+
 .ico-nav:before { content: "\e633"; }
+
 .ico-arrow-copy:before { content: "\e634"; }
+
 .ico-arrow-copy-copy:before { content: "\e635"; }
+
 .ico-shuaxin:before { content: "\e636"; }
+
 .ico-email:before { content: "\e637"; }
+
 .ico-androidarrowdropleft:before { content: "\e638"; }
+
 .ico-androidarrowdropright:before { content: "\e639"; }
+
 .ico-info:before { content: "\e63a"; }
+
 .ico-xingming1:before { content: "\e648"; }
+
 .ico-error:before { content: "\e63b"; }
+
 .ico-dot:before { content: "\e63c"; }
+
 .ico-arrow-up:before { content: "\e643"; }
+
 .ico-menu:before { content: "\e63d"; }
+
 .ico-weixinzhifu00c800:before { content: "\e644"; }
+
 .ico-zhifubao00aaee:before { content: "\e645"; }
+
 .ico-menu1:before { content: "\e63e"; }
+
 .ico-question:before { content: "\e63f"; }
+

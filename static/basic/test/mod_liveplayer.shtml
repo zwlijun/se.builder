@@ -47,19 +47,15 @@
       data-liveplayer-width="100%" 
       data-liveplayer-height="4.46rem" 
       data-liveplayer-time="3000" 
-      data-liveplayer-showOnlineUsers="1" 
       data-liveplayer-allowFullScreen="1" 
-      data-liveplayer-allowPIP="1" 
-      data-liveplayer-allowMaxOnlineUsers="300" 
-      data-liveplayer-onlineUsersTemplate="[%num%/%max%人在线]" 
-      data-liveplayer-master-source="http://data.gearedu.com/dialogs/16453/16453.mp4" 
-      data-liveplayer-master-poster="" 
-      data-liveplayer-master-preload="1" 
-      data-liveplayer-master-loop="0" 
-      data-liveplayer-master-autoplay="1"
-      data-liveplayer-master-controls="1"  
-      data-liveplayer-master-native="1"
-      data-liveplayer-pip-source="http://data.gearedu.com/dialogs/16453/16453.mp4" ></div>
+      data-liveplayer-source="video/mp4:http://data.gearedu.com/dialogs/16453/16453.mp4" 
+      data-liveplayer-poster="" 
+      data-liveplayer-preload="none" 
+      data-liveplayer-loop="0" 
+      data-liveplayer-autoplay="0"
+      data-liveplayer-controls="1"  
+      data-liveplayer-appearance="define"
+></div>
 <!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
 <script>
 seajs.use(["logic/test/test_liveplayer"]);

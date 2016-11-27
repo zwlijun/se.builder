@@ -150,6 +150,11 @@ textarea {
   zoom: 1; 
 }  
 
+[data-action-click],
+[data-action-tap]{
+  cursor: pointer;
+}
+
 .hide{display: none!important;}
 .transparent{opacity:0!important}
 .opaque{opacity:1!important}
