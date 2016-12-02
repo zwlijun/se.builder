@@ -24,17 +24,17 @@
 
             var expando = target.expando;
 
-            ErrorTypes      = expando.errors;
-            RespTypes       = expando.types;
-            Request         = expando.request;
-            ResponseProxy   = expando.response;
-            DataCache       = expando.cache;
-            CMD             = expando.cmd;
-            Util            = expando.util;
-            DataType        = expando.typeof;
-            TemplateEngine  = expando.template;
-            Persistent      = expando.persistent;
-            Session         = expando.session;
+            ErrorTypes      = expando["errors"];
+            RespTypes       = expando["types"];
+            Request         = expando["request"];
+            ResponseProxy   = expando["response"];
+            DataCache       = expando["cache"];
+            CMD             = expando["cmd"];
+            Util            = expando["util"];
+            DataType        = expando["typeof"];
+            TemplateEngine  = expando["template"];
+            Persistent      = expando["persistent"];
+            Session         = expando["session"];
 
             //业务初始化入口
             Logic.init();

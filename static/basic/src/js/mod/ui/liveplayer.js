@@ -248,29 +248,28 @@
 
         this.handleStack = new HandleStack();
         this.events = {
-            onabort: null,                  //在退出时运行的脚本。
-            oncanplay: null,                //当文件就绪可以开始播放时运行的脚本（缓冲已足够开始时）。
-            oncanplaythrough: null,         //当媒介能够无需因缓冲而停止即可播放至结尾时运行的脚本。
-            ondurationchange: null,         //当媒介长度改变时运行的脚本。
-            onemptied: null,                //当发生故障并且文件突然不可用时运行的脚本（比如连接意外断开时）。
-            onended: null,                  //当媒介已到达结尾时运行的脚本（可发送类似“感谢观看”之类的消息）。
-            onerror: null,                  //当在文件加载期间发生错误时运行的脚本。
-            onloadeddata: null,             //当媒介数据已加载时运行的脚本。
-            onloadedmetadata: null,         //当元数据（比如分辨率和时长）被加载时运行的脚本。
-            onloadstart: null,              //在文件开始加载且未实际加载任何数据前运行的脚本。
-            onpause: null,                  //当媒介被用户或程序暂停时运行的脚本。
-            onplay: null,                   //当媒介已就绪可以开始播放时运行的脚本。
-            onplaying: null,                //当媒介已开始播放时运行的脚本。
-            onprogress: null,               //当浏览器正在获取媒介数据时运行的脚本。
-            onratechange: null,             //每当回放速率改变时运行的脚本（比如当用户切换到慢动作或快进模式）。
-            onreadystatechange: null,       //每当就绪状态改变时运行的脚本（就绪状态监测媒介数据的状态）。
-            onseeked: null,                 //当 seeking 属性设置为 false（指示定位已结束）时运行的脚本。
-            onseeking: null,                //当 seeking 属性设置为 true（指示定位是活动的）时运行的脚本。
-            onstalled: null,                //在浏览器不论何种原因未能取回媒介数据时运行的脚本。
-            onsuspend: null,                //在媒介数据完全加载之前不论何种原因终止取回媒介数据时运行的脚本。
-            ontimeupdate: null,             //当播放位置改变时（比如当用户快进到媒介中一个不同的位置时）运行的脚本。
-            onvolumechange: null,           //每当音量改变时（包括将音量设置为静音）时运行的脚本。
-            onwaiting: null                 //当媒介已停止播放但打算继续播放时（比如当媒介暂停已缓冲更多数据）运行脚本
+            onabort: null,                  //Sent when playback is aborted; for example, if the media is playing and is restarted from the beginning, this event is sent.
+            oncanplay: null,                //在媒体数据已经有足够的数据（至少播放数帧）可供播放时触发。这个事件对应CAN_PLAY的readyState。
+            oncanplaythrough: null,         //在媒体的readyState变为CAN_PLAY_THROUGH时触发，表明媒体可以在保持当前的下载速度的情况下不被中断地播放完毕。注意：手动设置currentTime会使得firefox触发一次canplaythrough事件，其他浏览器或许不会如此。
+            ondurationchange: null,         //元信息已载入或已改变，表明媒体的长度发生了改变。例如，在媒体已被加载足够的长度从而得知总长度时会触发这个事件。
+            onemptied: null,                //The media has become empty; for example, this event is sent if the media has already been loaded (or partially loaded), and the load() method is called to reload it.
+            onended: null,                  //播放结束时触发。
+            onerror: null,                  //在发生错误时触发。元素的error属性会包含更多信息。参阅Error handling获得详细信息。
+            onloadeddata: null,             //媒体的第一帧已经加载完毕。
+            onloadedmetadata: null,         //媒体的元数据已经加载完毕，现在所有的属性包含了它们应有的有效信息。
+            onloadstart: null,              //在媒体开始加载时触发。
+            onpause: null,                  //播放暂停时触发
+            onplay: null,                   //在媒体回放被暂停后再次开始时触发。即，在一次暂停事件后恢复媒体回放。
+            onplaying: null,                //在媒体开始播放时触发（不论是初次播放、在暂停后恢复、或是在结束后重新开始）。
+            onprogress: null,               //告知媒体相关部分的下载进度时周期性地触发。有关媒体当前已下载总计的信息可以在元素的buffered属性中获取到。
+            onratechange: null,             //在回放速率变化时触发。
+            onseeked: null,                 //在跳跃操作完成时触发。
+            onseeking: null,                //在跳跃操作开始时触发。
+            onstalled: null,                //Sent when the user agent is trying to fetch media data, but data is unexpectedly not forthcoming.
+            onsuspend: null,                //在媒体资源加载终止时触发，这可能是因为下载已完成或因为其他原因暂停。
+            ontimeupdate: null,             //元素的currentTime属性表示的时间已经改变。
+            onvolumechange: null,           //在音频音量改变时触发（既可以是volume属性改变，也可以是muted属性改变）。
+            onwaiting: null                 //在一个待执行的操作（如回放）因等待另一个操作（如跳跃或下载）被延迟时触发。
         };
         this.listner = new Listener(this.events, this.handleStack);
     };
@@ -515,11 +514,24 @@
             var pattern = /^(([a-z0-9\-\_\+\.]+\/[a-z0-9\-\_\+\.]+)\:)?([\w\W]+)$/gi;
                 pattern.lastIndex = 0;
             var matcher = pattern.exec(source);
+            var mimeTypes = null;
+            var mimeType = null;
+            var src = null;
 
             if(matcher){
+                mimeType = matcher[2] || "";
+                src = matcher[3];
+
+                if(!mimeType){
+                    mimeTypes = LivePlayer.SOURCE_MIME_TYPES(src);
+
+                    if(mimeTypes){
+                        mimeType = mimeTypes[0];
+                    }
+                }
                 return {
-                    "type": matcher[2] || "",
-                    "source": matcher[3]
+                    "type": mimeType || "",
+                    "source": src
                 }
             }
 
@@ -538,7 +550,6 @@
                          .html('<source src="' + sourceInfo.source + '" />');
                 }
             }else{
-                console.info("a")
                 this.error(LivePlayer.Error.MEDIA_ERR_NO_SOURCE);
             }
         },
@@ -1146,6 +1157,7 @@
                 ];
             break;
             case "flv":
+            case "f4v":
                 mimeTypes = [
                     "video/x-flv"
                 ];
@@ -1170,8 +1182,26 @@
         var player = LivePlayer.LivePlayers[name] || (LivePlayer.LivePlayers[name] = new LivePlayer(name, _opts));
 
         var _exports = {
+            "exec": function(type, args){
+                player.exec(type, args);
+
+                return this;
+            },
             "set": function(type, option){
                 player.set(type, option);
+
+                return this;
+            },
+            "remove": function(type){
+                player.remove(type);
+
+                return this;
+            },
+            "get": function(type){
+                return player.get(type);
+            },
+            "clear": function(){
+                player.clear();
 
                 return this;
             },
@@ -1339,7 +1369,7 @@
     };
 
     module.exports = {
-        "version": "R16B1127",
+        "version": "R16B1201",
         createLivePlayer: function(name, options){
             return LivePlayer.createLivePlayer(name, options);
         },
@@ -1348,6 +1378,9 @@
         },
         canPlaySource: function(source){
             return LivePlayer.canPlaySource(source);
+        },
+        getSourceMIMETypes: function(source){
+            return LivePlayer.SOURCE_MIME_TYPES(source);
         },
         destory: function(name){
             var player = null;

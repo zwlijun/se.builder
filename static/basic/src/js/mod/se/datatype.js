@@ -12,7 +12,7 @@
 ;define(function(requre, exports, module){
     var _DataType = {
         version: "R16B0429",
-        typeof: function(obj){
+        "typeString": function(obj){
             var _type = Object.prototype.toString.call(obj);
             var prefix = "[object ";
             var prefixLength = prefix.length;
@@ -22,43 +22,43 @@
 
             return realType;
         },
-        lower: function(obj){
-            return (_DataType.typeof(obj)).toLowerCase();
+        "lower": function(obj){
+            return (_DataType.typeString(obj)).toLowerCase();
         },
-        isString: function(obj){
+        "isString": function(obj){
             var _type = _DataType.lower(obj);
 
             return "string" === _type;
         },
-        isNumber: function(obj){
+        "isNumber": function(obj){
             var _type = _DataType.lower(obj);
 
             return "number" === _type;
         },
-        isInt: function(obj){
+        "isInt": function(obj){
             if(_DataType.isNumber(obj)){
                 return obj === Math.floor(obj);
             }
 
             return false;
         },
-        isFloat: function(obj){
+        "isFloat": function(obj){
             if(_DataType.isNumber(obj)){
                 return obj !== Math.floor(obj);
             }
 
             return false;
         },
-        isBoolean: function(obj){
+        "isBoolean": function(obj){
             return (true === obj || false === obj);
         },
-        isNull: function(obj){
+        "isNull": function(obj){
             return (null === obj);
         },
-        isUndefined: function(obj){
+        "isUndefined": function(obj){
             return (undefined === obj);
         },
-        isEmptyString: function(obj){
+        "isEmptyString": function(obj){
             if(_DataType.isString(obj)){
                 obj = obj.replace(/^([\s]+)|([\s]+)$/, "");
 
@@ -67,11 +67,11 @@
 
             return false;
         },
-        isObject: function(obj){
+        "isObject": function(obj){
             var _type = _DataType.lower(obj);
             return "object" === _type;
         },
-        isArray: function(obj){
+        "isArray": function(obj){
             if(Array.isArray){
                 return Array.isArray(obj);
             }
@@ -80,17 +80,17 @@
 
             return "array" === _type;
         },
-        isFunction: function(obj){
+        "isFunction": function(obj){
             var _type = _DataType.lower(obj);
 
             return "function" === _type;
         },
-        isDate: function(obj){
+        "isDate": function(obj){
             var _type = _DataType.lower(obj);
 
             return "date" === _type;
         },
-        isRegExp: function(obj){
+        "isRegExp": function(obj){
             var _type = _DataType.lower(obj);
 
             return "regexp" === _type;
