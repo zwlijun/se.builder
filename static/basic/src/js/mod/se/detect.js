@@ -53,57 +53,171 @@
     var CheckMap = {
         "os": {
             "windows": [
-                "Windows NT (\\d+)\\.(\\d+)",
-                "Windows (\\d+)"
+                {
+                    "pattern": "Windows NT (\\d+)\\.(\\d+)",
+                    "alias": "WindowsNT"
+                },
+                {
+                    "pattern": "Windows (\\d+)",
+                    "alias": "Windows"
+                }
             ],
-            "osx": "Mac OS X (\\d+)_(\\d+)(_(\\d+))?",
-            "android": "Android (\\d+)\\.(\\d+)\\.(\\d+)",
+            "osx": {
+                "pattern": "Mac OS X (\\d+)_(\\d+)(_(\\d+))?",
+                "alias": "OSX"
+            },
+            "android": {
+                "pattern": "Android (\\d+)\\.(\\d+)\\.(\\d+)",
+                "alias": "Android"
+            },
             "ios": [
-                "iPhone;.+OS (\\d+)_(\\d+)(_(\\d+))?",
-                "iPad;.+OS (\\d+)_(\\d+)(_(\\d+))?",
-                "iPod;.+OS (\\d+)_(\\d+)(_(\\d+))?"
+                {
+                    "pattern": "iPhone;.+OS (\\d+)_(\\d+)(_(\\d+))?",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPad;.+OS (\\d+)_(\\d+)(_(\\d+))?",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPod;.+OS (\\d+)_(\\d+)(_(\\d+))?",
+                    "alias": "iOS"
+                }
             ],
-            "iphone": "iPhone;.+OS (\\d+)_(\\d+)(_(\\d+))?",
-            "ipad": "iPad;.+OS (\\d+)_(\\d+)(_(\\d+))?",
-            "ipod": "iPod;.+OS (\\d+)_(\\d+)(_(\\d+))?",
+            "iphone": {
+                "pattern": "iPhone;.+OS (\\d+)_(\\d+)(_(\\d+))?",
+                "alias": "iPhone"
+            },
+            "ipad": {
+                "pattern": "iPad;.+OS (\\d+)_(\\d+)(_(\\d+))?",
+                "alias": "iPad"
+            },
+            "ipod": {
+                "pattern": "iPod;.+OS (\\d+)_(\\d+)(_(\\d+))?",
+                "alias": "iPod"
+            },
             "windowsphone": [
-                "Windows Phone OS (\\d+)\\.(\\d+)",
-                "Windows Phone (\\d+)"
+                {
+                    "pattern": "Windows Phone OS (\\d+)\\.(\\d+)",
+                    "alias": "WindowsPhone"
+                },
+                {
+                    "pattern": "Windows Phone (\\d+)",
+                    "alias": "WindowsPhone"
+                }
             ],
-            "blackberry": "BlackBerry (\\d+)",
-            "symbian": "SymbianOS/(\\d+)\\.(\\d+)"
+            "blackberry": {
+                "pattern": "BlackBerry (\\d+)",
+                "alias": "BlackBerry"
+            },
+            "symbian": {
+                "pattern": "SymbianOS/(\\d+)\\.(\\d+)",
+                "alias": "SymbianOS"
+            }
         },
         "browser": {
-            "ie": "MSIE (\\d+)\\.(\\d+)",
-            "edge": "Edge/(\\d+)\\.(\\d+)",
-            "iemobile": "IEMobile[/ ](\\d+)\\.(\\d+)",
-            "chrome": "Chrome/(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)",
-            "safari": "Version/(\\d+)\\.(\\d+)(\\.(\\d+))?.+Safari",
-            "firefox": "Firefox/(\\d+)\\.(\\d+)",
+            "ie": {
+                "pattern": "MSIE (\\d+)\\.(\\d+)",
+                "alias": "MSIE"
+            },
+            "edge": {
+                "pattern": "Edge/(\\d+)\\.(\\d+)",
+                "alias": "Edge"
+            },
+            "iemobile": {
+                "pattern": "IEMobile[/ ](\\d+)\\.(\\d+)",
+                "alias": "IEMobile"
+            },
+            "chrome": {
+                "pattern": "Chrome/(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)",
+                "alias": "Chrome"
+            },
+            "safari": {
+                "pattern": "Version/(\\d+)\\.(\\d+)(\\.(\\d+))?.+Safari",
+                "alias": "Safari"
+            },
+            "firefox": {
+                "pattern": "Firefox/(\\d+)\\.(\\d+)",
+                "alias": "Firefox"
+            },
             "opera": [
-                "Opera (\\d+)\\.(\\d+)",
-                "Opera/.+ Version/(\\d+)\\.(\\d+)"
+                {
+                    "pattern": "Opera (\\d+)\\.(\\d+)",
+                    "alias": "Opera"
+                },
+                {
+                    "pattern": "Opera/.+ Version/(\\d+)\\.(\\d+)",
+                    "alias": "Opera"
+                }
             ],
-            "operamini": "Opera Mini/(\\d+)\\.(\\d+)",
-            "operamobile": "Opera Mobi/.+ Version/(\\d+)\\.(\\d+)",
+            "operamini": {
+                "pattern": "Opera Mini/(\\d+)\\.(\\d+)",
+                "alias": "OperaMini"
+            },
+            "operamobile": {
+                "pattern": "Opera Mobi/.+ Version/(\\d+)\\.(\\d+)",
+                "alias": "OperaMobile"
+            },
             "ucbrowser": [
-                "UC Browser[ /]?(\\d+)\\.(\\d+)\\.(\\d+)",
-                "UCBrowser/(\\d+)\\.(\\d+)\\.(\\d+)"
+                {
+                    "pattern": "UC Browser[ /]?(\\d+)\\.(\\d+)\\.(\\d+)",
+                    "alias": "UCBrowser"
+                },
+                {
+                    "pattern": "UCBrowser/(\\d+)\\.(\\d+)\\.(\\d+)",
+                    "alias": "UCBrowser"
+                }
             ],
-            "qqbrowser": " QQBrowser/(\\d+)\\.(\\d+)",
-            "mqqbrowser": " MQQBrowser/(\\d+)\\.(\\d+)",
-            "blackberry": "BlackBerry.+ Version/(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)",
-            "mqq": "SQ_[^/]+ QQ/(\\d+)\\.(\\d+)\\.(\\d+)",
-            "qq": "QQ/(\\d+)\\.(\\d+)\\.(\\d+)",
-            "wechat": "MicroMessenger/(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)",
-            "tbs": "TBS/(\\d+)",
-            "aliapp": "AliApp\\(AP/(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)"
+            "qqbrowser": {
+                "pattern": " QQBrowser/(\\d+)\\.(\\d+)",
+                "alias": "QQBrowser"
+            },
+            "mqqbrowser": {
+                "pattern": " MQQBrowser/(\\d+)\\.(\\d+)",
+                "alias": "MQQBrowser"
+            },
+            "blackberry": {
+                "pattern": "BlackBerry.+ Version/(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)",
+                "alias": "BlackBerry"
+            },
+            "mqq": {
+                "pattern": "SQ_[^/]+ QQ/(\\d+)\\.(\\d+)\\.(\\d+)",
+                "alias": "MQQ"
+            },
+            "qq": {
+                "pattern": "QQ/(\\d+)\\.(\\d+)\\.(\\d+)",
+                "alias": "QQ"
+            },
+            "wechat": {
+                "pattern": "MicroMessenger/(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)",
+                "alias": "WeChat"
+            },
+            "tbs": {
+                "pattern": "TBS/(\\d+)",
+                "alias": "TBS"
+            },
+            "aliapp": {
+                "pattern": "AliApp\\(AP/(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)",
+                "alias": "AliApp"
+            }
         },
         "engine": {
-            "trident": "Trident/(\\d+)\\.(\\d+)",
-            "webkit": "WebKit/(\\d+)\\.(\\d+)",
-            "gecko": "Gecko/(\\d+)",
-            "presto": "Presto/(\\d+)\\.(\\d+)\\.(\\d+)"
+            "trident": {
+                "pattern": "Trident/(\\d+)\\.(\\d+)",
+                "alias": "Trident"
+            },
+            "webkit": {
+                "pattern": "WebKit/(\\d+)\\.(\\d+)",
+                "alias": "WebKit"
+            },
+            "gecko": {
+                "pattern": "Gecko/(\\d+)",
+                "alias": "Gecko"
+            },
+            "presto": {
+                "pattern": "Presto/(\\d+)\\.(\\d+)\\.(\\d+)",
+                "alias": "Presto"
+            }
         }
     };
 
@@ -114,10 +228,11 @@
             "patch": -1,
             "build": -1,
             "short": -1,
-            "version": ""
+            "version": "",
+            "name": ""
         };
 
-        var pattern = new RegExp(reg);
+        var pattern = new RegExp(reg.pattern);
         var matcher = null;
 
         pattern.lastIndex = 0;
@@ -143,6 +258,7 @@
             result.build = l > 3 ? tmp[3] : -1;
             result.short = Number(result.major > -1 ? result.major + (result.minor > -1 ? "." + result.minor : ".0") : -1);
             result.version = tmp.join(".");
+            result.name = reg.alias;
         }
 
         return result;
@@ -185,7 +301,7 @@
     };
 
     module.exports = {
-        "version": "R16B0420",
+        "version": "R16B1204",
         "parse": __parse,
         "env": __parse(_ua)
     };
