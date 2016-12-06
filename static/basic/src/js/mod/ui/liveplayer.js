@@ -307,9 +307,12 @@
             },
             "pause": function(e){
                 var frame = this.getLivePlayerFrame();
+                var mask = this.getLivePlayerMasterMask();
 
                 this.watch().stop();
                 frame.removeClass("hidebars");
+                mask.removeClass("hide")
+                    .removeClass("liveplayer-error");
             },
             "playing": function(e){
                 var mask = this.getLivePlayerMasterMask();
@@ -1156,8 +1159,12 @@
                     "video/webm"
                 ];
             break;
-            case "flv":
             case "f4v":
+                mimeTypes = [
+                    "video/x-f4v"
+                ];
+            break;
+            case "flv":
                 mimeTypes = [
                     "video/x-flv"
                 ];

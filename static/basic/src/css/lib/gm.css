@@ -1340,7 +1340,7 @@ textarea {
 	top: 0;
 	z-index: 2;
 	background-color: transparent;
-	background-color: rgba(33, 33, 33, 1);
+	/*background-color: rgba(33, 33, 33, 1);*/
 }
 .liveplayer-master-mask ins{
 	background-color: transparent;
@@ -1348,7 +1348,10 @@ textarea {
 }
 .liveplayer-master-mask ins:before{
 	content: "\e651";
-	font-size: .72rem;
+	font-size: 1.00rem;
+	background-color: rgba(0, 0, 0, .35);
+    border-radius: 100%;
+    overflow: hidden;
 }
 .liveplayer-master-mask.liveplayer-error ins{
 	color: #b70000;
