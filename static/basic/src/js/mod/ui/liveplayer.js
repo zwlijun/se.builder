@@ -159,6 +159,17 @@
                 master.webkitRequestFullscreen();
             }
         },
+        reconnect: function(data, node, e, type){
+            e.stopPropagation();
+
+            var args = (data || "").split(",");
+            var name = args[0];
+
+            var player = LivePlayer.getLivePlayer(name);
+
+            player.destory(false);
+            player.render(true);
+        },
         progress: {
             seek: function(data, node, e, type){
                 var evt = ("changedTouches" in e ? e["changedTouches"][0] : e);
@@ -308,11 +319,18 @@
             "pause": function(e){
                 var frame = this.getLivePlayerFrame();
                 var mask = this.getLivePlayerMasterMask();
+                var master = this.getLivePlayerMasterVideo(true);
 
                 this.watch().stop();
                 frame.removeClass("hidebars");
-                mask.removeClass("hide")
-                    .removeClass("liveplayer-error");
+
+                if(master.error){
+                    mask.removeClass("hide")
+                        .addClass("liveplayer-error");
+                }else{
+                    mask.addClass("hide")
+                        .removeClass("liveplayer-error");
+                }
             },
             "playing": function(e){
                 var mask = this.getLivePlayerMasterMask();
@@ -684,6 +702,8 @@
             e.preventDefault();
             e.stopPropagation();
 
+            // console.log(name + " - " + type);
+
             if((type in processor) && processor[type]){
                 processor[type].apply(ins, [e]);
             }
@@ -886,7 +906,7 @@
 
             seekBarNode.on(_seek_start + "_" + this.getLivePlayerName(), "", ctx, this.seekstart);
         },
-        render: function(){
+        render: function(isInvokePlay){
             var container = this.getLivePlayerPlugin();
 
             if(container.find(".liveplayer-frame").length === 0){
@@ -901,11 +921,11 @@
                 this.updateNextPlayList(this.parseNextPlayList()); 
 
                 LivePlayerTemplate.render(true, HTML_TEMPLATE, metaData, {
-                    callback: function(ret, _container){
+                    callback: function(ret, _container, _isInvokePlay){
                         _container.html(ret.result);
 
                         Util.delay(50, {
-                            callback: function(et, _node){
+                            callback: function(et, _node, $isInvokePlay){
                                 this.listen();
                                 this.setVolume(this.options("volume"));
 
@@ -924,12 +944,21 @@
                                     this.watch();
                                 }
                                 this.bindSeekEvent();
+
+                                if(true === $isInvokePlay){
+                                    var master = this.getLivePlayerMasterVideo(true);
+                                    var state = this.getLivePlayerMasterControlState();
+
+                                    master.play();
+                                    state.removeClass("pause")
+                                         .addClass("play");
+                                }
                             },
-                            args: [_container],
+                            args: [_container, _isInvokePlay],
                             context: this
                         });
                     },
-                    args: [container],
+                    args: [container, isInvokePlay],
                     context: this
                 });
             }else{
@@ -988,12 +1017,18 @@
         play: function(){
             var master = this.getLivePlayerMasterVideo(true);
             var state = this.getLivePlayerMasterControlState();
+            var mask = this.getLivePlayerMasterMask();
 
             if(master){
-                master.play();
+                if(mask.hasClass("liveplayer-error")){
+                    this.destory();
+                    this.render(true);
+                }else{
+                    master.play();
 
-                state.removeClass("pause")
-                     .addClass("play");
+                    state.removeClass("pause")
+                         .addClass("play");
+                }
             }
         },
         pause: function(){
@@ -1066,14 +1101,26 @@
             }
 
             var mask = this.getLivePlayerMasterMask();
+            var state = this.getLivePlayerMasterControlState();
             var ins = mask.find("ins");
+            var meta = {
+                "name": this.getLivePlayerName()
+            };
 
             mask.addClass("liveplayer-error").removeClass("hide");
-            ins.html(err.code + ": " + err.message);
+            ins.html(err.code + ": " + Util.formatData(err.message, meta));
+
+            state.removeClass("play pause")
+                 .addClass("pause");
         },
         destory: function(){
             var frame = this.getLivePlayerFrame();
             frame.remove();
+
+            this.isListened = false;
+            this.nextPlayList = [];
+            this.nextPlayIndex = 0;
+            this.allowHideBars = true;
         }
     };
 
@@ -1088,7 +1135,7 @@
         },
         "MEDIA_ERR_NETWORK": {
             "code": "E1002",
-            "message": "网络出现故障"
+            "message": "网络出现故障<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name}\">重试</a>"
         },
         "MEDIA_ERR_DECODE": {
             "code": "E1003",
@@ -1285,8 +1332,8 @@
             "getNextPlayURL": function(){
                 return player.getNextPlayURL();
             },
-            "render": function(selector){
-                player.render(selector);
+            "render": function(isInvokePlay){
+                player.render(isInvokePlay);
 
                 return this;
             },
@@ -1354,11 +1401,13 @@
 
                 return this;
             },
-            "destory": function(){
+            "destory": function(removeCache){
                 player.destory();
 
-                LivePlayer.LivePlayers[name] = null;
-                delete LivePlayer.LivePlayers[name];
+                if(true === removeCache || undefined === removeCache){
+                    LivePlayer.LivePlayers[name] = null;
+                    delete LivePlayer.LivePlayers[name];
+                }
 
                 return this;
             }
@@ -1389,14 +1438,14 @@
         getSourceMIMETypes: function(source){
             return LivePlayer.SOURCE_MIME_TYPES(source);
         },
-        destory: function(name){
+        destory: function(name, removeCache){
             var player = null;
 
             if(name){
                 var player = LivePlayer.getLivePlayer(name);
 
                 if(player){
-                    player.destory();
+                    player.destory(removeCache);
                 }
             }else{
                 for(var _name in LivePlayer.LivePlayers){
@@ -1404,7 +1453,7 @@
                         player = LivePlayer.getLivePlayer(_name);
 
                         if(player){
-                            player.destory();
+                            player.destory(removeCache);
                         }
                     }
                 }

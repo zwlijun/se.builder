@@ -1354,13 +1354,21 @@ textarea {
     overflow: hidden;
 }
 .liveplayer-master-mask.liveplayer-error ins{
-	color: #b70000;
+	color: #fff;
 	margin: 0 .18rem;
     text-align: center;
     line-height: 1.3;
 }
 .liveplayer-master-mask.liveplayer-error ins:before{
 	content: none;
+}
+.liveplayer-master-mask.liveplayer-error ins a,
+.liveplayer-master-mask.liveplayer-error ins a:visited,
+.liveplayer-master-mask.liveplayer-error ins a:hover,
+.liveplayer-master-mask.liveplayer-error ins a:active{
+	text-decoration: none;
+	color: #fff;
+	margin-left: .10rem;
 }
 
 .liveplayer-frame .liveplayer-navbar,

@@ -108,6 +108,9 @@
 				case "NetStream.Play.StreamNotFound":
 					//
 				break;
+				default:
+					//
+				break;
 			}
 		}
 		
