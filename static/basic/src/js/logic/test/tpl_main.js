@@ -14,7 +14,7 @@ var ResponseProxy = DataProxy.ResponseProxy;
 var DataCache =  DataProxy.DataCache;
 
 var Persistent = Storage.Persistent;
-var Session = Storage.Storage;
+var Session = Storage.Session;
 
 var PreventDefaultLink = function(){
     $("body").on("click", 'a[href="#none"]', function(e){
