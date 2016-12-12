@@ -560,7 +560,13 @@
         },
         updateMasterSource: function(source){
             var video = this.getLivePlayerMasterVideo();
-            var sourceInfo = this.parseMasterSource(source);
+            var sourceInfo = DataType.isString(source) ? this.parseMasterSource(source) : source;
+
+            // console.log(">>-----------------------");
+            // console.log(source);
+            // console.log(JSON.stringify(sourceInfo));
+            // console.log("<<-----------------------")
+
 
             if(sourceInfo){
                 if(sourceInfo.type){
@@ -570,6 +576,8 @@
                     video.removeAttr("src")
                          .html('<source src="' + sourceInfo.source + '" />');
                 }
+
+                video[0].load();
             }else{
                 this.error(LivePlayer.Error.MEDIA_ERR_NO_SOURCE);
             }
@@ -996,6 +1004,7 @@
             var cs = playButton.parents(".liveplayer-control-state");
             var isLoop = this.options("loop");
 
+            // console.log(next);
             // console.log("next::source = " + next);
             // console.log(this.getNextPlayList())
 

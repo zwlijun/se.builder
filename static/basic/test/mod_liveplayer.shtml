@@ -39,6 +39,7 @@
       <div class="liveplayer-pip-mask flexbox middle center"></div>
     </div>
   </div> -->
+  <!-- video/mp4:http://data.gearedu.com/dialogs/16453/16453.mp4 -->
 <div id="lp0" 
       data-liveplayer="test_liveplayer" 
       data-liveplayer-type="vod" 
@@ -49,6 +50,7 @@
       data-liveplayer-time="3000" 
       data-liveplayer-allowFullScreen="1" 
       data-liveplayer-source="video/mp4:http://data.gearedu.com/dialogs/16453/16453.mp4" 
+      data-liveplayer-nextlist="" 
       data-liveplayer-poster="" 
       data-liveplayer-preload="none" 
       data-liveplayer-loop="0" 
