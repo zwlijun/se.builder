@@ -228,12 +228,12 @@ ln -s ${SE_BUILDER_ROOT}/se.builder/app/init_static.sh /usr/local/bin/init_stati
 ln -s ${SE_BUILDER_ROOT}/se.builder/app/init_static.sh /usr/local/bin/update_static
 
 //在osx/linux下构建一个新的静态资源
-STEP 1: merge_base_static BASE_VERSOIN
-STEP 2: init_static BASE_VERSOIN TARGET_VERSION
+STEP 1: merge_base_static
+STEP 2: init_static TARGET_VERSION
 
 //在osx/linux下同步更新静态资源
-STEP 1: merge_base_static BASE_VERSOIN
-STEP 2: update_static BASE_VERSOIN TARGET_VERSION
+STEP 1: merge_base_static
+STEP 2: update_static TARGET_VERSION
 </pre>
 
 
