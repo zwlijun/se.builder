@@ -543,13 +543,13 @@
                 mimeType = matcher[2] || "";
                 src = matcher[3];
 
-                if(!mimeType){
-                    mimeTypes = LivePlayer.SOURCE_MIME_TYPES(src);
+                // if(!mimeType){
+                //     mimeTypes = LivePlayer.SOURCE_MIME_TYPES(src);
 
-                    if(mimeTypes){
-                        mimeType = mimeTypes[0];
-                    }
-                }
+                //     if(mimeTypes){
+                //         mimeType = mimeTypes[0];
+                //     }
+                // }
                 return {
                     "type": mimeType || "",
                     "source": src
