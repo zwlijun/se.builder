@@ -4,22 +4,32 @@
  */
 .mod-swiper.draw .mod-swiper-item{
     -webkit-backface-visibility: hidden;
+       -moz-backface-visibility: hidden;
+        -ms-backface-visibility: hidden;
             backface-visibility: hidden;
 }
 .mod-swiper.draw.x .mod-swiper-item.maybe.after{
     -webkit-transform: translate(100%, 0) translateZ(0);
+       -moz-transform: translate(100%, 0) translateZ(0);
+        -ms-transform: translate(100%, 0) translateZ(0);
             transform: translate(100%, 0) translateZ(0);
 }
 .mod-swiper.draw.x .mod-swiper-item.maybe.before{
     -webkit-transform: translate(-100%, 0) translateZ(0);
+       -moz-transform: translate(-100%, 0) translateZ(0);
+        -ms-transform: translate(-100%, 0) translateZ(0);
             transform: translate(-100%, 0) translateZ(0);
 }
 .mod-swiper.draw.y .mod-swiper-item.maybe.after{
     -webkit-transform: translate(0, 100%) translateZ(0);
+       -moz-transform: translate(0, 100%) translateZ(0);
+        -ms-transform: translate(0, 100%) translateZ(0);
             transform: translate(0, 100%) translateZ(0);
 }
 .mod-swiper.draw.y .mod-swiper-item.maybe.before{
     -webkit-transform: translate(0, -100%) translateZ(0);
+       -moz-transform: translate(0, -100%) translateZ(0);
+        -ms-transform: translate(0, -100%) translateZ(0);
             transform: translate(0, -100%) translateZ(0);
 }
 
@@ -29,12 +39,14 @@
 .mod-swiper.draw.y.goto-before .mod-swiper-item.current{
     -webkit-animation-name: swiper-draw-exit;
        -moz-animation-name: swiper-draw-exit;
+        -ms-animation-name: swiper-draw-exit;
             animation-name: swiper-draw-exit;
 }
 
 .mod-swiper.draw.x.goto-after .mod-swiper-item.after{
     -webkit-animation-name: swiper-draw-x-after-enter;
        -moz-animation-name: swiper-draw-x-after-enter;
+        -ms-animation-name: swiper-draw-x-after-enter;
             animation-name: swiper-draw-x-after-enter;
 }
 @-webkit-keyframes swiper-draw-exit{
@@ -55,6 +67,16 @@
     100% {
         opacity: 0;
         -moz-transform: translate(0, 0) translateZ(0);
+    }
+}
+@-ms-keyframes swiper-draw-exit{
+    0% {
+        opacity: 1;
+        -ms-transform: translate(0, 0) translateZ(0);
+    }
+    100% {
+        opacity: 0;
+        -ms-transform: translate(0, 0) translateZ(0);
     }
 }
 @keyframes swiper-draw-exit{
@@ -83,6 +105,14 @@
         -moz-transform: translate(0, 0) translateZ(0);
     }
 }
+@-ms-keyframes swiper-draw-x-after-enter{
+    0% {
+        -ms-transform: translate(100%, 0) translateZ(0);
+    }
+    100% {
+        -ms-transform: translate(0, 0) translateZ(0);
+    }
+}
 @keyframes swiper-draw-x-after-enter{
     0% {
         transform: translate(100%, 0) translateZ(0);
@@ -95,6 +125,7 @@
 .mod-swiper.draw.x.goto-before .mod-swiper-item.before{
     -webkit-animation-name: swiper-draw-x-before-enter;
        -moz-animation-name: swiper-draw-x-before-enter;
+        -ms-animation-name: swiper-draw-x-before-enter;
             animation-name: swiper-draw-x-before-enter;
 }
 
@@ -114,6 +145,14 @@
         -moz-transform: translate(0, 0) translateZ(0);
     }
 }
+@-ms-keyframes swiper-draw-x-before-enter{
+    0% {
+        -ms-transform: translate(-100%, 0) translateZ(0);
+    }
+    100% {
+        -ms-transform: translate(0, 0) translateZ(0);
+    }
+}
 @keyframes swiper-draw-x-before-enter{
     0% {
         transform: translate(-100%, 0) translateZ(0);
@@ -127,6 +166,7 @@
 .mod-swiper.draw.y.goto-after .mod-swiper-item.after{
     -webkit-animation-name: swiper-draw-y-after-enter;
        -moz-animation-name: swiper-draw-y-after-enter;
+        -ms-animation-name: swiper-draw-y-after-enter;
             animation-name: swiper-draw-y-after-enter;
 }
 @-webkit-keyframes swiper-draw-y-after-enter{
@@ -145,6 +185,14 @@
         -moz-transform: translate(0, 0) translateZ(0);
     }
 }
+@-ms-keyframes swiper-draw-y-after-enter{
+    0% {
+        -ms-transform: translate(0, 100%) translateZ(0);
+    }
+    100% {
+        -ms-transform: translate(0, 0) translateZ(0);
+    }
+}
 @keyframes swiper-draw-y-after-enter{
     0% {
         transform: translate(0, 100%) translateZ(0);
@@ -157,6 +205,7 @@
 .mod-swiper.draw.y.goto-before .mod-swiper-item.before{
     -webkit-animation-name: swiper-draw-y-before-enter;
        -moz-animation-name: swiper-draw-y-before-enter;
+        -ms-animation-name: swiper-draw-y-before-enter;
             animation-name: swiper-draw-y-before-enter;
 }
 @-webkit-keyframes swiper-draw-y-before-enter{
@@ -173,6 +222,14 @@
     }
     100% {
         -moz-transform: translate(0, 0) translateZ(0);
+    }
+}
+@-ms-keyframes swiper-draw-y-before-enter{
+    0% {
+        -ms-transform: translate(0, -100%) translateZ(0);
+    }
+    100% {
+        -ms-transform: translate(0, 0) translateZ(0);
     }
 }
 @keyframes swiper-draw-y-before-enter{

@@ -14,6 +14,8 @@
 	z-index: 59996;
 	background-color: rgba(0, 0, 0, 0.7);
 	-webkit-transition: background-color 0.4s ease;
+	   -moz-transition: background-color 0.4s ease;
+	    -ms-transition: background-color 0.4s ease;
 			transition: background-color 0.4s ease;
 }
 .mod-actionsheet-panel{
@@ -22,20 +24,30 @@
 	background-color: #fff;
 	font-size: .32rem;
 	-webkit-transform: translate(0, 0) translateZ(0);
+	   -moz-transform: translate(0, 0) translateZ(0);
+	    -ms-transform: translate(0, 0) translateZ(0);
 			transform: translate(0, 0) translateZ(0);
 	-webkit-transition: -webkit-transform 0.4s ease;
+	   -moz-transition:    -moz-transform 0.4s ease;
+	    -ms-transition:     -ms-transform 0.4s ease;
 			transition: 		transform 0.4s ease;
 }
 .mod-actionsheet-mask.exit{
 	-webkit-transition: background-color 0.4s ease, left 0.1s ease 0.4s;
+	   -moz-transition: background-color 0.4s ease, left 0.1s ease 0.4s;
+	    -ms-transition: background-color 0.4s ease, left 0.1s ease 0.4s;
 			transition: background-color 0.4s ease, left 0.1s ease 0.4s;
 	background-color: rgba(0, 0, 0, 0);
 	left: 10000px;
 }
 .mod-actionsheet-panel.exit{
 	-webkit-transition: -webkit-transform 0.4s ease, left 0.1s ease 0.4s;
+	   -moz-transition:    -moz-transform 0.4s ease, left 0.1s ease 0.4s;
+	    -ms-transition:     -ms-transform 0.4s ease, left 0.1s ease 0.4s;
 			transition: 		transform 0.4s ease, left 0.1s ease 0.4s;
 	-webkit-transform: translate(0, 100%) translateZ(0);
+	   -moz-transform: translate(0, 100%) translateZ(0);
+	    -ms-transform: translate(0, 100%) translateZ(0);
 			transform: translate(0, 100%) translateZ(0);
 	left: 10000px;
 }

@@ -36,6 +36,8 @@
 .liveplayer-navbar > span{
 	display: block;
 	-webkit-flex: 1;
+	   -moz-flex: 1;
+	    -ms-flex: 1;
 			flex: 1;
 	height: 100%;
 	line-height: .64rem;
@@ -176,8 +178,12 @@
 .liveplayer-frame .liveplayer-navbar,
 .liveplayer-frame .liveplayer-controlbar{
 	-webkit-transition: all ease .4s;
+	   -moz-transition: all ease .4s;
+	    -ms-transition: all ease .4s;
 			transition: all ease .4s;
 	-webkit-transform: translateY(0) translateZ(0);
+	   -moz-transform: translateY(0) translateZ(0);
+	    -ms-transform: translateY(0) translateZ(0);
 			transform: translateY(0) translateZ(0);
 }
 .liveplayer-frame.hidebars{
@@ -185,10 +191,14 @@
 }
 .liveplayer-frame.hidebars .liveplayer-navbar{
 	-webkit-transform: translateY(-100%) translateZ(0);
+	   -moz-transform: translateY(-100%) translateZ(0);
+	    -ms-transform: translateY(-100%) translateZ(0);
 			transform: translateY(-100%) translateZ(0);
 }
 .liveplayer-frame.hidebars .liveplayer-controlbar{
 	-webkit-transform: translateY(100%) translateZ(0);
+	   -moz-transform: translateY(100%) translateZ(0);
+	    -ms-transform: translateY(100%) translateZ(0);
 			transform: translateY(100%) translateZ(0);
 }
 .liveplayer-frame.hidebars .liveplayer-controlbar .liveplayer-progressbar-seeked-bar{

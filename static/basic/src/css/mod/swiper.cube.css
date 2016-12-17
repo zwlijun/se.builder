@@ -20,6 +20,7 @@
             transition-property: transform;
              -webkit-box-sizing: content-box;
                 -moz-box-sizing: content-box;
+                 -ms-box-sizing: content-box;
                      box-sizing: content-box;
     -webkit-transform: translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg);
        -moz-transform: translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg);
@@ -44,25 +45,32 @@
     /*running | paused*/
     -webkit-animation-play-state: running;
        -moz-animation-play-state: running;
+        -ms-animation-play-state: running;
             animation-play-state: running;
     /*none | forwards | backwards | both*/        
     /*-webkit-animation-fill-mode: both; 
        -moz-animation-fill-mode: both;
+        -ms-animation-fill-mode: both;
             animation-fill-mode: both; */
     -webkit-animation-duration: 1s;
        -moz-animation-duration: 1s;
+        -ms-animation-duration: 1s;
             animation-duration: 1s; 
     -webkit-animation-timing-function: ease;
        -moz-animation-timing-function: ease;
+        -ms-animation-timing-function: ease;
             animation-timing-function: ease;
     -webkit-animation-delay: 0s;
        -moz-animation-delay: 0s;
+        -ms-animation-delay: 0s;
             animation-delay: 0s; 
     -webkit-animation-iteration-count: 1;
        -moz-animation-iteration-count: 1;
+        -ms-animation-iteration-count: 1;
             animation-iteration-count: 1;
     -webkit-animation-direction: normal;
        -moz-animation-direction: normal;
+        -ms-animation-direction: normal;
             animation-direction: normal;
 }
 .mod-swiper.cube.x.goto-after .mod-swiper-body{

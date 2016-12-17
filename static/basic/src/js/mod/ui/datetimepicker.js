@@ -1285,8 +1285,9 @@
                 window.innerHeight || 0
             );
 
+            var offsetTop = Math.max(rect.globalScrollY, rect.localScrollY); //IE: globalScrollY  Other: localScrollY
             var left = rect.left;
-            var top = rect.top + rect.height + 2 + rect.localScrollY;
+            var top = rect.top + rect.height + 2 + offsetTop;
 
             if(rect.left + pickerRect.width > clientWidth){
                 var offsetClientWidth = clientWidth - (rect.left + rect.width);

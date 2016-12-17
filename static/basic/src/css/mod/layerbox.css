@@ -46,6 +46,10 @@
     background-color: #fff;
     color: #949494;
     height: .42rem;
+    -webkit-flex: 1;
+       -moz-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
 }
 .mod-layerbox-buttons .button:last-child{
     color: #0CA735;

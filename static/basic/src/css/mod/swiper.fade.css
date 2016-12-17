@@ -4,11 +4,15 @@
  */
 .mod-swiper.fade .mod-swiper-item{
     -webkit-backface-visibility: hidden;
+       -moz-backface-visibility: hidden;
+        -ms-backface-visibility: hidden;
             backface-visibility: hidden;
 }
 .mod-swiper.fade .mod-swiper-item.maybe{
     opacity: 0;
     -webkit-transform: translate(0, 0) translateZ(0);
+       -moz-transform: translate(0, 0) translateZ(0);
+        -ms-transform: translate(0, 0) translateZ(0);
             transform: translate(0, 0) translateZ(0);
 }
 
@@ -16,12 +20,14 @@
 .mod-swiper.fade.goto-before .mod-swiper-item.current{
     -webkit-animation-name: swiper-fade-exit;
        -moz-animation-name: swiper-fade-exit;
+        -ms-animation-name: swiper-fade-exit;
             animation-name: swiper-fade-exit;
 }
 .mod-swiper.fade.goto-after .mod-swiper-item.maybe.after,
 .mod-swiper.fade.goto-before .mod-swiper-item.maybe.before{
     -webkit-animation-name: swiper-fade-enter;
        -moz-animation-name: swiper-fade-enter;
+        -ms-animation-name: swiper-fade-enter;
             animation-name: swiper-fade-enter;
 }
 
@@ -34,6 +40,14 @@
     }
 }
 @-moz-keyframes swiper-fade-exit{
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+@-ms-keyframes swiper-fade-exit{
     0% {
         opacity: 1;
     }
@@ -58,6 +72,14 @@
     }
 }
 @-moz-keyframes swiper-fade-enter{
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+@-ms-keyframes swiper-fade-enter{
     0% {
         opacity: 0;
     }

@@ -196,14 +196,22 @@ textarea {
 }
 .icofont-spin {
   -webkit-transform-origin: center center;
+     -moz-transform-origin: center center;
+      -ms-transform-origin: center center;
           transform-origin: center center;
   -webkit-animation: icofont-spin 2s infinite linear;
+     -moz-animation: icofont-spin 2s infinite linear;
+      -ms-animation: icofont-spin 2s infinite linear;
           animation: icofont-spin 2s infinite linear;
 }
 .icofont-pulse {
   -webkit-transform-origin: center center;
+     -moz-transform-origin: center center;
+      -ms-transform-origin: center center;
           transform-origin: center center;
   -webkit-animation: icofont-spin 1s infinite steps(8);
+     -moz-animation: icofont-spin 1s infinite steps(8);
+      -ms-animation: icofont-spin 1s infinite steps(8);
           animation: icofont-spin 1s infinite steps(8);
 }
 @-webkit-keyframes icofont-spin {
@@ -216,14 +224,38 @@ textarea {
     transform: rotate(359deg);
   }
 }
-@keyframes icofont-spin {
+@-moz-keyframes icofont-spin {
   0% {
-    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
     transform: rotate(0deg);
   }
   100% {
-    -webkit-transform: rotate(359deg);
+    -moz-transform: rotate(359deg);
     transform: rotate(359deg);
+  }
+}
+@-ms-keyframes icofont-spin {
+  0% {
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -ms-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes icofont-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+       -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+       -moz-transform: rotate(359deg);
+        -ms-transform: rotate(359deg);
+            transform: rotate(359deg);
   }
 }
 .icofont.info{
@@ -272,6 +304,7 @@ textarea {
     position: absolute;
     left: 50%;
     top: 50%;
+        -ms-transform: translate(-50%, -50%) translateZ(0);
        -moz-transform: translate(-50%, -50%) translateZ(0);
     -webkit-transform: translate(-50%, -50%) translateZ(0);
             transform: translate(-50%, -50%) translateZ(0);
@@ -282,6 +315,7 @@ textarea {
     position: absolute;
     left: 50%;
     top: 0;
+        -ms-transform: translate(-50%, 0%) translateZ(0);
        -moz-transform: translate(-50%, 0%) translateZ(0);
     -webkit-transform: translate(-50%, 0%) translateZ(0);
             transform: translate(-50%, 0%) translateZ(0);
@@ -290,6 +324,7 @@ textarea {
     position: absolute;
     left: 50%;
     bottom: 0;
+        -ms-transform: translate(-50%, 0%) translateZ(0);
        -moz-transform: translate(-50%, 0%) translateZ(0);
     -webkit-transform: translate(-50%, 0%) translateZ(0);
             transform: translate(-50%, 0%) translateZ(0);
@@ -300,6 +335,7 @@ textarea {
     position: absolute;
     top: 50%;
     left: 0;
+        -ms-transform: translate(0%, -50%) translateZ(0);
        -moz-transform: translate(0%, -50%) translateZ(0);
     -webkit-transform: translate(0%, -50%) translateZ(0);
             transform: translate(0%, -50%) translateZ(0);
@@ -308,6 +344,7 @@ textarea {
     position: absolute;
     top: 50%;
     right: 0;
+        -ms-transform: translate(0%, -50%) translateZ(0);
        -moz-transform: translate(0%, -50%) translateZ(0);
     -webkit-transform: translate(0%, -50%) translateZ(0);
             transform: translate(0%, -50%) translateZ(0);
@@ -656,6 +693,8 @@ textarea {
     -webkit-transform-origin: center center;
             transform-origin: center center;
     -webkit-animation: icofont-spin 2s infinite linear;
+       -moz-animation: icofont-spin 2s infinite linear;
+        -ms-animation: icofont-spin 2s infinite linear;
             animation: icofont-spin 2s infinite linear;
 }
 
@@ -675,6 +714,8 @@ textarea {
 	z-index: 59996;
 	background-color: rgba(0, 0, 0, 0.7);
 	-webkit-transition: background-color 0.4s ease;
+	   -moz-transition: background-color 0.4s ease;
+	    -ms-transition: background-color 0.4s ease;
 			transition: background-color 0.4s ease;
 }
 .mod-actionsheet-panel{
@@ -683,20 +724,30 @@ textarea {
 	background-color: #fff;
 	font-size: .32rem;
 	-webkit-transform: translate(0, 0) translateZ(0);
+	   -moz-transform: translate(0, 0) translateZ(0);
+	    -ms-transform: translate(0, 0) translateZ(0);
 			transform: translate(0, 0) translateZ(0);
 	-webkit-transition: -webkit-transform 0.4s ease;
+	   -moz-transition:    -moz-transform 0.4s ease;
+	    -ms-transition:     -ms-transform 0.4s ease;
 			transition: 		transform 0.4s ease;
 }
 .mod-actionsheet-mask.exit{
 	-webkit-transition: background-color 0.4s ease, left 0.1s ease 0.4s;
+	   -moz-transition: background-color 0.4s ease, left 0.1s ease 0.4s;
+	    -ms-transition: background-color 0.4s ease, left 0.1s ease 0.4s;
 			transition: background-color 0.4s ease, left 0.1s ease 0.4s;
 	background-color: rgba(0, 0, 0, 0);
 	left: 10000px;
 }
 .mod-actionsheet-panel.exit{
 	-webkit-transition: -webkit-transform 0.4s ease, left 0.1s ease 0.4s;
+	   -moz-transition:    -moz-transform 0.4s ease, left 0.1s ease 0.4s;
+	    -ms-transition:     -ms-transform 0.4s ease, left 0.1s ease 0.4s;
 			transition: 		transform 0.4s ease, left 0.1s ease 0.4s;
 	-webkit-transform: translate(0, 100%) translateZ(0);
+	   -moz-transform: translate(0, 100%) translateZ(0);
+	    -ms-transform: translate(0, 100%) translateZ(0);
 			transform: translate(0, 100%) translateZ(0);
 	left: 10000px;
 }
@@ -781,6 +832,7 @@ textarea {
 	border-bottom: 0;
 	border-bottom: none;
 	background-color: #fff;
+	height: 2.13rem;
 }
 .mod-dtpicker-frame [data-action-click]{
 	cursor: pointer;
@@ -788,6 +840,7 @@ textarea {
 
 .mod-dtpicker-datebox{
 	width: 2.16rem;
+	height: 2.12rem;
 	display: block;
 	position: relative;
 }
@@ -898,6 +951,7 @@ textarea {
 
 .mod-dtpicker-timebox{
 	border-left: 1px solid #e5e5e5;
+	height: 2.12rem;
 }
 .mod-dtpicker-time-choosen{
 	border-bottom: 1px solid #e5e5e5;
@@ -1171,6 +1225,10 @@ textarea {
     background-color: #fff;
     color: #949494;
     height: .42rem;
+    -webkit-flex: 1;
+       -moz-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
 }
 .mod-layerbox-buttons .button:last-child{
     color: #0CA735;
@@ -1234,6 +1292,8 @@ textarea {
 .liveplayer-navbar > span{
 	display: block;
 	-webkit-flex: 1;
+	   -moz-flex: 1;
+	    -ms-flex: 1;
 			flex: 1;
 	height: 100%;
 	line-height: .64rem;
@@ -1374,8 +1434,12 @@ textarea {
 .liveplayer-frame .liveplayer-navbar,
 .liveplayer-frame .liveplayer-controlbar{
 	-webkit-transition: all ease .4s;
+	   -moz-transition: all ease .4s;
+	    -ms-transition: all ease .4s;
 			transition: all ease .4s;
 	-webkit-transform: translateY(0) translateZ(0);
+	   -moz-transform: translateY(0) translateZ(0);
+	    -ms-transform: translateY(0) translateZ(0);
 			transform: translateY(0) translateZ(0);
 }
 .liveplayer-frame.hidebars{
@@ -1383,10 +1447,14 @@ textarea {
 }
 .liveplayer-frame.hidebars .liveplayer-navbar{
 	-webkit-transform: translateY(-100%) translateZ(0);
+	   -moz-transform: translateY(-100%) translateZ(0);
+	    -ms-transform: translateY(-100%) translateZ(0);
 			transform: translateY(-100%) translateZ(0);
 }
 .liveplayer-frame.hidebars .liveplayer-controlbar{
 	-webkit-transform: translateY(100%) translateZ(0);
+	   -moz-transform: translateY(100%) translateZ(0);
+	    -ms-transform: translateY(100%) translateZ(0);
 			transform: translateY(100%) translateZ(0);
 }
 .liveplayer-frame.hidebars .liveplayer-controlbar .liveplayer-progressbar-seeked-bar{
@@ -1632,6 +1700,8 @@ textarea {
 }
 .mod-swiper.dots-float-right .mod-swiper-dots{
            -webkit-box-pack: end;
+              -ms-flex-pack: end;
+        -ms-justify-content: flex-end;
        -moz-justify-content: flex-end;
     -webkit-justify-content: flex-end;
             justify-content: flex-end; 
@@ -1645,25 +1715,32 @@ textarea {
     /*running | paused*/
     -webkit-animation-play-state: running;
        -moz-animation-play-state: running;
+        -ms-animation-play-state: running;
             animation-play-state: running;
     /*none | forwards | backwards | both*/        
     /*-webkit-animation-fill-mode: both; 
        -moz-animation-fill-mode: both;
+        -ms-animation-fill-mode: both;
             animation-fill-mode: both; */
     -webkit-animation-duration: 1s;
        -moz-animation-duration: 1s;
+        -ms-animation-duration: 1s;
             animation-duration: 1s; 
     -webkit-animation-timing-function: ease;
        -moz-animation-timing-function: ease;
+        -ms-animation-timing-function: ease;
             animation-timing-function: ease;
     -webkit-animation-delay: 0s;
        -moz-animation-delay: 0s;
+        -ms-animation-delay: 0s;
             animation-delay: 0s; 
     -webkit-animation-iteration-count: 1;
        -moz-animation-iteration-count: 1;
+        -ms-animation-iteration-count: 1;
             animation-iteration-count: 1;
     -webkit-animation-direction: normal;
        -moz-animation-direction: normal;
+        -ms-animation-direction: normal;
             animation-direction: normal;
 }
 
@@ -1694,6 +1771,7 @@ textarea {
             transition-property: transform;
              -webkit-box-sizing: content-box;
                 -moz-box-sizing: content-box;
+                 -ms-box-sizing: content-box;
                      box-sizing: content-box;
     -webkit-transform: translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg);
        -moz-transform: translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg);
@@ -1718,25 +1796,32 @@ textarea {
     /*running | paused*/
     -webkit-animation-play-state: running;
        -moz-animation-play-state: running;
+        -ms-animation-play-state: running;
             animation-play-state: running;
     /*none | forwards | backwards | both*/        
     /*-webkit-animation-fill-mode: both; 
        -moz-animation-fill-mode: both;
+        -ms-animation-fill-mode: both;
             animation-fill-mode: both; */
     -webkit-animation-duration: 1s;
        -moz-animation-duration: 1s;
+        -ms-animation-duration: 1s;
             animation-duration: 1s; 
     -webkit-animation-timing-function: ease;
        -moz-animation-timing-function: ease;
+        -ms-animation-timing-function: ease;
             animation-timing-function: ease;
     -webkit-animation-delay: 0s;
        -moz-animation-delay: 0s;
+        -ms-animation-delay: 0s;
             animation-delay: 0s; 
     -webkit-animation-iteration-count: 1;
        -moz-animation-iteration-count: 1;
+        -ms-animation-iteration-count: 1;
             animation-iteration-count: 1;
     -webkit-animation-direction: normal;
        -moz-animation-direction: normal;
+        -ms-animation-direction: normal;
             animation-direction: normal;
 }
 .mod-swiper.cube.x.goto-after .mod-swiper-body{
@@ -1909,22 +1994,32 @@ textarea {
  */
 .mod-swiper.draw .mod-swiper-item{
     -webkit-backface-visibility: hidden;
+       -moz-backface-visibility: hidden;
+        -ms-backface-visibility: hidden;
             backface-visibility: hidden;
 }
 .mod-swiper.draw.x .mod-swiper-item.maybe.after{
     -webkit-transform: translate(100%, 0) translateZ(0);
+       -moz-transform: translate(100%, 0) translateZ(0);
+        -ms-transform: translate(100%, 0) translateZ(0);
             transform: translate(100%, 0) translateZ(0);
 }
 .mod-swiper.draw.x .mod-swiper-item.maybe.before{
     -webkit-transform: translate(-100%, 0) translateZ(0);
+       -moz-transform: translate(-100%, 0) translateZ(0);
+        -ms-transform: translate(-100%, 0) translateZ(0);
             transform: translate(-100%, 0) translateZ(0);
 }
 .mod-swiper.draw.y .mod-swiper-item.maybe.after{
     -webkit-transform: translate(0, 100%) translateZ(0);
+       -moz-transform: translate(0, 100%) translateZ(0);
+        -ms-transform: translate(0, 100%) translateZ(0);
             transform: translate(0, 100%) translateZ(0);
 }
 .mod-swiper.draw.y .mod-swiper-item.maybe.before{
     -webkit-transform: translate(0, -100%) translateZ(0);
+       -moz-transform: translate(0, -100%) translateZ(0);
+        -ms-transform: translate(0, -100%) translateZ(0);
             transform: translate(0, -100%) translateZ(0);
 }
 
@@ -1934,12 +2029,14 @@ textarea {
 .mod-swiper.draw.y.goto-before .mod-swiper-item.current{
     -webkit-animation-name: swiper-draw-exit;
        -moz-animation-name: swiper-draw-exit;
+        -ms-animation-name: swiper-draw-exit;
             animation-name: swiper-draw-exit;
 }
 
 .mod-swiper.draw.x.goto-after .mod-swiper-item.after{
     -webkit-animation-name: swiper-draw-x-after-enter;
        -moz-animation-name: swiper-draw-x-after-enter;
+        -ms-animation-name: swiper-draw-x-after-enter;
             animation-name: swiper-draw-x-after-enter;
 }
 @-webkit-keyframes swiper-draw-exit{
@@ -1960,6 +2057,16 @@ textarea {
     100% {
         opacity: 0;
         -moz-transform: translate(0, 0) translateZ(0);
+    }
+}
+@-ms-keyframes swiper-draw-exit{
+    0% {
+        opacity: 1;
+        -ms-transform: translate(0, 0) translateZ(0);
+    }
+    100% {
+        opacity: 0;
+        -ms-transform: translate(0, 0) translateZ(0);
     }
 }
 @keyframes swiper-draw-exit{
@@ -1988,6 +2095,14 @@ textarea {
         -moz-transform: translate(0, 0) translateZ(0);
     }
 }
+@-ms-keyframes swiper-draw-x-after-enter{
+    0% {
+        -ms-transform: translate(100%, 0) translateZ(0);
+    }
+    100% {
+        -ms-transform: translate(0, 0) translateZ(0);
+    }
+}
 @keyframes swiper-draw-x-after-enter{
     0% {
         transform: translate(100%, 0) translateZ(0);
@@ -2000,6 +2115,7 @@ textarea {
 .mod-swiper.draw.x.goto-before .mod-swiper-item.before{
     -webkit-animation-name: swiper-draw-x-before-enter;
        -moz-animation-name: swiper-draw-x-before-enter;
+        -ms-animation-name: swiper-draw-x-before-enter;
             animation-name: swiper-draw-x-before-enter;
 }
 
@@ -2019,6 +2135,14 @@ textarea {
         -moz-transform: translate(0, 0) translateZ(0);
     }
 }
+@-ms-keyframes swiper-draw-x-before-enter{
+    0% {
+        -ms-transform: translate(-100%, 0) translateZ(0);
+    }
+    100% {
+        -ms-transform: translate(0, 0) translateZ(0);
+    }
+}
 @keyframes swiper-draw-x-before-enter{
     0% {
         transform: translate(-100%, 0) translateZ(0);
@@ -2032,6 +2156,7 @@ textarea {
 .mod-swiper.draw.y.goto-after .mod-swiper-item.after{
     -webkit-animation-name: swiper-draw-y-after-enter;
        -moz-animation-name: swiper-draw-y-after-enter;
+        -ms-animation-name: swiper-draw-y-after-enter;
             animation-name: swiper-draw-y-after-enter;
 }
 @-webkit-keyframes swiper-draw-y-after-enter{
@@ -2050,6 +2175,14 @@ textarea {
         -moz-transform: translate(0, 0) translateZ(0);
     }
 }
+@-ms-keyframes swiper-draw-y-after-enter{
+    0% {
+        -ms-transform: translate(0, 100%) translateZ(0);
+    }
+    100% {
+        -ms-transform: translate(0, 0) translateZ(0);
+    }
+}
 @keyframes swiper-draw-y-after-enter{
     0% {
         transform: translate(0, 100%) translateZ(0);
@@ -2062,6 +2195,7 @@ textarea {
 .mod-swiper.draw.y.goto-before .mod-swiper-item.before{
     -webkit-animation-name: swiper-draw-y-before-enter;
        -moz-animation-name: swiper-draw-y-before-enter;
+        -ms-animation-name: swiper-draw-y-before-enter;
             animation-name: swiper-draw-y-before-enter;
 }
 @-webkit-keyframes swiper-draw-y-before-enter{
@@ -2080,6 +2214,14 @@ textarea {
         -moz-transform: translate(0, 0) translateZ(0);
     }
 }
+@-ms-keyframes swiper-draw-y-before-enter{
+    0% {
+        -ms-transform: translate(0, -100%) translateZ(0);
+    }
+    100% {
+        -ms-transform: translate(0, 0) translateZ(0);
+    }
+}
 @keyframes swiper-draw-y-before-enter{
     0% {
         transform: translate(0, -100%) translateZ(0);
@@ -2094,11 +2236,15 @@ textarea {
  */
 .mod-swiper.fade .mod-swiper-item{
     -webkit-backface-visibility: hidden;
+       -moz-backface-visibility: hidden;
+        -ms-backface-visibility: hidden;
             backface-visibility: hidden;
 }
 .mod-swiper.fade .mod-swiper-item.maybe{
     opacity: 0;
     -webkit-transform: translate(0, 0) translateZ(0);
+       -moz-transform: translate(0, 0) translateZ(0);
+        -ms-transform: translate(0, 0) translateZ(0);
             transform: translate(0, 0) translateZ(0);
 }
 
@@ -2106,12 +2252,14 @@ textarea {
 .mod-swiper.fade.goto-before .mod-swiper-item.current{
     -webkit-animation-name: swiper-fade-exit;
        -moz-animation-name: swiper-fade-exit;
+        -ms-animation-name: swiper-fade-exit;
             animation-name: swiper-fade-exit;
 }
 .mod-swiper.fade.goto-after .mod-swiper-item.maybe.after,
 .mod-swiper.fade.goto-before .mod-swiper-item.maybe.before{
     -webkit-animation-name: swiper-fade-enter;
        -moz-animation-name: swiper-fade-enter;
+        -ms-animation-name: swiper-fade-enter;
             animation-name: swiper-fade-enter;
 }
 
@@ -2124,6 +2272,14 @@ textarea {
     }
 }
 @-moz-keyframes swiper-fade-exit{
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+@-ms-keyframes swiper-fade-exit{
     0% {
         opacity: 1;
     }
@@ -2155,6 +2311,14 @@ textarea {
         opacity: 1;
     }
 }
+@-ms-keyframes swiper-fade-enter{
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
 @keyframes swiper-fade-enter{
     0% {
         opacity: 0;
@@ -2170,29 +2334,39 @@ textarea {
  */
 .mod-swiper.scale.x .mod-swiper-item.maybe.after{
     -webkit-transform: translate(100%, 0) translateZ(0) scale(0.3);
+       -moz-transform: translate(100%, 0) translateZ(0) scale(0.3);
+        -ms-transform: translate(100%, 0) translateZ(0) scale(0.3);
             transform: translate(100%, 0) translateZ(0) scale(0.3);
 }
 .mod-swiper.scale.x .mod-swiper-item.maybe.before{
     -webkit-transform: translate(-100%, 0) translateZ(0) scale(0.3);
+       -moz-transform: translate(-100%, 0) translateZ(0) scale(0.3);
+        -ms-transform: translate(-100%, 0) translateZ(0) scale(0.3);
             transform: translate(-100%, 0) translateZ(0) scale(0.3);
 }
 .mod-swiper.scale.y .mod-swiper-item.maybe.after{
     -webkit-transform: translate(0, 100%) translateZ(0) scale(0.3);
+       -moz-transform: translate(0, 100%) translateZ(0) scale(0.3);
+        -ms-transform: translate(0, 100%) translateZ(0) scale(0.3);
             transform: translate(0, 100%) translateZ(0) scale(0.3);
 }
 .mod-swiper.scale.y .mod-swiper-item.maybe.before{
     -webkit-transform: translate(0, -100%) translateZ(0) scale(0.3);
+       -moz-transform: translate(0, -100%) translateZ(0) scale(0.3);
+        -ms-transform: translate(0, -100%) translateZ(0) scale(0.3);
             transform: translate(0, -100%) translateZ(0) scale(0.3);
 }
 
 .mod-swiper.scale.x.goto-after .mod-swiper-item.current{
     -webkit-animation-name: swiper-scale-x-after-exit;
        -moz-animation-name: swiper-scale-x-after-exit;
+        -ms-animation-name: swiper-scale-x-after-exit;
             animation-name: swiper-scale-x-after-exit;
 }
 .mod-swiper.scale.x.goto-after .mod-swiper-item.after{
     -webkit-animation-name: swiper-scale-x-after-enter;
        -moz-animation-name: swiper-scale-x-after-enter;
+        -ms-animation-name: swiper-scale-x-after-enter;
             animation-name: swiper-scale-x-after-enter;
 }
 @-webkit-keyframes swiper-scale-x-after-exit{
@@ -2209,6 +2383,14 @@ textarea {
     }
     100% {
         -moz-transform: translate(-100%, 0) translateZ(0) scale(0.3);
+    }
+}
+@-ms-keyframes swiper-scale-x-after-exit{
+    0% {
+        -ms-transform: translate(0, 0) translateZ(0) scale(1);
+    }
+    100% {
+        -ms-transform: translate(-100%, 0) translateZ(0) scale(0.3);
     }
 }
 @keyframes swiper-scale-x-after-exit{
@@ -2235,6 +2417,14 @@ textarea {
         -moz-transform: translate(0, 0) translateZ(0) scale(1);
     }
 }
+@-ms-keyframes swiper-scale-x-after-enter{
+    0% {
+        -ms-transform: translate(100%, 0) translateZ(0) scale(0.3);
+    }
+    100% {
+        -ms-transform: translate(0, 0) translateZ(0) scale(1);
+    }
+}
 @keyframes swiper-scale-x-after-enter{
     0% {
         transform: translate(100%, 0) translateZ(0) scale(0.3);
@@ -2247,11 +2437,13 @@ textarea {
 .mod-swiper.scale.x.goto-before .mod-swiper-item.current{
     -webkit-animation-name: swiper-scale-x-before-exit;
        -moz-animation-name: swiper-scale-x-before-exit;
+        -ms-animation-name: swiper-scale-x-before-exit;
             animation-name: swiper-scale-x-before-exit;
 }
 .mod-swiper.scale.x.goto-before .mod-swiper-item.before{
     -webkit-animation-name: swiper-scale-x-before-enter;
        -moz-animation-name: swiper-scale-x-before-enter;
+        -ms-animation-name: swiper-scale-x-before-enter;
             animation-name: swiper-scale-x-before-enter;
 }
 @-webkit-keyframes swiper-scale-x-before-exit{
@@ -2268,6 +2460,14 @@ textarea {
     }
     100% {
         -moz-transform: translate(100%, 0) translateZ(0) scale(0.3);
+    }
+}
+@-ms-keyframes swiper-scale-x-before-exit{
+    0% {
+        -ms-transform: translate(0, 0) translateZ(0) scale(1);
+    }
+    100% {
+        -ms-transform: translate(100%, 0) translateZ(0) scale(0.3);
     }
 }
 @keyframes swiper-scale-x-before-exit{
@@ -2294,6 +2494,14 @@ textarea {
         -moz-transform: translate(0, 0) translateZ(0) scale(1);
     }
 }
+@-ms-keyframes swiper-scale-x-before-enter{
+    0% {
+        -ms-transform: translate(-100%, 0) translateZ(0) scale(0.3);
+    }
+    100% {
+        -ms-transform: translate(0, 0) translateZ(0) scale(1);
+    }
+}
 @keyframes swiper-scale-x-before-enter{
     0% {
         transform: translate(-100%, 0) translateZ(0) scale(0.3);
@@ -2306,11 +2514,13 @@ textarea {
 .mod-swiper.scale.y.goto-after .mod-swiper-item.current{
     -webkit-animation-name: swiper-scale-y-after-exit;
        -moz-animation-name: swiper-scale-y-after-exit;
+        -ms-animation-name: swiper-scale-y-after-exit;
             animation-name: swiper-scale-y-after-exit;
 }
 .mod-swiper.scale.y.goto-after .mod-swiper-item.after{
     -webkit-animation-name: swiper-scale-y-after-enter;
        -moz-animation-name: swiper-scale-y-after-enter;
+        -ms-animation-name: swiper-scale-y-after-enter;
             animation-name: swiper-scale-y-after-enter;
 }
 @-webkit-keyframes swiper-scale-y-after-exit{
@@ -2327,6 +2537,14 @@ textarea {
     }
     100% {
         -moz-transform: translate(0, -100%) translateZ(0) scale(0.3);
+    }
+}
+@-ms-keyframes swiper-scale-y-after-exit{
+    0% {
+        -ms-transform: translate(0, 0) translateZ(0) scale(1);
+    }
+    100% {
+        -ms-transform: translate(0, -100%) translateZ(0) scale(0.3);
     }
 }
 @keyframes swiper-scale-y-after-exit{
@@ -2353,6 +2571,14 @@ textarea {
         -moz-transform: translate(0, 0) translateZ(0) scale(1);
     }
 }
+@-ms-keyframes swiper-scale-y-after-enter{
+    0% {
+        -ms-transform: translate(0, 100%) translateZ(0) scale(0.3);
+    }
+    100% {
+        -ms-transform: translate(0, 0) translateZ(0) scale(1);
+    }
+}
 @keyframes swiper-scale-y-after-enter{
     0% {
         transform: translate(0, 100%) translateZ(0) scale(0.3);
@@ -2365,11 +2591,13 @@ textarea {
 .mod-swiper.scale.y.goto-before .mod-swiper-item.current{
     -webkit-animation-name: swiper-scale-y-before-exit;
        -moz-animation-name: swiper-scale-y-before-exit;
+        -ms-animation-name: swiper-scale-y-before-exit;
             animation-name: swiper-scale-y-before-exit;
 }
 .mod-swiper.scale.y.goto-before .mod-swiper-item.before{
     -webkit-animation-name: swiper-scale-y-before-enter;
        -moz-animation-name: swiper-scale-y-before-enter;
+        -ms-animation-name: swiper-scale-y-before-enter;
             animation-name: swiper-scale-y-before-enter;
 }
 @-webkit-keyframes swiper-scale-y-before-exit{
@@ -2386,6 +2614,14 @@ textarea {
     }
     100% {
         -moz-transform: translate(0, 100%) translateZ(0) scale(0.3);
+    }
+}
+@-ms-keyframes swiper-scale-y-before-exit{
+    0% {
+        -ms-transform: translate(0, 0) translateZ(0) scale(1);
+    }
+    100% {
+        -ms-transform: translate(0, 100%) translateZ(0) scale(0.3);
     }
 }
 @keyframes swiper-scale-y-before-exit{
@@ -2412,6 +2648,14 @@ textarea {
         -moz-transform: translate(0, 0) translateZ(0) scale(1);
     }
 }
+@-ms-keyframes swiper-scale-y-before-enter{
+    0% {
+        -ms-transform: translate(0, -100%) translateZ(0) scale(0.3);
+    }
+    100% {
+        -ms-transform: translate(0, 0) translateZ(0) scale(1);
+    }
+}
 @keyframes swiper-scale-y-before-enter{
     0% {
         transform: translate(0, -100%) translateZ(0) scale(0.3);
@@ -2426,29 +2670,39 @@ textarea {
  */
 .mod-swiper.slider.x .mod-swiper-item.maybe.after{
     -webkit-transform: translate(100%, 0) translateZ(0);
+       -moz-transform: translate(100%, 0) translateZ(0);
+        -ms-transform: translate(100%, 0) translateZ(0);
             transform: translate(100%, 0) translateZ(0);
 }
 .mod-swiper.slider.x .mod-swiper-item.maybe.before{
     -webkit-transform: translate(-100%, 0) translateZ(0);
+       -moz-transform: translate(-100%, 0) translateZ(0);
+        -ms-transform: translate(-100%, 0) translateZ(0);
             transform: translate(-100%, 0) translateZ(0);
 }
 .mod-swiper.slider.y .mod-swiper-item.maybe.after{
     -webkit-transform: translate(0, 100%) translateZ(0);
+       -moz-transform: translate(0, 100%) translateZ(0);
+        -ms-transform: translate(0, 100%) translateZ(0);
             transform: translate(0, 100%) translateZ(0);
 }
 .mod-swiper.slider.y .mod-swiper-item.maybe.before{
     -webkit-transform: translate(0, -100%) translateZ(0);
+       -moz-transform: translate(0, -100%) translateZ(0);
+        -ms-transform: translate(0, -100%) translateZ(0);
             transform: translate(0, -100%) translateZ(0);
 }
 
 .mod-swiper.slider.x.goto-after .mod-swiper-item.current{
     -webkit-animation-name: swiper-slider-x-after-exit;
        -moz-animation-name: swiper-slider-x-after-exit;
+        -ms-animation-name: swiper-slider-x-after-exit;
             animation-name: swiper-slider-x-after-exit;
 }
 .mod-swiper.slider.x.goto-after .mod-swiper-item.after{
     -webkit-animation-name: swiper-slider-x-after-enter;
        -moz-animation-name: swiper-slider-x-after-enter;
+        -ms-animation-name: swiper-slider-x-after-enter;
             animation-name: swiper-slider-x-after-enter;
 }
 @-webkit-keyframes swiper-slider-x-after-exit{
@@ -2465,6 +2719,14 @@ textarea {
     }
     100% {
         -moz-transform: translate(-100%, 0) translateZ(0);
+    }
+}
+@-ms-keyframes swiper-slider-x-after-exit{
+    0% {
+        -ms-transform: translate(0, 0) translateZ(0);
+    }
+    100% {
+        -ms-transform: translate(-100%, 0) translateZ(0);
     }
 }
 @keyframes swiper-slider-x-after-exit{
@@ -2491,6 +2753,14 @@ textarea {
         -moz-transform: translate(0, 0) translateZ(0);
     }
 }
+@-ms-keyframes swiper-slider-x-after-enter{
+    0% {
+        -ms-transform: translate(100%, 0) translateZ(0);
+    }
+    100% {
+        -ms-transform: translate(0, 0) translateZ(0);
+    }
+}
 @keyframes swiper-slider-x-after-enter{
     0% {
         transform: translate(100%, 0) translateZ(0);
@@ -2503,11 +2773,13 @@ textarea {
 .mod-swiper.slider.x.goto-before .mod-swiper-item.current{
     -webkit-animation-name: swiper-slider-x-before-exit;
        -moz-animation-name: swiper-slider-x-before-exit;
+        -ms-animation-name: swiper-slider-x-before-exit;
             animation-name: swiper-slider-x-before-exit;
 }
 .mod-swiper.slider.x.goto-before .mod-swiper-item.before{
     -webkit-animation-name: swiper-slider-x-before-enter;
        -moz-animation-name: swiper-slider-x-before-enter;
+        -ms-animation-name: swiper-slider-x-before-enter;
             animation-name: swiper-slider-x-before-enter;
 }
 @-webkit-keyframes swiper-slider-x-before-exit{
@@ -2524,6 +2796,14 @@ textarea {
     }
     100% {
         -moz-transform: translate(100%, 0) translateZ(0);
+    }
+}
+@-ms-keyframes swiper-slider-x-before-exit{
+    0% {
+        -ms-transform: translate(0, 0) translateZ(0);
+    }
+    100% {
+        -ms-transform: translate(100%, 0) translateZ(0);
     }
 }
 @keyframes swiper-slider-x-before-exit{
@@ -2550,6 +2830,14 @@ textarea {
         -moz-transform: translate(0, 0) translateZ(0);
     }
 }
+@-ms-keyframes swiper-slider-x-before-enter{
+    0% {
+        -ms-transform: translate(-100%, 0) translateZ(0);
+    }
+    100% {
+        -ms-transform: translate(0, 0) translateZ(0);
+    }
+}
 @keyframes swiper-slider-x-before-enter{
     0% {
         transform: translate(-100%, 0) translateZ(0);
@@ -2562,11 +2850,13 @@ textarea {
 .mod-swiper.slider.y.goto-after .mod-swiper-item.current{
     -webkit-animation-name: swiper-slider-y-after-exit;
        -moz-animation-name: swiper-slider-y-after-exit;
+        -ms-animation-name: swiper-slider-y-after-exit;
             animation-name: swiper-slider-y-after-exit;
 }
 .mod-swiper.slider.y.goto-after .mod-swiper-item.after{
     -webkit-animation-name: swiper-slider-y-after-enter;
        -moz-animation-name: swiper-slider-y-after-enter;
+        -ms-animation-name: swiper-slider-y-after-enter;
             animation-name: swiper-slider-y-after-enter;
 }
 @-webkit-keyframes swiper-slider-y-after-exit{
@@ -2583,6 +2873,14 @@ textarea {
     }
     100% {
         -moz-transform: translate(0, -100%) translateZ(0);
+    }
+}
+@-ms-keyframes swiper-slider-y-after-exit{
+    0% {
+        -ms-transform: translate(0, 0) translateZ(0);
+    }
+    100% {
+        -ms-transform: translate(0, -100%) translateZ(0);
     }
 }
 @keyframes swiper-slider-y-after-exit{
@@ -2609,6 +2907,14 @@ textarea {
         -moz-transform: translate(0, 0) translateZ(0);
     }
 }
+@-ms-keyframes swiper-slider-y-after-enter{
+    0% {
+        -ms-transform: translate(0, 100%) translateZ(0);
+    }
+    100% {
+        -ms-transform: translate(0, 0) translateZ(0);
+    }
+}
 @keyframes swiper-slider-y-after-enter{
     0% {
         transform: translate(0, 100%) translateZ(0);
@@ -2621,11 +2927,13 @@ textarea {
 .mod-swiper.slider.y.goto-before .mod-swiper-item.current{
     -webkit-animation-name: swiper-slider-y-before-exit;
        -moz-animation-name: swiper-slider-y-before-exit;
+        -ms-animation-name: swiper-slider-y-before-exit;
             animation-name: swiper-slider-y-before-exit;
 }
 .mod-swiper.slider.y.goto-before .mod-swiper-item.before{
     -webkit-animation-name: swiper-slider-y-before-enter;
        -moz-animation-name: swiper-slider-y-before-enter;
+        -ms-animation-name: swiper-slider-y-before-enter;
             animation-name: swiper-slider-y-before-enter;
 }
 @-webkit-keyframes swiper-slider-y-before-exit{
@@ -2642,6 +2950,14 @@ textarea {
     }
     100% {
         -moz-transform: translate(0, 100%) translateZ(0);
+    }
+}
+@-ms-keyframes swiper-slider-y-before-exit{
+    0% {
+        -ms-transform: translate(0, 0) translateZ(0);
+    }
+    100% {
+        -ms-transform: translate(0, 100%) translateZ(0);
     }
 }
 @keyframes swiper-slider-y-before-exit{
@@ -2666,6 +2982,14 @@ textarea {
     }
     100% {
         -moz-transform: translate(0, 0) translateZ(0);
+    }
+}
+@-ms-keyframes swiper-slider-y-before-enter{
+    0% {
+        -ms-transform: translate(0, -100%) translateZ(0);
+    }
+    100% {
+        -ms-transform: translate(0, 0) translateZ(0);
     }
 }
 @keyframes swiper-slider-y-before-enter{
