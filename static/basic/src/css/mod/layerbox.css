@@ -1,6 +1,6 @@
 /**
  * 信息弹层
- * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox
+ * loading > datetimepicker > imageviewer > layerbox > actionsheet > logicbox > framebox
  * @file layerbox.css
  */
 
@@ -11,7 +11,7 @@
     left: 0;
     top: 0;
     background-color: rgba(0, 0, 0, 0.45);
-    z-index: 59998;
+    z-index: 59700;
 }
 .mod-layerbox-box{
     width: 85%;

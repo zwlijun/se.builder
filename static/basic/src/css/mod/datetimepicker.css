@@ -1,11 +1,11 @@
 /**
  * 日期控件弹层
- * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox
+ * loading > datetimepicker > imageviewer > layerbox > actionsheet > logicbox > framebox
  * @file logicbox.css
  */
 .mod-dtpicker-frame{
 	position: absolute;
-	z-index: 59999;
+	z-index: 59900;
 	overflow: hidden;
 	border: 1px solid #e5e5e5;
 	border-bottom: 0;

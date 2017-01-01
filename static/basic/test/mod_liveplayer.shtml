@@ -57,6 +57,8 @@
       data-liveplayer-autoplay="0"
       data-liveplayer-controls="1"  
       data-liveplayer-appearance="define"
+      data-liveplayer-x5h5="1" 
+      data-liveplayer-x5fullscreen="true"
 ></div>
 <!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
 <script>

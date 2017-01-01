@@ -1,7 +1,7 @@
 /**
  * 窗口弹层
- * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox
- * @file logicbox.css
+ * loading > datetimepicker > imageviewer > layerbox > actionsheet > logicbox > framebox
+ * @file framebox.css
  */
 .mod-framebox-mask{
 	width: 100%;
@@ -10,7 +10,7 @@
     left: 0;
     top: 0;
     background-color: rgba(0, 0, 0, 0.45);
-    z-index: 59994;
+    z-index: 59300;
 }
 
 .mod-framebox-box{

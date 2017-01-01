@@ -69,10 +69,13 @@
                       + '      preload="<%=liveplayer.preload%>" '
                       + '      poster="<%=liveplayer.poster%>" '
                       + '      x-webkit-airplay="allow" '
-                      + '      webkit-playsinline="true" '
-                      + '      playsinline="true" '
+                      + '      webkit-playsinline '
+                      + '      playsinline '
                       + '      <%if(liveplayer.x5h5){%>'
-                      + '      x5-video-player-type="h5"'
+                      + '      x5-video-player-type="h5" '
+                      + '      <%}%>'
+                      + '      <%if("true" == liveplayer.x5fullscreen || "false" == liveplayer.x5fullscreen){%>'
+                      + '      x5-video-player-fullscreen="<%=liveplayer.x5fullscreen%>" '
                       + '      <%}%>'
                       + '    >'
                       + '    <%if(liveplayer.meta){%>'
@@ -211,6 +214,7 @@
       data-liveplayer-controls="是否显示控制条， 1 - 显示， 0 - 不显示"
       data-liveplayer-appearance="播放器外观，define - 自定义 native - 系统默认样式 none - 无外观仅播放窗口"
       data-liveplayer-x5h5="设置腾讯X5内核播放器H5属性 1 - 设置 0 - 不设置"
+      data-liveplayer-x5fullscreen="设置腾讯X5内核播放器全屏模式 true|false"
     ></element>
     **/
     var GetDefaultOptions = function(){
@@ -233,7 +237,8 @@
             controls: true,
             appearance: "define",
             nextlist: "",
-            x5h5: false
+            x5h5: false,
+            x5fullscreen: ""
         };
 
         return options;
@@ -280,7 +285,8 @@
             onsuspend: null,                //在媒体资源加载终止时触发，这可能是因为下载已完成或因为其他原因暂停。
             ontimeupdate: null,             //元素的currentTime属性表示的时间已经改变。
             onvolumechange: null,           //在音频音量改变时触发（既可以是volume属性改变，也可以是muted属性改变）。
-            onwaiting: null                 //在一个待执行的操作（如回放）因等待另一个操作（如跳跃或下载）被延迟时触发。
+            onwaiting: null,                //在一个待执行的操作（如回放）因等待另一个操作（如跳跃或下载）被延迟时触发。
+            onrender: null                  //渲染LivePlayer后执行
         };
         this.listner = new Listener(this.events, this.handleStack);
     };
@@ -756,7 +762,8 @@
                 //     controls: true,
                 //     appearance: "define",
                 //     nextlist: "",
-                //     x5h5: false
+                //     x5h5: false,
+                //     x5fullscreen: ""
                 // };
                 var _conf = [
                     {name: "type", dataType: "string"},
@@ -777,7 +784,8 @@
                     {name: "controls", dataType: "boolean"},
                     {name: "appearance", dataType: "string"},
                     {name: "nextlist", dataType: "string"},
-                    {name: "x5h5", dataType: "boolean"}
+                    {name: "x5h5", dataType: "boolean"},
+                    {name: "x5fullscreen", dataType: "string"}
                 ];
 
                 return _conf;
@@ -946,6 +954,8 @@
 
                                 Util.source(LivePlayerSchema);
 
+                                this.exec("render", [this.getLivePlayerName()], true);
+
                                 if(this.options("autoplay")){
                                     this.watch().start();
                                 }else{
@@ -972,6 +982,7 @@
             }else{
                 //解析其它播放列表
                 this.updateNextPlayList(this.parseNextPlayList());
+                this.exec("render", [this.getLivePlayerName(), false]);
             }
         },
         load: function(source, isPlay){
@@ -1273,6 +1284,9 @@
             },
             "getLivePlayerName": function(){
                 return player.getLivePlayerName();
+            },
+            "getLivePlayerPlugin": function(){
+                return player.getLivePlayerPlugin();
             },
             "getLivePlayerFrame": function(){
                 return player.getLivePlayerFrame();

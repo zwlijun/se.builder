@@ -508,6 +508,42 @@ textarea {
     -webkit-align-items: baseline;
             align-items: baseline;
 }
+.flexitem{
+  -webkit-align-self: auto;
+     -moz-align-self: auto;
+      -ms-align-self: auto;
+          align-self: auto;
+}
+.flexitem.start{
+  -webkit-align-self: flex-start;
+     -moz-align-self: flex-start;
+      -ms-align-self: flex-start;
+          align-self: flex-start;
+}
+.flexitem.end{
+  -webkit-align-self: flex-end;
+     -moz-align-self: flex-end;
+      -ms-align-self: flex-end;
+          align-self: flex-end;
+}
+.flexitem.center{
+  -webkit-align-self: center;
+     -moz-align-self: center;
+      -ms-align-self: center;
+          align-self: center;
+}
+.flexitem.baseline{
+  -webkit-align-self: baseline;
+     -moz-align-self: baseline;
+      -ms-align-self: baseline;
+          align-self: baseline;
+}
+.flexitem.stretch{
+  -webkit-align-self: stretch;
+     -moz-align-self: stretch;
+      -ms-align-self: stretch;
+          align-self: stretch;
+}
 .bubble-tips,
 .bubble-tips.info{
     position: fixed;
@@ -700,8 +736,8 @@ textarea {
 
 /**
  * ActionSheet模块
- * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox
- * @file loading.css
+ * loading > datetimepicker > imageviewer > layerbox > actionsheet > logicbox > framebox
+ * @file actionsheet.css
  */
 .mod-actionsheet{
 	position: fixed;
@@ -711,7 +747,7 @@ textarea {
 .mod-actionsheet-mask{
 	top: 0;
 	height: 100%;
-	z-index: 59996;
+	z-index: 59500;
 	background-color: rgba(0, 0, 0, 0.7);
 	-webkit-transition: background-color 0.4s ease;
 	   -moz-transition: background-color 0.4s ease;
@@ -720,7 +756,7 @@ textarea {
 }
 .mod-actionsheet-panel{
 	bottom: 0;
-	z-index: 59997;
+	z-index: 59600;
 	background-color: #fff;
 	font-size: .32rem;
 	-webkit-transform: translate(0, 0) translateZ(0);
@@ -821,12 +857,12 @@ textarea {
 }
 /**
  * 日期控件弹层
- * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox
+ * loading > datetimepicker > imageviewer > layerbox > actionsheet > logicbox > framebox
  * @file logicbox.css
  */
 .mod-dtpicker-frame{
 	position: absolute;
-	z-index: 59999;
+	z-index: 59900;
 	overflow: hidden;
 	border: 1px solid #e5e5e5;
 	border-bottom: 0;
@@ -1102,8 +1138,8 @@ textarea {
 
 /**
  * 窗口弹层
- * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox
- * @file logicbox.css
+ * loading > datetimepicker > imageviewer > layerbox > actionsheet > logicbox > framebox
+ * @file framebox.css
  */
 .mod-framebox-mask{
 	width: 100%;
@@ -1112,7 +1148,7 @@ textarea {
     left: 0;
     top: 0;
     background-color: rgba(0, 0, 0, 0.45);
-    z-index: 59994;
+    z-index: 59300;
 }
 
 .mod-framebox-box{
@@ -1178,8 +1214,147 @@ textarea {
 
 
 /**
+ * 图片查看器模块
+ * loading > datetimepicker > imageviewer > layerbox > actionsheet > logicbox > framebox
+ * @file imageviewer.css
+ */
+
+.mod-imageviewer-mask{
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 59800;
+	background-color: rgba(0, 0, 0, .75);
+}
+.mod-imageviewer-box{
+	background-color: #fff;
+	width: 6.40rem;
+	height: 4.80rem;
+	overflow: hidden;
+}
+.mod-imageviewer-master{
+	position: relative;
+	width: 100%;
+	height: 3.60rem;
+	background-color: rgba(0, 0, 0, .15);
+	overflow: hidden;
+	z-index: 5;
+}
+
+.mod-imageviewer-slider{
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	position: relative;
+	z-index: 1;
+}
+.mod-imageviewer-slider .mod-swiper,
+.mod-imageviewer-slider .mod-swiper .mod-swiper-body,
+.mod-imageviewer-slider .mod-swiper .mod-swiper-item{
+	width: 100% !important;
+	height: 100% !important;
+}
+.mod-imageviewer-slider .mod-swiper .mod-swiper-item{
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: cover;
+}
+
+.mod-imageviewer-slider-prev,
+.mod-imageviewer-slider-next{
+	width: .64rem;
+	height: .64rem;
+	border-radius: .64rem;
+	background-color: rgba(0, 0, 0, .35);
+	position: absolute;
+	z-index: 3;
+	top: 50%;
+	margin-top: -.32rem;
+	color: #fff;
+	font-size: .48rem;
+	text-align: center;
+	line-height: .64rem;
+}
+.mod-imageviewer-slider-prev{
+	left: .12rem;
+}
+.mod-imageviewer-slider-next{
+	right: .12rem;
+}
+.mod-imageviewer-slider-prev:before{
+	content: "\e642";
+}
+.mod-imageviewer-slider-next:before{
+	content: "\e641";
+}
+
+.mod-imageviewer-thumbnail{
+	width: 100%;
+	height: 1.20rem;
+}
+.mod-imageviewer-thumbnail-prev,
+.mod-imageviewer-thumbnail-next{
+	width: .32rem;
+	height: 100%;
+	color: #666;
+	font-size: .30rem;
+}
+.mod-imageviewer-thumbnail-prev{
+	margin-right: .12rem;
+}
+.mod-imageviewer-thumbnail-next{
+	margin-left: .12rem;
+}
+.mod-imageviewer-thumbnail-prev:before{
+	display: block;
+	content: "\e638";
+}
+.mod-imageviewer-thumbnail-next:before{
+	display: block;
+	content: "\e639";
+}
+
+.mod-imageviewer-thumbnails{
+	height: 100%;
+	width: 5.56rem;
+	width: -webkit-calc(6.40rem - .32rem - .12rem);
+	width: -moz-calc(6.40rem - .32rem - .12rem);
+	width: calc(6.40rem - .32rem - .12rem);
+	overflow: hidden;
+	overflow-x: auto;
+}
+.mod-imageviewer-thumbnails-viewer{
+	list-style: none;
+	height: .90rem;
+	margin-top: .15rem;
+	/*width: -webkit-calc(1.60rem * 10 + 2.00rem);
+	width: -moz-calc(1.60rem * 10 + 2.00rem);
+	width: calc(1.60rem * 10 + 2.00rem);*/
+}
+.mod-imageviewer-thumbnails-item{
+	width: 1.60rem;
+	height: .90rem;
+	float: left;
+	margin-right: .10rem;
+	border: 1px solid #d7d7d7;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: cover;
+}
+.mod-imageviewer-thumbnails-item.on{
+	border-color: #07a3ff;
+}
+.mod-imageviewer-thumbnails-item img{
+	max-width: 100%;
+	max-height: 100%;
+}
+
+
+/**
  * 信息弹层
- * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox
+ * loading > datetimepicker > imageviewer > layerbox > actionsheet > logicbox > framebox
  * @file layerbox.css
  */
 
@@ -1190,7 +1365,7 @@ textarea {
     left: 0;
     top: 0;
     background-color: rgba(0, 0, 0, 0.45);
-    z-index: 59998;
+    z-index: 59700;
 }
 .mod-layerbox-box{
     width: 85%;
@@ -1528,7 +1703,7 @@ textarea {
 
 /**
  * 逻辑弹层
- * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox
+ * loading > datetimepicker > imageviewer > layerbox > actionsheet > logicbox > framebox
  * @file logicbox.css
  */
 .mod-logicbox-mask{
@@ -1538,7 +1713,7 @@ textarea {
     left: 0;
     top: 0;
     background-color: rgba(0, 0, 0, 0.45);
-    z-index: 59995;
+    z-index: 59400;
 }
 
 .mod-logicbox-box{

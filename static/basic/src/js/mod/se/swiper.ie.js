@@ -21,12 +21,12 @@
     var _document = document;
     var _window = window;
 
-    var startEvent = "mousedown.swiper";
-    var endEvent   = "mouseup.swiper";
-    var moveEvent  = "mousemove.swiper";
+    var __START_EVENT = "mousedown.swiper";
+    var __END_EVENT   = "mouseup.swiper";
+    var __MOVE_EVENT  = "mousemove.swiper";
 
     var SwiperSchema = {
-        name: "swiper",
+        schema: "swiper",
         navigator: {
             go: function(data, node, e, type){
                 var args = (data || "").split(",");
@@ -290,9 +290,9 @@
             onexitend: null             //[target]
         }, this.handleStack);
 
-        startEvent += "_" + name;
-        moveEvent += "_" + name;
-        endEvent += "_" + name;
+        this.start_event = __START_EVENT + "_" + name;
+        this.move_event  = __MOVE_EVENT + "_" + name;
+        this.end_event   = __END_EVENT + "_" + name;
     };
 
     _Swiper.EffectType = {
@@ -814,7 +814,7 @@
                 swiper: this
             };
             if(true !== this.isbind){
-                viewport.on(startEvent, data, function(e){
+                viewport.on(this.start_event, data, function(e){
                     var data = e.data;
                     var swiper = data.swiper;
 
@@ -849,8 +849,8 @@
                     swiper._startY = event.pageY;
                     swiper._dir = 0;
 
-                    $(_document).on(moveEvent, data, swiper.move);
-                    $(_document).on(endEvent, data, swiper.end);
+                    $(_document).on(swiper.move_event, data, swiper.move);
+                    $(_document).on(swiper.end_event, data, swiper.end);
                 });
 
                 this.isbind = true;
@@ -980,8 +980,8 @@
             var data = e.data;
             var swiper = data.swiper;
 
-            $(_document).off(moveEvent);
-            $(_document).off(endEvent);
+            $(_document).off(swiper.move_event);
+            $(_document).off(swiper.end_event);
 
             if(!swiper.isEnabled()){
                 swiper.exec("block", ["enabled"]);
@@ -1429,6 +1429,7 @@
             (function(){
                 Util.watchAction("." + _BASE_CLASSNAME[0], [
                     {type: "tap", mapping: "click", compatible: null},
+                    {type: "click", mapping: null, compatible: null},
                     {type: "mouseover", mapping: null, compatible: null},
                     {type: "mouseout", mapping: null, compatible: null}
                 ], null);
@@ -1557,6 +1558,11 @@
                     swiper.pause()
 
                     return this;
+                },
+                "destroy": function(){
+                    _Swiper.Cache[name] = null;
+                    
+                    delete _Swiper.Cache[name];
                 }
             };
         }

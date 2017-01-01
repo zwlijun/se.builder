@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html data-page-alias="data-imageviewer">
+<head>
+<!--#include virtual="/static/basic/inc/meta.html"-->
+<!--#include virtual="/static/basic/inc/rem.html"-->
+<title>Mod/ImageViewer</title>
+<link id="seed_style" rel="stylesheet" type="text/css" href="/static/basic/src/css/lib/g.css">
+<link rel="stylesheet" type="text/css" href="/static/basic/src/css/mod/swiper.css">
+<link rel="stylesheet" type="text/css" href="/static/basic/src/css/mod/swiper.slider.css">
+<link rel="stylesheet" type="text/css" href="/static/basic/src/css/mod/swiper.scale.css">
+<link rel="stylesheet" type="text/css" href="/static/basic/src/css/mod/swiper.fade.css">
+<link rel="stylesheet" type="text/css" href="/static/basic/src/css/mod/swiper.draw.css">
+<link rel="stylesheet" type="text/css" href="/static/basic/src/css/mod/swiper.cube.css">
+<link id="seed_style" rel="stylesheet" type="text/css" href="/static/basic/src/css/mod/imageviewer.css">
+</head>
+
+<body>
+<!--
+DATA STRUCT
+{
+    images: [
+        {
+            "source": "",
+            "thumbnail": "",
+            "subject": ""
+            "desc": ""
+        }
+    ]
+}
+
+CONFIGURE
+width
+height
+autoplay
+loop
+interval
+duration
+timing
+delay
+unit
+-->
+<!-- <div class="mod-imageviewer-mask flexbox middle center">
+  <div class="mod-imageviewer-box">
+    <div class="mod-imageviewer-master">
+      <div class="mod-imageviewer-slider">
+        
+      </div>
+      <div class="mod-imageviewer-slider-prev icofont"></div>
+      <div class="mod-imageviewer-slider-next icofont"></div>
+    </div>
+    <div class="mod-imageviewer-thumbnail flexbox middle justify">
+      <div class="mod-imageviewer-thumbnail-prev icofont flexbox middle center"></div>
+      <div class="mod-imageviewer-thumbnails">
+        <ul class="mod-imageviewer-thumbnails-viewer clearfix">
+          <li class="mod-imageviewer-thumbnails-item on">1</li>
+          <li class="mod-imageviewer-thumbnails-item">2</li>
+          <li class="mod-imageviewer-thumbnails-item">3</li>
+          <li class="mod-imageviewer-thumbnails-item">4</li>
+          <li class="mod-imageviewer-thumbnails-item">5</li>
+          <li class="mod-imageviewer-thumbnails-item">6</li>
+          <li class="mod-imageviewer-thumbnails-item">7</li>
+          <li class="mod-imageviewer-thumbnails-item">8</li>
+          <li class="mod-imageviewer-thumbnails-item">9</li>
+          <li class="mod-imageviewer-thumbnails-item">0</li>
+        </ul>
+      </div>
+      <div class="mod-imageviewer-thumbnail-next icofont flexbox middle center"></div>
+    </div>
+  </div>
+</div> -->
+
+<!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
+<script>
+seajs.use(["logic/test/test_imageviewer"]);
+</script>
+</body>
+</html>

@@ -508,6 +508,42 @@ textarea {
     -webkit-align-items: baseline;
             align-items: baseline;
 }
+.flexitem{
+  -webkit-align-self: auto;
+     -moz-align-self: auto;
+      -ms-align-self: auto;
+          align-self: auto;
+}
+.flexitem.start{
+  -webkit-align-self: flex-start;
+     -moz-align-self: flex-start;
+      -ms-align-self: flex-start;
+          align-self: flex-start;
+}
+.flexitem.end{
+  -webkit-align-self: flex-end;
+     -moz-align-self: flex-end;
+      -ms-align-self: flex-end;
+          align-self: flex-end;
+}
+.flexitem.center{
+  -webkit-align-self: center;
+     -moz-align-self: center;
+      -ms-align-self: center;
+          align-self: center;
+}
+.flexitem.baseline{
+  -webkit-align-self: baseline;
+     -moz-align-self: baseline;
+      -ms-align-self: baseline;
+          align-self: baseline;
+}
+.flexitem.stretch{
+  -webkit-align-self: stretch;
+     -moz-align-self: stretch;
+      -ms-align-self: stretch;
+          align-self: stretch;
+}
 .bubble-tips,
 .bubble-tips.info{
     position: fixed;
