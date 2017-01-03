@@ -280,7 +280,7 @@
         this.listener = new Listener({
             onnotfound: null,           //[]
             oncreatebefore: null,       //[]
-            oninit: null                //[]
+            oninit: null,               //[]
             oncreate: null,             //[]
             onblock: null,              //[type]
             onstart: null,              //[target]
