@@ -155,6 +155,19 @@
 
             return (viewer.length > 0)
         },
+        setThumbnailViewPosition: function(index){
+            var viewer = this.getImageViewerMask();
+            var thumbnailView = viewer.find(".mod-imageviewer-thumbnails")[0];
+            var thumbnailItems = viewer.find(".mod-imageviewer-thumbnails-item");
+            var thumbnailWidth = this.options("thumbnailWidth");
+            var rect = Util.getBoundingClientRect(thumbnailView);
+            var viewWidth = rect.width;
+            var visibleSize = Math.floor(viewWidth / thumbnailWidth) - 1;
+
+            $(thumbnailItems.removeClass("on")[index]).addClass("on");
+
+            thumbnailView.scrollLeft = Math.max((index - visibleSize) * thumbnailWidth, 0);
+        },
         render: function(){
             if(!this.existed()){
                 var opts = this.options();
@@ -193,22 +206,19 @@
 
                         this.swiper = Swiper.createSwiper(this.name, ret.metaData.opts);
                         this.swiper.set("end", {
-                            callback: function(target, viewer){
-                                // console.info("end", _Swiper.getIndex())
+                            callback: function(target){
                                 var _index = this.swiper.getIndex();
-                                var thumbnailView = viewer.find(".mod-imageviewer-thumbnails")[0];
-                                var thumbnailItems = viewer.find(".mod-imageviewer-thumbnails-item");
-                                var thumbnailWidth = this.options("thumbnailWidth");
-                                var rect = Util.getBoundingClientRect(thumbnailView);
-                                var viewWidth = rect.width;
-                                var visibleSize = Math.floor(viewWidth / thumbnailWidth) - 1;
-
-                                $(thumbnailItems.removeClass("on")[_index]).addClass("on");
-
-                                thumbnailView.scrollLeft = Math.max((_index - visibleSize) * thumbnailWidth, 0);
+                                this.setThumbnailViewPosition(_index);
                             },
                             context: this,
-                            args: [viewer]
+                            args: []
+                        }).set("init", {
+                            callback: function(currentIndex){
+                                this.swiper.setIndex(currentIndex);
+                                this.setThumbnailViewPosition(currentIndex);
+                            },
+                            context: this,
+                            args: [ret.metaData.currentIndex]
                         });
 
                         this.swiper.create();
@@ -286,6 +296,11 @@
             },
             "hide": function(){
                 viewer.hide();
+
+                return this;
+            },
+            "setThumbnailViewPosition": function(index){
+                viewer.setThumbnailViewPosition(index);
 
                 return this;
             },

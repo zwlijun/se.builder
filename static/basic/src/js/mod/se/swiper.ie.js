@@ -280,6 +280,7 @@
         this.listener = new Listener({
             onnotfound: null,           //[]
             oncreatebefore: null,       //[]
+            oninit: null                //[]
             oncreate: null,             //[]
             onblock: null,              //[type]
             onstart: null,              //[target]
@@ -1381,6 +1382,9 @@
             this.findViewport(swiper);
             this.initDots();
             this.initControl();
+
+            this.exec("init", []);
+
             this.render();
             this.sizeof();
 

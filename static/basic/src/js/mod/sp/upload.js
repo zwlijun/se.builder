@@ -210,6 +210,8 @@
                     zone = plugin.attr("data-upload-zone") || null;
                     enter = plugin.attr("data-upload-enter") || null;
 
+                    filter = filter.replace(/([\.\-\/\+])/g, "\\\$1");
+
                     _Uploader.upload.init({
                         "key": key,
                         "plugin": plugin,
