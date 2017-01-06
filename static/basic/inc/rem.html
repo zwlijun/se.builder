@@ -9,8 +9,9 @@
     var remTimer = null;
     var _reset = function(){
         var root = d.documentElement;
+        var body = d.body;
 
-        if(!root){
+        if(!root || !body){
             return false;
         }
 
@@ -19,10 +20,9 @@
             var _fontSize = root.getAttribute("data-adaptor-base") || fontSize;
             var _minFontSize = Number(root.getAttribute("data-adaptor-min") || minFontSize);
             var _maxFontSize = Number(root.getAttribute("data-adaptor-max") || maxFontSize);
-            var clientWidth = root.clientWidth;
-            var windowWidth = w.innerWidth || 0;
+            var clientWidth = Math.max(root.clientWidth, body.clientWidth);
+            var width = w.innerWidth || clientWidth;
 
-            var width = Math.max(clientWidth, windowWidth);
             var fsize = (_fontSize * (width / _designWidth));
 
             if(fsize < _minFontSize){
@@ -45,7 +45,6 @@
     var ios = /(iPhone|iPad|iPod)/i.test(ua);
     var x5_tbs = /(TBS)\/(\d+)/.exec(ua);
     var uc = /UC[\s]?Browser/.test(ua);
-    var hasOrientationChange = false;
 
     if((x5_tbs && ((x5_tbs[2] || "").indexOf("03") == -1)) || uc){
         var r = d.documentElement;
@@ -63,12 +62,9 @@
         }
 
         if(_reset()){
-            if(("onorientationchange" in window)){
+            if(("onorientationchange" in w)){
                 w.addEventListener("orientationchange", _reset, false);
-
-                hasOrientationChange = true;
-            }
-            if(!ios || (ios && true !== hasOrientationChange)){
+            }else{
                 if("addEventListener" in w){
                     w.addEventListener("resize", _reset, false);
                 }else if("attachEvent" in w){
@@ -81,5 +77,5 @@
             setTimeout(arguments.callee, 0);
         }
     }, 0);
-})(window, document, 640, 100, 50, 100);
+})(window, document, 640, 100, 25, 100);
 </script>
