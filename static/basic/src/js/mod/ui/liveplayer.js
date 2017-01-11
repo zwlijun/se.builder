@@ -31,6 +31,21 @@
         MEDIA_ERR_SRC_NOT_SUPPORTED: 4
     };
 
+    var MediaNetworkState = {
+        NETWORK_EMPTY: 0,      //音频/视频尚未初始化
+        NETWORK_IDLE: 1,       //音频/视频是活动的且已选取资源，但并未使用网络
+        NETWORK_LOADING: 2,    //浏览器正在下载数据
+        NETWORK_NO_SOURCE: 3   //未找到音频/视频来源
+    };
+
+    var MediaReadyState = {
+        HAVE_NOTHING: 0,       //没有关于音频/视频是否就绪的信息
+        HAVE_METADATA: 1,      //关于音频/视频就绪的元数据
+        HAVE_CURRENT_DATA: 2,  //关于当前播放位置的数据是可用的，但没有足够的数据来播放下一帧/毫秒
+        HAVE_FUTURE_DATA: 3,   //当前及至少下一帧的数据是可用的
+        HAVE_ENOUGH_DATA: 4    //可用数据足以开始播放
+    };
+
     var HTML_TEMPLATE = ''
                       + '<div class="liveplayer-frame disable-select <%=liveplayer.type%>" id="<%=liveplayer.name%>" style="width: <%=liveplayer.width%>; height: <%=liveplayer.height%>;">'
                       + '  <%if("none" != liveplayer.appearance){%>'
@@ -199,6 +214,7 @@
       data-liveplayer-height="高度，默认：4.46rem" 
       
       data-liveplayer-time="控制条及标题栏停留时长，默认：3000毫秒" 
+      data-liveplayer-stateInterval="状态监听周期，默认：1000毫秒"
 
       data-liveplayer-allowFullScreen="是否允许显示全屏菜单，1 - 显示， 0 - 不显示" 
       data-liveplayer-allowAdjustVolume="是否允许调节音量， 1 - 允许， 0 - 不允许"
@@ -225,6 +241,7 @@
             width: "100%",
             height: "4.46rem",
             time: 3000,
+            stateInterval: 1000,
             allowFullScreen: true,
             allowAdjustVolume: true,
             volume: 7,
@@ -262,6 +279,12 @@
         this.name = name;
         this.allowHideBars = true;
 
+        this.stateTimer = null;
+        this.statusBarTimer = null;
+
+        this.readyState = MediaReadyState.HAVE_NOTHING;
+        this.networkState = MediaNetworkState.NETWORK_EMPTY;
+
         this.handleStack = new HandleStack();
         this.events = {
             onabort: null,                  //Sent when playback is aborted; for example, if the media is playing and is restarted from the beginning, this event is sent.
@@ -286,7 +309,8 @@
             ontimeupdate: null,             //元素的currentTime属性表示的时间已经改变。
             onvolumechange: null,           //在音频音量改变时触发（既可以是volume属性改变，也可以是muted属性改变）。
             onwaiting: null,                //在一个待执行的操作（如回放）因等待另一个操作（如跳跃或下载）被延迟时触发。
-            onrender: null                  //渲染LivePlayer后执行
+            onrender: null,                 //渲染LivePlayer后执行
+            onstatechange: null             //媒体状态监听
         };
         this.listner = new Listener(this.events, this.handleStack);
     };
@@ -688,10 +712,33 @@
 
             return "vod" == type;
         },
+        watchState: function(){
+            var name = this.getLivePlayerName();
+            var interval = this.options("stateInterval");
+            var timer = this.stateTimer = Timer.getTimer("liveplayer_" + name + "_state", Timer.toFPS(interval), {
+                callback: function(_timer){
+                    var video = this.getLivePlayerMasterVideo(true);
+                    var readyState = MediaReadyState.HAVE_NOTHING;
+                    var networkState = MediaNetworkState.NETWORK_EMPTY;
+
+                    if(video){
+                        readyState = video.readyState;
+                        networkState = video.networkState;
+                    }
+
+                    this.readyState = readyState;
+                    this.networkState = networkState;
+                    this.exec("statechange", [name, readyState, networkState]);
+                },
+                context: this
+            });
+
+            timer.start();
+        },
         watch: function(){
             var name = this.getLivePlayerName();
             var time = this.options("time");
-            var timer = Timer.getTimer("liveplayer_" + name, Timer.toFPS(time), {
+            var timer = this.statusBarTimer = Timer.getTimer("liveplayer_" + name, Timer.toFPS(time), {
                 callback: function(_timer){
                     var frame = this.getLivePlayerFrame();
 
@@ -943,6 +990,7 @@
                         Util.delay(50, {
                             callback: function(et, _node, $isInvokePlay){
                                 this.listen();
+                                this.watchState();
                                 this.setVolume(this.options("volume"));
 
                                 Util.registAction(_node, [
@@ -982,6 +1030,7 @@
             }else{
                 //解析其它播放列表
                 this.updateNextPlayList(this.parseNextPlayList());
+                this.watchState();
                 this.exec("render", [this.getLivePlayerName(), false]);
             }
         },
@@ -1135,6 +1184,17 @@
         },
         destory: function(){
             var frame = this.getLivePlayerFrame();
+
+            if(this.stateTimer){
+                this.stateTimer.stop();
+                this.stateTimer = null;
+            }
+
+            if(this.statusBarTimer){
+                this.statusBarTimer.stop();
+                this.statusBarTimer = null;
+            }
+
             frame.remove();
 
             this.isListened = false;
@@ -1306,6 +1366,18 @@
             "getLivePlayerMasterControlState": function(){
                 return player.getLivePlayerMasterControlState();
             },
+            "getLivePlayerStateTimer": function(){
+                return player.stateTimer;
+            },
+            "getLivePlayerStatusBarTimer": function(){
+                return player.statusBarTimer;
+            },
+            "getLivePlayerReadyState": function(){
+                return player.readyState;
+            },
+            "getLivePlayerNetworkState": function(){
+                return player.networkState;
+            },
             "updateMasterSource": function(source){
                 player.updateMasterSource(source);
 
@@ -1448,7 +1520,9 @@
     };
 
     module.exports = {
-        "version": "R16B1201",
+        "version": "R17B0111",
+        "MediaReadyState": MediaReadyState,
+        "MediaNetworkState": MediaNetworkState,
         createLivePlayer: function(name, options){
             return LivePlayer.createLivePlayer(name, options);
         },
