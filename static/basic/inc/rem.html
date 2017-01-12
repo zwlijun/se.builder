@@ -1,15 +1,13 @@
 <script>
-//w: window
-//d: document
 //design: 设计稿尺寸
 //fontSize: 基础字体大小
 //minFontSize: 最小字体大小
 //maxFontSize: 最大字体大小
-(function(w, d, design, fontSize, minFontSize, maxFontSize){
+(function(design, fontSize, minFontSize, maxFontSize){
     var remTimer = null;
     var _reset = function(){
-        var root = d.documentElement;
-        var body = d.body;
+        var root = document.documentElement;
+        var body = document.body;
 
         if(!root || !body){
             return false;
@@ -21,7 +19,7 @@
             var _minFontSize = Number(root.getAttribute("data-adaptor-min") || minFontSize);
             var _maxFontSize = Number(root.getAttribute("data-adaptor-max") || maxFontSize);
             var clientWidth = Math.max(root.clientWidth, body.clientWidth);
-            var width = w.innerWidth || clientWidth;
+            var width = window.innerWidth || clientWidth;
 
             var fsize = (_fontSize * (width / _designWidth));
 
@@ -40,6 +38,9 @@
 
         return true;
     };
+    var _listener = function(e){
+        setTimeout(_reset, 300);
+    };
 
     var ua = navigator.userAgent;
     var ios = /(iPhone|iPad|iPod)/i.test(ua);
@@ -47,7 +48,7 @@
     var uc = /UC[\s]?Browser/.test(ua);
 
     if((x5_tbs && ((x5_tbs[2] || "").indexOf("03") == -1)) || uc){
-        var r = d.documentElement;
+        var r = document.documentElement;
         var cls = r.className;
 
         if(cls.indexOf("wechat-x5") == -1){
@@ -62,20 +63,20 @@
         }
 
         if(_reset()){
-            if(("onorientationchange" in w)){
-                w.addEventListener("orientationchange", _reset, false);
+            if(("onorientationchange" in window)){
+                window.addEventListener("orientationchange", _listener, false);
             }else{
-                if("addEventListener" in w){
-                    w.addEventListener("resize", _reset, false);
-                }else if("attachEvent" in w){
-                    w.attachEvent("onresize", _reset);
+                if("addEventListener" in window){
+                    window.addEventListener("resize", _listener, false);
+                }else if("attachEvent" in window){
+                    window.attachEvent("onresize", _listener);
                 }else{
-                    w.onresize = _reset;
+                    window.onresize = _listener;
                 }
             }
         }else{
             setTimeout(arguments.callee, 0);
         }
     }, 0);
-})(window, document, 640, 100, 25, 100);
+})(640, 100, 50, 100);
 </script>
