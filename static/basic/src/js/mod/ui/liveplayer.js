@@ -225,7 +225,7 @@
       data-liveplayer-preload="预加载，auto - 当页面加载后载入整个视频 meta - 当页面加载后只载入元数据 none - 当页面加载后不载入视频" 
       data-liveplayer-loop="是否设置循环播放，1 - 循环， 0 - 单播" 
       data-liveplayer-autoplay="是否设置为自动播放， 1 - 自动播放， 0 - 需要点击播放" 
-      data-liveplayer-multed="是否设置为禁用， 1 - 不禁音， 0 - 禁音" 
+      data-liveplayer-muted="是否设置为禁用， 1 - 禁音， 0 - 不禁音" 
       data-liveplayer-nextlist="其他播放地址列表，多个地址间用英文逗号“,”分隔，没有时为空或不设置该属性，地址格式：mimetype:media_source"
       data-liveplayer-controls="是否显示控制条， 1 - 显示， 0 - 不显示"
       data-liveplayer-appearance="播放器外观，define - 自定义 native - 系统默认样式 none - 无外观仅播放窗口"
