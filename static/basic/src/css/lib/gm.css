@@ -1602,7 +1602,8 @@ textarea {
     text-align: center;
     line-height: 1.3;
 }
-.liveplayer-master-mask.liveplayer-error ins:before{
+.liveplayer-master-mask.liveplayer-error ins:before,
+.use-native .liveplayer-master-mask ins:before{
 	content: none;
 }
 .liveplayer-master-mask.liveplayer-error ins a,

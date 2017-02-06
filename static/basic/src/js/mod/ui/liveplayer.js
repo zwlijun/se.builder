@@ -47,7 +47,7 @@
     };
 
     var HTML_TEMPLATE = ''
-                      + '<div class="liveplayer-frame disable-select <%=liveplayer.type%>" id="<%=liveplayer.name%>" style="width: <%=liveplayer.width%>; height: <%=liveplayer.height%>;">'
+                      + '<div class="liveplayer-frame disable-select use-<%=liveplayer.appearance%> <%=liveplayer.type%>" id="<%=liveplayer.name%>" style="width: <%=liveplayer.width%>; height: <%=liveplayer.height%>;">'
                       + '  <%if("none" != liveplayer.appearance){%>'
                       + '  <div class="liveplayer-navbar flexbox middle justify">'
                       + '    <a href="<%=liveplayer.back%>" class="liveplayer-back icofont"></a>'
@@ -101,7 +101,7 @@
                       + '      <%}%>'
                       + '    <%}%>'
                       + '    </video>'
-                      + '    <div class="liveplayer-master-mask flexbox middle center<%=liveplayer.autoplay ? " hide" : ""%>">'
+                      + '    <div class="liveplayer-master-mask flexbox middle center<%=(liveplayer.autoplay || "native" === liveplayer.appearance) ? " hide" : ""%>">'
                       + '       <ins class="icofont" data-action-click="liveplayer://play#<%=liveplayer.name%>"></ins>'
                       + '    </div>'
                       + '  </div>'
@@ -132,7 +132,7 @@
             }
         },
         swapBars: function(data, node, e, type){
-            e.stopPropagation();
+            // e.stopPropagation();
 
             var args = (data || "").split(",");
             var name = args[0];
@@ -155,8 +155,9 @@
             var name = args[0];
 
             var player = LivePlayer.getLivePlayer(name);
+            var mask = player.getLivePlayerMasterMask();
 
-            if(!node.hasClass("liveplayer-error")){
+            if(!mask.hasClass("liveplayer-error") && !node.hasClass("use-native")){
                 player.play();
             }
         },
