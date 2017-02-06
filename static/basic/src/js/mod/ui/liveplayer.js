@@ -132,7 +132,7 @@
             }
         },
         swapBars: function(data, node, e, type){
-            // e.stopPropagation();
+            e.stopPropagation();
 
             var args = (data || "").split(",");
             var name = args[0];
