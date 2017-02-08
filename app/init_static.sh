@@ -104,10 +104,6 @@ if [ "$#" -eq "1" ]; then
     mkdir -p ${STATIC_PREFIX}/src/img/lib/extra
     mkdir -p ${STATIC_PREFIX}/src/img/mod
     mkdir -p ${STATIC_PREFIX}/src/img/logic
-    #字体目录
-    mkdir -p ${STATIC_PREFIX}/src/fonts
-    #SVG文件目录
-    mkdir -p ${STATIC_PREFIX}/src/svg
     #create res dir
     #JS构建后的目录，lib - 基础库   mod - 公用模块  logic - 业务逻辑  extra - 第三方插件、引擎或库
     mkdir -p ${STATIC_PREFIX}/res/js/lib/extra
@@ -121,18 +117,17 @@ if [ "$#" -eq "1" ]; then
     mkdir -p ${STATIC_PREFIX}/res/img/lib/extra
     mkdir -p ${STATIC_PREFIX}/res/img/mod
     mkdir -p ${STATIC_PREFIX}/res/img/logic
-    #媒体目录，audio - 音频    video - 视频
-    mkdir -p ${STATIC_PREFIX}/res/media/audio
-    mkdir -p ${STATIC_PREFIX}/res/media/video
-    #字体目录
-    mkdir -p ${STATIC_PREFIX}/res/fonts
-    #SVG文件目录
-    mkdir -p ${STATIC_PREFIX}/res/svg
     #create inc & html dir
     #公共Include文件目录
     mkdir -p ${STATIC_PREFIX}/inc
     #静态页面目录
     mkdir -p ${STATIC_PREFIX}/html
+    #创建字体目录
+    mkdir -p ${STATIC_PREFIX}/fonts
+    #创建媒体目录
+    mkdir -p ${STATIC_PREFIX}/media
+    #创建SVG文件目录
+    mkdir -p ${STATIC_PREFIX}/svg
     #功能模块复杂的第三方插件或工程目录，如：文本编辑器
     mkdir -p ${STATIC_PREFIX}/extra
     #创建测试目录
@@ -141,10 +136,6 @@ if [ "$#" -eq "1" ]; then
     mkdir -p ${STATIC_PREFIX}/demo
     #复制基础版本文件
     cp -rf ${STATIC_BASE_PREFIX}/* ${STATIC_PREFIX}/
-    #复制字体目录
-    cp -rf ${STATIC_PREFIX}/src/fonts/* ${STATIC_PREFIX}/res/fonts/
-    #复制SVG目录
-    cp -rf ${STATIC_PREFIX}/src/svg/* ${STATIC_PREFIX}/res/svg/
     #合并模块样式
     cat ${STATIC_PREFIX}/src/css/lib/g.css > ${STATIC_PREFIX}/src/css/lib/gm.css
     cat ${STATIC_PREFIX}/src/css/mod/* >> ${STATIC_PREFIX}/src/css/lib/gm.css

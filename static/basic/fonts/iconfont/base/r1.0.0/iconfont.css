@@ -1,10 +1,10 @@
 
 @font-face {font-family: "iconfont";
-  src: url('iconfont.eot?t=1483257305179'); /* IE9*/
-  src: url('iconfont.eot?t=1483257305179#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('iconfont.woff?t=1483257305179') format('woff'), /* chrome, firefox */
-  url('iconfont.ttf?t=1483257305179') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('iconfont.svg?t=1483257305179#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('iconfont.eot?t=1486527803801'); /* IE9*/
+  src: url('iconfont.eot?t=1486527803801#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1486527803801') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1486527803801') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1486527803801#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -146,6 +146,8 @@
 .ico-crop:before { content: "\e632"; }
 
 .ico-nav:before { content: "\e633"; }
+
+.ico-hua1:before { content: "\e652"; }
 
 .ico-arrow-copy:before { content: "\e634"; }
 
