@@ -371,6 +371,10 @@
             var ubound = 0;
             var min = undefined;
             var max = undefined;
+            var lboundTips = null;
+            var uboundTips = null;
+            var minTips = null;
+            var maxTips = null;
             var refer = null;
             var checkfilter = null;
             var holder = null;
@@ -414,8 +418,12 @@
                 xss = ("1" == el.attr("data-xss"));
                 lbound = Number(el.attr("data-lbound") || 0);
                 ubound = Number(el.attr("data-ubound") || 0);
-                min = Number(el.attr("min") + "" || el.attr("data-min") || undefined);
-                max = Number(el.attr("max") + "" || el.attr("data-max") || undefined);
+                min = Number(el.attr("min") || el.attr("data-min") || undefined);
+                max = Number(el.attr("max") || el.attr("data-max") || undefined);
+                lboundTips = el.attr("data-lboundtips") || "";
+                uboundTips = el.attr("data-uboundtips") || "";
+                minTips = el.attr("data-mintips") || "";
+                maxTips = el.attr("data-maxtips") || "";
                 compare = el.attr("data-compare");
                 refer = el.attr("data-refer");
                 checkfilter = el.attr("data-checkfilter"); 
@@ -443,6 +451,10 @@
                     "ubound": ubound,
                     "min": min,
                     "max": max,
+                    "lboundTips": lboundTips,
+                    "uboundTips": uboundTips,
+                    "minTips": minTips,
+                    "maxTips": maxTips,
                     "compare": compare,
                     "refer": refer,
                     "checkfilter": checkfilter,
@@ -552,20 +564,20 @@
                 if(lbound > 0 || ubound > 0){
                     if(lbound > 0 && length < lbound){
                         if(spv){
-                            this.exec("tips", [el, invalid, Types["LBOUND"]]);
+                            this.exec("tips", [el, lboundTips || invalid, Types["LBOUND"]]);
                             return null;
                         }else{
-                            this.setCheckResults(name, false, el, invalid, Types["LBOUND"]);
+                            this.setCheckResults(name, false, el, lboundTips || invalid, Types["LBOUND"]);
                             continue;
                         }
                     }
 
                     if(ubound > 0 && length > ubound){
                         if(spv){
-                            this.exec("tips", [el, invalid, Types["UBOUND"]]);
+                            this.exec("tips", [el, uboundTips || invalid, Types["UBOUND"]]);
                             return null;
                         }else{
-                            this.setCheckResults(name, false, el, invalid, Types["UBOUND"]);
+                            this.setCheckResults(name, false, el, uboundTips || invalid, Types["UBOUND"]);
                             continue;
                         }
                     }
@@ -574,20 +586,20 @@
                 if(!isNaN(value)){
                     if(!isNaN(min) && Number(value) < min){
                         if(spv){
-                            this.exec("tips", [el, invalid, Types["MIN"]]);
+                            this.exec("tips", [el, minTips || invalid, Types["MIN"]]);
                             return null;
                         }else{
-                            this.setCheckResults(name, false, el, invalid, Types["MIN"]);
+                            this.setCheckResults(name, false, el, minTips || invalid, Types["MIN"]);
                             continue;
                         }
                     }
 
                     if(!isNaN(max) && Number(value) > max){
                         if(spv){
-                            this.exec("tips", [el, invalid, Types["MAX"]]);
+                            this.exec("tips", [el, maxTips || invalid, Types["MAX"]]);
                             return null;
                         }else{
-                            this.setCheckResults(name, false, el, invalid, Types["MAX"]);
+                            this.setCheckResults(name, false, el, maxTips || invalid, Types["MAX"]);
                             continue;
                         }
                     }

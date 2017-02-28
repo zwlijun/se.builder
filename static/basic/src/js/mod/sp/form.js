@@ -380,17 +380,7 @@
             checker.set("before", check.before);
             checker.set("tips", {
                 callback: function(el, tips, type){
-                    if(CheckTypes.MIN == type){
-                        CMD.fireError("0x900001", el.attr("data-mintips") || tips, ErrorTypes.INFO);
-                    }else if(CheckTypes.MAX == type){
-                        CMD.fireError("0x900002", el.attr("data-maxtips") || tips, ErrorTypes.INFO);
-                    }else if(CheckTypes.LBOUND == type){
-                        CMD.fireError("0x900003", el.attr("data-lboundtips") || tips, ErrorTypes.INFO);
-                    }else if(CheckTypes.UBOUND == type){
-                        CMD.fireError("0x900004", el.attr("data-uboundtips") || tips, ErrorTypes.INFO);
-                    }else{
-                        CMD.fireError("0x900000", tips, ErrorTypes.INFO);
-                    }
+                    CMD.fireError("0x900000", tips, ErrorTypes.INFO);
                 }
             });
             checker.set("submit", {
@@ -693,7 +683,8 @@
     })();
 
     module.exports = {
-        "version": "R16B1103",
+        "version": "R17B0227",
+        "CheckTypes": CheckTypes,
         configure: function(conf){
             Configure(conf);
         },
