@@ -9,7 +9,7 @@
 <body>
 <button data-action-tap="actionsheet://show">ActionSheet</button>
 <div class="mod-actionsheet mod-actionsheet-mask exit"></div>
-<div class="mod-actionsheet mod-actionsheet-panel exit sheetmenu">
+<!-- <div class="mod-actionsheet mod-actionsheet-panel exit sheetmenu">
   <ul class="sheetmenu-group">
     <li class="sheetmenu-item normal">菜单一</li>
     <li class="sheetmenu-item normal">菜单二</li>
@@ -21,10 +21,10 @@
     <li class="sheetmenu-item danger">删除</li>
     <li class="sheetmenu-item weak" data-action-tap="actionsheet://hide">取消</li>
   </ul>
-</div>  
-<!-- <div class="mod-actionsheet mod-actionsheet-panel exit sheetbox">
+</div>  --> 
+<div class="mod-actionsheet mod-actionsheet-panel exit sheetbox">
   
-</div>  -->
+</div> 
 <!--#include virtual="/static/basic/inc/js_common_z.120.html" --> 
 <script>
 seajs.use(["mod/ui/actionsheet"]);

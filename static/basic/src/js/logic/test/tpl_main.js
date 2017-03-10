@@ -38,6 +38,14 @@ var SecurityURL = {
         }
 
         return "";
+    },
+    fixed: function(url){
+        var URLInfo = Request.parseURL(url);
+        var data = Request.merge(URLInfo.search, location.search);
+
+        url = Request.append(url, Request.stringify(data));
+
+        return url;
     }
 };
 
@@ -52,7 +60,7 @@ var GoSchema = {
             return ;
         }
 
-        location.href = url;
+        location.href = SecurityURL.fixed(url);
     },
     open: function(data, node, e, type){
         var args = (data || "").split(",");
@@ -63,7 +71,7 @@ var GoSchema = {
             return ;
         }
 
-        window.open(url, target);
+        window.open(SecurityURL.fixed(url), target);
     },
     refresh: function(data, node, e, type){
         var url = document.URL;
@@ -72,7 +80,7 @@ var GoSchema = {
             return ;
         }
 
-        location.replace(url);
+        location.replace(SecurityURL.fixed(url));
     },
     replace: function(data, node, e, type){
         var args = (data || "").split(",");
@@ -82,7 +90,7 @@ var GoSchema = {
             return ;
         }
 
-        location.replace(url);
+        location.replace(SecurityURL.fixed(url));
     },
     sego: function(data, node, e, type){
         var args = (data || "").split(",");
@@ -103,7 +111,7 @@ var GoSchema = {
         }
 
         if(url){
-            location.href = url;
+            location.href = SecurityURL.fixed(url);
         }
     },
     tab: function(data, node, e, type){

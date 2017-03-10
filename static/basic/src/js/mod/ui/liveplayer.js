@@ -221,13 +221,14 @@
       data-liveplayer-allowAdjustVolume="是否允许调节音量， 1 - 允许， 0 - 不允许"
       
       data-liveplayer-volume="默认音量 7"
-      data-liveplayer-source="视频地址，格式：mimetype:media_source" 
+      data-liveplayer-source="视频地址或地址列表，多个地址间用英文逗号“,”分隔，格式：mimetype:media_source[,mimetype:media_source]" 
+      data-liveplayer-sourceIndex="初始播放视频地址索引" 
+      data-liveplayer-autonext="是否为自动播放下一个地址，1 - 自动播放， 0 - 需要点击播放"
       data-liveplayer-poster="视频poster图片地址" 
       data-liveplayer-preload="预加载，auto - 当页面加载后载入整个视频 meta - 当页面加载后只载入元数据 none - 当页面加载后不载入视频" 
       data-liveplayer-loop="是否设置循环播放，1 - 循环， 0 - 单播" 
       data-liveplayer-autoplay="是否设置为自动播放， 1 - 自动播放， 0 - 需要点击播放" 
       data-liveplayer-muted="是否设置为禁用， 1 - 禁音， 0 - 不禁音" 
-      data-liveplayer-nextlist="其他播放地址列表，多个地址间用英文逗号“,”分隔，没有时为空或不设置该属性，地址格式：mimetype:media_source"
       data-liveplayer-controls="是否显示控制条， 1 - 显示， 0 - 不显示"
       data-liveplayer-appearance="播放器外观，define - 自定义 native - 系统默认样式 none - 无外观仅播放窗口"
       data-liveplayer-x5h5="设置腾讯X5内核播放器H5属性 1 - 设置 0 - 不设置"
@@ -247,6 +248,8 @@
             allowAdjustVolume: true,
             volume: 7,
             source: "",
+            sourceIndex: 0,
+            autonext: true,
             poster: "",
             preload: "auto",
             loop: false,
@@ -254,7 +257,6 @@
             muted: false,
             controls: true,
             appearance: "define",
-            nextlist: "",
             x5h5: false,
             x5fullscreen: ""
         };
@@ -272,12 +274,13 @@
     //7. canplaythrough
 
     var LivePlayer = function(name, options){
+        this.name = name;
+
         this.opts = $.extend(true, {}, GetDefaultOptions(), options || {});
 
         this.isListened = false;
-        this.nextPlayList = [];
-        this.nextPlayIndex = 0;
-        this.name = name;
+        this.sourceList = [];
+        this.sourceIndex = 0;
         this.allowHideBars = true;
 
         this.stateTimer = null;
@@ -334,17 +337,6 @@
                     if(master.error){
                         this.error(master.error);
                     }
-
-                    // if(this.isVOD()){
-                    //     if(Env.browser.tbs.major > 0){
-                    //         var diff = duration - currentTime;
-
-                    //         if(diff < 1){
-                    //             this.pause();
-                    //             this.next();
-                    //         }
-                    //     }
-                    // }
                 }
             },
             "pause": function(e){
@@ -374,9 +366,19 @@
             },
             "ended": function(e){
                 if(this.isVOD()){
-                    // if(Env.browser.tbs.major <= 0){
-                        this.next();
-                    // }
+                    if(this.options("autonext")){
+                        var nextIndex = this.getSourceIndex() + 1;
+                        var list = this.getSourceList();
+                        var lastIndex = list.length - 1;
+
+                        if(nextIndex > lastIndex){
+                            if(this.options("loop")){
+                                this.gotoAndPlay(0);
+                            }
+                        }else{
+                            this.gotoAndPlay(this.getSourceIndex() + 1);
+                        }
+                    }
                 }
             },
             "error": function(e){
@@ -659,9 +661,9 @@
                 progressSeekBarNode.css("left", pos + "px");
             }
         },
-        parseNextPlayList: function(){
-            var nextlist = this.options("nextlist") || "";
-            var items = nextlist.split(",");
+        parseSourceList: function(){
+            var source = this.options("source") || "";
+            var items = source.split(",");
             var size = items.length;
             var url = null;
             var list = [];
@@ -678,30 +680,41 @@
 
             return list;
         },
-        updateNextPlayList: function(nextlist){
-            this.nextPlayList = [].concat(nextlist);
-
-            // console.log("------------------------------");
-            // console.log(arguments.callee.caller);
-            // console.log(this.nextPlayList);
-            // console.log("------------------------------");
+        setSourceList: function(list){
+            this.sourceList = list || [];
         },
-        getNextPlayList: function(){
-            return this.nextPlayList;
+        getSourceList: function(){
+            return [].concat(this.sourceList);
         },
-        getNextPlayURL: function(isReverse){
-            var list = [].concat(this.getNextPlayList());
-            var url = "";
+        setSourceIndex: function(index){
+            var size = this.getSourceList().length;
+            var lastIndex = Math.max(size - 1, 0);
 
-            if(true === isReverse){
-                url = list.pop() || "";
-            }else{
-                url = list.shift() || "";
+            if(index < 0){
+                index = 0;
             }
 
-            this.updateNextPlayList(list);
+            if(index > lastIndex){
+                index = lastIndex;
+            }
 
-            return url;
+            this.sourceIndex = index;
+        },
+        getSourceIndex: function(){
+            return this.sourceIndex;
+        },
+        getSourceMetaData: function(index){
+            var list = this.getSourceList();
+            var source = null;
+
+            this.setSourceIndex(index);
+
+            source = list[this.getSourceIndex()];
+
+            return source;
+        },
+        getCurrentSourceMetaData: function(){
+            return this.getSourceMetaData(this.getSourceIndex());
         },
         isLive: function(){
             var type = this.options("type");
@@ -802,6 +815,8 @@
                 //     allowAdjustVolume: true,
                 //     volume: 7,
                 //     source: "",
+                //     sourceIndex: 0,
+                //     autonext: true,
                 //     poster: "",
                 //     preload: "auto",
                 //     loop: false,
@@ -809,7 +824,6 @@
                 //     muted: false,
                 //     controls: true,
                 //     appearance: "define",
-                //     nextlist: "",
                 //     x5h5: false,
                 //     x5fullscreen: ""
                 // };
@@ -824,6 +838,8 @@
                     {name: "allowAdjustVolume", dataType: "boolean"},
                     {name: "volume", dataType: "number"},
                     {name: "source", dataType: "string"},
+                    {name: "sourceIndex", dataType: "number"},
+                    {name: "autonext", dataType: "boolean"},
                     {name: "poster", dataType: "string"},
                     {name: "preload", dataType: "string"},
                     {name: "loop", dataType: "boolean"},
@@ -831,7 +847,6 @@
                     {name: "muted", dataType: "boolean"},
                     {name: "controls", dataType: "boolean"},
                     {name: "appearance", dataType: "string"},
-                    {name: "nextlist", dataType: "string"},
                     {name: "x5h5", dataType: "boolean"},
                     {name: "x5fullscreen", dataType: "string"}
                 ];
@@ -973,16 +988,15 @@
         render: function(isInvokePlay){
             var container = this.getLivePlayerPlugin();
 
-            if(container.find(".liveplayer-frame").length === 0){
-                this.options(this.parse());
+            this.options(this.parse());
+            this.setSourceList(this.parseSourceList()); 
+            this.setSourceIndex(this.options("sourceIndex"));
 
+            if(container.find(".liveplayer-frame").length === 0){
                 var metaData = $.extend({}, this.options(), {
                     "name": this.getLivePlayerName(),
-                    "meta": this.parseMasterSource(this.options("source"))
+                    "meta": this.getCurrentSourceMetaData()
                 });
-
-                //解析其它播放列表
-                this.updateNextPlayList(this.parseNextPlayList()); 
 
                 LivePlayerTemplate.render(true, HTML_TEMPLATE, metaData, {
                     callback: function(ret, _container, _isInvokePlay){
@@ -1029,52 +1043,8 @@
                     context: this
                 });
             }else{
-                //解析其它播放列表
-                this.updateNextPlayList(this.parseNextPlayList());
                 this.watchState();
                 this.exec("render", [this.getLivePlayerName(), false]);
-            }
-        },
-        load: function(source, isPlay){
-            var video = this.getLivePlayerMasterVideo();
-
-            if(video.length > 0){
-                this.updateMasterSource(source)
-
-                if(true === isPlay){
-                    this.play();
-                }else{
-                  this.pause();
-                }
-            }
-        },
-        reload: function(isPlay){
-            var source = this.options("source");
-            
-            this.updateNextPlayList(this.parseNextPlayList());
-
-            // console.log("reload::source = " + source);
-            // console.log(this.getNextPlayList());
-
-            this.load(source, true === isPlay);
-        },
-        next: function(){
-            var next = this.getNextPlayURL();
-            var frame = this.getLivePlayerFrame();
-            var playButton = this.getLivePlayerButton("play");
-            var cs = playButton.parents(".liveplayer-control-state");
-            var isLoop = this.options("loop");
-
-            // console.log(next);
-            // console.log("next::source = " + next);
-            // console.log(this.getNextPlayList())
-
-            if(!next){
-                cs.removeClass("play pause").addClass("pause");
-                frame.removeClass("hidebars");
-                this.reload(isLoop);
-            }else{
-                this.load(next, true);
             }
         },
         restore: function(){
@@ -1083,6 +1053,16 @@
 
             this.updateTimeSeek(0, duration);
             this.updateProgress("0%");
+        },
+        gotoAndPlay: function(index){
+            this.setSourceIndex(index);
+            this.updateMasterSource(
+                this.getSourceMetaData(
+                    this.getSourceIndex()
+                )
+            );
+
+            this.play();
         },
         play: function(){
             var master = this.getLivePlayerMasterVideo(true);
@@ -1199,8 +1179,8 @@
             frame.remove();
 
             this.isListened = false;
-            this.nextPlayList = [];
-            this.nextPlayIndex = 0;
+            this.sourceList = [];
+            this.sourceIndex = 0;
             this.allowHideBars = true;
         }
     };
@@ -1414,19 +1394,30 @@
 
                 return this;
             },
-            "parseNextPlayList": function(){
-                return player.parseNextPlayList();
+            "parseSourceList": function(){
+                return player.parseSourceList();
             },
-            "updateNextPlayList": function(list){
-                player.updateNextPlayList(list);
+            "setSourceList": function(list){
+                player.setSourceList(list);
 
                 return this;
             },
-            "getNextPlayList": function(){
-                return player.getNextPlayList();
+            "getSourceList": function(){
+                return this.getSourceList();
             },
-            "getNextPlayURL": function(){
-                return player.getNextPlayURL();
+            "setSourceIndex": function(index){
+                player.setSourceIndex(index);
+
+                return this;
+            },
+            "getSourceIndex": function(){
+                return player.getSourceIndex();
+            },
+            "getSourceMetaData": function(index){
+                return player.getSourceMetaData(index);
+            },
+            "getCurrentSourceMetaData": function(){
+                return player.getCurrentSourceMetaData();
             },
             "render": function(isInvokePlay){
                 player.render(isInvokePlay);
@@ -1447,8 +1438,8 @@
             "isVOD": function(){
                 return player.isVOD();
             },
-            "next": function(){
-                player.next();
+            "gotoAndPlay": function(index){
+                player.gotoAndPlay(index);
 
                 return this;
             },
@@ -1521,7 +1512,7 @@
     };
 
     module.exports = {
-        "version": "R17B0111",
+        "version": "R17B0309",
         "MediaReadyState": MediaReadyState,
         "MediaNetworkState": MediaNetworkState,
         createLivePlayer: function(name, options){
