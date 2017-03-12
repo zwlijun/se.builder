@@ -101,8 +101,8 @@
                       + '      <%if("true" == liveplayer.x5fullscreen || "false" == liveplayer.x5fullscreen){%>'
                       + '      x5-video-player-fullscreen="<%=liveplayer.x5fullscreen%>" '
                       + '      <%}%>'
-                      + '      <%if(liveplayer.x5­orientation){%>'
-                      + '      x5-video-orientation="<%=liveplayer.x5­orientation%>" '
+                      + '      <%if(liveplayer.x5orientation){%>'
+                      + '      x5-video-orientation="<%=liveplayer.x5orientation%>" '
                       + '      <%}%>'
                       + '    >'
                       + '    <%if(liveplayer.meta){%>'
@@ -297,7 +297,7 @@
             appearance: "define",
             x5h5: false,
             x5fullscreen: "",
-            x5­orientation: "portraint"
+            x5orientation: "portraint"
         };
 
         return options;
@@ -946,9 +946,12 @@
             var timer = this.statusBarTimer = Timer.getTimer("liveplayer_" + name, Timer.toFPS(time), {
                 callback: function(_timer){
                     var frame = this.getLivePlayerFrame();
+                    var master = this.getLivePlayerMasterVideo(true);
 
-                    if(!frame.hasClass("hidebars")){
-                        frame.addClass("hidebars");
+                    if(master && !master.paused){
+                        if(!frame.hasClass("hidebars")){
+                            frame.addClass("hidebars");
+                        }
                     }
 
                     _timer.stop();
@@ -1017,7 +1020,7 @@
                 //     appearance: "define",
                 //     x5h5: false,
                 //     x5fullscreen: "",
-                //     x5­orientation: ""
+                //     x5orientation: ""
                 // };
                 var _conf = [
                     {name: "type", dataType: "string"},
@@ -1041,7 +1044,7 @@
                     {name: "appearance", dataType: "string"},
                     {name: "x5h5", dataType: "boolean"},
                     {name: "x5fullscreen", dataType: "string"},
-                    {name: "x5­orientation", dataType: "string"}
+                    {name: "x5orientation", dataType: "string"}
                 ];
 
                 return _conf;
