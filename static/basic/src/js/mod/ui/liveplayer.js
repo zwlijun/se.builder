@@ -17,6 +17,7 @@
     var Timer           = require("mod/se/timer");
     var Detect          = require("mod/se/detect");
     var Request         = require("mod/se/request");
+    var FullScreen      = require("mod/se/fullscreen");
     var HandleStack     = Listener.HandleStack;
     var Env             = Detect.env;
 
@@ -68,6 +69,14 @@
                       + '        <%}%>'
                       + '      </div>'
                       + '      <div class="liveplayer-control-player flexbox middle right">'
+                      + '        <%if(liveplayer.allowAdjustVolume){%>'
+                      + '        <div class="liveplayer-button-volume flexbox middle justify">'
+                      + '          <b class="icofont" data-action-click="liveplayer://volume/muted#<%=liveplayer.name%>"></b>'
+                      + '          <code>'
+                      + '            <i></i>'
+                      + '          </code>'
+                      + '        </div>'
+                      + '        <%}%>'
                       + '        <%if(liveplayer.allowFullScreen){%>'
                       + '        <cite class="liveplayer-button-fullscreen icofont fullscreen" data-action-click="liveplayer://fullscreen#<%=liveplayer.name%>"></cite>'
                       + '        <%}%>'
@@ -92,6 +101,9 @@
                       + '      <%if("true" == liveplayer.x5fullscreen || "false" == liveplayer.x5fullscreen){%>'
                       + '      x5-video-player-fullscreen="<%=liveplayer.x5fullscreen%>" '
                       + '      <%}%>'
+                      + '      <%if(liveplayer.x5­orientation){%>'
+                      + '      x5-video-orientation="<%=liveplayer.x5­orientation%>" '
+                      + '      <%}%>'
                       + '    >'
                       + '    <%if(liveplayer.meta){%>'
                       + '      <%if(liveplayer.meta.type){%>'
@@ -108,9 +120,15 @@
                       + '</div>'
                       + '';
 
-    var _seek_start = ("ontouchstart" in document) ? "touchstart.liveplayer" : "mousedown.liveplayer";
-    var _seek_move = ("ontouchmove" in document) ? "touchmove.liveplayer" : "mousemove.liveplayer";
-    var _seek_end = ("ontouchend" in document) ? "touchend.liveplayer" : "mouseup.liveplayer";
+    var _seek_start = ("ontouchstart" in document) ? "touchstart.liveplayer_seek" : "mousedown.liveplayer_seek";
+    var _seek_move = ("ontouchmove" in document) ? "touchmove.liveplayer_seek" : "mousemove.liveplayer_seek";
+    var _seek_end = ("ontouchend" in document) ? "touchend.liveplayer_seek" : "mouseup.liveplayer_seek";
+
+    var _volume_start = ("ontouchstart" in document) ? "touchstart.liveplayer_volume" : "mousedown.liveplayer_volume";
+    var _volume_move = ("ontouchmove" in document) ? "touchmove.liveplayer_volume" : "mousemove.liveplayer_volume";
+    var _volume_end = ("ontouchend" in document) ? "touchend.liveplayer_volume" : "mouseup.liveplayer_volume";
+
+    var MAX_VOLUME = 10;
 
     var LivePlayerSchema = {
         schema: "liveplayer",
@@ -168,14 +186,9 @@
             var name = args[0];
 
             var player = LivePlayer.getLivePlayer(name);
-            var master = player.getLivePlayerMasterVideo(true);
 
-            if(master.requestFullscreen){
-                master.requestFullscreen();
-            }else if(master.mozRequestFullScreen){
-                master.mozRequestFullScreen();
-            }else if(master.webkitRequestFullscreen){
-                master.webkitRequestFullscreen();
+            if(player){
+                player.requestFullscreen();
             }
         },
         reconnect: function(data, node, e, type){
@@ -203,6 +216,30 @@
 
                 player.seekToMouse(evt.pageX);
             }
+        },
+        volume: {
+            muted: function(data, node, e, type){
+                e.stopPropagation();
+                e.preventDefault();
+
+                var args = (data || "").split(",");
+                var name = args[0];
+
+                var player = LivePlayer.getLivePlayer(name);
+                var video = null;
+
+                if(!player){
+                    return ;
+                }
+
+                if(node.hasClass("muted")){
+                    player.setMuted(false);
+                    node.removeClass("muted");
+                }else{
+                    player.setMuted(true);
+                    node.addClass("muted");
+                }
+            }
         }
     };
     /**
@@ -212,7 +249,7 @@
       data-liveplayer-back="返回URL" 
       data-liveplayer-title="视频标题" 
       data-liveplayer-width="宽度，默认：100%" 
-      data-liveplayer-height="高度，默认：4.46rem" 
+      data-liveplayer-height="高度，默认：100%" 
       
       data-liveplayer-time="控制条及标题栏停留时长，默认：3000毫秒" 
       data-liveplayer-stateInterval="状态监听周期，默认：1000毫秒"
@@ -233,6 +270,7 @@
       data-liveplayer-appearance="播放器外观，define - 自定义 native - 系统默认样式 none - 无外观仅播放窗口"
       data-liveplayer-x5h5="设置腾讯X5内核播放器H5属性 1 - 设置 0 - 不设置"
       data-liveplayer-x5fullscreen="设置腾讯X5内核播放器全屏模式 true|false"
+      data-liveplayer-x5­orientation="设置腾讯X5内核视频的横竖屏  landscape 横屏, portraint竖屏"
     ></element>
     **/
     var GetDefaultOptions = function(){
@@ -241,7 +279,7 @@
             back: "#",
             title: "&nbsp;",
             width: "100%",
-            height: "4.46rem",
+            height: "100%",
             time: 3000,
             stateInterval: 1000,
             allowFullScreen: true,
@@ -258,7 +296,8 @@
             controls: true,
             appearance: "define",
             x5h5: false,
-            x5fullscreen: ""
+            x5fullscreen: "",
+            x5­orientation: "portraint"
         };
 
         return options;
@@ -314,7 +353,13 @@
             onvolumechange: null,           //在音频音量改变时触发（既可以是volume属性改变，也可以是muted属性改变）。
             onwaiting: null,                //在一个待执行的操作（如回放）因等待另一个操作（如跳跃或下载）被延迟时触发。
             onrender: null,                 //渲染LivePlayer后执行
-            onstatechange: null             //媒体状态监听
+            onstatechange: null,            //媒体状态监听
+            onwebkitbeginfullscreen: null,  //进入全屏模式(iOS)
+            onwebkitendfullscreen: null,    //退出全屏模式(iOS)
+            onfullscreenchange: null,       //进入或退出全屏触发
+            onfullscreenerror: null,        //进入或退出全屏发生错误触发
+            onx5videoenterfullscreen: null, //进入全屏模式(Tencent X5)
+            onx5videoexitfullscreen: null   //退出全屏模式(Tencent X5)
         };
         this.listner = new Listener(this.events, this.handleStack);
     };
@@ -546,6 +591,30 @@
 
             return node;
         },
+        getLivePlayerVolumeRectNode: function(){
+            var frame = this.getLivePlayerFrame();
+            var node = frame.find(".liveplayer-button-volume");
+
+            return node;
+        },
+        getLivePlayerVolumeNode: function(){
+            var frame = this.getLivePlayerVolumeRectNode();
+            var node = frame.find("b");
+
+            return node;
+        },
+        getLivePlayerVolumeSliderNode: function(){
+            var frame = this.getLivePlayerVolumeRectNode();
+            var node = frame.find("code");
+
+            return node;
+        },
+        getLivePlayerVolumeBarNode: function(){
+            var frame = this.getLivePlayerVolumeRectNode();
+            var node = frame.find("i");
+
+            return node;
+        },
         getLivePlayerBackNode: function(){
             var frame = this.getLivePlayerFrame();
             var node = frame.find(".liveplayer-back");
@@ -657,8 +726,30 @@
                 var seekRect = Util.getBoundingClientRect(progressSeekBarNode[0]);
                 var pos = inum * frameRect.width - seekRect.width;
 
+                if(inum <= 0){
+                    pos = 0;
+                }
+
                 progressSeekNode.css("width", percent);
                 progressSeekBarNode.css("left", pos + "px");
+            }
+        },
+        updateVolumeProgress: function(volume){
+            var slider = this.getLivePlayerVolumeSliderNode();
+            var bar = this.getLivePlayerVolumeBarNode();
+
+            if(slider.length > 0){
+                var sliderRect = Util.getBoundingClientRect(slider[0]);
+                var barRect = Util.getBoundingClientRect(bar[0]);
+                var vol = volume * 10;
+                var inum = vol / 100;
+                var pos = inum * sliderRect.width - barRect.width;
+
+                if(inum <= 0){
+                    pos = 0;
+                }
+
+                bar.css("left", pos + "px");
             }
         },
         parseSourceList: function(){
@@ -725,6 +816,106 @@
             var type = this.options("type");
 
             return "vod" == type;
+        },
+        initFullScreen: function(){
+            var master = this.getLivePlayerMasterVideo(true);
+            var name = this.getLivePlayerName();
+            var fsi = FullScreen.getFullScreenInstance(name);
+
+            if(!fsi){
+                fsi = FullScreen.newFullScreenInstance(name, master);
+
+                fsi.onfullscreenchange({
+                    callback: function(e, name, element){
+                        // console.log(e.type)
+                        this.exec("fullscreenchange", [e, name, element]);
+                    },
+                    context: this
+                });
+                fsi.onfullscreenerror({
+                    callback: function(){
+                        // console.log(e.type)
+                        this.exec("fullscreenerror", [e, name, element]);
+                    },
+                    context: this
+                });
+                fsi.onwebkitbeginfullscreen({
+                    callback: function(){
+                        // console.log(e.type)
+                        this.exec("webkitbeginfullscreen", [e, name, element]);
+                    },
+                    context: this
+                });
+                fsi.onwebkitendfullscreen({
+                    callback: function(){
+                        // console.log(e.type)
+                        this.exec("webkitendfullscreen", [e, name, element]);
+                    },
+                    context: this
+                });
+                fsi.onx5videoenterfullscreen({
+                    callback: function(){
+                        // console.log(e.type)
+                        this.exec("x5videoenterfullscreen", [e, name, element]);
+                    },
+                    context: this
+                });
+                fsi.onx5videoexitfullscreen({
+                    callback: function(){
+                        // console.log(e.type)
+                        this.exec("x5videoexitfullscreen", [e, name, element]);
+                    },
+                    context: this
+                });
+            }
+
+        },
+        requestFullscreen: function(){
+            var master = this.getLivePlayerMasterVideo(true);
+
+            if(master){
+                var fsi = FullScreen.getFullScreenInstance(this.getLivePlayerName());
+
+                fsi.requestFullscreen();
+            }
+        },
+        exitFullscreen: function(){
+            var master = this.getLivePlayerMasterVideo(true);
+
+            if(master){
+                var fsi = FullScreen.getFullScreenInstance(this.getLivePlayerName());
+
+                fsi.exitFullscreen();
+            }
+        },
+        maybeUseTencentX5Core: function(){
+            var browser = Env.browser;
+            var os = Env.os;
+
+            var tbs = browser.tbs;
+            var mqq = browser.mqq;
+            var wechat = browser.wechat;
+            var mqb = browser.mqqbrowser;
+
+            var android = os.android;
+
+            if(android.major > -1){
+                if(mqb.major > -1 && mqb.short >= 7.1){
+                    return true;
+                }
+
+                if(wechat.major > -1 && tbs.major > -1 && tbs.major > 36849){
+                    return true;
+                }
+
+                if(mqq.major > -1 && tbs.major > -1 && tbs.major > 36855){
+                    return true;
+                }
+
+                return false;
+            }else{
+                return false;
+            }         
         },
         watchState: function(){
             var name = this.getLivePlayerName();
@@ -825,7 +1016,8 @@
                 //     controls: true,
                 //     appearance: "define",
                 //     x5h5: false,
-                //     x5fullscreen: ""
+                //     x5fullscreen: "",
+                //     x5­orientation: ""
                 // };
                 var _conf = [
                     {name: "type", dataType: "string"},
@@ -848,7 +1040,8 @@
                     {name: "controls", dataType: "boolean"},
                     {name: "appearance", dataType: "string"},
                     {name: "x5h5", dataType: "boolean"},
-                    {name: "x5fullscreen", dataType: "string"}
+                    {name: "x5fullscreen", dataType: "string"},
+                    {name: "x5­orientation", dataType: "string"}
                 ];
 
                 return _conf;
@@ -917,6 +1110,13 @@
 
             this.options(this.parse());
         },
+        setTencentX5VideoPosition(left, top){
+            var master = this.getLivePlayerMasterVideo(true);
+
+            if(master){
+                master.style["object-position"] = left + "px " + top + "px";
+            }
+        },
         seekToMouse: function(pageX){
             var frame = this.getLivePlayerFrame();
             var master = this.getLivePlayerMasterVideo(true);
@@ -932,8 +1132,8 @@
 
             master.currentTime = targetTime;
 
-            var percent = master.currentTime / duration;
-            var s = Math.min(percent * 100, 100) + "%";
+            var seekPercent = master.currentTime / duration;
+            var s = Math.min(seekPercent * 100, 100) + "%";
 
             this.updateTimeSeek(master.currentTime, duration);
             this.updateProgress(s);
@@ -985,6 +1185,63 @@
 
             seekBarNode.on(_seek_start + "_" + this.getLivePlayerName(), "", ctx, this.seekstart);
         },
+        volumeToMouse: function(pageX){
+            var slider = this.getLivePlayerVolumeSliderNode();
+            var rect = Util.getBoundingClientRect(slider[0]);
+
+            var left = rect.left;
+            var width = rect.width;
+            var pos = pageX - left;
+
+            var duration = MAX_VOLUME;
+            var percent = pos / width;
+            var targetVolume = Number(Number(duration * percent).toFixed(2));
+
+            this.setVolume(targetVolume);
+        },
+        volumestart: function(e){
+            var data = e.data;
+            var player = data.liveplayer;
+            var ctx = {
+                liveplayer: player
+            };
+
+            // var evt = ("changedTouches" in e ? e["changedTouches"][0] : e);
+            player.allowHideBars = false;
+            player.watch().stop();
+
+            $(document).on(_volume_move + "_" + player.getLivePlayerName(), "", ctx, player.volumemove)
+                       .on(_volume_end + "_" + player.getLivePlayerName(), "", ctx, player.volumestop);
+        },
+        volumemove: function(e){
+            var data = e.data;
+            var player = data.liveplayer;
+            var ctx = {
+                liveplayer: player
+            };
+
+            var evt = ("changedTouches" in e ? e["changedTouches"][0] : e);
+
+            player.volumeToMouse(evt.pageX);            
+        },
+        volumestop: function(e){
+            var data = e.data;
+            var player = data.liveplayer;
+
+            player.allowHideBars = true;
+            player.watch().start();
+
+            $(document).off(_volume_move + "_" + player.getLivePlayerName())
+                       .off(_volume_end + "_" + player.getLivePlayerName());
+        },
+        bindVolumeEvent: function(){
+            var volumeBarNode = this.getLivePlayerVolumeBarNode();
+            var ctx = {
+                liveplayer: this
+            };
+
+            volumeBarNode.on(_volume_start + "_" + this.getLivePlayerName(), "", ctx, this.volumestart);
+        },
         render: function(isInvokePlay){
             var container = this.getLivePlayerPlugin();
 
@@ -1025,6 +1282,8 @@
                                     this.watch();
                                 }
                                 this.bindSeekEvent();
+                                this.bindVolumeEvent();
+                                this.initFullScreen();
 
                                 if(true === $isInvokePlay){
                                     var master = this.getLivePlayerMasterVideo(true);
@@ -1093,11 +1352,31 @@
             }
         },
         //---------- NATIVE PROPERTIES SET BEGIN ---------------
-        setVolume: function(volume){
+        isMuted: function(){
             var master = this.getLivePlayerMasterVideo(true);
 
             if(master){
+                return master.muted;
+            }
+
+            return false;
+        },
+        setMuted: function(isMuted){
+            var master = this.getLivePlayerMasterVideo(true);
+
+            if(master){
+                master.muted = !!isMuted;
+            }
+        },
+        setVolume: function(volume){
+            var master = this.getLivePlayerMasterVideo(true);
+
+            volume = Math.min(Math.max(0, volume), MAX_VOLUME);
+
+            if(master){
                 master.volume = Number(Number(volume / 10).toFixed(1));
+
+                this.updateVolumeProgress(volume);
             }
         },
         getVolume: function(){
@@ -1147,6 +1426,9 @@
                 break;
                 case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
                     err = LivePlayer.Error.MEDIA_ERR_SRC_NOT_SUPPORTED;
+                break;
+                default:
+                    err = LivePlayer.Error.MEDIA_ERR_UNKNOWN;
                 break;
             }
 
@@ -1205,6 +1487,10 @@
         "MEDIA_ERR_SRC_NOT_SUPPORTED": {
             "code": "E1004",
             "message": "不支持的媒体地址"
+        },
+        "MEDIA_ERR_UNKNOWN": {
+            "code": "E1000",
+            "message": "发生未知的错误"
         }
     };
 
@@ -1419,6 +1705,24 @@
             "getCurrentSourceMetaData": function(){
                 return player.getCurrentSourceMetaData();
             },
+            "requestFullscreen": function(){
+                player.requestFullscreen();
+
+                return this;
+            },
+            "exitFullscreen": function(){
+                player.exitFullscreen();
+
+                return this;
+            },
+            "maybeUseTencentX5Core": function(){
+                return player.maybeUseTencentX5Core();
+            },
+            "setTencentX5VideoPosition": function(left, top){
+                player.setTencentX5VideoPosition(left, top);
+
+                return this;
+            },
             "render": function(isInvokePlay){
                 player.render(isInvokePlay);
 
@@ -1450,6 +1754,14 @@
             },
             "pause": function(){
                 player.pause();
+
+                return this;
+            },
+            isMuted: function(){
+                return player.isMuted();
+            },
+            "setMuted": function(isMuted){
+                player.setMuted(isMuted);
 
                 return this;
             },
@@ -1512,7 +1824,7 @@
     };
 
     module.exports = {
-        "version": "R17B0309",
+        "version": "R17B0312",
         "MediaReadyState": MediaReadyState,
         "MediaNetworkState": MediaNetworkState,
         createLivePlayer: function(name, options){

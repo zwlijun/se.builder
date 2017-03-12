@@ -112,6 +112,46 @@
 	font-size: .32rem;
 	margin-right: .08rem;
 }
+.liveplayer-control-player .liveplayer-button-volume{
+	width: 1.68rem;
+	height: .16rem;
+	background-color: transparent;
+}
+.liveplayer-control-player .liveplayer-button-volume b{
+	font-weight: normal;
+	display: block;
+	width: .48rem;
+	height: .48rem;
+	line-height: .48rem;
+	color: #fff;
+	text-align: center;
+	margin-right: 0;
+}
+.liveplayer-control-player .liveplayer-button-volume b:before{
+	content: "\e64d";
+	margin-right: 0;
+}
+.liveplayer-control-player .liveplayer-button-volume b.muted:before{
+	content: "\e64a";
+}
+.liveplayer-control-player .liveplayer-button-volume code{
+	position: relative;
+	display: block;
+	width: 1.20rem;
+	height: .04rem;
+	background-color: #fff;
+}
+.liveplayer-control-player .liveplayer-button-volume i{
+	display: block;
+	position: absolute;
+	left: 0%;
+	top: -.06rem;
+	width: .16rem;
+	height: .16rem;
+	border-radius: 100%;
+	font-style: normal;
+	background-color: rgba(0, 101, 255, .85);
+}
 .liveplayer-control-player .fullscreen{
 
 }
