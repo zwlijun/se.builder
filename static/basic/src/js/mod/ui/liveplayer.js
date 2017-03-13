@@ -7,7 +7,7 @@
  * @charset utf-8
  * @author lijun
  * @git: https://github.com/zwlijun/se.builder
- * @date 2016.10
+ * @date 2016.10 
  */
 ;define(function LivePlayer(require, exports, module){
     var TemplateEngine  = require("mod/se/template");
