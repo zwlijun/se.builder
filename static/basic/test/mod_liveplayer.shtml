@@ -40,7 +40,7 @@
     </div>
   </div> -->
   <!-- video/mp4:http://data.gearedu.com/dialogs/16453/16453.mp4 -->
-<div id="lp0" 
+<div id="lp0" style="width: 100%; height: 4.46rem; position: relative; z-index: 1;"
       data-liveplayer="test_liveplayer" 
       data-liveplayer-type="vod" 
       data-liveplayer-back="http:///" 
@@ -60,6 +60,9 @@
       data-liveplayer-x5h5="1" 
       data-liveplayer-x5fullscreen="true"
 ></div>
+<div style="position: relative; z-index: 3;">
+  <h1>LivePlayer And Tencent X5 Test</h1>
+</div>
 <!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
 <script>
 seajs.use(["logic/test/test_liveplayer"]);

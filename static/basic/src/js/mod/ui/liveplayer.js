@@ -868,7 +868,6 @@
                     context: this
                 });
             }
-
         },
         requestFullscreen: function(){
             var master = this.getLivePlayerMasterVideo(true);
@@ -1277,7 +1276,7 @@
 
                                 Util.source(LivePlayerSchema);
 
-                                this.exec("render", [this.getLivePlayerName()], true);
+                                this.exec("render", [this.getLivePlayerName(), true]);
 
                                 if(this.options("autoplay")){
                                     this.watch().start();
