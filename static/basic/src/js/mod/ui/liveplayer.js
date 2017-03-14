@@ -104,6 +104,9 @@
                       + '      <%if(liveplayer.x5orientation){%>'
                       + '      x5-video-orientation="<%=liveplayer.x5orientation%>" '
                       + '      <%}%>'
+                      + '      <%if(!liveplayer.contextmenu){%>'
+                      + '      oncontextmenu="return false;" '
+                      + '      <%}%>'
                       + '    >'
                       + '    <%if(liveplayer.meta){%>'
                       + '      <%if(liveplayer.meta.type){%>'
@@ -271,6 +274,8 @@
       data-liveplayer-x5h5="设置腾讯X5内核播放器H5属性 1 - 设置 0 - 不设置"
       data-liveplayer-x5fullscreen="设置腾讯X5内核播放器全屏模式 true|false"
       data-liveplayer-x5­orientation="设置腾讯X5内核视频的横竖屏  landscape 横屏, portraint竖屏"
+
+      data-liveplayer-contextmenu="是否允许视频区的contextmenu 1 - 允许 0 - 不允许"
     ></element>
     **/
     var GetDefaultOptions = function(){
@@ -294,6 +299,7 @@
             autoplay: true,
             muted: false,
             controls: true,
+            contextmenu: false,
             appearance: "define",
             x5h5: false,
             x5fullscreen: "",
@@ -1002,8 +1008,9 @@
                 //     back: "#",
                 //     title: "&nbsp;",
                 //     width: "100%",
-                //     height: "4.46rem",
+                //     height: "100%",
                 //     time: 3000,
+                //     stateInterval: 1000,
                 //     allowFullScreen: true,
                 //     allowAdjustVolume: true,
                 //     volume: 7,
@@ -1016,6 +1023,7 @@
                 //     autoplay: true,
                 //     muted: false,
                 //     controls: true,
+                //     contextmenu: false,
                 //     appearance: "define",
                 //     x5h5: false,
                 //     x5fullscreen: "",
@@ -1040,6 +1048,7 @@
                     {name: "autoplay", dataType: "boolean"},
                     {name: "muted", dataType: "boolean"},
                     {name: "controls", dataType: "boolean"},
+                    {name: "contextmenu", dataType: "boolean"},
                     {name: "appearance", dataType: "string"},
                     {name: "x5h5", dataType: "boolean"},
                     {name: "x5fullscreen", dataType: "string"},
