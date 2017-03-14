@@ -1516,7 +1516,7 @@ textarea {
 	height: .70rem;
 }
 .liveplayer-control-state{
-
+	margin-left: .12rem;
 }
 .liveplayer-control-state .icofont{
 	display: block;
@@ -1526,7 +1526,7 @@ textarea {
 	text-align: center;
 	line-height: .56rem;
 	font-size: .32rem;
-	margin-left: .08rem;
+	margin-right: .08rem;
 }
 .liveplayer-control-state.pause .icofont:before{
 	content: "\e64c";
@@ -1555,6 +1555,7 @@ textarea {
 	width: 1.68rem;
 	height: .16rem;
 	background-color: transparent;
+	margin-right: .18rem;
 }
 .liveplayer-control-player .liveplayer-button-volume b{
 	font-weight: normal;

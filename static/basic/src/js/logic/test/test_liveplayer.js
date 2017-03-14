@@ -5,7 +5,7 @@
 
 	player.set("render", {
 		callback: function(name, isFirst){
-			// var master = this.getLivePlayerMasterVideo(true);
+			var master = this.getLivePlayerMasterVideo(true);
 			this.setTencentX5VideoPosition(0, 0);
 
 			$("body").append("<p>LivePlayer::Event#Render</p>");

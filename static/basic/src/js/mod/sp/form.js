@@ -386,6 +386,8 @@
             checker.set("submit", {
                 callback: function(submitEvent, target, checkEvent){
                     submitEvent.preventDefault();
+                    submitEvent.stopPropagation();
+
 
                     Util.fireAction(target, checkEvent.data, checkEvent);
                 },
@@ -683,7 +685,7 @@
     })();
 
     module.exports = {
-        "version": "R17B0227",
+        "version": "R17B0313",
         "CheckTypes": CheckTypes,
         configure: function(conf){
             Configure(conf);

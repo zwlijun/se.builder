@@ -297,7 +297,7 @@
             appearance: "define",
             x5h5: false,
             x5fullscreen: "",
-            x5orientation: "portraint"
+            x5orientation: ""
         };
 
         return options;
@@ -1112,7 +1112,7 @@
 
             this.options(this.parse());
         },
-        setTencentX5VideoPosition(left, top){
+        setTencentX5VideoPosition: function(left, top){
             var master = this.getLivePlayerMasterVideo(true);
 
             if(master){

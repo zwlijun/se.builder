@@ -46,6 +46,18 @@
       e.type.toLowerCase() == 'mspointer'+type)
   }
 
+  function __event(types){
+      var items = types.split(" ");
+
+      for(var i = 0; i < items.length; i++){
+          if(("on" + items[i]) in window){
+              return items[i];
+          }
+      }
+
+      return items[0];
+  }
+
   $(document).ready(function(){
     var now, delta, deltaX = 0, deltaY = 0, firstTouch, _isPointerType
 
@@ -63,7 +75,7 @@
           touch.el.trigger('swipe'+ swipeDirectionFromVelocity)
         }
       })
-      .on('touchstart MSPointerDown pointerdown', function(e){
+      .on(__event('touchstart MSPointerDown pointerdown'), function(e){
         if((_isPointerType = isPointerEventType(e, 'down')) &&
           !isPrimaryTouch(e)) return
         firstTouch = _isPointerType ? e : e.touches[0]
@@ -86,7 +98,7 @@
         // adds the current touch contact for IE gesture recognition
         if (gesture && _isPointerType) gesture.addPointer(e.pointerId)
       })
-      .on('touchmove MSPointerMove pointermove', function(e){
+      .on(__event('touchmove MSPointerMove pointermove'), function(e){
         if((_isPointerType = isPointerEventType(e, 'move')) &&
           !isPrimaryTouch(e)) return
         firstTouch = _isPointerType ? e : e.touches[0]
@@ -97,7 +109,7 @@
         deltaX += Math.abs(touch.x1 - touch.x2)
         deltaY += Math.abs(touch.y1 - touch.y2)
       })
-      .on('touchend MSPointerUp pointerup', function(e){
+      .on(__event('touchend MSPointerUp pointerup'), function(e){
         if((_isPointerType = isPointerEventType(e, 'up')) &&
           !isPrimaryTouch(e)) return
         cancelLongTap()
@@ -154,7 +166,7 @@
       // when the browser window loses focus,
       // for example when a modal dialog is shown,
       // cancel all ongoing events
-      .on('touchcancel MSPointerCancel pointercancel', cancelAll)
+      .on(__event('touchcancel MSPointerCancel pointercancel'), cancelAll)
 
     // scrolling the window indicates intention of the user
     // to scroll, not tap or swipe, so cancel all ongoing events

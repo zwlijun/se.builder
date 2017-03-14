@@ -41,7 +41,22 @@ var SecurityURL = {
     },
     fixed: function(url){
         var URLInfo = Request.parseURL(url);
-        var data = Request.merge(URLInfo.search, location.search);
+        var mergeKeys = [];
+        var locData = Request.serialized(location.search);
+        var data = Request.serialized(URLInfo.search);
+        var key = null;
+
+        if(!mergeKeys || mergeKeys.length == 0){
+            return url;
+        }
+
+        for(var i = 0; i < mergeKeys.length; i++){
+            key = mergeKeys[i];
+
+            if(key in locData){
+                data[key] = locData[key];
+            }
+        }
 
         url = Request.append(url, Request.stringify(data));
 

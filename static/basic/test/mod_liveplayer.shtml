@@ -49,7 +49,7 @@
       data-liveplayer-height="4.46rem" 
       data-liveplayer-time="3000" 
       data-liveplayer-allowAdjustVolume="1" 
-      data-liveplayer-allowFullScreen="1" 
+      data-liveplayer-allowFullScreen="0" 
       data-liveplayer-source="video/mp4:http://data.gearedu.com/dialogs/16453/16453.mp4" 
       data-liveplayer-poster="" 
       data-liveplayer-preload="auto" 
