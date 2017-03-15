@@ -390,6 +390,23 @@
                     }
                 }
             },
+            "durationchange": function(e){
+                var master = this.getLivePlayerMasterVideo(true);
+                var duration = master.duration;
+                var currentTime = master.currentTime;
+
+                if(duration > 0){
+                    var percent = currentTime / duration;
+                    var s = Math.min(percent * 100, 100) + "%";
+
+                    this.updateTimeSeek(currentTime, duration);
+                    this.updateProgress(s);
+
+                    if(master.error){
+                        this.error(master.error);
+                    }
+                }
+            },
             "pause": function(e){
                 var frame = this.getLivePlayerFrame();
                 var mask = this.getLivePlayerMasterMask();
@@ -666,6 +683,17 @@
 
             return null;
         },
+        loadMasterSource: function(){
+            var video = this.getLivePlayerMasterVideo(true);
+
+            if(video){
+                try{
+                    video.load();
+                }catch(e){
+                    this.error(LivePlayer.Error.MEDIA_ERR_LOAD_SOURCE);
+                }
+            }
+        },
         updateMasterSource: function(source){
             var video = this.getLivePlayerMasterVideo();
             var sourceInfo = DataType.isString(source) ? this.parseMasterSource(source) : source;
@@ -676,7 +704,7 @@
             // console.log("<<-----------------------")
 
 
-            if(sourceInfo){
+            if(sourceInfo && sourceInfo.source){
                 if(sourceInfo.type){
                     video.removeAttr("src")
                          .html('<source src="' + sourceInfo.source + '" type="' + sourceInfo.type + '" />');
@@ -685,7 +713,7 @@
                          .html('<source src="' + sourceInfo.source + '" />');
                 }
 
-                video[0].load();
+                this.loadMasterSource();
             }else{
                 this.error(LivePlayer.Error.MEDIA_ERR_NO_SOURCE);
             }
@@ -1273,6 +1301,7 @@
                         Util.delay(50, {
                             callback: function(et, _node, $isInvokePlay){
                                 this.listen();
+                                this.loadMasterSource();
                                 this.watchState();
                                 this.setVolume(this.options("volume"));
 
@@ -1300,9 +1329,13 @@
                                     var master = this.getLivePlayerMasterVideo(true);
                                     var state = this.getLivePlayerMasterControlState();
 
-                                    master.play();
-                                    state.removeClass("pause")
-                                         .addClass("play");
+                                    try{
+                                        master.play();
+                                        state.removeClass("pause")
+                                             .addClass("play");
+                                    }catch(e){
+                                        this.error(LivePlayer.Error.MEDIA_ERR_PLAY);
+                                    }
                                 }
                             },
                             args: [_container, _isInvokePlay],
@@ -1313,6 +1346,7 @@
                     context: this
                 });
             }else{
+                this.updateMasterSource(this.getCurrentSourceMetaData());
                 this.watchState();
                 this.exec("render", [this.getLivePlayerName(), false]);
             }
@@ -1344,10 +1378,14 @@
                     this.destory();
                     this.render(true);
                 }else{
-                    master.play();
+                    try{
+                        master.play();
 
-                    state.removeClass("pause")
-                         .addClass("play");
+                        state.removeClass("pause")
+                             .addClass("play");
+                    }catch(e){
+                        this.error(LivePlayer.Error.MEDIA_ERR_PLAY);
+                    }
                 }
             }
         },
@@ -1426,6 +1464,7 @@
         },
         error: function(err){
             switch(err.code){
+                //------SYSTEM ERROR------------
                 case MediaError.MEDIA_ERR_ABORTED:
                     err = LivePlayer.Error.MEDIA_ERR_ABORTED;
                 break;
@@ -1438,6 +1477,13 @@
                 case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
                     err = LivePlayer.Error.MEDIA_ERR_SRC_NOT_SUPPORTED;
                 break;
+                //------LOGIC ERROR-------------
+                case LivePlayer.Error.MEDIA_ERR_LOAD_SOURCE.code:
+                case LivePlayer.Error.MEDIA_ERR_PLAY.code:
+                case LivePlayer.Error.MEDIA_ERR_NO_SOURCE.code:
+                    //@todo
+                break;
+                //------DEFAULT ERROR------------
                 default:
                     err = LivePlayer.Error.MEDIA_ERR_UNKNOWN;
                 break;
@@ -1479,10 +1525,7 @@
     };
 
     LivePlayer.Error = {
-        "MEDIA_ERR_NO_SOURCE": {
-            "code": "E0001",
-            "message": "解析播放地址失败，正确格式：[媒体类型:]播放地址。如：video/mp4:source.mp4或source.mp4"
-        },
+        //------SYSTEM ERROR------------
         "MEDIA_ERR_ABORTED": {
             "code": "E1001",
             "message": "已取消视频源的请求"
@@ -1499,9 +1542,23 @@
             "code": "E1004",
             "message": "不支持的媒体地址"
         },
+        //------DEFAULT ERROR-------------
         "MEDIA_ERR_UNKNOWN": {
-            "code": "E1000",
-            "message": "发生未知的错误"
+            "code": "E2000",
+            "message": "发生未知的错误<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name}\">重试</a>"
+        },
+        //------LOGIC ERROR-------------
+        "MEDIA_ERR_NO_SOURCE": {
+            "code": "E2001",
+            "message": "解析播放地址失败，正确格式：[媒体类型:]播放地址。如：video/mp4:source.mp4或source.mp4"
+        },
+        "MEDIA_ERR_LOAD_SOURCE": {
+            "code": "E2002",
+            "message": "加载媒体地址失败<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name}\">重试</a>"
+        },
+        "MEDIA_ERR_PLAY": {
+            "code": "E2003",
+            "message": "播放时发生错误<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name}\">重试</a>"
         }
     };
 
@@ -1835,7 +1892,7 @@
     };
 
     module.exports = {
-        "version": "R17B0312",
+        "version": "R17B0315",
         "MediaReadyState": MediaReadyState,
         "MediaNetworkState": MediaNetworkState,
         createLivePlayer: function(name, options){
