@@ -58,6 +58,7 @@
                       + '  <%if(liveplayer.controls && "define" == liveplayer.appearance){%>'
                       + '  <div class="liveplayer-controlbar">'
                       + '    <div class="liveplayer-progressbar<%="live" == liveplayer.type ? " hidden" : ""%>" data-action-touchstart="liveplayer://progress/seek#<%=liveplayer.name%>">'
+                      + '      <div class="liveplayer-progressbar-buffered" style="width: 0%"></div>'
                       + '      <div class="liveplayer-progressbar-seeked" style="width: 0%"></div>'
                       + '      <div class="liveplayer-progressbar-seeked-bar"></div>'
                       + '    </div>'
@@ -407,6 +408,37 @@
                     }
                 }
             },
+            "loadstart": function(e){
+                this.message("正在缓冲，请稍候...");
+            },
+            "canplay": function(e){
+                this.message();
+            },
+            "seeking": function(e){
+                this.message("正在缓冲，请稍候...");
+            },
+            "seeked": function(e){
+                this.message();
+            },
+            "progress": function(e){
+                if(this.isVOD()){
+                    var master = this.getLivePlayerMasterVideo(true);
+
+                    var buffered = master.buffered;
+                    var timeBuffered = 0;
+                    var duration = master.duration;
+                    var percent = 0;
+
+                    if(buffered.length != 0){
+                        timeBuffered = buffered.end(Math.max(buffered.length - 2, 0));
+                        percent = (timeBuffered / duration);
+                        
+                        this.updateBufferedProgress(percent);
+                    }else{
+                        this.updateBufferedProgress(0);
+                    }
+                }
+            },
             "pause": function(e){
                 var frame = this.getLivePlayerFrame();
                 var mask = this.getLivePlayerMasterMask();
@@ -416,12 +448,13 @@
                 frame.removeClass("hidebars");
 
                 if(master.error){
-                    mask.removeClass("hide")
-                        .addClass("liveplayer-error");
+                    this.error(master.error);
                 }else{
-                    mask.addClass("hide")
-                        .removeClass("liveplayer-error");
+                    this.updatePlayStateUI();
                 }
+            },
+            "play": function(e){
+                this.updatePlayStateUI();
             },
             "playing": function(e){
                 var mask = this.getLivePlayerMasterMask();
@@ -614,6 +647,12 @@
 
             return node;
         },
+        getLivePlayerProgressBufferedNode: function(){
+            var pb = this.getLivePlayerProgressBar();
+            var node = pb.find(".liveplayer-progressbar-buffered");
+
+            return node;
+        },
         getLivePlayerVolumeRectNode: function(){
             var frame = this.getLivePlayerFrame();
             var node = frame.find(".liveplayer-button-volume");
@@ -713,6 +752,7 @@
                          .html('<source src="' + sourceInfo.source + '" />');
                 }
 
+                this.listenSourceError();
                 this.loadMasterSource();
             }else{
                 this.error(LivePlayer.Error.MEDIA_ERR_NO_SOURCE);
@@ -760,7 +800,7 @@
                 var seekRect = Util.getBoundingClientRect(progressSeekBarNode[0]);
                 var pos = inum * frameRect.width - seekRect.width;
 
-                if(inum <= 0){
+                if(pos <= 0){
                     pos = 0;
                 }
 
@@ -779,12 +819,18 @@
                 var inum = vol / 100;
                 var pos = inum * sliderRect.width - barRect.width;
 
-                if(inum <= 0){
+                if(pos <= 0){
                     pos = 0;
                 }
 
                 bar.css("left", pos + "px");
             }
+        },
+        updateBufferedProgress: function(percent){
+            var node = this.getLivePlayerProgressBufferedNode();
+            var str = Number(percent * 100).toFixed(2) + "%";
+
+            node.css("width", str);
         },
         parseSourceList: function(){
             var source = this.options("source") || "";
@@ -1004,7 +1050,7 @@
             e.preventDefault();
             e.stopPropagation();
 
-            // console.log(name + " - " + type);
+            console.log("LivePlayer#" + name + "/Event/" + type);
 
             if((type in processor) && processor[type]){
                 processor[type].apply(ins, [e]);
@@ -1024,6 +1070,22 @@
 
                     this.isListened = true;
                 }
+            }
+        },
+        sourceErrorDispatcher: function(e){
+            var data = e.data;
+            var ins = data.liveplayer;
+
+            ins.error(LivePlayer.Error.MEDIA_ERR_LOAD_SOURCE);
+        },
+        listenSourceError: function(){
+            var master = this.getLivePlayerMasterVideo();
+            var source = master.find("source");
+
+            if(source.length > 0){
+                source.on("error", "", {
+                    liveplayer: this
+                }, this.sourceErrorDispatcher);
             }
         },
         parse: function(){
@@ -1301,6 +1363,7 @@
                         Util.delay(50, {
                             callback: function(et, _node, $isInvokePlay){
                                 this.listen();
+                                this.listenSourceError();
                                 this.loadMasterSource();
                                 this.watchState();
                                 this.setVolume(this.options("volume"));
@@ -1327,12 +1390,10 @@
 
                                 if(true === $isInvokePlay){
                                     var master = this.getLivePlayerMasterVideo(true);
-                                    var state = this.getLivePlayerMasterControlState();
 
                                     try{
                                         master.play();
-                                        state.removeClass("pause")
-                                             .addClass("play");
+                                        this.checkPlaying();
                                     }catch(e){
                                         this.error(LivePlayer.Error.MEDIA_ERR_PLAY);
                                     }
@@ -1349,6 +1410,10 @@
                 this.updateMasterSource(this.getCurrentSourceMetaData());
                 this.watchState();
                 this.exec("render", [this.getLivePlayerName(), false]);
+
+                if(isInvokePlay){
+                    this.play();
+                }
             }
         },
         restore: function(){
@@ -1360,6 +1425,7 @@
         },
         gotoAndPlay: function(index){
             this.setSourceIndex(index);
+            this.updateBufferedProgress(0);
             this.updateMasterSource(
                 this.getSourceMetaData(
                     this.getSourceIndex()
@@ -1368,9 +1434,43 @@
 
             this.play();
         },
-        play: function(){
+        updatePlayStateUI: function(){
             var master = this.getLivePlayerMasterVideo(true);
             var state = this.getLivePlayerMasterControlState();
+            var mask = this.getLivePlayerMasterMask();
+
+            if(master){
+                // mask.addClass("hide")
+                //     .removeClass("liveplayer-error");
+
+                if(master.paused){
+                    state.removeClass("play")
+                         .addClass("pause");
+
+                    if("define" == this.options("appearance")){
+                        mask.removeClass("hide");
+                    } 
+                }else{
+                    state.removeClass("pause")
+                          .addClass("play");
+                }
+            }
+        },
+        checkPlaying: function(){
+            var master = this.getLivePlayerMasterVideo(true);
+
+            if(master){
+
+                Util.delay(50, {
+                    callback: function(_et){
+                        this.updatePlayStateUI();
+                    },
+                    context: this
+                });
+            }
+        },
+        play: function(){
+            var master = this.getLivePlayerMasterVideo(true);
             var mask = this.getLivePlayerMasterMask();
 
             if(master){
@@ -1380,9 +1480,7 @@
                 }else{
                     try{
                         master.play();
-
-                        state.removeClass("pause")
-                             .addClass("play");
+                        this.checkPlaying();
                     }catch(e){
                         this.error(LivePlayer.Error.MEDIA_ERR_PLAY);
                     }
@@ -1391,13 +1489,9 @@
         },
         pause: function(){
             var master = this.getLivePlayerMasterVideo(true);
-            var state = this.getLivePlayerMasterControlState();
 
             if(master){
                 master.pause();
-
-                state.removeClass("play")
-                     .addClass("pause");
             }
         },
         //---------- NATIVE PROPERTIES SET BEGIN ---------------
@@ -1462,6 +1556,30 @@
         canPlaySource: function(source){
             return LivePlayer.canPlaySource(source);
         },
+        message: function(msg){
+            var master = this.getLivePlayerMasterVideo(true);
+            var mask = this.getLivePlayerMasterMask();
+            var ins = mask.find("ins");
+
+            if(!msg){
+                mask.removeClass("liveplayer-error").addClass("hide");
+                ins.html("");
+
+                this.updatePlayStateUI();
+                return ;
+            }
+
+            var meta = {
+                "name": this.getLivePlayerName()
+            };
+
+            ins.html(Util.formatData(msg, meta));
+
+            mask.addClass("liveplayer-error").removeClass("hide");
+
+            this.allowHideBars = false;
+            this.watch().stop();
+        },
         error: function(err){
             switch(err.code){
                 //------SYSTEM ERROR------------
@@ -1489,15 +1607,9 @@
                 break;
             }
 
-            var mask = this.getLivePlayerMasterMask();
             var state = this.getLivePlayerMasterControlState();
-            var ins = mask.find("ins");
-            var meta = {
-                "name": this.getLivePlayerName()
-            };
 
-            mask.addClass("liveplayer-error").removeClass("hide");
-            ins.html(err.code + ": " + Util.formatData(err.message, meta));
+            this.message(err.code + ": " + err.message);
 
             state.removeClass("play pause")
                  .addClass("pause");

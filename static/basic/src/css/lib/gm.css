@@ -1497,12 +1497,16 @@ textarea {
 .liveplayer-progressbar{
 	height: .06rem;
 	width: 100%;
-	background-color: rgba(255, 255, 255, .65);
+	background-color: rgba(255, 255, 255, .45);
 	position: relative;
 }
 .liveplayer-progressbar-seeked{
 	height: 100%;
-	background-color: rgba(0, 101, 255, .65);
+	background-color: rgba(0, 101, 255, 1);
+	z-index: 2;
+	position: absolute;
+	left: 0;
+	top: 0;
 }
 .liveplayer-progressbar-seeked-bar{
 	width: .18rem;
@@ -1511,6 +1515,15 @@ textarea {
 	position: absolute;
 	top: -.06rem;
 	background-color: rgba(0, 101, 255, .85);
+	z-index: 3;
+}
+.liveplayer-progressbar-buffered{
+	height: 100%;
+	background-color: rgba(255, 255, 255, .55);
+	z-index: 1;
+	position: absolute;
+	left: 0;
+	top: 0;
 }
 .liveplayer-control{
 	height: .70rem;
@@ -1623,8 +1636,8 @@ textarea {
 	left: 0;
 	top: 0;
 	z-index: 2;
-	background-color: transparent;
-	/*background-color: rgba(33, 33, 33, 1);*/
+	/*background-color: transparent;*/
+	background-color: rgba(0, 0, 0, .50);
 }
 .liveplayer-master-mask ins{
 	background-color: transparent;

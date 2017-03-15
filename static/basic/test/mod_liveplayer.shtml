@@ -54,7 +54,7 @@
       data-liveplayer-poster="" 
       data-liveplayer-preload="auto" 
       data-liveplayer-loop="0" 
-      data-liveplayer-autoplay="0"
+      data-liveplayer-autoplay="1"
       data-liveplayer-controls="1"  
       data-liveplayer-appearance="define"
       data-liveplayer-x5h5="1" 
