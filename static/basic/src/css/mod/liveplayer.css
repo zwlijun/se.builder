@@ -56,6 +56,12 @@
 	font-size: .18rem;
 	z-index: 5;
 }
+.liveplayer-frame.live .liveplayer-controlbar{
+	height: .68rem;
+}
+.liveplayer-frame.live .liveplayer-progressbar{
+	display: none;
+}
 .liveplayer-progressbar{
 	height: .08rem;
 	width: 100%;
