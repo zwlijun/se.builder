@@ -202,6 +202,13 @@ textarea {
   -webkit-text-stroke-width: 0.2px;
   -moz-osx-font-smoothing: grayscale;
 }
+.icofont.none{
+  
+}
+.icofont.none:before,
+.icofont.none:after{
+  content: none!important;
+}
 .icofont-spin {
   -webkit-transform-origin: center center;
      -moz-transform-origin: center center;

@@ -286,7 +286,7 @@
             title: "&nbsp;",
             width: "100%",
             height: "100%",
-            time: 3000,
+            time: 12000,
             stateInterval: 1000,
             allowFullScreen: true,
             allowAdjustVolume: true,
@@ -328,6 +328,7 @@
         this.sourceList = [];
         this.sourceIndex = 0;
         this.allowHideBars = true;
+        this.forceLockBars = false;
 
         this.stateTimer = null;
         this.statusBarTimer = null;
@@ -415,10 +416,10 @@
                 this.message();
             },
             "seeking": function(e){
-                this.message("正在缓冲，请稍候...");
+                // this.message("正在缓冲，请稍候...");
             },
             "seeked": function(e){
-                this.message();
+                // this.message();
             },
             "progress": function(e){
                 if(this.isVOD()){
@@ -444,13 +445,14 @@
                 var mask = this.getLivePlayerMasterMask();
                 var master = this.getLivePlayerMasterVideo(true);
 
-                this.watch().stop();
-                frame.removeClass("hidebars");
+                // this.watch().stop();
+                // frame.removeClass("hidebars");
 
                 if(master.error){
                     this.error(master.error);
                 }else{
                     this.updatePlayStateUI();
+                    this.updateLivePlayerBarsStateUI();
                 }
             },
             "play": function(e){
@@ -459,9 +461,9 @@
             "playing": function(e){
                 var mask = this.getLivePlayerMasterMask();
 
-                if(this.allowHideBars){
-                    this.watch().start();
-                }
+                // if(this.allowHideBars){
+                //     this.watch().start();
+                // }
 
                 mask.addClass("hide");
             },
@@ -475,11 +477,15 @@
                         if(nextIndex > lastIndex){
                             if(this.options("loop")){
                                 this.gotoAndPlay(0);
+                            }else{
+                                this.updateLivePlayerBarsStateUI();
                             }
                         }else{
                             this.gotoAndPlay(this.getSourceIndex() + 1);
                         }
                     }
+                }else{
+                    this.updateLivePlayerBarsStateUI();
                 }
             },
             "error": function(e){
@@ -1024,21 +1030,32 @@
             var time = this.options("time");
             var timer = this.statusBarTimer = Timer.getTimer("liveplayer_" + name, Timer.toFPS(time), {
                 callback: function(_timer){
-                    var frame = this.getLivePlayerFrame();
-                    var master = this.getLivePlayerMasterVideo(true);
-
-                    if(master && !master.paused){
-                        if(!frame.hasClass("hidebars")){
-                            frame.addClass("hidebars");
-                        }
-                    }
-
-                    _timer.stop();
+                    this.updateLivePlayerBarsStateUI();
                 },
                 context: this
             });
 
+            this.updateLivePlayerBarsStateUI();
+            timer.start();
+
             return timer;
+        },
+        updateLivePlayerBarsStateUI: function(){
+            var frame = this.getLivePlayerFrame();
+            var master = this.getLivePlayerMasterVideo(true);
+
+            if(true === this.forceLockBars 
+                  || false === this.allowHideBars 
+                      || (master && true === master.paused))
+            { //如果当前设置为不允许隐藏、强制锁定或者视频为暂停状态时显示工具栏
+                if(frame.hasClass("hidebars")){
+                    frame.removeClass("hidebars");
+                }
+            }else{
+                if(!frame.hasClass("hidebars")){
+                    frame.addClass("hidebars");
+                }
+            }
         },
         dispatcher: function(e){
             var data = e.data;
@@ -1247,8 +1264,8 @@
             };
 
             // var evt = ("changedTouches" in e ? e["changedTouches"][0] : e);
-            player.allowHideBars = false;
-            player.watch().stop();
+            player.forceLockBars = true;
+            // player.watch().stop();
 
             $(document).on(_seek_move + "_" + player.getLivePlayerName(), "", ctx, player.seekmove)
                        .on(_seek_end + "_" + player.getLivePlayerName(), "", ctx, player.seekstop);
@@ -1268,8 +1285,8 @@
             var data = e.data;
             var player = data.liveplayer;
 
-            player.allowHideBars = true;
-            player.watch().start();
+            player.forceLockBars = false;
+            // player.watch().start();
 
             $(document).off(_seek_move + "_" + player.getLivePlayerName())
                        .off(_seek_end + "_" + player.getLivePlayerName());
@@ -1308,8 +1325,8 @@
             };
 
             // var evt = ("changedTouches" in e ? e["changedTouches"][0] : e);
-            player.allowHideBars = false;
-            player.watch().stop();
+            player.forceLockBars = true;
+            // player.watch().stop();
 
             $(document).on(_volume_move + "_" + player.getLivePlayerName(), "", ctx, player.volumemove)
                        .on(_volume_end + "_" + player.getLivePlayerName(), "", ctx, player.volumestop);
@@ -1329,8 +1346,8 @@
             var data = e.data;
             var player = data.liveplayer;
 
-            player.allowHideBars = true;
-            player.watch().start();
+            player.forceLockBars = false;
+            // player.watch().start();
 
             $(document).off(_volume_move + "_" + player.getLivePlayerName())
                        .off(_volume_end + "_" + player.getLivePlayerName());
@@ -1379,11 +1396,12 @@
 
                                 this.exec("render", [this.getLivePlayerName(), true]);
 
-                                if(this.options("autoplay")){
-                                    this.watch().start();
-                                }else{
-                                    this.watch();
-                                }
+                                this.watch();
+                                // if(this.options("autoplay")){
+                                //     this.watch().start();
+                                // }else{
+                                //     this.watch();
+                                // }
                                 this.bindSeekEvent();
                                 this.bindVolumeEvent();
                                 this.initFullScreen();
@@ -1566,6 +1584,8 @@
                 ins.html("");
 
                 this.updatePlayStateUI();
+
+                this.allowHideBars = true;
                 return ;
             }
 
@@ -1578,7 +1598,7 @@
             mask.addClass("liveplayer-error").removeClass("hide");
 
             this.allowHideBars = false;
-            this.watch().stop();
+            // this.watch().stop();
         },
         error: function(err){
             switch(err.code){
@@ -1633,6 +1653,7 @@
             this.sourceList = [];
             this.sourceIndex = 0;
             this.allowHideBars = true;
+            this.forceLockBars = false;
         }
     };
 
@@ -2004,7 +2025,7 @@
     };
 
     module.exports = {
-        "version": "R17B0315",
+        "version": "R17B0317",
         "MediaReadyState": MediaReadyState,
         "MediaNetworkState": MediaNetworkState,
         createLivePlayer: function(name, options){
