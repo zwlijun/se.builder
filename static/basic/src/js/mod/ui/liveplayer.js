@@ -445,9 +445,6 @@
                 var mask = this.getLivePlayerMasterMask();
                 var master = this.getLivePlayerMasterVideo(true);
 
-                // this.watch().stop();
-                // frame.removeClass("hidebars");
-
                 if(master.error){
                     this.error(master.error);
                 }else{
@@ -461,11 +458,8 @@
             "playing": function(e){
                 var mask = this.getLivePlayerMasterMask();
 
-                // if(this.allowHideBars){
-                //     this.watch().start();
-                // }
-
                 mask.addClass("hide");
+                this.updatePlayStateUI();
             },
             "ended": function(e){
                 if(this.isVOD()){
@@ -861,7 +855,7 @@
             this.sourceList = list || [];
         },
         getSourceList: function(){
-            return [].concat(this.sourceList);
+            return [].concat(this.sourceList || []);
         },
         setSourceIndex: function(index){
             var size = this.getSourceList().length;
@@ -886,7 +880,7 @@
 
             this.setSourceIndex(index);
 
-            source = list[this.getSourceIndex()];
+            source = list[this.getSourceIndex()] || null;
 
             return source;
         },
@@ -1377,61 +1371,51 @@
                     callback: function(ret, _container, _isInvokePlay){
                         _container.html(ret.result);
 
-                        Util.delay(50, {
-                            callback: function(et, _node, $isInvokePlay){
-                                this.listen();
-                                this.listenSourceError();
-                                this.loadMasterSource();
-                                this.watchState();
-                                this.setVolume(this.options("volume"));
+                        //监听事件
+                        this.listen();
+                        this.listenSourceError();
 
-                                Util.registAction(_node, [
-                                    {type: "click", mapping: null, compatible: null},
-                                    {type: "touchstart", mapping: "mousedown", compatible: null},
-                                    {type: "touchmove", mapping: "mousemove", compatible: null},
-                                    {type: "touchend", mapping: "mouseup", compatible: null}
-                                ], null);
+                        //监听状态
+                        this.watchState();
+                        this.watch();
 
-                                Util.source(LivePlayerSchema);
+                        //设置声音
+                        this.setVolume(this.options("volume"));
+                        
+                        //绑定进度条事件
+                        this.bindSeekEvent();
+                        this.bindVolumeEvent();
 
-                                this.exec("render", [this.getLivePlayerName(), true]);
+                        //初始化全屏控制
+                        this.initFullScreen();
 
-                                this.watch();
-                                // if(this.options("autoplay")){
-                                //     this.watch().start();
-                                // }else{
-                                //     this.watch();
-                                // }
-                                this.bindSeekEvent();
-                                this.bindVolumeEvent();
-                                this.initFullScreen();
+                        if(ret.metaData.meta){
+                            this.loadMasterSource(); //加载资源
 
-                                if(true === $isInvokePlay){
-                                    var master = this.getLivePlayerMasterVideo(true);
+                            if(true === _isInvokePlay){
+                                this.play();
+                            }
+                        }
 
-                                    try{
-                                        master.play();
-                                        this.checkPlaying();
-                                    }catch(e){
-                                        this.error(LivePlayer.Error.MEDIA_ERR_PLAY);
-                                    }
-                                }
-                            },
-                            args: [_container, _isInvokePlay],
-                            context: this
-                        });
+                        //调用render回调
+                        this.exec("render", [this.getLivePlayerName()]);
+
+                        //注册schema
+                        Util.source(LivePlayerSchema);
+
+                        //注册事件
+                        Util.registAction(_container, [
+                            {type: "click", mapping: null, compatible: null},
+                            {type: "touchstart", mapping: "mousedown", compatible: null},
+                            {type: "touchmove", mapping: "mousemove", compatible: null},
+                            {type: "touchend", mapping: "mouseup", compatible: null}
+                        ], null);
                     },
                     args: [container, isInvokePlay],
                     context: this
                 });
             }else{
-                this.updateMasterSource(this.getCurrentSourceMetaData());
-                this.watchState();
-                this.exec("render", [this.getLivePlayerName(), false]);
-
-                if(isInvokePlay){
-                    this.play();
-                }
+                console.warn("媒体播放器已经存在，如果您要重新渲染，请先调用destory()方法");
             }
         },
         restore: function(){
@@ -1474,34 +1458,14 @@
                 }
             }
         },
-        checkPlaying: function(){
-            var master = this.getLivePlayerMasterVideo(true);
-
-            if(master){
-
-                Util.delay(50, {
-                    callback: function(_et){
-                        this.updatePlayStateUI();
-                    },
-                    context: this
-                });
-            }
-        },
         play: function(){
             var master = this.getLivePlayerMasterVideo(true);
-            var mask = this.getLivePlayerMasterMask();
 
             if(master){
-                if(mask.hasClass("liveplayer-error")){
-                    this.destory();
-                    this.render(true);
-                }else{
-                    try{
-                        master.play();
-                        this.checkPlaying();
-                    }catch(e){
-                        this.error(LivePlayer.Error.MEDIA_ERR_PLAY);
-                    }
+                try{
+                    master.play();
+                }catch(e){
+                    this.error(LivePlayer.Error.MEDIA_ERR_PLAY);
                 }
             }
         },
