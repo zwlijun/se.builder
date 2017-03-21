@@ -6,6 +6,11 @@ SE前端构建工具及静态资源基础版本库
 ./static - 静态资源基础版本
 </pre>
 
+# 测试地址
+<pre>
+http://static.seshenghuo.com/${STATIC_PATH}
+</pre>
+
 # 谁在用？
 <pre>
 SE生活(<a href="http://www.seshenghuo.com/" target="_blank">http://www.seshenghuo.com/</a>)
