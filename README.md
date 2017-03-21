@@ -23,10 +23,12 @@ http://static.seshenghuo.com/${STATIC_PATH}
 </pre>
 
 #ICON Font Demo
+<pre>
 <a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/base/r1.0.0/demo.html" target="_blank">demo</a>
 <a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/base/r1.0.0/demo_fontclass.html" target="_blank">demo_fontclass</a>
 <a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/base/r1.0.0/demo_symbol.html" target="_blank">demo_symbol</a>
 <a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/base/r1.0.0/demo_unicode.html" target="_blank">demo_unicode</a>
+</pre>
 
 # 谁在用？
 <pre>
