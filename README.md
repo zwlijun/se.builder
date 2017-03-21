@@ -22,6 +22,12 @@ http://static.seshenghuo.com/${STATIC_PATH}
 <a href="http://static.seshenghuo.com/static/basic/test/mod_framebox.shtml" target="_blank">Module#Frame Box</a> @see UI Component
 </pre>
 
+#ICON Font Demo
+<a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/base/r1.0.0/demo.html" target="_blank">demo</a>
+<a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/base/r1.0.0/demo_fontclass.html" target="_blank">demo_fontclass</a>
+<a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/base/r1.0.0/demo_symbol.html" target="_blank">demo_symbol</a>
+<a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/base/r1.0.0/demo_unicode.html" target="_blank">demo_unicode</a>
+
 # 谁在用？
 <pre>
 SE生活(<a href="http://www.seshenghuo.com/" target="_blank">http://www.seshenghuo.com/</a>)
