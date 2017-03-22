@@ -394,9 +394,29 @@
                 return 0;
             }
 
+            var lastModified = 0;
+            var lastModifiedDate = null;
+
             for(var i = 0; i < len; i++){
                 file = files[i];
                 fileType = file.type;
+
+                if(file.lastModified){
+                    lastModified = file.lastModified;
+                }
+
+                if(file.lastModifiedDate){
+                    lastModifiedDate = file.lastModifiedDate;
+                }
+
+                if(lastModifiedDate && !lastModified){
+                    lastModified = lastModifiedDate.getTime();
+                }
+
+                if(lastModified && !lastModifiedDate){
+                    lastModifiedDate = new Date(lastModified);
+                }
+
                 fileInfo = {
                     "key": Util.GUID(),
                     "source": file,
@@ -405,7 +425,8 @@
                     "type": fileType,
                     "bytes": file.size,
                     "size": _ins.getFileSize(file.size),
-                    "lastModifiedDate": DateUtil.format(file.lastModifiedDate, "%d/%M/%y %h:%m:%s"),
+                    "lastModified": lastModified,
+                    "lastModifiedDate": DateUtil.format(lastModifiedDate, "%d/%M/%y %h:%m:%s"),
                     "thumb": undefined
                 };
 
@@ -571,7 +592,7 @@
     _Upload.cacheData = {};
 
     module.exports = {
-        "version": "R15B0726",
+        "version": "R17B0322",
         "getUploadService": function(name, options){
             // options.maxsize     单个文件最大尺寸
             // options.filter      文件类型过滤
