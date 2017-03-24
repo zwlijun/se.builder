@@ -176,11 +176,12 @@
          * @return Object items
          */
         serialized : function(qs){
-            qs = (qs || "");
+            if(!qs){
+                return {};
+            }
             
             var ch = qs.substring(0, 1);
             var search = (("?&".indexOf(ch) == -1) ? "?" + qs : qs);
-            var s = (search || location.search);
             var pattern = /[\?&]([^\?&=#]+)=([^&#\?]*)/g;
             var matcher = null;
             var items = {};
@@ -188,7 +189,7 @@
             var value = null;
             var tmp = null;
 
-            while(null != (matcher = pattern.exec(s))){
+            while(null != (matcher = pattern.exec(search))){
                 key = matcher[1];
                 value = decodeURIComponent(this.filterScript(matcher[2]));
                 
