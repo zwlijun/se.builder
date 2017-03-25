@@ -21,7 +21,8 @@
             var clientWidth = Math.max(root.clientWidth, body.clientWidth);
             var width = window.innerWidth || clientWidth;
 
-            var fsize = (_fontSize * (width / _designWidth));
+            var percentage = width / _designWidth;
+            var fsize = _fontSize * percentage;
 
             if(fsize < _minFontSize){
                 fsize = _minFontSize;
@@ -31,7 +32,10 @@
                 fsize = _maxFontSize;
             }
 
+            percentage = fsize / _fontSize;
+
             root.style.fontSize = fsize + 'px';
+            root.setAttribute("data-adaptor-percentage", percentage);
         }catch(e){
             return false;
         }
