@@ -6,7 +6,11 @@
 	player.set("render", {
 		callback: function(name, isFirst){
 			var master = this.getLivePlayerMasterVideo(true);
-			this.setTencentX5VideoPosition(0, 0);
+
+			if(this.maybeUseTencentX5Core()){
+				this.setTencentX5VideoPosition(0, 0);
+				this.setTencentX5VideoFit("contain");
+			}
 
 			$("body").append("<p>LivePlayer::Event#Render</p>");
 			$("body").append("<p>LivePlayer::Style#" + master.getAttribute("style") + "</p>");
@@ -40,8 +44,8 @@
 	player.set("x5videoenterfullscreen", {
 		callback: function(e, name, element){
 			var master = this.getLivePlayerMasterVideo(true);
-			
-			this.setTencentX5VideoPosition(0, 0);
+
+			master.style.height = "2000px";
 
 			$("body").append("<p>LivePlayer::Event#X5VideoEnterFullScreen</p>");
 			$("body").append("<p>LivePlayer::Style#" + master.getAttribute("style") + "</p>");
@@ -50,7 +54,12 @@
 	});
 	player.set("x5videoexitfullscreen", {
 		callback: function(e, name, element){
+			var master = this.getLivePlayerMasterVideo(true);
+
+			master.style.height = "initial";
+
 			$("body").append("<p>LivePlayer::Event#X5VideoExitFullScreen</p>");
+			$("body").append("<p>LivePlayer::Style#" + master.getAttribute("style") + "</p>");
 		},
 		context: player
 	});

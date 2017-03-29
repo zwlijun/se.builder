@@ -1222,12 +1222,34 @@
 
             this.options(this.parse());
         },
-        setTencentX5VideoPosition: function(left, top){
+        setLivePlayerObjectStyle: function(type, style){
             var master = this.getLivePlayerMasterVideo(true);
 
             if(master){
-                master.style["object-position"] = left + "px " + top + "px";
+                master.style["object-" + type] = style;
             }
+        },
+        setTencentX5VideoPosition: function(left, top){
+            var sleft = left + "";
+            var stop = top + "";
+            var unit = /(px|%|pt|in|cm|mm|em|rem|ex|pc)$/i;
+
+            var style = "";
+
+            if(!unit.test(sleft)){
+                sleft = sleft + "px";
+            }
+
+            if(!unit.test(stop)){
+                stop = stop + "px";
+            }
+
+            style = sleft + " " + stop;
+
+            this.setLivePlayerObjectStyle("position", style);
+        },
+        setTencentX5VideoFit: function(fitType){
+            this.setLivePlayerObjectStyle("fit", fitType);
         },
         seekToMouse: function(pageX){
             var frame = this.getLivePlayerFrame();
@@ -1883,8 +1905,18 @@
             "maybeUseTencentX5Core": function(){
                 return player.maybeUseTencentX5Core();
             },
+            "setLivePlayerObjectStyle": function(type, style){
+                player.setLivePlayerObjectStyle(type, style);
+
+                return this;
+            },
             "setTencentX5VideoPosition": function(left, top){
                 player.setTencentX5VideoPosition(left, top);
+
+                return this;
+            },
+            "setTencentX5VideoFit": function(fitType){
+                player.setTencentX5VideoFit(fitType);
 
                 return this;
             },
@@ -1989,7 +2021,7 @@
     };
 
     module.exports = {
-        "version": "R17B0317",
+        "version": "R17B0329",
         "MediaReadyState": MediaReadyState,
         "MediaNetworkState": MediaNetworkState,
         createLivePlayer: function(name, options){
