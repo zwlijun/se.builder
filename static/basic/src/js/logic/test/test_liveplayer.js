@@ -7,6 +7,11 @@
 		callback: function(name, isFirst){
 			var master = this.getLivePlayerMasterVideo(true);
 
+			if(this.maybeUseTencentX5Core()){
+				// this.setTencentX5VideoPosition("50%", "50%");
+				this.setTencentX5VideoFit("contain");
+			}
+
 			$("body").append("<p>" + (navigator.userAgent) + "</p>");
 			$("body").append("<p>LivePlayer::Event#Render</p>");
 			$("body").append("<p>LivePlayer::UseTencentX5#" + this.maybeUseTencentX5Core() + "</p>");
@@ -43,12 +48,7 @@
 			var master = this.getLivePlayerMasterVideo(true);
 			var percentage = RemAdaptor.getRemAdaptorPercentageValue();
 
-			if(this.maybeUseTencentX5Core()){
-				// this.setTencentX5VideoPosition("50%", "50%");
-				this.setTencentX5VideoFit("contain");
-
-				master.style.height = (percentage > 0 ? window.screen.height / percentage : 3000) + "px";
-			}
+			master.style.height = (percentage > 0 ? window.screen.height / percentage : 3000) + "px";
 
 			$("body").append("<p>LivePlayer::Event#X5VideoEnterFullScreen</p>");
 			$("body").append("<p>LivePlayer::Style#" + master.getAttribute("style") + "</p>");
@@ -58,10 +58,8 @@
 	player.set("x5videoexitfullscreen", {
 		callback: function(e, name, element){
 			var master = this.getLivePlayerMasterVideo(true);
-
-			if(this.maybeUseTencentX5Core()){
-				master.style.height = "initial";
-			}
+			
+			master.style.height = "initial";
 
 			$("body").append("<p>LivePlayer::Event#X5VideoExitFullScreen</p>");
 			$("body").append("<p>LivePlayer::Style#" + master.getAttribute("style") + "</p>");
