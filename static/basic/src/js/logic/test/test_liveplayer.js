@@ -19,6 +19,42 @@
 		},
 		context: player
 	});
+	player.set("requestfullscreen", {
+		callback: function(name){
+			var master = this.getLivePlayerMasterVideo(true);
+
+			if(this.maybeUseTencentX5Core()){
+				var orientation = master.getAttribute("x5-video-orientation");
+
+				if(!orientation || "portraint" === orientation){
+					master.setAttribute("x5-video-orientation", "landscape");
+				}else{
+					master.setAttribute("x5-video-orientation", "portraint");
+				}
+			}
+
+			$("body").append("<p>LivePlayer::Event#RequestFullScreen</p>");
+		},
+		context: player
+	});
+	player.set("exitfullscreen", {
+		callback: function(name){
+			var master = this.getLivePlayerMasterVideo(true);
+
+			if(this.maybeUseTencentX5Core()){
+				var orientation = master.getAttribute("x5-video-orientation");
+
+				if(!orientation || "portraint" === orientation){
+					master.setAttribute("x5-video-orientation", "landscape");
+				}else{
+					master.setAttribute("x5-video-orientation", "portraint");
+				}
+			}
+
+			$("body").append("<p>LivePlayer::Event#ExitFullScreen</p>");
+		},
+		context: player
+	});
 	player.set("fullscreenchange", {
 		callback: function(e, name, element){
 			$("body").append("<p>LivePlayer::Event#FullScreenChange</p>");
@@ -46,8 +82,14 @@
 	player.set("x5videoenterfullscreen", {
 		callback: function(e, name, element){
 			var master = this.getLivePlayerMasterVideo(true);
+			var navbar = this.getLivePlayerNavBar();
+			var controlbar = this.getLivePlayerControlBar();
 			var percentage = RemAdaptor.getRemAdaptorPercentageValue();
 
+			navbar.addClass("hide");
+			// controlbar.addClass("hide");
+
+			master.controls = true;
 			master.style.height = (percentage > 0 ? window.screen.height / percentage : 3000) + "px";
 
 			$("body").append("<p>LivePlayer::Event#X5VideoEnterFullScreen</p>");
@@ -58,8 +100,16 @@
 	player.set("x5videoexitfullscreen", {
 		callback: function(e, name, element){
 			var master = this.getLivePlayerMasterVideo(true);
+			var navbar = this.getLivePlayerNavBar();
+			var controlbar = this.getLivePlayerControlBar();
 			
 			master.style.height = "initial";
+			master.setAttribute("x5-video-orientation", "portraint");
+
+			master.controls = false;
+
+			navbar.removeClass("hide");
+			// controlbar.removeClass("hide");
 
 			$("body").append("<p>LivePlayer::Event#X5VideoExitFullScreen</p>");
 			$("body").append("<p>LivePlayer::Style#" + master.getAttribute("style") + "</p>");

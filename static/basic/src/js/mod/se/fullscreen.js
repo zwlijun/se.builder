@@ -15,6 +15,8 @@
     var _doc = document;
     var _win = window;
 
+    _doc.x5fullscreen = false; //for Tencent X5(TBS)
+
     var _FullScreen = function(name, element){
         this.name = name;
         this.element = element;
@@ -26,6 +28,7 @@
                 _doc.fullscreen || 
                 _doc.webkitIsFullScreen || 
                 _doc.mozFullScreen || 
+                _doc.x5fullscreen || 
                 _win.fullScreen || 
                 this.element.webkitDisplayingFullscreen
             );
@@ -44,14 +47,25 @@
                 _doc.fullscreenElement || 
                 _doc.webkitFullscreenElement || 
                 _doc.mozFullScreenElement || 
-                _doc.msFullscreenElement
+                _doc.msFullscreenElement || 
+                (_doc.x5fullscreen ? this.element : null)
             );
         },
         _dispatcher: function(e){
             var data = e.data;
             var name = data.name;
+            var type = data.type;
             var element = data.element;
             var handler = data.handler;
+
+            switch(type){
+                case "x5videoenterfullscreen":
+                    _doc.x5fullscreen = true;
+                break;
+                case "x5videoexitfullscreen":
+                    _doc.x5fullscreen = false;
+                break;
+            }
 
             Util.execHandler(handler, [e, name, element]);
         },
@@ -70,6 +84,7 @@
 
             var data = {
                 "name": this.name,
+                "type": eventType,
                 "element": this.element,
                 "handler": handler
             };
@@ -91,6 +106,7 @@
 
             var data = {
                 "name": this.name,
+                "type": eventType,
                 "element": this.element,
                 "handler": handler
             };
@@ -102,6 +118,7 @@
 
             var data = {
                 "name": this.name,
+                "type": eventType,
                 "element": this.element,
                 "handler": handler
             };
@@ -113,6 +130,7 @@
 
             var data = {
                 "name": this.name,
+                "type": eventType,
                 "element": this.element,
                 "handler": handler
             };
@@ -124,6 +142,7 @@
 
             var data = {
                 "name": this.name,
+                "type": eventType,
                 "element": this.element,
                 "handler": handler
             };
@@ -135,6 +154,7 @@
 
             var data = {
                 "name": this.name,
+                "type": eventType,
                 "element": this.element,
                 "handler": handler
             };

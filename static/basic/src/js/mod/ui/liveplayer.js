@@ -192,7 +192,11 @@
             var player = LivePlayer.getLivePlayer(name);
 
             if(player){
-                player.requestFullscreen();
+                if(player.isFullScreen()){
+                    player.exitFullscreen();
+                }else{
+                    player.requestFullscreen();
+                }
             }
         },
         reconnect: function(data, node, e, type){
@@ -367,7 +371,9 @@
             onfullscreenchange: null,       //进入或退出全屏触发
             onfullscreenerror: null,        //进入或退出全屏发生错误触发
             onx5videoenterfullscreen: null, //进入全屏模式(Tencent X5)
-            onx5videoexitfullscreen: null   //退出全屏模式(Tencent X5)
+            onx5videoexitfullscreen: null,  //退出全屏模式(Tencent X5)
+            onrequestfullscreen: null,      //请求全屏时触发
+            onexitfullscreen: null          //退了全屏时触发
         };
         this.listner = new Listener(this.events, this.handleStack);
     };
@@ -598,6 +604,18 @@
             var name = this.getLivePlayerName();
 
             return $("#" + name);
+        },
+        getLivePlayerNavBar: function(){
+            var frame = this.getLivePlayerFrame();
+            var navbar = frame.find(".liveplayer-navbar");
+
+            return navbar;
+        },
+        getLivePlayerControlBar: function(){
+            var frame = this.getLivePlayerFrame();
+            var controlbar = frame.find(".liveplayer-controlbar");
+
+            return controlbar;
         },
         getLivePlayerButton: function(type){
             var frame = this.getLivePlayerFrame();
@@ -951,21 +969,37 @@
         },
         requestFullscreen: function(){
             var master = this.getLivePlayerMasterVideo(true);
+            var name = this.getLivePlayerName();
 
             if(master){
-                var fsi = FullScreen.getFullScreenInstance(this.getLivePlayerName());
+                var fsi = FullScreen.getFullScreenInstance(name);
 
                 fsi.requestFullscreen();
+
+                this.exec("requestfullscreen", [name]);
             }
         },
         exitFullscreen: function(){
             var master = this.getLivePlayerMasterVideo(true);
+            var name = this.getLivePlayerName();
 
             if(master){
-                var fsi = FullScreen.getFullScreenInstance(this.getLivePlayerName());
+                var fsi = FullScreen.getFullScreenInstance(name);
 
                 fsi.exitFullscreen();
+
+                this.exec("exitfullscreen", [name]);
             }
+        },
+        isFullScreen: function(){
+            var name = this.getLivePlayerName();
+            var fsi = FullScreen.getFullScreenInstance(name);
+
+            if(fsi){
+                return fsi.isFullScreen();
+            }
+
+            return false;
         },
         maybeUseTencentX5Core: function(){
             var browser = Env.browser;
@@ -1805,6 +1839,12 @@
             "getLivePlayerFrame": function(){
                 return player.getLivePlayerFrame();
             },
+            "getLivePlayerNavBar": function(){
+                return player.getLivePlayerNavBar();
+            },
+            "getLivePlayerControlBar": function(){
+                return player.getLivePlayerControlBar();
+            },
             "getLivePlayerButton": function(type){
                 return player.getLivePlayerButton(type);
             },
@@ -1901,6 +1941,9 @@
                 player.exitFullscreen();
 
                 return this;
+            },
+            "isFullScreen": function(){
+                return player.isFullScreen();
             },
             "maybeUseTencentX5Core": function(){
                 return player.maybeUseTencentX5Core();
@@ -2025,6 +2068,7 @@
         "MediaReadyState": MediaReadyState,
         "MediaNetworkState": MediaNetworkState,
         createLivePlayer: function(name, options){
+            console.log("LivePlayer::Version#" + this.version);
             return LivePlayer.createLivePlayer(name, options);
         },
         getLivePlayer: function(name){
