@@ -66,10 +66,16 @@
                 "pattern": "Mac OS X (\\d+)_(\\d+)(_(\\d+))?",
                 "alias": "OSX"
             },
-            "android": {
-                "pattern": "Android (\\d+)\\.(\\d+)\\.(\\d+)",
-                "alias": "Android"
-            },
+            "android": [
+                {
+                    "pattern": "Android (\\d+)\\.(\\d+)\\.(\\d+)",
+                    "alias": "Android"
+                },
+                {
+                    "pattern": "Android (\\d+)\\.(\\d+)",
+                    "alias": "Android"
+                }
+            ],
             "ios": [
                 {
                     "pattern": "iPhone;.+OS (\\d+)_(\\d+)(_(\\d+))?",
@@ -301,7 +307,7 @@
     };
 
     module.exports = {
-        "version": "R16B1204",
+        "version": "R17B0330",
         "parse": __parse,
         "env": __parse(_ua)
     };

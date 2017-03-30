@@ -51,7 +51,7 @@
     var x5_tbs = /(TBS)\/(\d+)/.exec(ua);
     var uc = /UC[\s]?Browser/.test(ua);
 
-    if((x5_tbs && ((x5_tbs[2] || "").indexOf("03") == -1)) || uc){
+    if((x5_tbs && ((x5_tbs[2] || "").indexOf("02") !== -1)) || uc){
         var r = document.documentElement;
         var cls = r.className;
 
@@ -82,5 +82,58 @@
             setTimeout(arguments.callee, 0);
         }
     }, 0);
+
+    window["RemAdaptor"] = {
+        getRemAdaptorAttribute: function(attrName){
+            var el = document.documentElement;
+
+            return el.getAttribute("data-adaptor-" + attrName);
+        },
+        getRemAdaptorDesignValue: function(){
+            var val = Number(this.getRemAdaptorAttribute("design") || 0);
+
+            if(isNaN(val)){
+                return 0;
+            }
+
+            return val;
+        },
+        getRemAdaptorBaseValue: function(){
+            var val = Number(this.getRemAdaptorAttribute("base") || 0);
+
+            if(isNaN(val)){
+                return 0;
+            }
+
+            return val;
+        },
+        getRemAdaptorMinValue: function(){
+            var val = Number(this.getRemAdaptorAttribute("min") || 0);
+
+            if(isNaN(val)){
+                return 0;
+            }
+
+            return val;
+        },
+        getRemAdaptorMaxValue: function(){
+            var val = Number(this.getRemAdaptorAttribute("max") || 0);
+
+            if(isNaN(val)){
+                return 0;
+            }
+
+            return val;
+        },
+        getRemAdaptorPercentageValue: function(){
+            var val = Number(this.getRemAdaptorAttribute("percentage") || 0);
+
+            if(isNaN(val)){
+                return 0;
+            }
+
+            return val;
+        }
+    };
 })(640, 100, 50, 100);
 </script>

@@ -913,35 +913,35 @@
                     context: this
                 });
                 fsi.onfullscreenerror({
-                    callback: function(){
+                    callback: function(e, name, element){
                         // console.log(e.type)
                         this.exec("fullscreenerror", [e, name, element]);
                     },
                     context: this
                 });
                 fsi.onwebkitbeginfullscreen({
-                    callback: function(){
+                    callback: function(e, name, element){
                         // console.log(e.type)
                         this.exec("webkitbeginfullscreen", [e, name, element]);
                     },
                     context: this
                 });
                 fsi.onwebkitendfullscreen({
-                    callback: function(){
+                    callback: function(e, name, element){
                         // console.log(e.type)
                         this.exec("webkitendfullscreen", [e, name, element]);
                     },
                     context: this
                 });
                 fsi.onx5videoenterfullscreen({
-                    callback: function(){
+                    callback: function(e, name, element){
                         // console.log(e.type)
                         this.exec("x5videoenterfullscreen", [e, name, element]);
                     },
                     context: this
                 });
                 fsi.onx5videoexitfullscreen({
-                    callback: function(){
+                    callback: function(e, name, element){
                         // console.log(e.type)
                         this.exec("x5videoexitfullscreen", [e, name, element]);
                     },
@@ -2021,7 +2021,7 @@
     };
 
     module.exports = {
-        "version": "R17B0329",
+        "version": "R17B0330",
         "MediaReadyState": MediaReadyState,
         "MediaNetworkState": MediaNetworkState,
         createLivePlayer: function(name, options){
