@@ -1,6 +1,7 @@
 <script>
 var IECompatible = (function(){
     var _importTimer = null;
+    var _ver = window["SE_BUILDER_STATIC_VERSION"] || "basic";
     var _compatible = {
         hasClass: function(dom, className){
             if(!dom){
@@ -129,7 +130,7 @@ var IECompatible = (function(){
                 var link  = document.createElement("link");
                 link.rel  = "stylesheet";
                 link.type = "text/css";
-                link.href = "/static/v1.0/src/css/lib/compatible/ie.css";
+                link.href = "/static/" + _ver + "/src/css/lib/compatible/ie.css";
 
                 __head__[0].appendChild(link);
             }else{

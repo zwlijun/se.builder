@@ -147,6 +147,7 @@ if [ "$#" -eq "1" ]; then
     rm -rf ${STATIC_PREFIX}/html/*
 
     #生成基础版本INC文件
+    echo -n "<script>window[\"SE_BUILDER_STATIC_VERSION\"] = \"${STATIC_BASE_VERSION}\";</script>" > ${STATIC_BASE_PREFIX}/inc/static_version.html
     echo -n "<link id=\"seed_style\" rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_BASE_RELATIVE_DIR}/src/css/lib/gm.css\">" > ${STATIC_BASE_PREFIX}/inc/css_common_gm.html
     echo -n "<link rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_BASE_RELATIVE_DIR}/src/css/lib/m_main.css\">" > ${STATIC_BASE_PREFIX}/inc/css_common_mm.html
     echo -n "<link rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_BASE_RELATIVE_DIR}/src/css/lib/d_main.css\">" > ${STATIC_BASE_PREFIX}/inc/css_common_dm.html
@@ -158,6 +159,7 @@ if [ "$#" -eq "1" ]; then
     echo -n "<!--[if lt IE 9]><script src=\"${STATIC_BASE_RELATIVE_DIR}/src/js/lib/extra/html5/r${HTML5_SHIV_VERSION}/html5shiv.js\"></script><![endif]-->" > ${STATIC_BASE_PREFIX}/inc/js_html5_shiv.html
     
     #生成目标版本INC文件
+    echo -n "<script>window[\"SE_BUILDER_STATIC_VERSION\"] = \"${STATIC_TARGET_VERSION}\";</script>" > ${STATIC_PREFIX}/inc/static_version.html
     echo -n "<link id=\"seed_style\" rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_RELATIVE_DIR}/src/css/lib/gm.css\">" > ${STATIC_PREFIX}/inc/css_common_gm.html
     echo -n "<link rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_RELATIVE_DIR}/src/css/lib/m_main.css\">" > ${STATIC_PREFIX}/inc/css_common_mm.html
     echo -n "<link rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_RELATIVE_DIR}/src/css/lib/d_main.css\">" > ${STATIC_PREFIX}/inc/css_common_dm.html

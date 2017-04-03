@@ -6,6 +6,7 @@
 <title>移动终端页面框架DEMO</title>
 <!--#include virtual="/static/v1.0/inc/css_common_gm.html"-->
 <!--#include virtual="/static/v1.0/inc/css_common_mm.html"-->
+<!--#include virtual="/static/v1.0/inc/static_version.html"-->
 </head>
 <body>
 <header class="app-header"></header> 

@@ -69,6 +69,7 @@ echo ";/*! SE Config For SeaJS */" >> ${ZEPTO_120_MIX}
 cat ${BASED_SE_PATH} >> ${ZEPTO_120_MIX}
 
 #生成INC文件
+echo -n "<script>window[\"SE_BUILDER_STATIC_VERSION\"] = \"${STATIC_BASE_VERSION}\";</script>" > ${STATIC_BASE_PREFIX}/inc/static_version.html
 echo -n "<link id=\"seed_style\" rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_RELATIVE_DIR}/src/css/lib/gm.css\">" > ${STATIC_BASE_PREFIX}/inc/css_common_gm.html
 echo -n "<link rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_RELATIVE_DIR}/src/css/lib/m_main.css\">" > ${STATIC_BASE_PREFIX}/inc/css_common_mm.html
 echo -n "<link rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_RELATIVE_DIR}/src/css/lib/d_main.css\">" > ${STATIC_BASE_PREFIX}/inc/css_common_dm.html
