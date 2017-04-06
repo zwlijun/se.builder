@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html data-page-alias="data-actionsheet">
+<head>
+<!--#include virtual="/static/basic/inc/meta.html"-->
+<!--#include virtual="/static/basic/inc/rem.html"-->
+<title>Mod/ShareBox</title>
+<!--#include virtual="/static/basic/inc/css_common_gm.html"-->
+</head>
+<body>
+<button data-sharebox="test_sharebox">分享到...</button>
+<ul>
+  <li class="share weibo">WeiBo</li>
+  <li class="share qzone">QZone</li>
+  <li class="share qq">QQ</li>
+  <li class="share wechat">WeChat</li>
+  <li class="share timeline">TimeLine</li>
+  <li class="share douban">Dou Ban</li>
+  <li class="share diandian">Dian Dian</li>
+  <li class="share linkedin">Linked in</li>
+  <li class="share facebook">Facebook</li>
+  <li class="share twitter">Twitter</li>
+  <li class="share google">Google</li>
+</ul>
+<!--#include virtual="/static/basic/inc/js_common_z.120.html" --> 
+<script>
+seajs.use(["logic/test/test_sharebox"]);
+</script>
+</body>
+</html>

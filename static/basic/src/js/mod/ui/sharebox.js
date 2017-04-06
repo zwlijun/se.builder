@@ -13,6 +13,8 @@
     var Util           = require("mod/se/util");
     var ActionSheet    = require("mod/ui/actionsheet");
     var TemplateEngine = require("mod/se/template");
+    var Listener       = require("mod/se/listener");
+    var HandleStack    = Listener.HandleStack;
 
     var ShareTemplate = TemplateEngine.getTemplate("mod_share_box", {
         "root": "sharebox"
@@ -32,8 +34,10 @@
                            '    var value = null;' + 
                            '    conf.push("data-action-tap=\\\"sharebox://share/adaptor#" + sharebox.name + "\\\"");' +
                            '    for(var pf in platform){' +
-                           '        value = platform[pf];' +
-                           '        conf.push("data-sharebox-" + pf + "=\\\"" + encodeURIComponent(value) + "\\\"");' +
+                           '        if(platform.hasOwnProperty(pf)){' +
+                           '            value = platform[pf];' +
+                           '            conf.push("data-sharebox-" + pf + "=\\\"" + encodeURIComponent(value) + "\\\"");' +
+                           '        }' +
                            '    }' +
                            '  %>' +
                            '    <a href="#none" <%=conf.join(" ")%>>' +
@@ -135,29 +139,43 @@
                 var conf = ins.parse(node);
                 var type = conf.type;
                 var api = conf.api;
-                var apiType = api.type;;
+                var apiType = api.type;
+
+                console.log(name)
 
                 if(!apiType){
                     console.log("不支持的分享类型(" + type + "#" + apiType + ")");
                     return ;
                 }
 
-                if(conf.external){
-                    Util.requestExternal(conf.external, [ins, conf]);
-                }
-
                 if(apiType == "native"){
                     //todo
+                    ins.exec("native", [ins, conf]);
                 }else if(apiType == "redirect"){
-                    var url = api.url;
-                    var data = api.data;
+                    var apiUrl = api.url;
+                    var apiData = api.data;
 
-                    ShareTemplate.render(true, data, conf, {
-                        callback: function(ret, _url){
-                            location.href = _url + "?" + ret.result;
-                        },
-                        args: [url]
-                    });
+                    if(conf.external){
+                        Util.requestExternal(conf.external, [ins, conf, {
+                            callback: function(_apiUrl, _apiData, _conf){
+                                this.render(true, _apiData, _conf, {
+                                    callback: function(ret, _url){
+                                        location.href = _url + "?" + ret.result;
+                                    },
+                                    args: [_apiUrl]
+                                });
+                            },
+                            args: [apiUrl, apiData, conf],
+                            context: ShareTemplate
+                        }]);
+                    }else{
+                        ShareTemplate.render(true, apiData, conf, {
+                            callback: function(ret, _url){
+                                location.href = _url + "?" + ret.result;
+                            },
+                            args: [apiUrl]
+                        });
+                    }
                 }
             }
         }
@@ -167,7 +185,7 @@
      * options
      * options -> name  组件名称， 默认为：share
      * options -> title  组件标题， 默认为： 分享到
-     * options -> type 类型 m: 移动端   d:PC端
+     * options -> type 类型 m: 移动端   d:PC端(未实现)   a:自动适配平台(未实现)   u:自定义
      * options -> share 统一分享配置，如果平台中有配置，将优先用平台中的配置
      *            share -> title  分享标题
      *            share -> description  分享描述
@@ -268,9 +286,56 @@
 
     var _ShareBox = function(){
         this.options = GetDefaultOptions();
+
+        this.handleStack = new HandleStack();
+        this.listener = new Listener({
+            onconfigure: null,
+            onnative: null
+        }, this.handleStack);
     };
 
     _ShareBox.prototype = {
+        /**
+         * 执行回调函数
+         * @param String type 类型
+         * @param Array args 消息
+         * @return * result 返回值
+         */
+        exec : function(type, args){
+            return this.listener.exec(type, args);
+        },
+        /**
+         * 设置回调
+         * @param String type 类型
+         * @param Object option 配置 {Function callback, Array args, Object context, Boolean returnValue}
+         */
+        set : function(type, option){
+            this.listener.set(type, option);
+        },
+        /**
+         * 移除回调
+         * @param String type 类型
+         */
+        remove : function(type){
+            this.listener.remove(type);
+        },
+        /**
+         * 获取回调
+         * @param String type 类型
+         * @return Object on
+         */
+        get : function(type){
+            return this.listener.get(type);
+        },
+        /**
+         * 清除所有回调
+         */
+        clear : function(){
+            this.listener.clear();
+        },
+        getHandleStack : function(){
+            return this.handleStack;
+        },
         parse: function(node){
             var attrNames = [
                 "type", 
@@ -354,6 +419,8 @@
 
             if("m" == type){
                 this.mconf(name, opts);
+            }else{
+                this.exec("configure", [opts]);
             }
         },
         create: function(){
@@ -372,6 +439,30 @@
         var _ins = _ShareBox.Cache[name] || (_ShareBox.Cache[name] = new _ShareBox());
 
         return {
+            exec : function(type, args){
+                return _ins.exec(type, args);
+            },
+            set : function(type, option){
+                _ins.set(type, option);
+
+                return this;
+            },
+            remove : function(type){
+                _ins.remove(type);
+
+                return this;
+            },
+            get : function(type){
+                return _ins.get(type);
+            },
+            clear : function(){
+                _ins.clear();
+
+                return this;
+            },
+            getHandleStack : function(){
+                return _ins.getHandleStack();
+            },
             parse: function(node){
                 return _ins.parse(node);
             },
@@ -401,7 +492,7 @@
     })();
 
     module.exports = {
-        "version": "R16B0418",
+        "version": "R17B0406",
         "newShareBox": function(name){
             return _ShareBox.render(name);    
         },
