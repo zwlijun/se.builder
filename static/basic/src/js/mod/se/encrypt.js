@@ -60,6 +60,7 @@
     };
 
     module.exports = {
-        "encrypt" : encrypt
+        "version": "R17B0407",
+        "encrypt": encrypt
     }
 });

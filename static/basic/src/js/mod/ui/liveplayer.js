@@ -2064,7 +2064,7 @@
     };
 
     module.exports = {
-        "version": "R17B0330",
+        "version": "R17B0407",
         "MediaReadyState": MediaReadyState,
         "MediaNetworkState": MediaNetworkState,
         createLivePlayer: function(name, options){

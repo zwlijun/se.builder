@@ -685,7 +685,7 @@
     })();
 
     module.exports = {
-        "version": "R17B0313",
+        "version": "R17B0407",
         "CheckTypes": CheckTypes,
         configure: function(conf){
             Configure(conf);
