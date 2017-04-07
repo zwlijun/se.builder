@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html data-page-alias="data-actionsheet">
+<head>
+<!--#include virtual="/static/basic/inc/meta.html"-->
+<!--#include virtual="/static/basic/inc/rem.html"-->
+<title>Mod/Request</title>
+<!--#include virtual="/static/basic/inc/css_common_gm.html"-->
+</head>
+<body>
+<input type="text" name="url" id="url" style="width: 400px;">
+<button type="button" data-action-click="req://parse">解析</button>
+<!--#include virtual="/static/basic/inc/js_common_z.120.html" --> 
+<script>
+seajs.use(["logic/test/test_request"]);
+</script>
+</body>
+</html>

@@ -105,7 +105,7 @@
          * @return Object items {String url, String protocol, String host, String port, String pathname, String search, String hash, String user, String password, String filename}
          */
         parseURL : function(url){
-            var p = /^([^\:\/\?&\#]+\:)\/\/(([\w\W]+)(\:([\w\W]+)\@))?([^\:\/\?&\#]+)(\:([\d]+))?(\/?[^\?&\#\:]*\/)?([^\/&\#\?\:]+)?(\?[^\?#]+)?(\#[\w\W]*)?$/;
+            var p = /^([^\:\/\?&\#]+\:)\/\/(([\w\W]+)(\:([\w\W]+)\@))?([^\:\/\?&\#]+)(\:([\d]+))?(\/?[^\?&\#\:]*\/)?([^\/&\#\?\:]+)?(\?[^\?#]*)?(\#[\w\W]*)?$/;
             //[
             // 0: "ftp://carlli:123@ftp.domain.com:21000/www/test/a?sss=123&t=123&o=000#!asd=123",  //原串
             // 1: "ftp:",                    //protocol
