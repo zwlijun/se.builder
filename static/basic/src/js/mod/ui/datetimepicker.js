@@ -1536,12 +1536,12 @@
 
                 var inRange = true;
 
-                startRangeDate = startRangeDate.ok ? startRangeDate.date : null;
+                startRangeDate = ((startRangeDate && startRangeDate.ok) ? startRangeDate.date : null);
                 if(startRangeDate){
                     startRangeDate = new Date(startRangeDate.getFullYear(), startRangeDate.getMonth(), startRangeDate.getDate(), 0, 0, 0).getTime();
                 }
 
-                endRangeDate = endRangeDate.ok ? endRangeDate.date : null;
+                endRangeDate = ((endRangeDate && endRangeDate.ok) ? endRangeDate.date : null);
                 if(endRangeDate){
                     endRangeDate = new Date(endRangeDate.getFullYear(), endRangeDate.getMonth(), endRangeDate.getDate(), 0, 0, 0).getTime();
                 }
