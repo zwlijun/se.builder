@@ -50,26 +50,41 @@
                              + '    var prev = dtp.prev;'
                              + '    var next = dtp.next;'
                              + '    var first = dtp.first;'
+                             + '    var prevDatetime = prev.datetime;'
+                             + '    var nextDatetime = next.datetime;'
                              + '    var today = dtp.today;'
                              + '    var prevDays = prev.leapYear.monthDays;'
                              + '    var nextDays = next.leapYear.monthDays;'
                              + '    var currentDays = dtp.leapYear.monthDays;'
                              + '    var firstDay = first.day;'
+                             + '    var cls = "";'
                              + '    %>'
                              + '    <%for(var i = firstDay - 1; i >= 0; i--){%>'
-                             + '    <li class="gray" data-action-click="dtp://datetime/date/set#<%=dtp.name%>,prev,<%=(prevDays - i)%>"><%=(prevDays - i)%></li>'
+                             + '    <%'
+                             + '    cls = dtp.range.dateRange(dtp.options, prevDatetime.getFullYear() + "-" + (prevDatetime.getMonth() + 1) + "-" + (prevDays - i)).className;'
+                             + '    cls = cls ? " " + cls : "";'
+                             + '    %>'
+                             + '    <li class="gray<%=cls%>" data-action-click="dtp://datetime/date/set#<%=dtp.name%>,prev,<%=(prevDays - i)%>"><%=(prevDays - i)%></li>'
                              + '    <%}%>'
                              + '    <%for(var j = 1; j <= currentDays; j++){%>'
+                             + '    <%'
+                             + '    cls = dtp.range.dateRange(dtp.options, dtp.year + "-" + (dtp.month + 1) + "-" + j).className;'
+                             + '    cls = cls ? " " + cls : "";'
+                             + '    %>'
                              + '      <%if(j === today.date && dtp.year === today.year && dtp.month === today.month){%>'
-                             + '        <li class="today" data-action-click="dtp://datetime/date/set#<%=dtp.name%>,cur,<%=j%>"><%=j%></li>'
+                             + '        <li class="today<%=cls%>" data-action-click="dtp://datetime/date/set#<%=dtp.name%>,cur,<%=j%>"><%=j%></li>'
                              + '      <%}else if(j === dtp.date){%>'
-                             + '        <li class="cur" data-action-click="dtp://datetime/date/set#<%=dtp.name%>,cur,<%=j%>"><%=j%></li>'
+                             + '        <li class="cur<%=cls%>" data-action-click="dtp://datetime/date/set#<%=dtp.name%>,cur,<%=j%>"><%=j%></li>'
                              + '      <%}else{%>'
-                             + '        <li data-action-click="dtp://datetime/date/set#<%=dtp.name%>,cur,<%=j%>"><%=j%></li>'
+                             + '        <li class="<%=cls%>" data-action-click="dtp://datetime/date/set#<%=dtp.name%>,cur,<%=j%>"><%=j%></li>'
                              + '      <%}%>'
                              + '    <%}%>'
                              + '    <%for(var k = 1; k <= (42 - currentDays - firstDay); k++){%>'
-                             + '    <li class="gray" data-action-click="dtp://datetime/date/set#<%=dtp.name%>,next,<%=k%>"><%=k%></li>'
+                             + '    <%'
+                             + '    cls = dtp.range.dateRange(dtp.options, nextDatetime.getFullYear() + "-" + (nextDatetime.getMonth() + 1) + "-" + k).className;'
+                             + '    cls = cls ? " " + cls : "";'
+                             + '    %>'
+                             + '    <li class="gray<%=cls%>" data-action-click="dtp://datetime/date/set#<%=dtp.name%>,next,<%=k%>"><%=k%></li>'
                              + '    <%}%>'
                              + '  </ul>'
                              + '  <div class="mod-dtpicker-year-month<%=(3 === dtp.mode.value ? "" : " hide")%>">'
@@ -115,6 +130,7 @@
                              + '          step = Math.min(Math.max(1, step), 23);'
                              + '          %>'
                              + '          <%for(var i = 0; i < 24; i+=step){%>'
+                             + '          <%if(!dtp.range.hoursRange(dtp.options, i).inRange){continue;}%>'
                              + '          <li<%=(i === dtp.hours ? " class=\\"on\\"" : "")%> data-action-click="dtp://datetime/hour/set#<%=dtp.name%>,<%=i%>"><%=(i < 10 ? "0" + i : i)%></li>'
                              + '          <%}%>'
                              + '          <li class="empty"></li>'
@@ -134,6 +150,7 @@
                              + '          step = Math.min(Math.max(1, step), 59);'
                              + '          %>'
                              + '          <%for(var i = 0; i < 60; i+=step){%>'
+                             + '          <%if(!dtp.range.minutesRange(dtp.options, i).inRange){continue;}%>'
                              + '          <li<%=(i === dtp.minutes ? " class=\\"on\\"" : "")%> data-action-click="dtp://datetime/minute/set#<%=dtp.name%>,<%=i%>"><%=(i < 10 ? "0" + i : i)%></li>'
                              + '          <%}%>'
                              + '          <li class="empty"></li>'
@@ -153,6 +170,7 @@
                              + '          step = Math.min(Math.max(1, step), 59);'
                              + '          %>'
                              + '          <%for(var i = 0; i < 60; i+=step){%>'
+                             + '          <%if(!dtp.range.secondsRange(dtp.options, i).inRange){continue;}%>'
                              + '          <li<%=(i === dtp.seconds ? " class=\\"on\\"" : "")%> data-action-click="dtp://datetime/second/set#<%=dtp.name%>,<%=i%>"><%=(i < 10 ? "0" + i : i)%></li>'
                              + '          <%}%>'
                              + '          <li class="empty"></li>'
@@ -173,9 +191,13 @@
                              + '          var minuteStep = dtp.options.step.minute;'
                              + '              minuteStep = Math.min(Math.max(1, minuteStep), 59);'
                              + '          var arr = [];'
+                             + '          var timeString = "";'
                              + '          for(var h = 0; h < 24; h+= hourStep){'
                              + '              for(var m = 0; m < 60; m+= minuteStep){'
-                             + '                  arr.push((h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m));'
+                             + '                  timeString = (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m);'
+                             + '                  if(dtp.range.timeRange(dtp.options, timeString).inRange){'
+                             + '                      arr.push(timeString);'
+                             + '                  }'
                              + '              }'
                              + '          }'
                              + '          for(var a = 0; a < arr.length; a++){'
@@ -259,7 +281,7 @@
                     choosenDate.setMonth(choosenDate.getMonth() - 1);
 
                     picker.update(choosenDate)
-                          .renderDateBox(picker.serialized(choosenDate));
+                          .renderDateBox(picker.serialized(choosenDate), DateTimePicker.Parser.Range.dateRange(picker.options(), choosenDate).inRange);
                 },
                 next: function(data, node, e, type){
                     var args = (data || "").split(",");
@@ -272,7 +294,7 @@
                     choosenDate.setMonth(choosenDate.getMonth() + 1);
 
                     picker.update(choosenDate)
-                          .renderDateBox(picker.serialized(choosenDate));
+                          .renderDateBox(picker.serialized(choosenDate), DateTimePicker.Parser.Range.dateRange(picker.options(), choosenDate).inRange);
                 },
                 set: function(data, node, e, type){
                     var args = (data || "").split(",");
@@ -286,7 +308,7 @@
                     choosenDate.setMonth(month);
 
                     picker.update(choosenDate)
-                          .renderDateBox(picker.serialized(choosenDate))
+                          .renderDateBox(picker.serialized(choosenDate), DateTimePicker.Parser.Range.dateRange(picker.options(), choosenDate).inRange)
                           .getDateTimePickerYearMonthPanel()
                           .removeClass("hide");;
                 }
@@ -303,7 +325,7 @@
                     choosenDate.setFullYear(choosenDate.getFullYear() - 1);
 
                     picker.update(choosenDate)
-                          .renderDateBox(picker.serialized(choosenDate))
+                          .renderDateBox(picker.serialized(choosenDate), DateTimePicker.Parser.Range.dateRange(picker.options(), choosenDate).inRange)
                           .getDateTimePickerYearMonthPanel()
                           .removeClass("hide");
                 },
@@ -318,13 +340,17 @@
                     choosenDate.setFullYear(choosenDate.getFullYear() + 1);
 
                     picker.update(choosenDate)
-                          .renderDateBox(picker.serialized(choosenDate))
+                          .renderDateBox(picker.serialized(choosenDate), DateTimePicker.Parser.Range.dateRange(picker.options(), choosenDate).inRange)
                           .getDateTimePickerYearMonthPanel()
                           .removeClass("hide");
                 }
             },
             date: {
                 set: function(data, node, e, type){
+                    if(node && node.hasClass("disabled")){
+                        return ;
+                    }
+
                     var args = (data || "").split(",");
                     var name = args[0];
                     var type = args[1];
@@ -343,7 +369,7 @@
                     choosenDate.setDate(value);
 
                     picker.update(choosenDate)
-                          .renderDateBox(picker.serialized(choosenDate));
+                          .renderDateBox(picker.serialized(choosenDate), true);
                 }
             },
             hour: {
@@ -384,7 +410,7 @@
                     choosenDate.setHours(hours);
 
                     picker.update(choosenDate)
-                          .renderTimeBox(picker.serialized(choosenDate));
+                          .renderTimeBox(picker.serialized(choosenDate), true);
                 },
                 next: function(data, node, e, type){
                     var args = (data || "").split(",");
@@ -423,7 +449,7 @@
                     choosenDate.setHours(hours);
 
                     picker.update(choosenDate)
-                          .renderTimeBox(picker.serialized(choosenDate));
+                          .renderTimeBox(picker.serialized(choosenDate), true);
                 },
                 set: function(data, node, e, type){
                     var args = (data || "").split(",");
@@ -437,7 +463,7 @@
                     choosenDate.setHours(value);
 
                     picker.update(choosenDate)
-                          .renderTimeBox(picker.serialized(choosenDate));
+                          .renderTimeBox(picker.serialized(choosenDate), true);
                 }
             },
             minute: {
@@ -478,7 +504,7 @@
                     choosenDate.setMinutes(minutes);
 
                     picker.update(choosenDate)
-                          .renderTimeBox(picker.serialized(choosenDate));
+                          .renderTimeBox(picker.serialized(choosenDate), true);
                 },
                 next: function(data, node, e, type){
                     var args = (data || "").split(",");
@@ -517,7 +543,7 @@
                     choosenDate.setMinutes(minutes);
 
                     picker.update(choosenDate)
-                          .renderTimeBox(picker.serialized(choosenDate));
+                          .renderTimeBox(picker.serialized(choosenDate), true);
                 },
                 set: function(data, node, e, type){
                     var args = (data || "").split(",");
@@ -531,7 +557,7 @@
                     choosenDate.setMinutes(value);
 
                     picker.update(choosenDate)
-                          .renderTimeBox(picker.serialized(choosenDate));
+                          .renderTimeBox(picker.serialized(choosenDate), true);
                 }
             },
             second: {
@@ -572,7 +598,7 @@
                     choosenDate.setSeconds(seconds);
 
                     picker.update(choosenDate)
-                          .renderTimeBox(picker.serialized(choosenDate));
+                          .renderTimeBox(picker.serialized(choosenDate), true);
                 },
                 next: function(data, node, e, type){
                     var args = (data || "").split(",");
@@ -611,7 +637,7 @@
                     choosenDate.setSeconds(seconds);
 
                     picker.update(choosenDate)
-                          .renderTimeBox(picker.serialized(choosenDate));
+                          .renderTimeBox(picker.serialized(choosenDate), true);
                 },
                 set: function(data, node, e, type){
                     var args = (data || "").split(",");
@@ -625,7 +651,7 @@
                     choosenDate.setSeconds(value);
 
                     picker.update(choosenDate)
-                          .renderTimeBox(picker.serialized(choosenDate));
+                          .renderTimeBox(picker.serialized(choosenDate), true);
                 }
             },
             time: {
@@ -709,7 +735,7 @@
                     choosenDate.setMinutes(minutes);
 
                     picker.update(choosenDate)
-                          .renderTimeBox(picker.serialized(choosenDate));
+                          .renderTimeBox(picker.serialized(choosenDate), true);
                 }
             }
         },
@@ -778,6 +804,7 @@
             }
         }
     };
+
     /**
      
      <element 
@@ -787,10 +814,17 @@
         data-dtpicker-format="%y-%M-%d"
         data-dtpicker-value="" 
         data-dtpicker-sync="dtp://picker/sync" 
+        data-dtpicker-range-date-format="" 
         data-dtpicker-range-date-start="" 
         data-dtpicker-range-date-end="" 
         data-dtpicker-range-time-start="" 
         data-dtpicker-range-time-end="" 
+        data-dtpicker-range-hours-start="" 
+        data-dtpicker-range-hours-end="" 
+        data-dtpicker-range-minutes-start="" 
+        data-dtpicker-range-minutes-end="" 
+        data-dtpicker-range-seconds-start="" 
+        data-dtpicker-range-seconds-end="" 
         data-dtpicker-filter-years="" 
         data-dtpicker-filter-months="" 
         data-dtpicker-filter-dates="" 
@@ -815,12 +849,25 @@
             format: "%y-%M-%d", //格式化
             range: { //范围选择
                 date: {
+                    format: "%y-%M-%d",
                     start: null, //2016-01-01
                     end: null    //2016-12-31
                 },
                 time: {
                     start: null,    //06:30:00
                     end: null       //21:00:00
+                },
+                hours: {
+                    start: 0,
+                    end: 23
+                },
+                minutes: {
+                    start: 0,
+                    end: 59
+                },
+                seconds: {
+                    start: 0,
+                    end: 59
                 }
             },
             filter: {   //过滤器，筛选掉设置中的值
@@ -848,10 +895,18 @@
             {"property": "format", "dataType": "string"},
             {"property": "value", "dataType": "string"},
             {"property": "sync", "dataType": "string"},
+            {"property": "range-date-format", "dataType": "string"},
             {"property": "range-date-start", "dataType": "string"},
             {"property": "range-date-end", "dataType": "string"},
+            {"property": "range-time-format", "dataType": "string"},
             {"property": "range-time-start", "dataType": "string"},
             {"property": "range-time-end", "dataType": "string"},
+            {"property": "range-hours-start", "dataType": "number"},
+            {"property": "range-hours-end", "dataType": "number"},
+            {"property": "range-minutes-start", "dataType": "number"},
+            {"property": "range-minutes-end", "dataType": "number"},
+            {"property": "range-seconds-start", "dataType": "number"},
+            {"property": "range-seconds-end", "dataType": "number"},
             {"property": "filter-years", "dataType": "array"},
             {"property": "filter-months", "dataType": "array"},
             {"property": "filter-dates", "dataType": "array"},
@@ -1031,6 +1086,8 @@
                 "options": this.options(),
                 "mode": mode,
                 ///////////////////////////////////////////////
+                "range": DateTimePicker.Parser.Range,
+                ///////////////////////////////////////////////
                 "datetime": dt,
                 "leapYear": DateUtil.leapYear(dt),
                 "year": year,
@@ -1174,13 +1231,13 @@
 
             return options;
         },
-        render: function(target){
+        render: function(target, isSetInputValue){
             var renderData = this.serialized(this.currentDatetime);
             var picker = this.getDateTimePickerFrame();
 
             if(picker.length === 0){
                 DATETIME_PICKER.render(true, _html_picker_frame, renderData, {
-                    callback: function(ret, _target){
+                    callback: function(ret, _target, isSet){
                         $(_target).append(ret.result);
 
                         Util.watchAction(_target, [
@@ -1189,18 +1246,18 @@
                         ], null);
 
                         Util.source(DateTimePickerProtocol);
-                        this.core(ret.metaData);
+                        this.core(ret.metaData, isSet);
                     },
-                    args: [target || document.body],
+                    args: [target || document.body, isSetInputValue],
                     context: this
                 });
             }else{
-                this.core(renderData);
+                this.core(renderData, isSetInputValue);
             }
         },
-        renderDateBox: function(renderData){
+        renderDateBox: function(renderData, isSetInputValue){
             DATETIME_PICKER.render(true, _html_picker_datebox, renderData, {
-                callback: function(ret){
+                callback: function(ret, isSet){
                     var dateBox = this.getDateTimePickerDateBox();
 
                     dateBox.html(ret.result);
@@ -1209,15 +1266,18 @@
                     var plugin = $('[data-plugin="dtpicker.' + this.name + '"]');
 
                     plugin.attr("data-dtpicker-value", this.format(metaData.datetime));
-                    Util.requestExternal(this.options("sync"), [metaData.datetime, this.format(metaData.datetime), plugin]);
+
+                    if(true === isSet){
+                        Util.requestExternal(this.options("sync"), [metaData.datetime, this.format(metaData.datetime), plugin]);
+                    }
                 },
-                args: [],
+                args: [isSetInputValue],
                 context: this
             });
         },
-        renderTimeBox: function(renderData){
+        renderTimeBox: function(renderData, isSetInputValue){
             DATETIME_PICKER.render(true, _html_picker_timebox, renderData, {
-                callback: function(ret){
+                callback: function(ret, isSet){
                     var timeBox = this.getDateTimePickerTimeBox();
                     
                     timeBox.html(ret.result);
@@ -1230,15 +1290,18 @@
                     var plugin = $('[data-plugin="dtpicker.' + this.name + '"]');
 
                     plugin.attr("data-dtpicker-value", this.format(metaData.datetime));
-                    Util.requestExternal(this.options("sync"), [metaData.datetime, this.format(metaData.datetime), plugin]);
+
+                    if(true === isSet){
+                        Util.requestExternal(this.options("sync"), [metaData.datetime, this.format(metaData.datetime), plugin]);
+                    }
                 },
-                args: [],
+                args: [isSetInputValue],
                 context: this
             });
         },
-        core: function(renderData){
-            this.renderDateBox(renderData);
-            this.renderTimeBox(renderData);
+        core: function(renderData, isSetInputValue){
+            this.renderDateBox(renderData, isSetInputValue);
+            this.renderTimeBox(renderData, isSetInputValue);
         },
         update: function(datetime){
             this.currentDatetime = datetime;
@@ -1349,7 +1412,7 @@
             parse: function(datetimeString){
                 return dtp.parse(datetimeString);
             },
-            format: function(datatime){
+            format: function(datetime){
                 return dtp.format(datetime);
             },
             mode: function(mode){
@@ -1376,23 +1439,23 @@
             getDateTimePickerTimeOptions: function(type){
                 return dtp.getDateTimePickerTimeOptions(type);
             },
-            render: function(target){
-                dtp.render(target);
+            render: function(target, isSetInputValue){
+                dtp.render(target, isSetInputValue);
 
                 return this;
             },
-            renderDateBox: function(renderData){
-                dtp.renderDateBox(renderData);
+            renderDateBox: function(renderData, isSetInputValue){
+                dtp.renderDateBox(renderData, isSetInputValue);
 
                 return this;
             },
-            renderTimeBox: function(renderData){
-                dtp.renderTimeBox(renderData);
+            renderTimeBox: function(renderData, isSetInputValue){
+                dtp.renderTimeBox(renderData, isSetInputValue);
 
                 return this;
             },
-            core: function(renderData){
-                dtp.core(renderData);
+            core: function(renderData, isSetInputValue){
+                dtp.core(renderData, isSetInputValue);
 
                 return this;
             },
@@ -1459,6 +1522,262 @@
         }
     };
 
+    DateTimePicker.Parser = {
+        Range: {
+            dateRange: function(options, checkValue){
+                var range = options.range.date;
+                var filter = options.filter;
+                var format = range.format;
+                var start = range.start || null;
+                var end = range.end || null;
+                var startRangeDate = start ? DateUtil.parse(start, format) : null;
+                var endRangeDate = end ? DateUtil.parse(end, format) : null;
+                var checkDate = DataType.isDate(checkValue) ? checkValue : DateUtil.parse(checkValue, "%y-%M-%d").date;
+
+                var inRange = true;
+
+                startRangeDate = startRangeDate.ok ? startRangeDate.date : null;
+                if(startRangeDate){
+                    startRangeDate = new Date(startRangeDate.getFullYear(), startRangeDate.getMonth(), startRangeDate.getDate(), 0, 0, 0).getTime();
+                }
+
+                endRangeDate = endRangeDate.ok ? endRangeDate.date : null;
+                if(endRangeDate){
+                    endRangeDate = new Date(endRangeDate.getFullYear(), endRangeDate.getMonth(), endRangeDate.getDate(), 0, 0, 0).getTime();
+                }
+
+                checkDate = new Date(checkDate.getFullYear(), checkDate.getMonth(), checkDate.getDate(), 0, 0, 0);
+                checkDate = DateTimePicker.Parser.filter("date", filter, checkDate);
+
+                if(checkDate){
+                    checkDate = checkDate.getTime();
+
+                    inRange = ((false === !!startRangeDate || startRangeDate <= checkDate) && (false === !!endRangeDate || checkDate <= endRangeDate));
+                }else{
+                    inRange = false;
+                }
+
+                var ret = {
+                    "inRange": inRange,
+                    "className": (inRange ? "" : "disabled")
+                };
+
+                return ret;
+            },
+            timeRange: function(options, checkValue){
+                var range = options.range.time;
+                var filter = options.filter;
+                var start = range.start || null;
+                var end = range.end || null;
+                var check = null;
+
+                var now = new Date();
+                var inRange = true;
+
+                var parse = function(value){
+                    var items = value.split(":");
+                    var hours = parseInt(items[0] || 0, 10);
+                    var minutes = parseInt(items[1] || 0, 10);
+                    var seconds = parseInt(items[2] || 0, 10);
+
+                    return {
+                        "hours": hours,
+                        "minutes": minutes,
+                        "seconds": seconds
+                    };
+                };
+
+                if(start){
+                    start = parse(start);
+                    start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), start.hours, start.minutes, start.seconds).getTime();
+                }
+
+                if(end){
+                    end = parse(end);
+                    end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), end.hours, end.minutes, end.seconds).getTime();
+                }
+
+                check = parse(checkValue);
+                check = new Date(now.getFullYear(), now.getMonth(), now.getDate(), check.hours, check.minutes, check.seconds);
+
+                check = DateTimePicker.Parser.filter("time", filter, check);
+
+                if(check){
+                    check = check.getTime();
+
+                    inRange = ((false === !!start || start <= check) && (false === !!end || check <= end));
+                }else{
+                    inRange = false;
+                }
+
+                var ret = {
+                    "inRange": inRange,
+                    "className": (inRange ? "" : "disabled")
+                };
+
+                return ret;
+            },
+            hoursRange: function(options, checkValue){
+                var range = options.range.hours;
+                var start = range.start;
+                var end = range.end;
+                var filter = options.filter;
+                var inRange = (start <= checkValue && checkValue <= end);
+
+                var compare = function(items, value){
+                    var size = items.length;
+
+                    for(var i = 0; i < size; i++){
+                        if(parseInt(items[i], 10) === value){
+                            return true;
+                        }
+                    }
+
+                    return false;
+                };
+
+                if(true === compare(filter.hours || [], checkValue)){
+                    inRange = false;
+                }
+
+                var ret = {
+                    "inRange": inRange,
+                    "className": (inRange ? "" : "disabled")
+                };
+
+                return ret;
+            },
+            minutesRange: function(options, checkValue){
+                var range = options.range.minutes;
+                var start = range.start;
+                var end = range.end;
+                var filter = options.filter;
+                var inRange = (start <= checkValue && checkValue <= end);
+
+                var compare = function(items, value){
+                    var size = items.length;
+
+                    for(var i = 0; i < size; i++){
+                        if(parseInt(items[i], 10) === value){
+                            return true;
+                        }
+                    }
+
+                    return false;
+                };
+
+                if(true === compare(filter.minutes || [], checkValue)){
+                    inRange = false;
+                }
+
+                var ret = {
+                    "inRange": inRange,
+                    "className": (inRange ? "" : "disabled")
+                };
+
+                return ret;
+            },
+            secondsRange: function(options, checkValue){
+                var range = options.range.seconds;
+                var start = range.start;
+                var end = range.end;
+                var filter = options.filter;
+                var inRange = (start <= checkValue && checkValue <= end);
+
+                var compare = function(items, value){
+                    var size = items.length;
+
+                    for(var i = 0; i < size; i++){
+                        if(parseInt(items[i], 10) === value){
+                            return true;
+                        }
+                    }
+
+                    return false;
+                };
+
+                if(true === compare(filter.seconds || [], checkValue)){
+                    inRange = false;
+                }
+
+                var ret = {
+                    "inRange": inRange,
+                    "className": (inRange ? "" : "disabled")
+                };
+
+                return ret;
+            }
+        },
+        filter: function(type, filter, datetime){
+            var filterYears = filter.years || [];
+            var filterMonths = filter.months || [];
+            var filterDates = filter.dates || [];
+            var filterHours = filter.hours || [];
+            var filterMinutes = filter.minutes || [];
+            var filterSeconds = filter.seconds || [];
+            var filterWeekends = filter.weekends;
+            var filterWeekdays = filter.weekdays;
+
+            var year = datetime.getFullYear();
+            var month = datetime.getMonth() + 1;
+            var date = datetime.getDate();
+            var day = datetime.getDay();
+            var hours = datetime.getHours();
+            var minutes = datetime.getMinutes();
+            var seconds = datetime.getSeconds();
+
+            var compare = function(items, value){
+                var size = items.length;
+
+                for(var i = 0; i < size; i++){
+                    if(parseInt(items[i], 10) === value){
+                        return true;
+                    }
+                }
+
+                return false;
+            };
+
+            if("date" == type){
+                if(true === compare(filterYears, year)){
+                    return null;
+                }
+
+                if(true === compare(filterMonths, month)){
+                    return null;
+                }
+
+                if(true === compare(filterDates, date)){
+                    return null;
+                }
+
+                if(true === filterWeekends && (0 === day || 6 === day)){
+                    return null;
+                }
+
+                if(true === filterWeekdays && (day > 0 && day < 6)){
+                    return null;
+                }
+            }
+
+            if("time" == type){
+                if(true === compare(filterHours, hours)){
+                    return null;
+                }
+
+                if(true === compare(filterMinutes, minutes)){
+                    return null;
+                }
+
+                if(true === compare(filterSeconds, seconds)){
+                    return null;
+                }
+            }
+
+            return datetime;
+        }
+    };
+
     (function(){
         $(document).on("mousedown.datetimepicker", function(e){
             for(var name in DateTimePicker.Cache){
@@ -1470,7 +1789,7 @@
     })()
 
     module.exports = {
-        version: "R16B1104",
+        version: "R17B0409",
         MODE: DateTimePicker.MODE,
         create: DateTimePicker.createDateTimePicker,
         lookup: DateTimePicker.lookup,

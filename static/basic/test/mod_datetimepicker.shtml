@@ -392,67 +392,22 @@
       </div>
     </div>
   </div>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
   <input name="aabbd" type="text" 
     data-plugin="dtpicker.oabd" 
     data-dtpicker-mode="2" 
     data-dtpicker-theme="aa" 
     data-dtpicker-format="%h:%m"
-    data-dtpicker-value="2016-11-08 06:30:00" 
+    data-dtpicker-value="" 
     data-dtpicker-sync="dtp://sync" 
+    data-dtpicker-range-date-format="%y-%M-%d" 
     data-dtpicker-range-date-start="2016-11-12" 
     data-dtpicker-range-date-end="2018-11-12" 
-    data-dtpicker-range-time-start="11:20:22" 
-    data-dtpicker-range-time-end="" 
+    data-dtpicker-range-hours-start="0" 
+    data-dtpicker-range-hours-end="12" 
+    data-dtpicker-range-minutes-start="0" 
+    data-dtpicker-range-minutes-end="30" 
+    data-dtpicker-range-seconds-start="0" 
+    data-dtpicker-range-seconds-end="30" 
     data-dtpicker-filter-years="" 
     data-dtpicker-filter-months="" 
     data-dtpicker-filter-dates="" 
@@ -463,23 +418,24 @@
     data-dtpicker-filter-weekdays="0" 
     data-dtpicker-step-hour="0"
     data-dtpicker-step-minute="5"
-    data-dtpicker-step-second="30" 
+    data-dtpicker-step-second="15" 
     style="margin-left: 100px; margin-top: 500px" />
   <input name="inste" type="text"
     data-plugin="dtpicker.test"
         data-dtpicker-mode="6" 
         data-dtpicker-theme="aa" 
         data-dtpicker-format="%y-%M-%d %h:%m:%s"
-        data-dtpicker-value="2016-11-08 06:30:00" 
+        data-dtpicker-value="" 
         data-dtpicker-sync="dtp://sync" 
+        data-dtpicker-range-date-format="%y-%M-%d" 
         data-dtpicker-range-date-start="2016-11-12" 
         data-dtpicker-range-date-end="2018-11-12" 
-        data-dtpicker-range-time-start="11:20:22" 
-        data-dtpicker-range-time-end="" 
+        data-dtpicker-range-time-start="00:00:00" 
+        data-dtpicker-range-time-end="14:00:00" 
         data-dtpicker-filter-years="" 
         data-dtpicker-filter-months="" 
         data-dtpicker-filter-dates="" 
-        data-dtpicker-filter-hours="1,2,3,4,5" 
+        data-dtpicker-filter-hours="0,1,2,3,4,5" 
         data-dtpicker-filter-minutes="" 
         data-dtpicker-filter-seconds="" 
         data-dtpicker-filter-weekends="0" 
@@ -493,8 +449,9 @@
         data-dtpicker-mode="6" 
         data-dtpicker-theme="aa" 
         data-dtpicker-format="%y-%M-%d %h:%m:%s"
-        data-dtpicker-value="2016-11-08 06:30:00" 
+        data-dtpicker-value="" 
         data-dtpicker-sync="dtp://sync" 
+        data-dtpicker-range-date-format="%y-%M-%d" 
         data-dtpicker-range-date-start="2016-11-12" 
         data-dtpicker-range-date-end="2018-11-12" 
         data-dtpicker-range-time-start="11:20:22" 
@@ -511,31 +468,6 @@
         data-dtpicker-step-minute="5"
         data-dtpicker-step-second="30"
   />
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
-  <p><br></p>
 <!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
 <script>
 $.dtpicker = {

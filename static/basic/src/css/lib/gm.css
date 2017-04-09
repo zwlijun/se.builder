@@ -951,6 +951,7 @@ textarea {
 .mod-dtpicker-date-panel > li.disabled{
 	background-color: #fcfcfc;
 	color: #d6d6d6;
+	cursor: not-allowed!important;
 }
 .mod-dtpicker-year-month{
 	position: absolute;

@@ -27,7 +27,7 @@ var PreventDefaultLink = function(){
 };
 
 var SecurityURL = {
-    verify: function(url){
+    verify: function(url, defaultURL){
         var info = Request.parseURL(url);
         var host = info.host;
 
@@ -35,9 +35,12 @@ var SecurityURL = {
 
         if(pattern.test(host)){
             return url;
+        }else{
+            console.warn("The URL(" + url + ") is not allowed.");
+            console.warn("The default URL is `" + defaultURL + "`");
         }
 
-        return "";
+        return defaultURL || "";
     },
     fixed: function(url){
         var URLInfo = Request.parseURL(url);
@@ -75,6 +78,10 @@ var GoSchema = {
             return ;
         }
 
+        if(!url || !SecurityURL.verify(url)){
+            return ;
+        }
+
         location.href = SecurityURL.fixed(url);
     },
     open: function(data, node, e, type){
@@ -83,6 +90,10 @@ var GoSchema = {
         var target = args[1] || "_blank";
 
         if(node && node.hasClass("disabled")){
+            return ;
+        }
+
+        if(!url || !SecurityURL.verify(url)){
             return ;
         }
 
@@ -102,6 +113,10 @@ var GoSchema = {
         var url = args[0];
 
         if(node && node.hasClass("disabled")){
+            return ;
+        }
+
+        if(!url || !SecurityURL.verify(url)){
             return ;
         }
 
