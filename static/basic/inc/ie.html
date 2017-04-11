@@ -1,6 +1,7 @@
 <script>
 var IECompatible = (function(){
     var _importTimer = null;
+    var _loadTimer = null;
     var _ver = window["SE_BUILDER_STATIC_VERSION"] || "basic";
     var _compatible = {
         hasClass: function(dom, className){
@@ -115,7 +116,7 @@ var IECompatible = (function(){
             return version;
         },
         importLink: function(){
-            if(_compatible.ie() <= 0){
+            if(_compatible.ie() <= 0 || _compatible.ie() >= 10){
                 return _compatible;
             }
 
@@ -133,6 +134,8 @@ var IECompatible = (function(){
                 link.href = "/static/" + _ver + "/src/css/lib/compatible/ie.css";
 
                 __head__[0].appendChild(link);
+
+                _compatible.importScript();
             }else{
                 _importTimer = setTimeout(function(){
                     _compatible.importLink();
@@ -140,6 +143,33 @@ var IECompatible = (function(){
             }
 
             return _compatible;
+        },
+        importScript: function(){
+            if(!_compatible.rem.supported()){
+                _compatible.loadScript("/static/" + _ver + "/src/js/lib/extra/rem/r1.3.4/rem.js");
+                _compatible.loadScript("/static/" + _ver + "/src/js/lib/extra/html5/r3.7.3/html5shiv.js");
+            }
+        },
+        loadScript: function(_src){
+            var __head__ = document.getElementsByTagName('head');
+
+            if(_loadTimer){
+                clearTimeout(_loadTimer);
+                _loadTimer = null;
+            }
+
+            if(__head__.length > 0){
+                var script  = document.createElement("script");
+
+                script.type = "text/javascript";
+                script.src = _src;
+
+                __head__[0].appendChild(script);
+            }else{
+                _loadTimer = setTimeout(function(){
+                    _compatible.loadScript(_src);
+                }, 0)
+            }
         },
         compatible: function(){
             var __docroot__ = document.documentElement;
@@ -152,7 +182,7 @@ var IECompatible = (function(){
             if(_compatible.rem.supported()){
                 _compatible.addClass(__docroot__, "rem-yes");
             }else{
-                _compatible.addClass(__docroot__, "rem-no hidden");
+                _compatible.addClass(__docroot__, "rem-no");
             }
 
             return _compatible;

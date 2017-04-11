@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html data-page-alias="platform.app.project.module.feature.page"<!--#include virtual="/static/v1.0/inc/rem_mattr.html"-->>
+<html data-page-alias="platform.app.project.module.feature.page"<!--#include virtual="/static/basic/inc/rem_mattr.html"-->>
 <head>
-<!--#include virtual="/static/v1.0/inc/meta.html"-->
-<!--#include virtual="/static/v1.0/inc/rem.html"-->
+<!--#include virtual="/static/basic/inc/meta.html"-->
+<!--#include virtual="/static/basic/inc/rem.html"-->
 <title>移动终端页面框架DEMO</title>
-<!--#include virtual="/static/v1.0/inc/css_common_gm.html"-->
-<!--#include virtual="/static/v1.0/inc/css_common_mm.html"-->
-<!--#include virtual="/static/v1.0/inc/static_version.html"-->
+<!--#include virtual="/static/basic/inc/css_common_gm.html"-->
+<!--#include virtual="/static/basic/inc/css_common_mm.html"-->
+<!--#include virtual="/static/basic/inc/static_version.html"-->
 </head>
 <body>
 <header class="app-header"></header> 
 <article class="app-body"></article>
 <footer class="app-footer"></footer>
-<!--#include virtual="/static/v1.0/inc/js_common_z.120.html" -->  
+<!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
 </body>
 </html>
