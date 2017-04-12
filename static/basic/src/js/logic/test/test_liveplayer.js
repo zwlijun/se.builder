@@ -22,13 +22,16 @@
 	player.set("requestfullscreen", {
 		callback: function(name){
 			var master = this.getLivePlayerMasterVideo(true);
+			var percentage = RemAdaptor.getRemAdaptorPercentageValue();
 
 			if(this.maybeUseTencentX5Core()){
 				var orientation = master.getAttribute("x5-video-orientation");
 
 				if(!orientation || "portraint" === orientation){
+					master.style.height = "initial";
 					master.setAttribute("x5-video-orientation", "landscape");
 				}else{
+					master.style.height = (percentage > 0 ? (Math.max(window.screen.height, window.screen.width) / percentage) * 2 : 3000) + "px";
 					master.setAttribute("x5-video-orientation", "portraint");
 				}
 			}
@@ -40,13 +43,16 @@
 	player.set("exitfullscreen", {
 		callback: function(name){
 			var master = this.getLivePlayerMasterVideo(true);
+			var percentage = RemAdaptor.getRemAdaptorPercentageValue();
 
 			if(this.maybeUseTencentX5Core()){
 				var orientation = master.getAttribute("x5-video-orientation");
 
 				if(!orientation || "portraint" === orientation){
+					master.style.height = "initial";
 					master.setAttribute("x5-video-orientation", "landscape");
 				}else{
+					master.style.height = (percentage > 0 ? (Math.max(window.screen.height, window.screen.width) / percentage) * 2 : 3000) + "px";
 					master.setAttribute("x5-video-orientation", "portraint");
 				}
 			}
@@ -89,8 +95,8 @@
 			navbar.addClass("hide");
 			// controlbar.addClass("hide");
 
-			master.controls = true;
-			master.style.height = (percentage > 0 ? window.screen.height / percentage : 3000) + "px";
+			// master.controls = true;
+			master.style.height = (percentage > 0 ? (Math.max(window.screen.height, window.screen.width) / percentage) * 2 : 3000) + "px";
 
 			$("body").append("<p>LivePlayer::Event#X5VideoEnterFullScreen</p>");
 			$("body").append("<p>LivePlayer::Style#" + master.getAttribute("style") + "</p>");
@@ -106,7 +112,7 @@
 			master.style.height = "initial";
 			master.setAttribute("x5-video-orientation", "portraint");
 
-			master.controls = false;
+			// master.controls = false;
 
 			navbar.removeClass("hide");
 			// controlbar.removeClass("hide");
