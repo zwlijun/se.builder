@@ -141,6 +141,8 @@ if [ "$#" -eq "1" ]; then
     cp -rf ${STATIC_BASE_PREFIX}/src/js/lib/extra ${STATIC_PREFIX}/src/js/lib/
     cp -rf ${STATIC_BASE_PREFIX}/src/js/lib/*.mix.js ${STATIC_PREFIX}/src/js/lib/
     cp -rf ${STATIC_BASE_PREFIX}/src/js/mod ${STATIC_PREFIX}/src/js/
+    cp -rf ${STATIC_BASE_PREFIX}/src/js/logic/test/tpl.js ${STATIC_PREFIX}/src/js/logic/test/
+    cp -rf ${STATIC_BASE_PREFIX}/src/js/logic/test/tpl_main.js ${STATIC_PREFIX}/src/js/logic/test/
     #复制样式文件
     cp -rf ${STATIC_BASE_PREFIX}/src/css/lib/extra ${STATIC_PREFIX}/src/css/lib/
     cp -rf ${STATIC_BASE_PREFIX}/src/css/lib/gm.css ${STATIC_PREFIX}/src/css/lib/
@@ -155,6 +157,8 @@ if [ "$#" -eq "1" ]; then
     cp -rf ${STATIC_BASE_PREFIX}/media/* ${STATIC_PREFIX}/media/
     #复制 inc/rem
     cp -rf ${STATIC_BASE_PREFIX}/inc/rem.html ${STATIC_PREFIX}/inc/
+    #复制 inc/ie
+    cp -rf ${STATIC_BASE_PREFIX}/inc/ie.html ${STATIC_PREFIX}/inc/
 
     #生成基础版本INC文件
     echo -n "<script>window[\"SE_BUILDER_STATIC_VERSION\"] = \"${STATIC_BASE_VERSION}\";</script>" > ${STATIC_BASE_PREFIX}/inc/static_version.html
