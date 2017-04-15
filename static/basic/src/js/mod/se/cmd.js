@@ -10,10 +10,10 @@
  * @date 2014.4
  */
 ;define(function CMD(require, exports, module){
-    var Util    = $.Util    = require("mod/se/util");
-    var Request = $.Request = require("mod/se/request");
-    var DB      = $.Storage = require("mod/se/storage");
-    var Loading = $.Loading = require("mod/ui/loading");
+    var Util            = require("mod/se/util");
+    var Request         = require("mod/se/request");
+    var DB              = require("mod/se/storage");
+    var Loading         = require("mod/ui/loading");
 
     var RequestStatus = {
         "timeout"  : {status: 0xFF01, text: "亲，请求超时了~"},
@@ -415,7 +415,7 @@
     }
 
     module.exports = {
-        "version": "R17B0407",
+        "version": "R17B0415",
         "exec": Exec,
         "existCommand" : ExistCommand,
         "fireError" : FireError,

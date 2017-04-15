@@ -260,7 +260,7 @@ var InputSchema = {
             tab.removeClass("hide");
         }
     } 
-}
+};
 
 var _App = {
     _conf: {},

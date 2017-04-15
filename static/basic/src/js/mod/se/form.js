@@ -10,11 +10,12 @@
  * @date 2014.4
  */
 ;define(function FormUtil(require, exports, module){
-    var Listener   = $.Listener   = require("mod/se/listener");
-    var StringUtil = $.StringUtil = require("mod/se/stringutil");
-    var Request    = $.Request    = require("mod/se/request");
-    var Util       = $.Util       = require("mod/se/util");
-    var HandleStack               = Listener.HandleStack;
+    var Listener        = require("mod/se/listener");
+    var StringUtil      = require("mod/se/stringutil");
+    var Request         = require("mod/se/request");
+    var Util            = require("mod/se/util");
+    var DateUtil        = require("mod/se/dateutil");
+    var HandleStack     = Listener.HandleStack;
 
     /**
      * 校驗方法
@@ -147,6 +148,41 @@
             email: function(data, v, el){
                 var p = /^([a-z0-9_\.\-]+)@([a-z0-9_\-]+)(\.[a-z0-9_\-]+)+$/i
                 return p.test(v);
+            },
+            url: function(data, v, el){
+                var urlInfo = Request.parseURL(v, false);
+
+                return !!urlInfo.url;
+            },
+            datetime: function(data, v, el){
+                var fmt = el.attr("data-dtpicker-format") || "%y-%M-%d %h:%m:%s";
+                var check = DateUtil.parse(v, fmt);
+
+                return check.ok;
+            },
+            shortdatetime: function(data, v, el){
+                var fmt = el.attr("data-dtpicker-format") || "%y-%M-%d %h:%m";
+                var check = DateUtil.parse(v, fmt);
+
+                return check.ok;
+            },
+            date: function(data, v, el){
+                var fmt = el.attr("data-dtpicker-format") || "%y-%M-%d";
+                var check = DateUtil.parse(v, fmt);
+
+                return check.ok;
+            },
+            time: function(data, v, el){
+                var fmt = el.attr("data-dtpicker-format") || "%h:%m:%s";
+                var check = DateUtil.parse(v, fmt);
+
+                return check.ok;
+            },
+            shorttime: function(data, v, el){
+                var fmt = el.attr("data-dtpicker-format") || "%h:%m";
+                var check = DateUtil.parse(v, fmt);
+
+                return check.ok;
             },
             smscode: function(data, v, el){
                 var p = /^[0-9]{4,6}$/i;
@@ -724,7 +760,7 @@
             
             if((null == chk) ||                                                     //没有设置beforecheck
                (null != chk && true !== chk.returnValue) ||                         //没有设置returnValue属性或returnValue属性不为true
-               (null != chk && this.exe("beforecheck", [this.form, this.spv]))      //有设置beforecheck并且条件为真
+               (null != chk && this.exec("beforecheck", [this.form, this.spv]))      //有设置beforecheck并且条件为真
             ){
                 this.doCheck();
             }
@@ -757,7 +793,7 @@
     var _Cache = {};
 
     module.exports = {
-        "version": "R17B0407",
+        "version": "R17B0415",
         "CheckTypes": Types,
         "getInstance" : function(name, prefix){
             var ins = (_Cache[name] || new _Form(name, prefix)); 

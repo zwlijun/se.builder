@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html data-page-alias="ui-component#framebox">
+<head>
+<!--#include virtual="/static/basic/inc/meta.html"-->
+<!--#include virtual="/static/basic/inc/rem.html"-->
+<title>Mod/Form</title>
+<!--#include virtual="/static/basic/inc/css_common_gm.html"-->
+<style type="text/css">
+body{
+  margin: 50px; 
+}
+div{
+  padding-bottom: 15px;
+}
+label{
+  display: inline-block;
+  width: 100px;
+}
+input{
+  width: 200px;
+}
+</style>
+</head>
+<body>
+<form name="testForm" method="get" action="mod_form.shtml" data-action-submit="form://submit#test,testForm,request">
+  <div>
+    <label>大陆身份证</label>
+    <input type="text" name="cnid" data-required="0" data-empty="请输入大陆身份证" data-format="cnid" data-invalid="大陆身份证输入不正确">
+  </div>
+  <div>
+    <label>香港身份证</label>
+    <input type="text" name="hkid" data-required="0" data-empty="请输入香港身份证" data-format="hkid" data-invalid="香港身份证输入不正确">
+  </div>
+  <div>
+    <label>普通密码</label>
+    <input type="text" name="spasswd" data-required="0" data-empty="请输入普通密码" data-format="spasswd" data-invalid="普通密码为6-16位的非空字符">
+  </div>
+  <div>
+    <label>数字密码</label>
+    <input type="text" name="npasswd" data-required="0" data-empty="请输入数字密码" data-format="npasswd" data-invalid="数字密码为6-8位的数字">
+  </div>
+  <div>
+    <label>英文字符</label>
+    <input type="text" name="enchar" data-required="0" data-empty="请输入英文字符" data-format="enchar" data-invalid="英文字符输入不正确">
+  </div>
+  <div>
+    <label>中文字符</label>
+    <input type="text" name="cnchar" data-required="0" data-empty="请输入中文字符" data-format="cnchar" data-invalid="中文字符输入不正确">
+  </div>
+  <div>
+    <label>中文名</label>
+    <input type="text" name="cn_name" data-required="0" data-empty="请输入中文名" data-format="cn_name" data-invalid="中文名输入不正确">
+  </div>
+  <div>
+    <label>英文名</label>
+    <input type="text" name="en_name" data-required="0" data-empty="请输入英文名" data-format="en_name" data-invalid="英文名输入不正确">
+  </div>
+  <div>
+    <label>半角字符</label>
+    <input type="text" name="ascii" data-required="0" data-empty="请输入半角字符" data-format="ascii" data-invalid="半角字符输入不正确">
+  </div>
+  <div>
+    <label>手机号</label>
+    <input type="text" name="mobile" data-required="0" data-empty="请输入手机号" data-format="mobile" data-invalid="手机号输入不正确">
+  </div>
+  <div>
+    <label>电话号码</label>
+    <input type="text" name="tel" data-required="0" data-empty="请输入电话号码" data-format="tel" data-invalid="电话号码输入不正确">
+  </div>
+  <div>
+    <label>Email</label>
+    <input type="text" name="email" data-required="0" data-empty="请输入Email" data-format="email" data-invalid="Email输入不正确">
+  </div>
+  <div>
+    <label>URL</label>
+    <input type="text" name="url" data-required="0" data-empty="请输入URL" data-format="url" data-invalid="URL输入不正确">
+  </div>
+  <div>
+    <label>日期/时间</label>
+    <input type="text" name="datetime" data-required="0" data-empty="请输入日期/时间" data-format="datetime" data-invalid="日期/时间输入不正确，格式：%y-%M-%d %h:%m:%s">
+  </div>
+  <div>
+    <label>短日期</label>
+    <input type="text" name="shortdatetime" data-required="0" data-empty="请输入短日期" data-format="shortdatetime" data-invalid="短日期输入不正确，格式：%y-%M-%d %h:%m">
+  </div>
+  <div>
+    <label>日期</label>
+    <input type="text" name="date" data-required="0" data-empty="请输入日期" data-format="date" data-invalid="日期输入不正确，格式：%y-%M-%d">
+  </div>
+  <div>
+    <label>时间</label>
+    <input type="text" name="time" data-required="0" data-empty="请输入时间" data-format="time" data-invalid="时间输入不正确，格式：%h:%m:%s">
+  </div>
+  <div>
+    <label>短时间</label>
+    <input type="text" name="shorttime" data-required="0" data-empty="请输入短时间" data-format="shorttime" data-invalid="短时间输入不正确，格式：%h:%m">
+  </div>
+  <div>
+    <label>短信验证码</label>
+    <input type="text" name="smscode" data-required="0" data-empty="请输入短信验证码" data-format="smscode" data-invalid="短信验证码为4-6位的数字">
+  </div>
+  <div>
+    <label>图像验证码</label>
+    <input type="text" name="verifycode" data-required="0" data-empty="请输入图像验证码" data-format="verifycode" data-invalid="图像验证码为4-6位的字母或数字">
+  </div>
+  <div>
+    <label>任意字符</label>
+    <input type="text" name="any" data-required="0" data-empty="请输入任意字符" data-format="any" data-invalid="任意字符为非空的所有字符">
+  </div>
+  <button type="submit">提交</button>
+</form>
+<!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
+<script>
+seajs.use(["logic/test/test_form"]);
+</script>
+</body>
+</html>

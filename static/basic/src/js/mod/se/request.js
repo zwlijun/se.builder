@@ -31,6 +31,7 @@
     };
 
     module.exports = {   
+        version: "R17B0415",
         /**
          * 过滤XSS的非法字符
          * @param String str 需要进行过滤的字符串
@@ -102,9 +103,10 @@
          * 解析URL
          * @method parseURL
          * @param String url 需要解析的URL
+         * @param boolean autofix 是否自动修复
          * @return Object items {String url, String protocol, String host, String port, String pathname, String search, String hash, String user, String password, String filename}
          */
-        parseURL : function(url){
+        parseURL : function(url, autofix){
             var p = /^([^\:\/\?&\#]+\:)\/\/(([\w\W]+)(\:([\w\W]+)\@))?([^\:\/\?&\#]+)(\:([\d]+))?(\/?[^\?&\#\:]*\/)?([^\/&\#\?\:]+)?(\?[^\?#]*)?(\#[\w\W]*)?$/;
             //[
             // 0: "ftp://carlli:123@ftp.domain.com:21000/www/test/a?sss=123&t=123&o=000#!asd=123",  //原串
@@ -121,7 +123,8 @@
             // 11:"?sss=123&t=123&o=000",    //search
             // 12:"#!asd=123"                //hash
             //]
-            var loc = this.fix(url || document.URL);
+            
+            var loc = autofix !== false ? this.fix(url) : url;
             var r0 = p.exec(loc)||[];
             
             var path = r0[9] || "";

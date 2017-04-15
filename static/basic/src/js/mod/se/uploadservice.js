@@ -232,8 +232,25 @@
             this.Service[fileInfo.key] = new _UploadService(this, fileInfo);
         },
         addFileInfo: function(fileInfo){
+            this.fileInfoList = this.fileInfoList || [];
+
+            fileInfo.index = this.fileInfoList.length;
+            
             this.fileInfoList.push(fileInfo);
             this.size = this.fileInfoList.length;
+        },
+        updateFileInfoList: function(list){
+            thsi.fileInfoList = list;
+            this.size = this.fileInfoList.length;
+        },
+        getFileInfoList: function(){
+            return this.fileInfoList;
+        },
+        clearFileInfoList: function(){
+            this.fileInfoList.length = 0;
+            this.fileInfoList = undefined;
+            this.fileInfoList = [];
+            this.size = 0;
         },
         as: function(fileInfo){
             this.addFileInfo(fileInfo);
@@ -246,7 +263,7 @@
 
                 return  0;
             }
-            var fileInfoList = this.fileInfoList;
+            var fileInfoList = this.getFileInfoList();
             var size = fileInfoList.length;
             var fileInfo = null;
 
@@ -279,9 +296,10 @@
                 return ;
             }
 
-            var fileInfoList = this.fileInfoList;
+            var fileInfoList = this.getFileInfoList();
             var size = fileInfoList.length;
             var fileInfo = null;
+            var newFileInfoList = [];
 
             for(var i = 0; i < size; i++){
                 fileInfo = fileInfoList[i];
@@ -292,10 +310,14 @@
 
                     break;
                 }
+                fileInfo.index = newFileInfoList.length;
+                newFileInfoList.push(fileInfo);
             }
+
+            this.updateFileInfoList(newFileInfoList);
         },
         getFileInfo: function(key){
-            var fileInfoList = this.fileInfoList;
+            var fileInfoList = this.getFileInfoList();
             var size = fileInfoList.length;
             var fileInfo = null;
 
@@ -451,7 +473,7 @@
                         return function(e){
                             _fileInfo.thumb = e.target.result;
 
-                            ins.fileInfoList.push(_fileInfo);
+                            ins.addFileInfo(_fileInfo);
                             ins.readCount++;
                         }
                     })(fileInfo, _ins);
@@ -459,7 +481,7 @@
                 }else{
                     fileInfo.thumb = undefined;
 
-                    _ins.fileInfoList.push(fileInfo);
+                    _ins.addFileInfo(fileInfo);
                     _ins.readCount++;
                 }
             }
@@ -471,7 +493,7 @@
                     if(this.readCount >= size){
                         _timer.destroy();
                         
-                        this.exec("read", [this.fileInfoList]);
+                        this.exec("read", [this.getFileInfoList()]);
                     }else{
                         this.exec("reading", [this.readCount, size]);
                     }
@@ -578,8 +600,7 @@
                 this.CounterTimer = null;
             }
 
-            this.size = 0;
-            this.fileInfoList = [];
+            this.clearFileInfoList();
 
             for(var key in this.Service){
                 if(this.Service.hasOwnProperty(key)){
@@ -592,7 +613,7 @@
     _Upload.cacheData = {};
 
     module.exports = {
-        "version": "R17B0322",
+        "version": "R17B0413",
         "getUploadService": function(name, options){
             // options.maxsize     单个文件最大尺寸
             // options.filter      文件类型过滤
