@@ -64,12 +64,12 @@
             "tqq": {
                 "type": "redirect",
                 "url": 'http://share.v.t.qq.com/index.php',
-                "data": 'c=share&a=index&title=<%=sharebox.title%>&url=<%=sharebox.link%>&pic=<%=sharebox.image%>'
+                "data": 'c=share&a=index&title=<%=sharebox.description%>&url=<%=sharebox.link%>&pic=<%=sharebox.image%>'
             },
             "weibo": {
                 "type": "redirect",
                 "url": 'http://service.weibo.com/share/share.php',
-                "data": 'url=<%=sharebox.link%>&title=<%=sharebox.title%>&pic=<%=sharebox.image%>&appkey=<%=sharebox.akey%>'
+                "data": 'url=<%=sharebox.link%>&title=<%=sharebox.description%>&pic=<%=sharebox.image%>&appkey=<%=sharebox.akey%>'
             },
             "douban": {
                 "type": "redirect",
@@ -79,7 +79,7 @@
             "diandian": {
                 "type": "redirect",
                 "url": 'http://www.diandian.com/share',
-                "data": 'lo=<%=sharebox.link%>&ti=<%=sharebox.title%>&type=link'
+                "data": 'lo=<%=sharebox.link%>&ti=<%=sharebox.description%>&type=link'
             },
             "linkedin": {
                 "type": "redirect",
@@ -94,7 +94,7 @@
             "twitter": {
                 "type": "redirect",
                 "url": 'https://twitter.com/intent/tweet',
-                "data": 'text=<%=sharebox.title%>&url=<%=sharebox.link%>&via=<%=sharebox.source%>'
+                "data": 'text=<%=sharebox.description%>&url=<%=sharebox.link%>&via=<%=sharebox.source%>'
             },
             "google": {
                 "type": "redirect",
@@ -123,15 +123,21 @@
         schema: "sharebox",
         share: {
             callout: function(data, node, e, type){
+                e && e.preventDefault();
+                
                 var args = (data || "").split(",");
                 var name = args[0];
 
                 ActionSheet.show(name);
             },
             cancel: function(data, node, e, type){
+                e && e.preventDefault();
+
                 ActionSheet.hide();
             },
             adaptor: function(data, node, e, type){
+                e && e.preventDefault();
+
                 var args = (data || "").split(",");
                 var name = args[0];
 
@@ -160,7 +166,7 @@
                             callback: function(_apiUrl, _apiData, _conf){
                                 this.render(true, _apiData, _conf, {
                                     callback: function(ret, _url){
-                                        location.href = _url + "?" + ret.result;
+                                        window.open(_url + "?" + ret.result, _conf.target);
                                     },
                                     args: [_apiUrl]
                                 });
@@ -170,10 +176,10 @@
                         }]);
                     }else{
                         ShareTemplate.render(true, apiData, conf, {
-                            callback: function(ret, _url){
-                                location.href = _url + "?" + ret.result;
+                            callback: function(ret, _url, _conf){
+                                window.open(_url + "?" + ret.result, _conf.target);
                             },
-                            args: [apiUrl]
+                            args: [apiUrl, conf]
                         });
                     }
                 }
@@ -224,7 +230,8 @@
                 "image": "",
                 "source": "",
                 "summary": "",
-                "external": ""
+                "external": "",
+                "target": "_blank"
             },
             "platforms": [
                 {
@@ -238,7 +245,8 @@
                     "image": "",
                     "source": "",
                     "summary": "",
-                    "external": ""
+                    "external": "",
+                    "target": "_blank"
                 },
                 {
                     "type": "timeline",
@@ -251,7 +259,8 @@
                     "image": "",
                     "source": "",
                     "summary": "",
-                    "external": ""
+                    "external": "",
+                    "target": "_blank"
                 },
                 {
                     "type": "weibo",
@@ -264,7 +273,8 @@
                     "image": "",
                     "source": "",
                     "summary": "",
-                    "external": ""
+                    "external": "",
+                    "target": "_blank"
                 },
                 {
                     "type": "mqq",
@@ -277,7 +287,8 @@
                     "image": "",
                     "source": "",
                     "summary": "",
-                    "external": ""
+                    "external": "",
+                    "target": "_blank"
                 }
             ],
             "apis": {}
@@ -349,7 +360,8 @@
                 "image", 
                 "source", 
                 "summary", 
-                "external"
+                "external",
+                "target"
             ];
             var size = attrNames.length;
             var name = null;
@@ -492,7 +504,7 @@
     })();
 
     module.exports = {
-        "version": "R17B0406",
+        "version": "R17B0417",
         "newShareBox": function(name){
             return _ShareBox.render(name);    
         },
