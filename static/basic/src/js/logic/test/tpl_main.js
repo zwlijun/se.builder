@@ -246,11 +246,11 @@ var InputSchema = {
     tab: {
         radio: function(data, node, e, type){
             var args = (data || "").split(",");
-            var type = args[0];
+            var tabType = args[0];
             var val = node.val();
 
-            var tabs = $('[data-tabfor^="' + type + '."]');
-            var tab = $('[data-tabfor="' + type + '.' + val + '"]');
+            var tabs = $('[data-tabfor^="' + tabType + '."]');
+            var tab = $('[data-tabfor="' + tabType + '.' + val + '"]');
 
             if(node && (node[0].disabled || node.parents(".disabled").length > 0)){
                 return ;
