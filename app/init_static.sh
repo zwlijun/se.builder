@@ -19,7 +19,6 @@ STATIC_RELATIVE_DIR=/static/${STATIC_TARGET_VERSION}
 #第三方库版本号
 JQUERY_1X_VERSION=1.12.3
 JQUERY_2X_VERSION=2.2.3
-ZEPTO_116_VERSION=1.1.6
 ZEPTO_120_VERSION=1.2.0
 SEAJS_VERSION=3.0.0
 COMBO_VERSION=1.0.1
@@ -28,8 +27,6 @@ COMBO_VERSION=1.0.1
 BASED_JQUERY_1X_PATH=${STATIC_BASE_PREFIX}/src/js/lib/based/jquery/r${JQUERY_1X_VERSION}/jquery.js
 #jquery 2.x基础版本路径
 BASED_JQUERY_2X_PATH=${STATIC_BASE_PREFIX}/src/js/lib/based/jquery/r${JQUERY_2X_VERSION}/jquery.js
-#zepto 1.1.6 基础版本路径
-BASED_ZEPTO_116_PATH=${STATIC_BASE_PREFIX}/src/js/lib/based/zepto/r${ZEPTO_116_VERSION}/zepto.js
 #zepto 1.2.0 基础版本路径
 BASED_ZEPTO_120_PATH=${STATIC_BASE_PREFIX}/src/js/lib/based/zepto/r${ZEPTO_120_VERSION}/zepto.js
 #seajs基础版本路径
@@ -43,8 +40,6 @@ BASED_SE_PATH=${STATIC_BASE_PREFIX}/src/js/lib/based/se.js
 JQUERY_1X_MIX=${STATIC_BASE_PREFIX}/src/js/lib/j.1x.mix.js
 #jquery 2.x 合并路径
 JQUERY_2X_MIX=${STATIC_BASE_PREFIX}/src/js/lib/j.2x.mix.js
-#zepto 1.1.6 合并路径
-ZEPTO_116_MIX=${STATIC_BASE_PREFIX}/src/js/lib/z.116.mix.js
 #zepto 1.2.0 合并路径
 ZEPTO_120_MIX=${STATIC_BASE_PREFIX}/src/js/lib/z.120.mix.js
 
@@ -70,15 +65,6 @@ if [ "$#" -eq "1" ]; then
     cat ${BASED_COMBO_PATH} >> ${JQUERY_2X_MIX}
     echo ";/*! SE Config For SeaJS */" >> ${JQUERY_2X_MIX}
     cat ${BASED_SE_PATH} >> ${JQUERY_2X_MIX}
-
-    echo ";/*! Zepto v${ZEPTO_116_VERSION} - zepto event ajax form ie - zeptojs.com/license */" > ${ZEPTO_116_MIX}
-    cat ${BASED_ZEPTO_116_PATH} >> ${ZEPTO_116_MIX}
-    echo ";/*! Sea.js ${SEAJS_VERSION} | seajs.org/LICENSE.md */" >> ${ZEPTO_116_MIX}
-    cat ${BASED_SEAJS_PATH} >> ${ZEPTO_116_MIX}
-    echo ";/*! SeaJS-Combo.js ${COMBO_VERSION} | seajs.org/LICENSE.md */" >> ${ZEPTO_116_MIX}
-    cat ${BASED_COMBO_PATH} >> ${ZEPTO_116_MIX}
-    echo ";/*! SE Config For SeaJS */" >> ${ZEPTO_116_MIX}
-    cat ${BASED_SE_PATH} >> ${ZEPTO_116_MIX}
 
     echo ";/*! Zepto v${ZEPTO_120_VERSION} - zepto event ajax form ie - zeptojs.com/license */" > ${ZEPTO_120_MIX}
     cat ${BASED_ZEPTO_120_PATH} >> ${ZEPTO_120_MIX}
@@ -151,7 +137,6 @@ if [ "$#" -eq "1" ]; then
     echo -n "<link rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_BASE_RELATIVE_DIR}/src/css/lib/d_main.css\">" > ${STATIC_BASE_PREFIX}/inc/css_common_dm.html
     echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_BASE_RELATIVE_DIR}/src/js/lib/j.1x.mix.js\"></script>" > ${STATIC_BASE_PREFIX}/inc/js_common_j.1.x.html
     echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_BASE_RELATIVE_DIR}/src/js/lib/j.2x.mix.js\"></script>" > ${STATIC_BASE_PREFIX}/inc/js_common_j.2.x.html
-    echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_BASE_RELATIVE_DIR}/src/js/lib/z.116.mix.js\"></script>" > ${STATIC_BASE_PREFIX}/inc/js_common_z.116.html
     echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_BASE_RELATIVE_DIR}/src/js/lib/z.120.mix.js\"></script>" > ${STATIC_BASE_PREFIX}/inc/js_common_z.120.html
     
     #生成目标版本INC文件
@@ -161,7 +146,6 @@ if [ "$#" -eq "1" ]; then
     echo -n "<link rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_RELATIVE_DIR}/src/css/lib/d_main.css\">" > ${STATIC_PREFIX}/inc/css_common_dm.html
     echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_RELATIVE_DIR}/src/js/lib/j.1x.mix.js\"></script>" > ${STATIC_PREFIX}/inc/js_common_j.1.x.html
     echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_RELATIVE_DIR}/src/js/lib/j.2x.mix.js\"></script>" > ${STATIC_PREFIX}/inc/js_common_j.2.x.html
-    echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_RELATIVE_DIR}/src/js/lib/z.116.mix.js\"></script>" > ${STATIC_PREFIX}/inc/js_common_z.116.html
     echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_RELATIVE_DIR}/src/js/lib/z.120.mix.js\"></script>" > ${STATIC_PREFIX}/inc/js_common_z.120.html
 
     #svn check & commit
