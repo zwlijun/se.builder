@@ -364,6 +364,8 @@
             ontimeupdate: null,             //元素的currentTime属性表示的时间已经改变。
             onvolumechange: null,           //在音频音量改变时触发（既可以是volume属性改变，也可以是muted属性改变）。
             onwaiting: null,                //在一个待执行的操作（如回放）因等待另一个操作（如跳跃或下载）被延迟时触发。
+            //----------------------------------------------------------------------------------------------
+            onbeforerender: null,           //在渲染之前执行，可以更改配置，视频源等
             onrender: null,                 //渲染LivePlayer后执行
             onstatechange: null,            //媒体状态监听
             onwebkitbeginfullscreen: null,  //进入全屏模式(iOS)
@@ -372,8 +374,8 @@
             onfullscreenerror: null,        //进入或退出全屏发生错误触发
             onx5videoenterfullscreen: null, //进入全屏模式(Tencent X5)
             onx5videoexitfullscreen: null,  //退出全屏模式(Tencent X5)
-            onrequestfullscreen: null,      //请求全屏时触发
-            onexitfullscreen: null          //退了全屏时触发
+            onrequestfullscreen: null,      //请求进入全屏时触发
+            onexitfullscreen: null          //请求退出全屏时触发
         };
         this.listner = new Listener(this.events, this.handleStack);
     };
@@ -416,6 +418,9 @@
                 }
             },
             "loadstart": function(e){
+                this.message("正在缓冲，请稍候...");
+            },
+            "waiting": function(e){
                 this.message("正在缓冲，请稍候...");
             },
             "canplay": function(e){
@@ -1418,6 +1423,7 @@
             this.setSourceIndex(this.options("sourceIndex"));
 
             if(container.find(".liveplayer-frame").length === 0){
+                this.exec("beforerender", [this.getLivePlayerName()]);
                 var metaData = $.extend({}, this.options(), {
                     "name": this.getLivePlayerName(),
                     "meta": this.getCurrentSourceMetaData()

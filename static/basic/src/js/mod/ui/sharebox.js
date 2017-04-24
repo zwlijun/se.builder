@@ -147,8 +147,6 @@
                 var api = conf.api;
                 var apiType = api.type;
 
-                console.log(name)
-
                 if(!apiType){
                     console.log("不支持的分享类型(" + type + "#" + apiType + ")");
                     return ;
@@ -156,7 +154,7 @@
 
                 if(apiType == "native"){
                     //todo
-                    ins.exec("native", [ins, conf]);
+                    ins.exec("native", [ins, conf, node]);
                 }else if(apiType == "redirect"){
                     var apiUrl = api.url;
                     var apiData = api.data;
@@ -173,7 +171,7 @@
                             },
                             args: [apiUrl, apiData, conf],
                             context: ShareTemplate
-                        }]);
+                        }, node]);
                     }else{
                         ShareTemplate.render(true, apiData, conf, {
                             callback: function(ret, _url, _conf){
@@ -193,6 +191,7 @@
      * options -> title  组件标题， 默认为： 分享到
      * options -> type 类型 m: 移动端   d:PC端(未实现)   a:自动适配平台(未实现)   u:自定义
      * options -> share 统一分享配置，如果平台中有配置，将优先用平台中的配置
+     *            share -> name   应用名称，如：微信，手机QQ，微博 
      *            share -> title  分享标题
      *            share -> description  分享描述
      *            share -> link  分享链接
@@ -203,6 +202,7 @@
      * options -> platforms  平台配置
      *            platform -> type   类型，如: wx, timeline, weibo, qq, qzone等
      *            platform -> text   文本标签，如：微信好友，朋友圈，微博，QQ好友，QZone等
+     *            platform -> name   应用名称，如：微信，手机QQ，微博 
      *            platform -> title  分享标题
      *            platform -> description  分享描述
      *            platform -> link   分享链接
@@ -224,6 +224,7 @@
             "title": "分享到",
             "type": "m",
             "share": {
+                "name": "SE.Shenghuo",
                 "title": "",
                 "description": "",
                 "link": "",
@@ -237,6 +238,7 @@
                 {
                     "type": "wechat",
                     "text": "微信好友",
+                    "name": "微信",
                     "aid": "",
                     "akey": "",
                     "title": "",
@@ -251,6 +253,7 @@
                 {
                     "type": "timeline",
                     "text": "朋友圈",
+                    "name": "微信",
                     "aid": "",
                     "akey": "",
                     "title": "",
@@ -265,6 +268,7 @@
                 {
                     "type": "weibo",
                     "text": "微博",
+                    "name": "微博",
                     "aid": "",
                     "akey": "",
                     "title": "",
@@ -279,6 +283,7 @@
                 {
                     "type": "mqq",
                     "text": "QQ好友",
+                    "name": "手机QQ",
                     "aid": "",
                     "akey": "",
                     "title": "",
@@ -351,6 +356,7 @@
             var attrNames = [
                 "type", 
                 "text", 
+                "name",
                 "sign", 
                 "aid", 
                 "akey", 
