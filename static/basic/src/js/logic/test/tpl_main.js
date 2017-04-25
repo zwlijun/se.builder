@@ -70,13 +70,15 @@ var SecurityURL = {
 var AppSchema = {
     schema: "app",
     //--------------------------
-    //data ==> [flag,method,args...]
+    //data ==> [flag,action]
     invoke: function(data, node, e, type){
-        //method,data
         var args = (data || "").split(",");
         var flag = Number(args[0] || 0); // 0, 1, 2, 4, ...
-        var method = args[1];
-        var methodArgs = args.slice(2).join(",");
+        var action = args[1];
+
+        if(!action){
+            return ;
+        }
 
         if(e && Util.checkBitFlag(3, 1)){
             e.preventDefault();
@@ -86,7 +88,7 @@ var AppSchema = {
             e.stopPropagation();
         }
 
-        Util.requestExternal("go://" + method + "#" + methodArgs, [node, e, type]);
+        Util.requestExternal(action, [node, e, type]);
     }
 };
 
