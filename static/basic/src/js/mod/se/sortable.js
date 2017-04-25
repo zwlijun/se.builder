@@ -1277,7 +1277,7 @@
 		return new Sortable(el, options);
 	};
 
-	Sortable.version = 'R16B0223#1.4.2';
+	Sortable.version = 'R17B0425#1.4.2';
 
 	module.exports = Sortable;
 });

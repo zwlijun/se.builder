@@ -334,7 +334,7 @@
     ImageFix.Cache = {};
 
     module.exports = {
-        "version": "R15B1030",
+        "version": "R17B0425",
         "Types": ImageFixTypes,
         "getInstance": function(name, options, handle){
             var ifx = ImageFix.Cache[name] || (ImageFix.Cache[name] = new ImageFix(options, handle));

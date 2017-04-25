@@ -61,7 +61,7 @@
     })();
 
     module.exports = {
-        "version": "R16B0415",
+        "version": "R17B0425",
         "show": _ActionSheet.show,
         "hide": _ActionSheet.hide
     };

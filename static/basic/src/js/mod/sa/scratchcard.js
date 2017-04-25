@@ -268,7 +268,7 @@
         var _sc = new ScratchCard(canvas);
 
         var pub = {
-            "version": "B15R0909",
+            "version": "R17B0425",
             "set": function(type, option){
                 _sc.set(type, option);
 

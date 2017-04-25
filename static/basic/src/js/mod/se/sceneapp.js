@@ -380,7 +380,7 @@
     _SceneApp.Cache = {};
 
     module.exports = {
-        "version": "R15B1112",
+        "version": "R17B0425",
         "createSceneApp": function(name){
             var sa = _SceneApp.Cache[name] || (_SceneApp.Cache[name] = new _SceneApp());
 

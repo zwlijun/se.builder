@@ -222,6 +222,7 @@
         var tt = new Turntable(selector);
 
         var pub = {
+            "version": "R17B0425",
             setTweenParameter : function(begin, end, duration){
                 tt.setTweenParameter(begin, end, duration);
 

@@ -17,7 +17,7 @@
     var HandleStack   = Listener.HandleStack;
 
     var _Image = function(canvas){
-        this.version = "B15R0613";
+        this.version = "R17B0425";
         this.stage = canvas;
         this.context = canvas.getContext("2d");
 

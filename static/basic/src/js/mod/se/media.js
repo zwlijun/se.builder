@@ -412,7 +412,7 @@
     _Media.Cache = {};
 
     var _pub = {
-        "version": "R15B1014",
+        "version": "R17B0425",
         getMedia : function(target, type, name){
             var ins = _Media.Cache[name] || (_Media.Cache[name] = new _Media(target, type, name));
 

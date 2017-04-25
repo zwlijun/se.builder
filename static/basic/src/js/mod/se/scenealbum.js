@@ -276,7 +276,7 @@
     _SceneAlbum.Cache = {};
 
     module.exports = {
-        "version": "R16B0124",
+        "version": "R17B0425",
         "createSceneAlbum": function(name, options){
             var sa = _SceneAlbum.Cache[name] || (_SceneAlbum.Cache[name] = new _SceneAlbum(options));
 

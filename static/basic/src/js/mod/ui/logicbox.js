@@ -183,7 +183,7 @@
 
     //--------------------------------------------------------------------------
     module.exports = {
-        "version": "R16B0314",
+        "version": "R17B0425",
         newLogicBox: function(name){
             return _LogicBox.create(name || "default");
         },

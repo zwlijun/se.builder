@@ -1429,7 +1429,7 @@
     };
 
     module.exports = {
-        "version": "R16B0512",
+        "version": "R17B0425",
         createSwiper: function(name, options){
             return _Swiper.createSwiper(name, options);
         },

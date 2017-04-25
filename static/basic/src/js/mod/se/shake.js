@@ -96,6 +96,7 @@
     Shake.ShakePool = {};
 
     module.exports = {
+        "version": "R17B0425",
         getShake: function(name, handler, threshold, timeout){
             var shake = Shake.ShakePool[name] || (Shake.ShakePool[name] = new Shake(handler, threshold, timeout));
 

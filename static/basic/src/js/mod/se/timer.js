@@ -105,6 +105,7 @@
     Timer.TimerPool = {};
 
     module.exports = {
+        "version": "R17B0425",
     	"getTimer": function(name, fps, handler){
             name = name || "timer_" + Util.GUID();
             fps = fps || 0;

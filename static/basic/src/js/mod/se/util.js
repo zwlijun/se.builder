@@ -12,6 +12,17 @@
 ;define(function Util(require, exports, module){
     var _util = {
         /**
+         * bit位检测
+         * @param int src 源值
+         * @param int flag 标识位
+         * @return Boolean 
+         * @example Util.checkBitFlag(7, 2) => true
+         *          Util.checkBitFlag(7, 8) => false
+         */
+        checkBitFlag : function(src, flag){
+            return (!!(src & flag) && flag > 0)
+        },
+        /**
          * 格式化模板数据
          * @param String tpl 模板数据
          * @param Object metaData 元数据

@@ -298,7 +298,7 @@
 
     //--------------------------------------------------------------------------
     module.exports = {
-        "version": "R16B0408",
+        "version": "R17B0425",
         newFrameBox: function(name){
             return _FrameBox.create(name || "default");
         },

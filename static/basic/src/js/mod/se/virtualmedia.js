@@ -353,7 +353,7 @@
     VirtualMedia.Cache = {};
 
     module.exports = {
-        "version": "R15B1123",
+        "version": "R17B0425",
         "createVirtualMedia": function(target, type, name){
             var vm = VirtualMedia.Cache[name] || (VirtualMedia.Cache[name] = new VirtualMedia(target, type, name));
 

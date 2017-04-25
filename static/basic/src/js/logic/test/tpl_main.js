@@ -67,6 +67,29 @@ var SecurityURL = {
     }
 };
 
+var AppSchema = {
+    schema: "app",
+    //--------------------------
+    //data ==> [flag,method,args...]
+    invoke: function(data, node, e, type){
+        //method,data
+        var args = (data || "").split(",");
+        var flag = Number(args[0] || 0); // 0, 1, 2, 4, ...
+        var method = args[1];
+        var methodArgs = args.slice(2).join(",");
+
+        if(e && Util.checkBitFlag(3, 1)){
+            e.preventDefault();
+        }
+
+        if(e && Util.checkBitFlag(3, 2)){
+            e.stopPropagation();
+        }
+
+        Util.requestExternal("go://" + method + "#" + methodArgs, [node, e, type]);
+    }
+};
+
 var GoSchema = {
     schema: "go",
     //--------------------------
@@ -309,6 +332,7 @@ var _App = {
             {type: "input", mapping: null, compatible: null}
         ], null);
 
+        Util.source(AppSchema);
         Util.source(GoSchema);
         Util.source(InputSchema);
 
@@ -320,7 +344,7 @@ var _App = {
 };
 
 module.exports = {
-    "version": "R16B0408",
+    "version": "R17B0425",
     "init": _App.init,
     "conf": _App.conf,
     "expando": {

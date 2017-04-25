@@ -188,7 +188,7 @@
     var _Compatible = _LayerBox.create("default");
 
     module.exports = {
-        "version": "R16B0314",
+        "version": "R17B0425",
         "options": _Compatible.options,
         "Types": Types,
         newLayerBox: function(name){

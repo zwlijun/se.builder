@@ -510,7 +510,7 @@
     })();
 
     module.exports = {
-        "version": "R17B0417",
+        "version": "R17B0425",
         "newShareBox": function(name){
             return _ShareBox.render(name);    
         },
