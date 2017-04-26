@@ -284,6 +284,31 @@ var InputSchema = {
             tabs.addClass("hide");
             tab.removeClass("hide");
         }
+    },
+    label: {
+        radio: function(data, node, e, type){
+            var args = (data || "").split(",");
+            var tabType = args[0];
+            var val = node.val();
+
+            if(node && (node[0].disabled || node.parents(".disabled").length > 0)){
+                return ;
+            }
+
+            var labels = (node.attr("data-labels") || "").split(",");
+            var labelNodes = $('[data-labelfor="' + tabType + '"]');
+            var labelNode = null;
+            var label = null;
+
+            for(var i = 0; i < labelNodes.length; i++){
+                label = labels[i];
+                labelNode = labelNodes[i];
+
+                if(label && labelNode){
+                    labelNode.innerHTML = label;
+                }
+            }
+        }
     } 
 };
 
