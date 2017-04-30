@@ -1,10 +1,10 @@
 @font-face {
   font-family: "iconfont";
-  src: url('../../../fonts/iconfont/base/r1.0.0/iconfont.eot?t=R17B0406'); /* IE9*/
-  src: url('../../../fonts/iconfont/base/r1.0.0/iconfont.eot?t=R17B0406#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('../../../fonts/iconfont/base/r1.0.0/iconfont.woff?t=R17B0406') format('woff'), /* chrome, firefox */
-       url('../../../fonts/iconfont/base/r1.0.0/iconfont.ttf?t=R17B0406') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-       url('../../../fonts/iconfont/base/r1.0.0/iconfont.svg?t=R17B0406#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('../../../fonts/iconfont/base/r1.0.0/iconfont.eot?t=R17B0430'); /* IE9*/
+  src: url('../../../fonts/iconfont/base/r1.0.0/iconfont.eot?t=R17B0430#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../../../fonts/iconfont/base/r1.0.0/iconfont.woff?t=R17B0430') format('woff'), /* chrome, firefox */
+       url('../../../fonts/iconfont/base/r1.0.0/iconfont.ttf?t=R17B0430') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+       url('../../../fonts/iconfont/base/r1.0.0/iconfont.svg?t=R17B0430#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 /**
@@ -1453,11 +1453,11 @@ textarea {
 	overflow: hidden;
 }
 .liveplayer-navbar{
-	background-color: rgba(0, 0, 0, .45);
+	background-color: rgba(0, 0, 0, .35);
 	color: #fff;
 	width: 100%;
-	height: .64rem;
-	font-size: .32rem;
+	height: .54rem;
+	font-size: .20rem;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -1469,9 +1469,9 @@ textarea {
 .liveplayer-navbar > a:active{
 	text-decoration: none;
 	display: block;
-	width: .64rem;
+	width: .54rem;
 	height: 100%;
-	line-height: .64rem;
+	line-height: .54rem;
 	text-align: center;
 	font-size: .28rem;
 	color: #fff;
@@ -1487,7 +1487,7 @@ textarea {
 	    -ms-flex: 1;
 			flex: 1;
 	height: 100%;
-	line-height: .64rem;
+	line-height: .54rem;
 	margin-left: .04rem;
 	margin: 0 .08rem;
 }
@@ -1495,10 +1495,10 @@ textarea {
 	position: absolute;
 	left: 0;
 	bottom: 0;
-	background-color: rgba(0, 0, 0, 1);
+	background-color: rgba(0, 0, 0, .35);
 	color: #fff;
 	width: 100%;
-	height: .88rem;
+	height: .68rem;
 	font-size: .18rem;
 	z-index: 5;
 }
@@ -1542,7 +1542,7 @@ textarea {
 	top: 0;
 }
 .liveplayer-control{
-	height: .68rem;
+	height: .48rem;
 	width: 100%;
 	position: absolute;
 	left: 0;
@@ -1554,10 +1554,10 @@ textarea {
 .liveplayer-control-state .icofont{
 	display: block;
 	font-style: normal;
-	width: .56rem;
-	height: .56rem;
+	width: .48rem;
+	height: .48rem;
 	text-align: center;
-	line-height: .56rem;
+	line-height: .48rem;
 	font-size: .32rem;
 	margin-right: .08rem;
 }
@@ -1577,10 +1577,10 @@ textarea {
 .liveplayer-control-player .icofont{
 	display: block;
 	font-style: normal;
-	width: .56rem;
-	height: .56rem;
+	width: .48rem;
+	height: .48rem;
 	text-align: center;
-	line-height: .56rem;
+	line-height: .48rem;
 	font-size: .32rem;
 	margin-right: .08rem;
 }
@@ -1629,7 +1629,11 @@ textarea {
 
 }
 .liveplayer-control-player .fullscreen:before{
-	content: "\e64e";
+	content: "\e654";
+	font-size: .48rem;
+}
+.liveplayer-control-player .fullscreen.exit:before{
+	content: "\e653";
 }
 .liveplayer-master{
 	position: absolute;
@@ -1668,7 +1672,7 @@ textarea {
 }
 .liveplayer-master-mask ins:before{
 	content: "\e651";
-	font-size: 1.00rem;
+	font-size: .64rem;
 	background-color: rgba(0, 0, 0, .35);
     border-radius: 100%;
     overflow: hidden;

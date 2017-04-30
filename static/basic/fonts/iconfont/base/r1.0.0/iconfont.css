@@ -1,10 +1,10 @@
 
 @font-face {font-family: "iconfont";
-  src: url('iconfont.eot?t=1491459316089'); /* IE9*/
-  src: url('iconfont.eot?t=1491459316089#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('iconfont.woff?t=1491459316089') format('woff'), /* chrome, firefox */
-  url('iconfont.ttf?t=1491459316089') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('iconfont.svg?t=1491459316089#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('iconfont.eot?t=1493537470311'); /* IE9*/
+  src: url('iconfont.eot?t=1493537470311#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1493537470311') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1493537470311') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1493537470311#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -186,4 +186,8 @@
 .ico-menu1:before { content: "\e63e"; }
 
 .ico-question:before { content: "\e63f"; }
+
+.ico-tuichuquanping:before { content: "\e653"; }
+
+.ico-quanping1:before { content: "\e654"; }
 
