@@ -93,7 +93,7 @@
     Accelerometer.MemCache = {};
 
     module.exports = {
-        "version": "R17B0425",
+        "version": "R17B0430.01",
         "getAccelerometer": function(name, handler){
             var acc = Accelerometer.MemCache[name] || (Accelerometer.MemCache[name] = new Accelerometer(handler));
 

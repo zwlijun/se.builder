@@ -10,6 +10,48 @@
  * @date 2014.4
  */
 ;define(function Util(require, exports, module){
+    var ActionEvent = function(wrapper, actualType, originType){
+        this.wrapper = wrapper;
+        this.actualType = actualType;
+        this.originType = originType;
+    };
+    ActionEvent.prototype = {
+        listen: function(){
+            var _this = this;
+            var box = _this.wrapper;
+            var actualType = _this.actualType;
+            var originType = _this.originType;
+
+            box.on(actualType, '[data-action-' + originType + ']', null, function(e){
+                var currentTarget = $(e.currentTarget);
+                var external = currentTarget.attr("data-action-" + originType);
+                var beforeCheck = currentTarget.attr("data-" + originType + "-beforecheck");
+                var before = currentTarget.attr("data-" + originType + "-before");
+                var after = currentTarget.attr("data-" + originType + "-after");
+
+                console.log("external: " + external + "; beforecheck: " + beforeCheck + "; before: " + before + "; after: " + after);
+                console.log("fireType: " + e.type + "; originType: " + originType);
+
+                if(beforeCheck){
+                    var ret = _util.requestExternal(beforeCheck, [currentTarget, e, originType]);
+
+                    if(0 === ret.code && true !== ret.result){
+                        return ;
+                    }
+                }
+
+                if(before){
+                    _util.requestExternal(before, [currentTarget, e, originType]);
+                }
+
+                _util.requestExternal(external, [currentTarget, e, originType]);
+
+                if(after){
+                    _util.requestExternal(after, [currentTarget, e, originType]);
+                }
+            });
+        }
+    };
     var _util = {
         /**
          * bit位检测
@@ -227,11 +269,12 @@
             var _events = [].concat(events);
             var size = _events.length;
             var evt = null;
-            var type = null;
+            var originType = null;
             var actualType = null;
             var compatible = null;
             var mapping = null;
             var flag = null;
+            var actionEvent = null;
             
             if(!dom){
                 console.log("the target is not existed");
@@ -244,29 +287,29 @@
 
             for(var i = 0; i < size; i++){
                 evt = _events[i];
-                type = evt.type;
+                originType = evt.type;
                 mapping = evt.mapping;
                 compatible = evt.compatible;
 
-                flag = box.attr("data-action-" + type + "-flag");
+                flag = box.attr("data-action-" + originType + "-flag");
 
                 if("1" == flag){
                     continue;
                 }
 
-                box.attr("data-action-" + type + "-flag", "1");
+                box.attr("data-action-" + originType + "-flag", "1");
 
-                actualType = type;
+                actualType = originType;
 
                 if(mapping){
                     var p = /^(swipe|swipeLeft|swipeRight|swipeUp|swipeDown|doubleTap|tap|singleTap|longTap)$/;
 
-                    if(p.test(type)){
+                    if(p.test(originType)){
                         if(!("ontouchstart" in window)){
                             actualType = mapping;
                         }
                     }else{
-                        if(!(("on" + type) in dom)){
+                        if(!(("on" + originType) in dom)){
                             actualType = mapping;
                         }
                     }
@@ -277,31 +320,10 @@
                     actualType = ([actualType].concat(compatible)).join(" ");
                 }
 
-                box.on(actualType, '[data-action-' + type + ']', type, function(e){
-                    var currentTarget = $(e.currentTarget);
-                    var external = currentTarget.attr("data-action-" + e.data);
-                    var beforeCheck = currentTarget.attr("data-" + e.data + "-beforecheck");
-                    var before = currentTarget.attr("data-" + e.data + "-before");
-                    var after = currentTarget.attr("data-" + e.data + "-after");
+                console.log("originType: " + originType + "; actualType: " + actualType);
 
-                    if(beforeCheck){
-                        var ret = _util.requestExternal(beforeCheck, [currentTarget, e, e.data]);
-
-                        if(0 === ret.code && true !== ret.result){
-                            return ;
-                        }
-                    }
-
-                    if(before){
-                        _util.requestExternal(before, [currentTarget, e, e.data]);
-                    }
-
-                    _util.requestExternal(external, [currentTarget, e, e.data]);
-
-                    if(after){
-                        _util.requestExternal(after, [currentTarget, e, e.data]);
-                    }
-                });
+                var actionEvent = new ActionEvent(box, actualType, originType);                
+                actionEvent.listen();
             }
 
             return true;

@@ -381,7 +381,7 @@
     };
 
     module.exports = {
-        "version": "R17B0425",
+        "version": "R17B0430.01",
         "WeiXinAPI": WeiXinAPI,
         "MetaData": MetaData,
         "api": {

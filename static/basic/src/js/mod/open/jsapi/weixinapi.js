@@ -226,7 +226,7 @@
     };
 
     var WeiXinAPI = {
-        "version": "R17B0425",
+        "version": "R17B0430.01",
         MetaData : MetaData,
         readyState: 0,
         _readyList: [],

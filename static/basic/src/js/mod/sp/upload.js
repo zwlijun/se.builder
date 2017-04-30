@@ -224,12 +224,30 @@
                         "enterStyle": enter
                     });
                 }
+            },
+            destroy: function(key){
+                if(undefined !== key && "" !== key && null !== key){
+                    if(key in _Uploader.upload.service){
+                        var service = _Uploader.upload.service[key];
+
+                        service.destroy();
+
+                        _Uploader.upload.service[key] = null;
+                        delete _Uploader.upload.service[key];
+                    }
+                }else{
+                    for(var n in _Uploader.upload.service){
+                        if(_Uploader.upload.service.hasOwnProperty(n)){
+                            _Uploader.upload.destroy(n);
+                        }
+                    }
+                }
             }
         }
     };
 
     module.exports = {
-        "version": "R17B0425",
+        "version": "R17B0430.01",
         lookup: function(){
             _Uploader.upload.lookup();
 
@@ -239,6 +257,11 @@
             _Uploader.upload.watch(key, options);
 
             return this
+        },
+        destroy: function(key){
+            _Uploader.upload.destroy(key);
+
+            return this;
         }
     };
 });

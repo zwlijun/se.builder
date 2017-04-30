@@ -361,7 +361,7 @@
             var _ls = _LightScroll.Cache[name] || (_LightScroll.Cache[name] = new _LightScroll(viewer, scroller, ratio));
 
             return {
-                "version": "R17B0425",
+                "version": "R17B0430.01",
                 "viewer": _ls.viewer,
                 "scroller": _ls.scroller,
                 "ratio": _ls.ratio,

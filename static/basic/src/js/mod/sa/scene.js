@@ -1349,7 +1349,7 @@
     _Scene.Cache = {};
 
     module.exports = {
-        "version": "R17B0425",
+        "version": "R17B0430.01",
         "createScene": function(name, enableLoop, enableTouch){
             var s = _Scene.Cache[name] || (_Scene.Cache[name] = new _Scene(enableLoop, enableTouch));
 

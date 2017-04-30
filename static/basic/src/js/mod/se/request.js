@@ -31,7 +31,7 @@
     };
 
     module.exports = {   
-        "version": "R17B0425",
+        "version": "R17B0430.01",
         /**
          * 过滤XSS的非法字符
          * @param String str 需要进行过滤的字符串

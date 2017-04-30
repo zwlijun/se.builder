@@ -1000,7 +1000,7 @@
     _ColorPicker.Cache = {};
 
     module.exports = {
-        "version": "R17B0425",
+        "version": "R17B0430.01",
         createColorPicker: function(identity, colors){
             var cp = _ColorPicker.Cache[identity] || (_ColorPicker.Cache[identity] = new _ColorPicker(identity, colors));
 

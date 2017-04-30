@@ -108,7 +108,7 @@
     _CountDown.CachePool = {};
 
     module.exports = {
-        "version": "R17B0425",
+        "version": "R17B0430.01",
         "getCountDown": function(name, fps, handler){
             name = name || "countdown_" + Util.GUID();
             handler = handler || null;

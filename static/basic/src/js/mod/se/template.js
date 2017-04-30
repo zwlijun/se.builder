@@ -103,7 +103,7 @@
     };
 
     module.exports = {
-        "version": "R17B0425",
+        "version": "R17B0430.01",
         getTemplate: function(name, options){
             var _t = _Template.Cache[name] || (_Template.Cache[name] = new _Template(name, options || {}));
 

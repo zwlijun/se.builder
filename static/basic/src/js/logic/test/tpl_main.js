@@ -371,7 +371,7 @@ var _App = {
 };
 
 module.exports = {
-    "version": "R17B0425",
+    "version": "R17B0430.01",
     "init": _App.init,
     "conf": _App.conf,
     "expando": {

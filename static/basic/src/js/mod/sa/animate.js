@@ -1110,7 +1110,7 @@
     _Animate.CachePool = {};
 
     module.exports = {
-        "version": "R17B0425",
+        "version": "R17B0430.01",
         "TriggerTypes": TriggerTypes,
         "getAnimate": function(name){
             var ani = _Animate.CachePool[name] || (_Animate.CachePool[name] = new _Animate());

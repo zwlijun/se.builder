@@ -613,7 +613,7 @@
     _Upload.cacheData = {};
 
     module.exports = {
-        "version": "R17B0425",
+        "version": "R17B0430.01",
         "getUploadService": function(name, options){
             // options.maxsize     单个文件最大尺寸
             // options.filter      文件类型过滤
