@@ -150,7 +150,8 @@ var GoSchema = {
     sego: function(data, node, e, type){
         var args = (data || "").split(",");
         var name = args[0] || "segoto";
-        var url = Request.getParameter(name);
+        var defaultURL = args[1] || null;
+        var url = Request.getParameter(name) || defaultURL;
 
         if(url){
             try{
