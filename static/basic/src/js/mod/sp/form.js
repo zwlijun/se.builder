@@ -386,7 +386,7 @@
             checker.set("submit", {
                 callback: function(submitEvent, target, checkEvent){
                     submitEvent.preventDefault();
-                    submitEvent.stopPropagation();
+                    // submitEvent.stopPropagation();
 
 
                     Util.fireAction(target, checkEvent.data, checkEvent);

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html data-page-alias="data-actionsheet">
+<head>
+<!--#include virtual="/static/basic/inc/meta.html"-->
+<!--#include virtual="/static/basic/inc/rem.html"-->
+<title>Mod/Logger</title>
+<!--#include virtual="/static/basic/inc/css_common_gm.html"-->
+</head>
+<body>
+<h1>Logger</h1>
+<!--#include virtual="/static/basic/inc/js_common_z.120.html" --> 
+<script>
+seajs.use(["logic/test/test_logger"]);
+</script>
+</body>
+</html>

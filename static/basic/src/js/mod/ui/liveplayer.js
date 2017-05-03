@@ -365,6 +365,7 @@
             onvolumechange: null,           //在音频音量改变时触发（既可以是volume属性改变，也可以是muted属性改变）。
             onwaiting: null,                //在一个待执行的操作（如回放）因等待另一个操作（如跳跃或下载）被延迟时触发。
             //----------------------------------------------------------------------------------------------
+            onruntimeexception: null,       //播放器运行期异常
             onbeforerender: null,           //在渲染之前执行，可以更改配置，视频源等
             onrender: null,                 //渲染LivePlayer后执行
             onstatechange: null,            //媒体状态监听
@@ -1659,6 +1660,8 @@
 
             state.removeClass("play pause")
                  .addClass("pause");
+
+            this.exec("runtimeexception", [this.getLivePlayerName(), err.code, err.message]);
         },
         destory: function(){
             var frame = this.getLivePlayerFrame();
@@ -2070,7 +2073,7 @@
     };
 
     module.exports = {
-        "version": "R17B0430.01",
+        "version": "R17B0503",
         "MediaReadyState": MediaReadyState,
         "MediaNetworkState": MediaNetworkState,
         createLivePlayer: function(name, options){

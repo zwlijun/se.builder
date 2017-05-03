@@ -54,7 +54,7 @@
         "os": {
             "windows": [
                 {
-                    "pattern": "Windows NT (\\d+)\\.(\\d+)",
+                    "pattern": "Windows NT (\\d+)[^0-9\\s ](\\d+)",
                     "alias": "WindowsNT"
                 },
                 {
@@ -62,49 +62,149 @@
                     "alias": "Windows"
                 }
             ],
-            "osx": {
-                "pattern": "Mac OS X (\\d+)_(\\d+)(_(\\d+))?",
-                "alias": "OSX"
-            },
+            "osx": [
+                {
+                    "pattern": "Mac OS X (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "OSX"
+                },
+                {
+                    "pattern": "Mac OS X (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "OSX"
+                },
+                {
+                    "pattern": "Mac OS X (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "OSX"
+                },
+                {
+                    "pattern": "Mac OS X (\\d+)",
+                    "alias": "OSX"
+                }
+            ],
             "android": [
                 {
-                    "pattern": "Android (\\d+)\\.(\\d+)\\.(\\d+)",
+                    "pattern": "Android (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
                     "alias": "Android"
                 },
                 {
-                    "pattern": "Android (\\d+)\\.(\\d+)",
+                    "pattern": "Android (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Android"
+                },
+                {
+                    "pattern": "Android (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Android"
+                },
+                {
+                    "pattern": "Android (\\d+)",
                     "alias": "Android"
                 }
             ],
             "ios": [
                 {
-                    "pattern": "iPhone;.+OS (\\d+)_(\\d+)(_(\\d+))?",
+                    "pattern": "iPhone;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iOS"
                 },
                 {
-                    "pattern": "iPad;.+OS (\\d+)_(\\d+)(_(\\d+))?",
+                    "pattern": "iPhone;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iOS"
                 },
                 {
-                    "pattern": "iPod;.+OS (\\d+)_(\\d+)(_(\\d+))?",
+                    "pattern": "iPhone;.+OS (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPhone;.+OS (\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPad;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPad;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPad;.+OS (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPad;.+OS (\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPod;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPod;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPod;.+OS (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPod;.+OS (\\d+)",
                     "alias": "iOS"
                 }
             ],
-            "iphone": {
-                "pattern": "iPhone;.+OS (\\d+)_(\\d+)(_(\\d+))?",
-                "alias": "iPhone"
-            },
-            "ipad": {
-                "pattern": "iPad;.+OS (\\d+)_(\\d+)(_(\\d+))?",
-                "alias": "iPad"
-            },
-            "ipod": {
-                "pattern": "iPod;.+OS (\\d+)_(\\d+)(_(\\d+))?",
-                "alias": "iPod"
-            },
+            "iphone": [
+                {
+                    "pattern": "iPhone;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iPhone"
+                },
+                {
+                    "pattern": "iPhone;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iPhone"
+                },
+                {
+                    "pattern": "iPhone;.+OS (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iPhone"
+                },
+                {
+                    "pattern": "iPhone;.+OS (\\d+)",
+                    "alias": "iPhone"
+                }
+            ],
+            "ipad": [
+                {
+                    "pattern": "iPad;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iPad"
+                },
+                {
+                    "pattern": "iPad;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iPad"
+                },
+                {
+                    "pattern": "iPad;.+OS (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iPad"
+                },
+                {
+                    "pattern": "iPad;.+OS (\\d+)",
+                    "alias": "iPad"
+                }
+            ],
+            "ipod": [
+                {
+                    "pattern": "iPod;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iPod"
+                },
+                {
+                    "pattern": "iPod;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iPod"
+                },
+                {
+                    "pattern": "iPod;.+OS (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iPod"
+                },
+                {
+                    "pattern": "iPod;.+OS (\\d+)",
+                    "alias": "iPod"
+                }
+            ],
             "windowsphone": [
                 {
-                    "pattern": "Windows Phone OS (\\d+)\\.(\\d+)",
+                    "pattern": "Windows Phone OS (\\d+)[^0-9\\s ](\\d+)",
                     "alias": "WindowsPhone"
                 },
                 {
@@ -112,118 +212,358 @@
                     "alias": "WindowsPhone"
                 }
             ],
-            "blackberry": {
-                "pattern": "BlackBerry (\\d+)",
-                "alias": "BlackBerry"
-            },
-            "symbian": {
-                "pattern": "SymbianOS/(\\d+)\\.(\\d+)",
-                "alias": "SymbianOS"
-            }
+            "blackberry": [
+                {
+                    "pattern": "BlackBerry (\\d+)",
+                    "alias": "BlackBerry"
+                }
+            ],
+            "symbian": [
+                {
+                    "pattern": "SymbianOS/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "SymbianOS"
+                }
+            ]
         },
         "browser": {
-            "ie": {
-                "pattern": "MSIE (\\d+)\\.(\\d+)",
-                "alias": "MSIE"
-            },
-            "edge": {
-                "pattern": "Edge/(\\d+)\\.(\\d+)",
-                "alias": "Edge"
-            },
-            "iemobile": {
-                "pattern": "IEMobile[/ ](\\d+)\\.(\\d+)",
-                "alias": "IEMobile"
-            },
-            "chrome": {
-                "pattern": "Chrome/(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)",
-                "alias": "Chrome"
-            },
-            "safari": {
-                "pattern": "Version/(\\d+)\\.(\\d+)(\\.(\\d+))?.+Safari",
-                "alias": "Safari"
-            },
-            "firefox": {
-                "pattern": "Firefox/(\\d+)\\.(\\d+)",
-                "alias": "Firefox"
-            },
+            "ie": [
+                {
+                    "pattern": "MSIE (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MSIE"
+                },
+                {
+                    "pattern": "MSIE (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MSIE"
+                },
+                {
+                    "pattern": "MSIE (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MSIE"
+                },
+                {
+                    "pattern": "MSIE (\\d+)",
+                    "alias": "MSIE"
+                },
+                {
+                    "pattern": "Trident/[^\\s ]+; rv\\:(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MSIE"
+                },
+                {
+                    "pattern": "Trident/[^\\s ]+; rv\\:(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MSIE"
+                },
+                {
+                    "pattern": "Trident/[^\\s ]+; rv\\:(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MSIE"
+                },
+                {
+                    "pattern": "Trident/[^\\s ]+; rv\\:(\\d+)",
+                    "alias": "MSIE"
+                }
+            ],
+            "edge": [
+                {
+                    "pattern": "Edge/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Edge"
+                },
+                {
+                    "pattern": "Edge/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Edge"
+                },
+                {
+                    "pattern": "Edge/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Edge"
+                },
+                {
+                    "pattern": "Edge/(\\d+)",
+                    "alias": "Edge"
+                }
+            ],
+            "iemobile": [
+                {
+                    "pattern": "IEMobile[/ ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "IEMobile"
+                },
+                {
+                    "pattern": "IEMobile[/ ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "IEMobile"
+                },
+                {
+                    "pattern": "IEMobile[/ ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "IEMobile"
+                },
+                {
+                    "pattern": "IEMobile[/ ](\\d+)",
+                    "alias": "IEMobile"
+                }
+            ],
+            "chrome": [
+                {
+                    "pattern": "Chrome/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Chrome"
+                },
+                {
+                    "pattern": "Chrome/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Chrome"
+                },
+                {
+                    "pattern": "Chrome/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Chrome"
+                },
+                {
+                    "pattern": "Chrome/(\\d+)",
+                    "alias": "Chrome"
+                }
+            ],
+            "safari": [
+                {
+                    "pattern": "Version/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[\s ](Mobile/[0-9a-zA-Z]+[\s ])?Safari",
+                    "alias": "Safari"
+                },
+                {
+                    "pattern": "Version/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[\s ](Mobile/[0-9a-zA-Z]+[\s ])?Safari",
+                    "alias": "Safari"
+                },
+                {
+                    "pattern": "Version/(\\d+)[^0-9\\s ](\\d+)[\s ](Mobile/[0-9a-zA-Z]+[\s ])?Safari",
+                    "alias": "Safari"
+                },
+                {
+                    "pattern": "Version/(\\d+)[\s ](Mobile/[0-9a-zA-Z]+[\s ])?Safari",
+                    "alias": "Safari"
+                }
+            ],
+            "firefox": [
+                {
+                    "pattern": "Firefox/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Firefox"
+                },
+                {
+                    "pattern": "Firefox/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Firefox"
+                },
+                {
+                    "pattern": "Firefox/(\\d+)",
+                    "alias": "Firefox"
+                }
+            ],
             "opera": [
                 {
-                    "pattern": "Opera (\\d+)\\.(\\d+)",
+                    "pattern": "Opera (\\d+)[^0-9\\s ](\\d+)",
                     "alias": "Opera"
                 },
                 {
-                    "pattern": "Opera/.+ Version/(\\d+)\\.(\\d+)",
+                    "pattern": "Opera/.+ Version/(\\d+)[^0-9\\s ](\\d+)",
                     "alias": "Opera"
                 }
             ],
-            "operamini": {
-                "pattern": "Opera Mini/(\\d+)\\.(\\d+)",
-                "alias": "OperaMini"
-            },
-            "operamobile": {
-                "pattern": "Opera Mobi/.+ Version/(\\d+)\\.(\\d+)",
-                "alias": "OperaMobile"
-            },
+            "operamini": [
+                {
+                    "pattern": "Opera Mini/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "OperaMini"
+                }
+            ],
+            "operamobile": [
+                {
+                    "pattern": "Opera Mobi/.+ Version/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "OperaMobile"
+                }
+            ],
             "ucbrowser": [
                 {
-                    "pattern": "UC Browser[ /]?(\\d+)\\.(\\d+)\\.(\\d+)",
+                    "pattern": "UC Browser[ /]?(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
                     "alias": "UCBrowser"
                 },
                 {
-                    "pattern": "UCBrowser/(\\d+)\\.(\\d+)\\.(\\d+)",
+                    "pattern": "UCBrowser/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
                     "alias": "UCBrowser"
                 }
             ],
-            "qqbrowser": {
-                "pattern": " QQBrowser/(\\d+)\\.(\\d+)",
-                "alias": "QQBrowser"
-            },
-            "mqqbrowser": {
-                "pattern": " MQQBrowser/(\\d+)\\.(\\d+)",
-                "alias": "MQQBrowser"
-            },
-            "blackberry": {
-                "pattern": "BlackBerry.+ Version/(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)",
-                "alias": "BlackBerry"
-            },
-            "mqq": {
-                "pattern": "SQ_[^/]+ QQ/(\\d+)\\.(\\d+)\\.(\\d+)",
-                "alias": "MQQ"
-            },
-            "qq": {
-                "pattern": "QQ/(\\d+)\\.(\\d+)\\.(\\d+)",
-                "alias": "QQ"
-            },
-            "wechat": {
-                "pattern": "MicroMessenger/(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)",
-                "alias": "WeChat"
-            },
-            "tbs": {
-                "pattern": "TBS/(\\d+)",
-                "alias": "TBS"
-            },
-            "aliapp": {
-                "pattern": "AliApp\\(AP/(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)",
-                "alias": "AliApp"
-            }
+            "qqbrowser": [
+                {
+                    "pattern": " QQBrowser/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "QQBrowser"
+                },
+                {
+                    "pattern": " QQBrowser/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "QQBrowser"
+                },
+                {
+                    "pattern": " QQBrowser/(\\d+)",
+                    "alias": "QQBrowser"
+                }
+            ],
+            "mqqbrowser": [
+                {
+                    "pattern": " MQQBrowser/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MQQBrowser"
+                },
+                {
+                    "pattern": " MQQBrowser/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MQQBrowser"
+                },
+                {
+                    "pattern": " MQQBrowser/(\\d+)",
+                    "alias": "MQQBrowser"
+                }
+            ],
+            "blackberry": [
+                {
+                    "pattern": "BlackBerry.+ Version/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "BlackBerry"
+                }
+            ],
+            "mqq": [
+                {
+                    "pattern": "SQ_[^/]+ QQ/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MQQ"
+                },
+                {
+                    "pattern": "SQ_[^/]+ QQ/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MQQ"
+                },
+                {
+                    "pattern": "SQ_[^/]+ QQ/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MQQ"
+                },
+                {
+                    "pattern": "SQ_[^/]+ QQ/(\\d+)",
+                    "alias": "MQQ"
+                }
+            ],
+            "qq": [
+                {
+                    "pattern": "QQ/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "QQ"
+                },
+                {
+                    "pattern": "QQ/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "QQ"
+                },
+                {
+                    "pattern": "QQ/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "QQ"
+                },
+                {
+                    "pattern": "QQ/(\\d+)",
+                    "alias": "QQ"
+                }
+            ],
+            "wechat": [
+                {
+                    "pattern": "MicroMessenger/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "WeChat"
+                },
+                {
+                    "pattern": "MicroMessenger/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "WeChat"
+                },
+                {
+                    "pattern": "MicroMessenger/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "WeChat"
+                },
+                {
+                    "pattern": "MicroMessenger/(\\d+)",
+                    "alias": "WeChat"
+                }
+            ],
+            "tbs": [
+                {
+                    "pattern": "TBS/(\\d+)",
+                    "alias": "TBS"
+                }
+            ],
+            "aliapp": [
+                {
+                    "pattern": "AliApp\\(AP/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "AliApp"
+                },
+                {
+                    "pattern": "AliApp\\(AP/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "AliApp"
+                },
+                {
+                    "pattern": "AliApp\\(AP/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "AliApp"
+                },
+                {
+                    "pattern": "AliApp\\(AP/(\\d+)",
+                    "alias": "AliApp"
+                }
+            ]
         },
         "engine": {
-            "trident": {
-                "pattern": "Trident/(\\d+)\\.(\\d+)",
-                "alias": "Trident"
-            },
-            "webkit": {
-                "pattern": "WebKit/(\\d+)\\.(\\d+)",
-                "alias": "WebKit"
-            },
-            "gecko": {
-                "pattern": "Gecko/(\\d+)",
-                "alias": "Gecko"
-            },
-            "presto": {
-                "pattern": "Presto/(\\d+)\\.(\\d+)\\.(\\d+)",
-                "alias": "Presto"
-            }
+            "trident": [
+                {
+                    "pattern": "Trident/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Trident"
+                },
+                {
+                    "pattern": "Trident/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Trident"
+                },
+                {
+                    "pattern": "Trident/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Trident"
+                },
+                {
+                    "pattern": "Trident/(\\d+)",
+                    "alias": "Trident"
+                }
+            ],
+            "webkit": [
+                {
+                    "pattern": "WebKit/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "WebKit"
+                },
+                {
+                    "pattern": "WebKit/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "WebKit"
+                },
+                {
+                    "pattern": "WebKit/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "WebKit"
+                },
+                {
+                    "pattern": "WebKit/(\\d+)",
+                    "alias": "WebKit"
+                }
+            ],
+            "gecko": [
+                {
+                    "pattern": "Gecko/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Gecko"
+                },
+                {
+                    "pattern": "Gecko/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Gecko"
+                },
+                {
+                    "pattern": "Gecko/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Gecko"
+                },
+                {
+                    "pattern": "Gecko/(\\d+)",
+                    "alias": "Gecko"
+                }
+            ],
+            "presto": [
+                {
+                    "pattern": "Presto/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Presto"
+                },
+                {
+                    "pattern": "Presto/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Presto"
+                },
+                {
+                    "pattern": "Presto/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Presto"
+                },
+                {
+                    "pattern": "Presto/(\\d+)",
+                    "alias": "Presto"
+                }
+            ]
         }
     };
 
@@ -238,7 +578,7 @@
             "name": ""
         };
 
-        var pattern = new RegExp(reg.pattern);
+        var pattern = new RegExp(reg.pattern, "i");
         var matcher = null;
 
         pattern.lastIndex = 0;

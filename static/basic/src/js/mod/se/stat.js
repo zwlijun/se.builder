@@ -207,7 +207,7 @@
     };
 
     module.exports = {
-        "version": "R17B0430.01",
+        "version": "R17B0503",
         "setNetwork": Stat.setNetwork,
         "send": Stat.send
     };
