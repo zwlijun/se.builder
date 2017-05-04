@@ -120,6 +120,7 @@
 	text-align: center;
 	border-right: 1px solid #e5e5e5;
 	border-bottom: 1px solid #e5e5e5;
+	font-size: .14rem;
 }
 .mod-dtpicker-months em:nth-child(3n){
 	border-right: 0;
@@ -206,6 +207,7 @@
 	line-height: .24rem;
 	text-align: center;
 	border-bottom: 1px solid transparent;
+	font-size: .14rem;
 }
 
 .mod-dtpicker-frame.mode.datetime{

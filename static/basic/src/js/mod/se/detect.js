@@ -244,19 +244,19 @@
                     "alias": "MSIE"
                 },
                 {
-                    "pattern": "Trident/[^\\s ]+; rv\\:(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "Trident/[^\\s ]+; [^\\)]*rv\\:(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
                     "alias": "MSIE"
                 },
                 {
-                    "pattern": "Trident/[^\\s ]+; rv\\:(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "Trident/[^\\s ]+; [^\\)]*rv\\:(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
                     "alias": "MSIE"
                 },
                 {
-                    "pattern": "Trident/[^\\s ]+; rv\\:(\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "Trident/[^\\s ]+; [^\\)]*rv\\:(\\d+)[^0-9\\s ](\\d+)",
                     "alias": "MSIE"
                 },
                 {
-                    "pattern": "Trident/[^\\s ]+; rv\\:(\\d+)",
+                    "pattern": "Trident/[^\\s ]+; [^\\)]*rv\\:(\\d+)",
                     "alias": "MSIE"
                 }
             ],

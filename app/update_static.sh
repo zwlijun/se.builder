@@ -144,13 +144,13 @@ if [ "$#" -eq "1" ]; then
     #复制 inc/rem
     cp -rf ${STATIC_BASE_PREFIX}/inc/rem.html ${STATIC_PREFIX}/inc/
     #复制 inc/ie
-    cp -rf ${STATIC_BASE_PREFIX}/inc/ie.html ${STATIC_PREFIX}/inc/
+    #cp -rf ${STATIC_BASE_PREFIX}/inc/ie.html ${STATIC_PREFIX}/inc/
 
     #生成基础版本INC文件
-    echo -n "<script>window[\"SE_BUILDER_STATIC_VERSION\"] = \"${STATIC_BASE_VERSION}\";</script>" > ${STATIC_BASE_PREFIX}/inc/static_version.html
+    #echo -n "<script>window[\"SE_BUILDER_STATIC_VERSION\"] = \"${STATIC_BASE_VERSION}\";</script>" > ${STATIC_BASE_PREFIX}/inc/static_version.html
     
     #生成目标版本INC文件
-    echo -n "<script>window[\"SE_BUILDER_STATIC_VERSION\"] = \"${STATIC_TARGET_VERSION}\";</script>" > ${STATIC_PREFIX}/inc/static_version.html
+    #echo -n "<script>window[\"SE_BUILDER_STATIC_VERSION\"] = \"${STATIC_TARGET_VERSION}\";</script>" > ${STATIC_PREFIX}/inc/static_version.html
 
     #svn check & commit
     SVN_REVISION=`svn info |grep "Last Changed Rev:" |awk '{print $4}'`  
