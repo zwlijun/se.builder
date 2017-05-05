@@ -234,6 +234,8 @@
         this.footer = null;
         this.dots = null;
         this.controller = null;
+        this.leftControler = null;
+        this.rightControler = null;
         this.index = 0;
         this.lastIndex = 0;
         this.nextIndex = 0;
@@ -464,6 +466,8 @@
             this.body = swiper.children(".mod-swiper-body");
             this.items = this.body.children(".mod-swiper-item");
             this.controller = swiper.children(".mod-swiper-control");
+            this.leftControler = swiper.children(".mod-swiper-control.prev");
+            this.rightControler = swiper.children(".mod-swiper-control.next");
             this.footer = swiper.children(".mod-swiper-footer");
             this.dots = this.footer.children(".mod-swiper-dots");
 
@@ -865,7 +869,14 @@
         initControl: function(){
             var control = this.options("control");
 
-            this.controller.addClass("hide");
+            this.leftControler.attr("data-action-tap", "swiper://navigator/prev#" + this.name);
+            this.rightControler.attr("data-action-tap", "swiper://navigator/next#" + this.name);
+
+            if(true === control){
+                this.controller.removeClass("hide");
+            }else{
+                this.controller.addClass("hide");
+            }
         },
         sizeof: function(type, _set){
             var swiper = this;
