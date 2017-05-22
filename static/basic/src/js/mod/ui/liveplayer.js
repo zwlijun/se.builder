@@ -204,11 +204,23 @@
 
             var args = (data || "").split(",");
             var name = args[0];
+            var code = args[1];
 
             var player = LivePlayer.getLivePlayer(name);
+            var onreconnect = player.get("reconnect");
 
-            player.destory(false);
-            player.render(true);
+            if(onreconnect){
+                player.exec("reconnect", [name, code, {
+                    callback: function(){
+                        this.destory(false);
+                        this.render(true);
+                    },
+                    context: player
+                }]);
+            }else{
+                player.destory(false);
+                player.render(true);
+            }
         },
         progress: {
             seek: function(data, node, e, type){
@@ -365,6 +377,7 @@
             onvolumechange: null,           //在音频音量改变时触发（既可以是volume属性改变，也可以是muted属性改变）。
             onwaiting: null,                //在一个待执行的操作（如回放）因等待另一个操作（如跳跃或下载）被延迟时触发。
             //----------------------------------------------------------------------------------------------
+            onreconnect: null,              //点击重试或刷新时执行的回调，如果有设置，就先执行回调，再调用相关业务逻辑
             onruntimeexception: null,       //播放器运行期异常
             onbeforerender: null,           //在渲染之前执行，可以更改配置，视频源等
             onrender: null,                 //渲染LivePlayer后执行
@@ -1690,15 +1703,15 @@
         //------SYSTEM ERROR------------
         "MEDIA_ERR_ABORTED": {
             "code": "E1001",
-            "message": "已取消视频源的请求"
+            "message": "已取消视频源的请求<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name},E1001\">刷新</a>"
         },
         "MEDIA_ERR_NETWORK": {
             "code": "E1002",
-            "message": "网络出现故障<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name}\">重试</a>"
+            "message": "网络出现故障<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name},E1002\">重试</a>"
         },
         "MEDIA_ERR_DECODE": {
             "code": "E1003",
-            "message": "媒体解码失败"
+            "message": "媒体解码失败<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name},E1003\">刷新</a>"
         },
         "MEDIA_ERR_SRC_NOT_SUPPORTED": {
             "code": "E1004",
@@ -1707,7 +1720,7 @@
         //------DEFAULT ERROR-------------
         "MEDIA_ERR_UNKNOWN": {
             "code": "E2000",
-            "message": "发生未知的错误<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name}\">重试</a>"
+            "message": "发生未知的错误<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name},E2000\">重试</a>"
         },
         //------LOGIC ERROR-------------
         "MEDIA_ERR_NO_SOURCE": {
@@ -1716,11 +1729,11 @@
         },
         "MEDIA_ERR_LOAD_SOURCE": {
             "code": "E2002",
-            "message": "加载媒体地址失败<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name}\">重试</a>"
+            "message": "加载媒体地址失败<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name},E2002\">重试</a>"
         },
         "MEDIA_ERR_PLAY": {
             "code": "E2003",
-            "message": "播放时发生错误<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name}\">重试</a>"
+            "message": "播放时发生错误<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name},E2003\">重试</a>"
         }
     };
 
@@ -2076,6 +2089,19 @@
         "version": "R17B0503",
         "MediaReadyState": MediaReadyState,
         "MediaNetworkState": MediaNetworkState,
+        "MediaError": MediaError,
+        "LivePlayerError": (function(){
+            var err = LivePlayer.Error;
+            var o = {};
+
+            for(var type in err){
+                if(err.hasOwnProperty(type)){
+                    o[type] = err[type].code;
+                }
+            }
+
+            return o;
+        })(),
         createLivePlayer: function(name, options){
             console.log("LivePlayer::Version#" + this.version);
             return LivePlayer.createLivePlayer(name, options);

@@ -1,10 +1,10 @@
 
 @font-face {font-family: "iconfont";
-  src: url('iconfont.eot?t=1493537470311'); /* IE9*/
-  src: url('iconfont.eot?t=1493537470311#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('iconfont.woff?t=1493537470311') format('woff'), /* chrome, firefox */
-  url('iconfont.ttf?t=1493537470311') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('iconfont.svg?t=1493537470311#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('iconfont.eot?t=1495358988295'); /* IE9*/
+  src: url('iconfont.eot?t=1495358988295#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1495358988295') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1495358988295') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1495358988295#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -32,6 +32,8 @@
 .ico-zanting:before { content: "\e649"; }
 
 .ico-add:before { content: "\e608"; }
+
+.ico-email1:before { content: "\e657"; }
 
 .ico-telephone:before { content: "\e609"; }
 
@@ -77,6 +79,8 @@
 
 .ico-comment:before { content: "\e61a"; }
 
+.ico-chapterlinks:before { content: "\e689"; }
+
 .ico-address:before { content: "\e61b"; }
 
 .ico-loading:before { content: "\e61c"; }
@@ -87,11 +91,53 @@
 
 .ico-move:before { content: "\e61f"; }
 
+.ico-baidu:before { content: "\e680"; }
+
+.ico-behance0:before { content: "\e684"; }
+
+.ico-facebook0:before { content: "\e68a"; }
+
+.ico-google0:before { content: "\e68f"; }
+
+.ico-kongjian0:before { content: "\e696"; }
+
+.ico-linkedin0:before { content: "\e698"; }
+
+.ico-pengyouquan:before { content: "\e69a"; }
+
+.ico-pengyouquanyin:before { content: "\e69c"; }
+
+.ico-pinterest:before { content: "\e69e"; }
+
+.ico-qq1:before { content: "\e6a0"; }
+
+.ico-renren:before { content: "\e6a2"; }
+
+.ico-sina0:before { content: "\e6a5"; }
+
+.ico-taobaoyin:before { content: "\e6a7"; }
+
+.ico-tianya:before { content: "\e6a8"; }
+
+.ico-twitter0:before { content: "\e6ab"; }
+
+.ico-wangyi:before { content: "\e6ad"; }
+
+.ico-weiboo:before { content: "\e6b0"; }
+
+.ico-weixin1:before { content: "\e6b1"; }
+
+.ico-yixin:before { content: "\e6b4"; }
+
+.ico-zhifubao:before { content: "\e6b8"; }
+
 .ico-tingzhi:before { content: "\e64b"; }
 
 .ico-magic02:before { content: "\e620"; }
 
 .ico-qq:before { content: "\e621"; }
+
+.ico-tieba0:before { content: "\e6bb"; }
 
 .ico-shoucang:before { content: "\e622"; }
 
@@ -157,11 +203,17 @@
 
 .ico-email:before { content: "\e637"; }
 
+.ico-shareto_weixin:before { content: "\e655"; }
+
+.ico-shareto_qq:before { content: "\e656"; }
+
 .ico-androidarrowdropleft:before { content: "\e638"; }
 
 .ico-androidarrowdropright:before { content: "\e639"; }
 
 .ico-info:before { content: "\e63a"; }
+
+.ico-douban0:before { content: "\e70a"; }
 
 .ico-xingming1:before { content: "\e648"; }
 
@@ -189,5 +241,13 @@
 
 .ico-tuichuquanping:before { content: "\e653"; }
 
+.ico-clock1:before { content: "\e6f4"; }
+
 .ico-quanping1:before { content: "\e654"; }
+
+.ico-weibofenxiang:before { content: "\e6a1"; }
+
+.ico-qipao-:before { content: "\e68c"; }
+
+.ico-qipao:before { content: "\e68d"; }
 

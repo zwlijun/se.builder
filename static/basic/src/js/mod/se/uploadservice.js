@@ -240,7 +240,7 @@
             this.size = this.fileInfoList.length;
         },
         updateFileInfoList: function(list){
-            thsi.fileInfoList = list;
+            this.fileInfoList = list;
             this.size = this.fileInfoList.length;
         },
         getFileInfoList: function(){
