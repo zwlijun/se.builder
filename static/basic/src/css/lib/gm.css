@@ -1581,6 +1581,19 @@ textarea {
 .liveplayer-frame.vod .liveplayer-control-state.play .icofont:before{
 	content: "\e649";
 }
+
+.liveplayer-rate{
+	margin-left: .36rem;
+	height: .28rem;
+	line-height: .28rem;
+	width: .64rem;
+	text-align: center;
+	border-radius: .06rem;
+	color: #000;
+	display: inline-block;
+	background-color: rgba(255, 255, 255, .35);
+}
+
 .liveplayer-control-player{
 
 }

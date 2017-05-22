@@ -67,6 +67,9 @@
                       + '        <cite class="liveplayer-button-play icofont" data-action-click="liveplayer://swapState#<%=liveplayer.name%>"></cite>'
                       + '        <%if("live" != liveplayer.type){%>'
                       + '        <span class="liveplayer-timeseek">00:00:00/00:00:00</span>'
+                      + '          <%if(true === liveplayer.allowChangePlaybackRate){%>'
+                      + '          <span class="liveplayer-rate" data-action-click="liveplayer://playback/rate#<%=liveplayer.name%>"><%=(liveplayer.defaultPlaybackRate).toFixed(1)%>&ensp;x</span>'
+                      + '          <%}%>'
                       + '        <%}%>'
                       + '      </div>'
                       + '      <div class="liveplayer-control-player flexbox middle right">'
@@ -260,6 +263,37 @@
                     node.addClass("muted");
                 }
             }
+        },
+        playback: {
+            rate: function(data, node, e, type){
+                var args = (data || "").split(",");
+                var name = args[0];
+
+                var player = LivePlayer.getLivePlayer(name);
+                var video = null;
+
+                if(!player){
+                    return ;
+                }
+
+                var rates = player.options("rates");
+                var items = rates.split(" ");
+                var size = items.length;
+                var rateIndex = Number(node.attr("data-liveplayer-rateIndex") || 0);
+                var nextRateIndex = rateIndex + 1;
+
+                var rate = Number(items[rateIndex]);
+
+                nextRateIndex = nextRateIndex >= size ? 0 : nextRateIndex;
+
+                node.attr("data-liveplayer-rateIndex", nextRateIndex);
+
+                console.log("LivePlayer#" + name + "/rates(" + rates + ") => " + rate);
+
+                player.setPlaybackRate(rate);
+
+                node.html(rate.toFixed(1) + "&ensp;x");
+            }
         }
     };
     /**
@@ -278,6 +312,12 @@
       data-liveplayer-allowAdjustVolume="是否允许调节音量， 1 - 允许， 0 - 不允许"
       
       data-liveplayer-volume="默认音量 7"
+      
+      data-liveplayer-allowChangePlaybackRate="是否允许改变播放速率（仅在vod模式下有效）， 1 - 允许  0 - 不允许"
+      data-liveplayer-defaultPlaybackRate="默认播放速率 1.0"
+      data-liveplayer-playbackRate="当前播放速率 1.0" 
+      data-liveplayer-rates="1.0 1.5 2.0 3.0" 
+
       data-liveplayer-source="视频地址或地址列表，多个地址间用英文逗号“,”分隔，格式：mimetype:media_source[,mimetype:media_source]" 
       data-liveplayer-sourceIndex="初始播放视频地址索引" 
       data-liveplayer-autonext="是否为自动播放下一个地址，1 - 自动播放， 0 - 需要点击播放"
@@ -306,7 +346,11 @@
             stateInterval: 1000,
             allowFullScreen: true,
             allowAdjustVolume: true,
+            allowChangePlaybackRate: false,
             volume: 7,
+            defaultPlaybackRate: 1.0,
+            playbackRate: 1.0,
+            rates: "1.0 1.5 2.0 3.0",
             source: "",
             sourceIndex: 0,
             autonext: true,
@@ -1167,7 +1211,11 @@
                 //     stateInterval: 1000,
                 //     allowFullScreen: true,
                 //     allowAdjustVolume: true,
+                //     allowChangePlaybackRate: false,
                 //     volume: 7,
+                //     defaultPlaybackRate: 1.0,
+                //     playbackRate: 1.0,
+                //     rates: "1.0 1.5 2.0 3.0",
                 //     source: "",
                 //     sourceIndex: 0,
                 //     autonext: true,
@@ -1193,6 +1241,10 @@
                     {name: "allowFullScreen", dataType: "boolean"},
                     {name: "allowAdjustVolume", dataType: "boolean"},
                     {name: "volume", dataType: "number"},
+                    {name: "allowChangePlaybackRate", dataType: "boolean"},
+                    {name: "defaultPlaybackRate", dataType: "number"},
+                    {name: "playbackRate", dataType: "number"},
+                    {name: "rates", dataType: "string"},
                     {name: "source", dataType: "string"},
                     {name: "sourceIndex", dataType: "number"},
                     {name: "autonext", dataType: "boolean"},
@@ -1465,6 +1517,9 @@
                         //初始化全屏控制
                         this.initFullScreen();
 
+                        //设置默认播放速率
+                        this.setDefaultPlaybackRate(this.options("defaultPlaybackRate"));
+
                         if(ret.metaData.meta){
                             this.loadMasterSource(); //加载资源
 
@@ -1472,6 +1527,9 @@
                                 this.play();
                             }
                         }
+
+                        //设置当前播放速率
+                        this.setPlaybackRate(this.options("playbackRate"));
 
                         //调用render回调
                         this.exec("render", [this.getLivePlayerName()]);
@@ -1600,6 +1658,34 @@
 
             if(master){
                 return master.crossOrigin;
+            }
+        },
+        setDefaultPlaybackRate: function(playbackspeed){
+            var master = this.getLivePlayerMasterVideo(true);
+
+            if(master){
+                master.defaultPlaybackRate = playbackspeed;
+            }
+        },
+        getDefaultPlaybackRate: function(playbackspeed){
+            var master = this.getLivePlayerMasterVideo(true);
+
+            if(master){
+                return master.defaultPlaybackRate;
+            }
+        },
+        setPlaybackRate: function(playbackspeed){
+            var master = this.getLivePlayerMasterVideo(true);
+
+            if(master){
+                master.playbackRate = playbackspeed;
+            }
+        },
+        getPlaybackRate: function(playbackspeed){
+            var master = this.getLivePlayerMasterVideo(true);
+
+            if(master){
+                return master.playbackRate;
             }
         },
         //---------- NATIVE PROPERTIES SET END ---------------
@@ -2042,6 +2128,22 @@
             },
             "getCrossOrigin": function(){
                 return player.getCrossOrigin();
+            },
+            "setDefaultPlaybackRate": function(playbackspeed){
+                player.setDefaultPlaybackRate(playbackspeed);
+
+                return this;
+            },
+            "getDefaultPlaybackRate": function(){
+                return player.getDefaultPlaybackRate();
+            },
+            "setPlaybackRate": function(playbackspeed){
+                player.setPlaybackRate(playbackspeed);
+
+                return this;
+            },
+            "getPlaybackRate": function(){
+                return player.getPlaybackRate();
             },
             "size": function(width, height){
                 player.size(width, height);
