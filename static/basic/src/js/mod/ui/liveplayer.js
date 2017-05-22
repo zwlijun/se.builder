@@ -68,7 +68,7 @@
                       + '        <%if("live" != liveplayer.type){%>'
                       + '        <span class="liveplayer-timeseek">00:00:00/00:00:00</span>'
                       + '          <%if(true === liveplayer.allowChangePlaybackRate){%>'
-                      + '          <span class="liveplayer-rate" data-action-click="liveplayer://playback/rate#<%=liveplayer.name%>"><%=(liveplayer.defaultPlaybackRate).toFixed(1)%>&ensp;x</span>'
+                      + '          <span class="liveplayer-rate flexbox middle center" data-action-click="liveplayer://playback/rate#<%=liveplayer.name%>"><%=(liveplayer.defaultPlaybackRate).toFixed(1)%>&ensp;x</span>'
                       + '          <%}%>'
                       + '        <%}%>'
                       + '      </div>'
@@ -279,7 +279,7 @@
                 var rates = player.options("rates");
                 var items = rates.split(" ");
                 var size = items.length;
-                var rateIndex = Number(node.attr("data-liveplayer-rateIndex") || 0);
+                var rateIndex = Number(node.attr("data-liveplayer-rateIndex") || 1);
                 var nextRateIndex = rateIndex + 1;
 
                 var rate = Number(items[rateIndex]);
@@ -1679,6 +1679,10 @@
 
             if(master){
                 master.playbackRate = playbackspeed;
+
+                if(Env.os.ios.major > -1 || Env.os.android.major > -1){
+                    this.setDefaultPlaybackRate(playbackspeed);
+                }
             }
         },
         getPlaybackRate: function(playbackspeed){
