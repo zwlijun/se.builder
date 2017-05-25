@@ -457,7 +457,11 @@
             var platform = null;
             var size = platforms.length;
 
-            share = (newOptions["share"] = $.extend(true, ConfDataStruct.share(), defaultOptions["share"], options["share"]));
+            var shareStruct = ConfDataStruct.share();
+            var platformStruct = ConfDataStruct.platform();
+            var apiStruct = ConfDataStruct.api();
+
+            share = (newOptions["share"] = $.extend(true, {}, shareStruct, defaultOptions["share"], options["share"]));
 
             for(var key in defaultOptions){
                 if(defaultOptions.hasOwnProperty(key)){
@@ -467,22 +471,15 @@
                         for(var i = 0; i < size; i++){
                             platform = platforms[i];
 
-                            newOptions.platforms.push($.extend(true, ConfDataStruct.platform(), share, platform));
-
-                            for(var j = 0; j < defaultSize; j++){ // check default conf
-                                defaultPlatform = defaultPlatforms[j];
-
-                                if(defaultPlatform.type === platform.type){
-                                    newOptions.platforms[i] = ($.extend(true, ConfDataStruct.platform(), share, defaultPlatform, platform));
-                                }
-                            }
+                            newOptions.platforms.push($.extend(true, {}, platformStruct, share, platform));
                         }
+                        // console.table(newOptions.platforms);
                     }else if("apis" === key){ //copy apis conf
                         newOptions[key] = options[key] || {};
 
                         for(var api in newOptions[key]){
                             if(newOptions[key].hasOwnProperty(api)){
-                                newOptions[key][api] = $.extend(true, ConfDataStruct.api(), newOptions[key][api]);
+                                newOptions[key][api] = $.extend(true, {}, apiStruct, newOptions[key][api]);
                             }
                         }
                     }else{ // other conf
