@@ -217,14 +217,54 @@
      *            api -> url 接口地址
      *            api -> data 接口地址参数
      */
-    
+
+    var ConfDataStruct = {
+        share: function(){
+            return {
+                "name": "",
+                "title": "",
+                "description": "",
+                "link": "",
+                "image": "",
+                "source": "",
+                "summary": "",
+                "external": "",
+                "target": ""
+            };
+        },
+        platform: function(){
+            return {
+                "type": "",
+                "text": "",
+                "name": "",
+                "sign": "",
+                "aid": "",
+                "akey": "",
+                "title": "",
+                "description": "",
+                "link": "",
+                "image": "",
+                "source": "",
+                "summary": "",
+                "external": "",
+                "target": ""
+            };
+        },
+        api: function(){
+            return {
+                "type": "native",
+                "url": '',
+                "data": ''
+            };
+        }
+    };
+
     var GetDefaultOptions = function(){
         return {
             "name": "share",
             "title": "分享到",
             "type": "m",
-            "share": {
-                "name": "SE.Shenghuo",
+            "share": {"name": "SE.Shenghuo",
                 "title": "",
                 "description": "",
                 "link": "",
@@ -235,8 +275,7 @@
                 "target": "_blank"
             },
             "platforms": [
-                {
-                    "type": "wechat",
+                {"type": "wechat",
                     "text": "微信好友",
                     "name": "微信",
                     "aid": "",
@@ -250,8 +289,7 @@
                     "external": "",
                     "target": "_blank"
                 },
-                {
-                    "type": "timeline",
+                {"type": "timeline",
                     "text": "朋友圈",
                     "name": "微信",
                     "aid": "",
@@ -265,8 +303,7 @@
                     "external": "",
                     "target": "_blank"
                 },
-                {
-                    "type": "weibo",
+                {"type": "weibo",
                     "text": "微博",
                     "name": "微博",
                     "aid": "",
@@ -280,8 +317,7 @@
                     "external": "",
                     "target": "_blank"
                 },
-                {
-                    "type": "mqq",
+                {"type": "mqq",
                     "text": "QQ好友",
                     "name": "手机QQ",
                     "aid": "",
@@ -353,22 +389,15 @@
             return this.handleStack;
         },
         parse: function(node){
-            var attrNames = [
-                "type", 
-                "text", 
-                "name",
-                "sign", 
-                "aid", 
-                "akey", 
-                "title", 
-                "description", 
-                "link", 
-                "image", 
-                "source", 
-                "summary", 
-                "external",
-                "target"
-            ];
+            var attrNames = [];
+            var struct = ConfDataStruct.platform();
+
+            for(var key in struct){
+                if(struct.hasOwnProperty(key)){
+                    attrNames.push(key);
+                }
+            }
+
             var size = attrNames.length;
             var name = null;
             var conf = {};
@@ -412,24 +441,60 @@
             });
         },
         merge: function(options){
+            var defaultOptions = GetDefaultOptions();
+            var newOptions = {
+                "share": {},
+                "platforms": [],
+                "apis": {}
+            };
+
+            var defaultPlatforms = defaultOptions.platforms;
+            var defaultSize = defaultPlatforms.length;
+            var defaultPlatform = null;
+
             var share = options.share;
             var platforms = options.platforms;
             var platform = null;
             var size = platforms.length;
 
-            for(var i = 0; i < size; i++){
-                platform = platforms[i];
+            share = (newOptions["share"] = $.extend(true, ConfDataStruct.share(), defaultOptions["share"], options["share"]));
 
-                for(var key in share){
-                    options.platforms[i][key] = platform[key] || share[key];
+            for(var key in defaultOptions){
+                if(defaultOptions.hasOwnProperty(key)){
+                    if("share" === key){ //copy share conf
+                        continue;
+                    }else if("platforms" === key){ //copy platforms conf
+                        for(var i = 0; i < size; i++){
+                            platform = platforms[i];
+
+                            newOptions.platforms.push($.extend(true, ConfDataStruct.platform(), share, platform));
+
+                            for(var j = 0; j < defaultSize; j++){ // check default conf
+                                defaultPlatform = defaultPlatforms[j];
+
+                                if(defaultPlatform.type === platform.type){
+                                    newOptions.platforms[i] = ($.extend(true, ConfDataStruct.platform(), share, defaultPlatform, platform));
+                                }
+                            }
+                        }
+                    }else if("apis" === key){ //copy apis conf
+                        newOptions[key] = options[key] || {};
+
+                        for(var api in newOptions[key]){
+                            if(newOptions[key].hasOwnProperty(api)){
+                                newOptions[key][api] = $.extend(true, ConfDataStruct.api(), newOptions[key][api]);
+                            }
+                        }
+                    }else{ // other conf
+                        newOptions[key] = options[key] || defaultOptions[key];
+                    }
                 }
             }
 
-            return options;
+            return newOptions;
         },
         conf: function(options){
-            this.options = $.extend(true, GetDefaultOptions(), options);
-            this.options = this.merge(this.options);
+            this.options = this.merge(options);
 
             var opts = this.options;
             var name = opts.name;
@@ -510,7 +575,7 @@
     })();
 
     module.exports = {
-        "version": "R17B0430.01",
+        "version": "R17B0525",
         "newShareBox": function(name){
             return _ShareBox.render(name);    
         },
