@@ -49,7 +49,7 @@
 
     var HTML_TEMPLATE = ''
                       + '<div class="liveplayer-frame disable-select use-<%=liveplayer.appearance%> <%=liveplayer.type%>" id="<%=liveplayer.name%>" style="width: <%=liveplayer.width%>; height: <%=liveplayer.height%>;">'
-                      + '  <%if("none" != liveplayer.appearance){%>'
+                      + '  <%if("none" != liveplayer.appearance && true === liveplayer.showNavigationBar){%>'
                       + '  <div class="liveplayer-navbar flexbox middle justify">'
                       + '    <a href="<%=liveplayer.back%>" class="liveplayer-back icofont"></a>'
                       + '    <span class="liveplayer-title ellipsis"><%=liveplayer.title%></span>'
@@ -307,6 +307,8 @@
       
       data-liveplayer-time="控制条及标题栏停留时长，默认：3000毫秒" 
       data-liveplayer-stateInterval="状态监听周期，默认：1000毫秒"
+      
+      data-liveplayer-showNavigationBar="是否显示导航栏，1 - 显示， 0 - 不显示"
 
       data-liveplayer-allowFullScreen="是否允许显示全屏菜单，1 - 显示， 0 - 不显示" 
       data-liveplayer-allowAdjustVolume="是否允许调节音量， 1 - 允许， 0 - 不允许"
@@ -344,6 +346,7 @@
             height: "100%",
             time: 12000,
             stateInterval: 1000,
+            showNavigationBar: true,
             allowFullScreen: true,
             allowAdjustVolume: true,
             allowChangePlaybackRate: false,
@@ -1209,6 +1212,7 @@
                 //     height: "100%",
                 //     time: 3000,
                 //     stateInterval: 1000,
+                //     showNavigationBar: true,
                 //     allowFullScreen: true,
                 //     allowAdjustVolume: true,
                 //     allowChangePlaybackRate: false,
@@ -1238,6 +1242,7 @@
                     {name: "width", dataType: "string"},
                     {name: "height", dataType: "string"},
                     {name: "time", dataType: "number"},
+                    {name: "showNavigationBar", dataType: "boolean"},
                     {name: "allowFullScreen", dataType: "boolean"},
                     {name: "allowAdjustVolume", dataType: "boolean"},
                     {name: "volume", dataType: "number"},
@@ -2192,7 +2197,7 @@
     };
 
     module.exports = {
-        "version": "R17B0503",
+        "version": "R17B0528",
         "MediaReadyState": MediaReadyState,
         "MediaNetworkState": MediaNetworkState,
         "MediaError": MediaError,

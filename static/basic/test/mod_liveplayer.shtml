@@ -48,6 +48,7 @@
       data-liveplayer-width="100%" 
       data-liveplayer-height="3.60rem" 
       data-liveplayer-time="12000" 
+      data-liveplayer-showNavigationBar="0" 
       data-liveplayer-allowAdjustVolume="1" 
       data-liveplayer-allowFullScreen="1" 
       data-liveplayer-allowChangePlaybackRate="1" 
