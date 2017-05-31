@@ -185,8 +185,12 @@
                 _doc.mozCancelFullScreen();
             }else if(_doc.msExitFullscreen){
                 _doc.msExitFullscreen();
+            }else if(_doc.webkitExitFullScreen){
+                _doc.webkitExitFullScreen();
             }else if(_doc.webkitExitFullscreen){
                 _doc.webkitExitFullscreen();
+            }else if(master.webkitExitFullScreen){
+                master.webkitExitFullScreen();
             }else if(master.webkitExitFullscreen){
                 master.webkitExitFullscreen();
             }
@@ -266,7 +270,7 @@
     };
 
     module.exports = {
-        "version": "R17B0430.01",
+        "version": "R17B0531",
         "newFullScreenInstance": _FullScreen.newFullScreenInstance,
         "getFullScreenInstance": _FullScreen.getFullScreenInstance
     };
