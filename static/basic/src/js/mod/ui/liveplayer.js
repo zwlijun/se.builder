@@ -320,6 +320,8 @@
       data-liveplayer-playbackRate="当前播放速率 1.0" 
       data-liveplayer-rates="1.0 1.5 2.0 3.0" 
 
+      data-liveplayer-errorMessageMode="错误消息显示方式， default - 模块默认显示  custom - 通回调自行设置"
+
       data-liveplayer-source="视频地址或地址列表，多个地址间用英文逗号“,”分隔，格式：mimetype:media_source[,mimetype:media_source]" 
       data-liveplayer-sourceIndex="初始播放视频地址索引" 
       data-liveplayer-autonext="是否为自动播放下一个地址，1 - 自动播放， 0 - 需要点击播放"
@@ -334,7 +336,7 @@
       data-liveplayer-x5fullscreen="设置腾讯X5内核播放器全屏模式 true|false"
       data-liveplayer-x5­orientation="设置腾讯X5内核视频的横竖屏  landscape 横屏, portraint竖屏"
 
-      data-liveplayer-contextmenu="是否允许视频区的contextmenu 1 - 允许 0 - 不允许"
+      data-liveplayer-contextmenu="是否允许视频区的contextmenu 1 - 允许 0 - 不允许" 
     ></element>
     **/
     var GetDefaultOptions = function(){
@@ -354,6 +356,7 @@
             defaultPlaybackRate: 1.0,
             playbackRate: 1.0,
             rates: "1.0 1.5 2.0 3.0",
+            errorMessageMode: "default",
             source: "",
             sourceIndex: 0,
             autonext: true,
@@ -1220,6 +1223,7 @@
                 //     defaultPlaybackRate: 1.0,
                 //     playbackRate: 1.0,
                 //     rates: "1.0 1.5 2.0 3.0",
+                //     errorMessageMode: "default",
                 //     source: "",
                 //     sourceIndex: 0,
                 //     autonext: true,
@@ -1250,6 +1254,7 @@
                     {name: "defaultPlaybackRate", dataType: "number"},
                     {name: "playbackRate", dataType: "number"},
                     {name: "rates", dataType: "string"},
+                    {name: "errorMessageMode", dataType: "string"},
                     {name: "source", dataType: "string"},
                     {name: "sourceIndex", dataType: "number"},
                     {name: "autonext", dataType: "boolean"},
@@ -1764,10 +1769,12 @@
 
             var state = this.getLivePlayerMasterControlState();
 
-            this.message(err.code + ": " + err.message);
-
             state.removeClass("play pause")
                  .addClass("pause");
+
+            if("default" === this.options("errorMessageMode")){
+                this.message(err.code + ": " + err.message);
+            }
 
             this.exec("runtimeexception", [this.getLivePlayerName(), err.code, err.message]);
         },
@@ -2170,6 +2177,11 @@
             },
             "error": function(errObj){
                 player.error(errObj);
+
+                return this;
+            },
+            "message": function(msg){
+                player.message(msg);
 
                 return this;
             },
