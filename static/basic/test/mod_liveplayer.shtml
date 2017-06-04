@@ -17,13 +17,14 @@
       data-liveplayer-width="100%" 
       data-liveplayer-height="3.60rem" 
       data-liveplayer-time="12000" 
-      data-liveplayer-showNavigationBar="0" 
+      data-liveplayer-showNavigationBar="1" 
       data-liveplayer-allowAdjustVolume="1" 
       data-liveplayer-allowFullScreen="1" 
       data-liveplayer-allowChangePlaybackRate="1" 
       data-liveplayer-defaultPlaybackRate="1.0" 
       data-liveplayer-playbackRate="1.0" 
       data-liveplayer-rates="1.0 1.5 2.0 3.0" 
+      data-liveplayer-errorMessageMode="default" 
       data-liveplayer-source="video/mp4:http://data.gearedu.com/dialogs/16453/16453.mp4" 
       data-liveplayer-poster="" 
       data-liveplayer-preload="auto" 
@@ -35,7 +36,7 @@
       data-liveplayer-x5fullscreen="true"
 ></div>
 <div style="position: relative; z-index: 3;">
-  <h1>LivePlayer And Tencent X5 Test</h1>
+  <h1>LivePlayer And Tencent X5 Test <a style="margin-left: .24rem; font-size: .24rem;" href="#" data-action-click="liveplayer://reconnect#test_liveplayer,-1">重连</a></h1>
 </div>
 <!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
 <script>

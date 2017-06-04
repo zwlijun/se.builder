@@ -215,14 +215,24 @@
             if(onreconnect){
                 player.exec("reconnect", [name, code, {
                     callback: function(){
-                        this.destory(false);
-                        this.render(true);
+                        // this.destory(false);
+                        // this.render(true);
+                        this.updateMasterSource(
+                            this.getCurrentSourceMetaData()
+                        );
+
+                        this.play();
                     },
                     context: player
                 }]);
             }else{
-                player.destory(false);
-                player.render(true);
+                // player.destory(false);
+                // player.render(true);
+                player.updateMasterSource(
+                    player.getCurrentSourceMetaData()
+                );
+
+                player.play();
             }
         },
         progress: {
@@ -307,7 +317,7 @@
       
       data-liveplayer-time="控制条及标题栏停留时长，默认：3000毫秒" 
       data-liveplayer-stateInterval="状态监听周期，默认：1000毫秒"
-      
+
       data-liveplayer-showNavigationBar="是否显示导航栏，1 - 显示， 0 - 不显示"
 
       data-liveplayer-allowFullScreen="是否允许显示全屏菜单，1 - 显示， 0 - 不显示" 
@@ -336,7 +346,7 @@
       data-liveplayer-x5fullscreen="设置腾讯X5内核播放器全屏模式 true|false"
       data-liveplayer-x5­orientation="设置腾讯X5内核视频的横竖屏  landscape 横屏, portraint竖屏"
 
-      data-liveplayer-contextmenu="是否允许视频区的contextmenu 1 - 允许 0 - 不允许" 
+      data-liveplayer-contextmenu="是否允许视频区的contextmenu 1 - 允许 0 - 不允许"
     ></element>
     **/
     var GetDefaultOptions = function(){
@@ -1573,9 +1583,7 @@
             this.setSourceIndex(index);
             this.updateBufferedProgress(0);
             this.updateMasterSource(
-                this.getSourceMetaData(
-                    this.getSourceIndex()
-                )
+                this.getCurrentSourceMetaData()
             );
 
             this.play();
@@ -1617,7 +1625,11 @@
             var master = this.getLivePlayerMasterVideo(true);
 
             if(master){
-                master.pause();
+                try{
+                    master.pause();
+                }catch(e){
+
+                }
             }
         },
         //---------- NATIVE PROPERTIES SET BEGIN ---------------
@@ -1769,14 +1781,18 @@
 
             var state = this.getLivePlayerMasterControlState();
 
+            var code = err.code;
+            var msg = err.message;
+            var evt = err.event;
+
             state.removeClass("play pause")
                  .addClass("pause");
 
             if("default" === this.options("errorMessageMode")){
-                this.message(err.code + ": " + err.message);
+                this.message(code + ": " + msg + (evt ? evt : ""));
             }
 
-            this.exec("runtimeexception", [this.getLivePlayerName(), err.code, err.message]);
+            this.exec("runtimeexception", [this.getLivePlayerName(), code, msg, evt]);
         },
         destory: function(){
             var frame = this.getLivePlayerFrame();
@@ -1805,37 +1821,45 @@
         //------SYSTEM ERROR------------
         "MEDIA_ERR_ABORTED": {
             "code": "E1001",
-            "message": "已取消视频源的请求<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name},E1001\">刷新</a>"
+            "message": "已取消视频源的请求",
+            "event": "<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name},E1001\">刷新</a>"
         },
         "MEDIA_ERR_NETWORK": {
             "code": "E1002",
-            "message": "网络出现故障<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name},E1002\">重试</a>"
+            "message": "网络出现故障",
+            "event": "<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name},E1002\">重试</a>"
         },
         "MEDIA_ERR_DECODE": {
             "code": "E1003",
-            "message": "媒体解码失败<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name},E1003\">刷新</a>"
+            "message": "媒体解码失败",
+            "event": "<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name},E1003\">刷新</a>"
         },
         "MEDIA_ERR_SRC_NOT_SUPPORTED": {
             "code": "E1004",
-            "message": "不支持的媒体地址"
+            "message": "不支持的媒体地址",
+            "event": null
         },
         //------DEFAULT ERROR-------------
         "MEDIA_ERR_UNKNOWN": {
             "code": "E2000",
-            "message": "发生未知的错误<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name},E2000\">重试</a>"
+            "message": "发生未知的错误",
+            "event": "<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name},E2000\">重试</a>"
         },
         //------LOGIC ERROR-------------
         "MEDIA_ERR_NO_SOURCE": {
             "code": "E2001",
-            "message": "解析播放地址失败，正确格式：[媒体类型:]播放地址。如：video/mp4:source.mp4或source.mp4"
+            "message": "解析播放地址失败，正确格式：[媒体类型:]播放地址。如：video/mp4:source.mp4或source.mp4",
+            "event": null
         },
         "MEDIA_ERR_LOAD_SOURCE": {
             "code": "E2002",
-            "message": "加载媒体地址失败<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name},E2002\">重试</a>"
+            "message": "加载媒体地址失败",
+            "event": "<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name},E2002\">重试</a>"
         },
         "MEDIA_ERR_PLAY": {
             "code": "E2003",
-            "message": "播放时发生错误<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name},E2003\">重试</a>"
+            "message": "播放时发生错误",
+            "event": "<a href=\"#\" data-action-click=\"liveplayer://reconnect#${name},E2003\">重试</a>"
         }
     };
 
@@ -2182,7 +2206,7 @@
             },
             "message": function(msg){
                 player.message(msg);
-
+ 
                 return this;
             },
             "destory": function(removeCache){
@@ -2209,7 +2233,7 @@
     };
 
     module.exports = {
-        "version": "R17B0531",
+        "version": "R17B0604",
         "MediaReadyState": MediaReadyState,
         "MediaNetworkState": MediaNetworkState,
         "MediaError": MediaError,

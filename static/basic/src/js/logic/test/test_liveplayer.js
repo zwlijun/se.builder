@@ -1,4 +1,5 @@
 ;define(function(require, exports, module){
+	var Util       = require("mod/se/util");
 	var LivePlayer = require("mod/ui/liveplayer");
 
 	var player = LivePlayer.createLivePlayer("test_liveplayer");
@@ -18,6 +19,12 @@
 			$("body").append("<p>LivePlayer::Style#" + master.getAttribute("style") + "</p>");
 		},
 		context: player
+	});
+	player.set("runtimeexception", {
+		callback: function(name, code, message, event){
+			$("body").append("<p>LivePlayer::Event#RuntimeException =&gt;</p>");
+			$("body").append("<p>" + code + ": " + message + "</p>");
+		}
 	});
 	player.set("requestfullscreen", {
 		callback: function(name){
@@ -124,5 +131,10 @@
 	});
 	
     player.render();
+
+
+    Util.registAction("body", [
+        {type: "click", mapping: null, compatible: null}
+    ], null);
 
 });
