@@ -32,11 +32,4 @@ http://static.seshenghuo.com/${STATIC_PATH}
 <a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/base/r1.0.0/demo_unicode.html" target="_blank">demo_unicode</a>
 </pre>
 
-# 谁在用？
-<pre>
-SE生活(<a href="http://www.seshenghuo.com/" target="_blank">http://www.seshenghuo.com/</a>)
-最酷网(<a href="http://www.zuiku.com/" target="_blank">http://www.zuiku.com/</a>)
-挖贝三板通(<a href="http://stock.wabei.cn/" target="_blank">http://stock.wabei.cn/</a>)
-轻课云直播(<a href="http://www.qingkeyun.cn/" target="_blank">http://www.qingkeyun.cn/</a>)
-</pre>
 
