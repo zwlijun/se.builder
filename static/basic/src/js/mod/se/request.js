@@ -89,7 +89,7 @@
             var host = protocol + "//" + hostname + (port ? ":" + port : "");
             var current = pathname.replace(/\/([^\/]+)$/, "/");
 
-            console.log(pathname, current);
+            // console.log(pathname, current);
 
             if(ch2 == "//"){
                 return protocol + url;
