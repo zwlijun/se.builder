@@ -31,7 +31,7 @@
     };
 
     module.exports = {   
-        "version": "R17B0430.01",
+        "version": "R17B0606",
         /**
          * 过滤XSS的非法字符
          * @param String str 需要进行过滤的字符串
@@ -87,7 +87,9 @@
             var ch1 = url.substr(0, 1);
             var ch2 = url.substr(0, 2);
             var host = protocol + "//" + hostname + (port ? ":" + port : "");
-            var current = pathname.replace(/\/([^\/]+)/, "/");
+            var current = pathname.replace(/\/([^\/]+)$/, "/");
+
+            console.log(pathname, current);
 
             if(ch2 == "//"){
                 return protocol + url;

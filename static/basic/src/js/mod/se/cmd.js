@@ -415,7 +415,7 @@
     }
 
     module.exports = {
-        "version": "R17B0430.01",
+        "version": "R17B0606",
         "exec": Exec,
         "existCommand" : ExistCommand,
         "fireError" : FireError,

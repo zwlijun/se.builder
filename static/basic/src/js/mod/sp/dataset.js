@@ -313,7 +313,7 @@
     })();
 
     module.exports = {
-        "version": "R17B0430.01",
+        "version": "R17B0606",
         configure: function(conf){
             Configure(conf);
         },
