@@ -73,8 +73,8 @@ var AppSchema = {
     //data ==> [flag,action]
     invoke: function(data, node, e, type){
         var args = (data || "").split(",");
-        var flag = Number(args[0] || 0); // 0, 1, 2, 4, ...
-        var action = args[1];
+        var flag = Number(args.shift() || 0); // 0, 1, 2, 4, ...
+        var action = args.join(",");
 
         if(!action){
             return ;
