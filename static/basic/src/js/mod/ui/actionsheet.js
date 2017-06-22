@@ -32,10 +32,14 @@
 
     var _ActionSheet = {
         show: function(name){
-            var mask = $(".mod-actionsheet-mask");
+            var mask = name 
+                       ?
+                       $('.mod-actionsheet-mask[data-actionsheet="' + name + '"]')
+                       :
+                       $($(".mod-actionsheet-mask").get(0));
             var panel = name 
                         ? 
-                        $('[data-actionsheet="' + name + '"]')
+                        $('.mod-actionsheet-panel[data-actionsheet="' + name + '"]')
                         :
                         $($(".mod-actionsheet-panel").get(0));
 
@@ -61,7 +65,7 @@
     })();
 
     module.exports = {
-        "version": "R17B0430.01",
+        "version": "R17B0621",
         "show": _ActionSheet.show,
         "hide": _ActionSheet.hide
     };

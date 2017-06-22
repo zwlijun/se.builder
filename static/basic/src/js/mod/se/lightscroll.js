@@ -29,9 +29,10 @@
         this.viewerCSSText = this.viewer[0].style.cssText || "";
         this.scrollerCSSText = this.scroller[0].style.cssText || "";
 
-        this.direction = this.viewer.attr("data-dir") || "v";
-        this.shiftDistance = Number(this.viewer.attr("data-shift") || 0);
-        this.overDistance = Number(this.viewer.attr("data-over") || 0);
+        this.direction = this.viewer.attr("data-lightscroll-dir") || "v";
+        this.shiftDistance = Number(this.viewer.attr("data-lightscroll-shift") || 0);
+        this.overDistance = Number(this.viewer.attr("data-lightscroll-over") || 0);
+        this.allowOutOfRange = Number(this.viewer.attr("data-lightscroll-range") || .20);
 
         this.bind = false;
 
@@ -107,8 +108,8 @@
 
             this.cleanBoxStyle();
 
-            vo = this.viewer.offset();
-            so = this.scroller.offset();
+            vo = Util.getBoundingClientRect(this.viewer[0]);
+            so = Util.getBoundingClientRect(this.scroller[0]);
 
             this.viewerbox = {
                 "width": vo.width / this.ratio,
@@ -175,6 +176,30 @@
         maximum: function(){
             this.scrollTo(this.MAX);
         },
+        rx: function(x){
+            var viewerbox = this.viewerbox;
+            var range = viewerbox.width * this.allowOutOfRange;
+
+            if(x > range){
+                x = range;
+            }else if(Math.abs(x - this.MAX.x) > range){
+                x = this.MAX.x + -range;
+            }
+
+            return x;
+        },
+        ry: function(y){
+            var viewerbox = this.viewerbox;
+            var range = viewerbox.height * this.allowOutOfRange;
+
+            if(y > range){
+                y = range;
+            }else if(Math.abs(y - this.MAX.y) > range){
+                y = this.MAX.y + -range;
+            }
+
+            return y;
+        },
         configure : function(){
             var _ins = this;
             var dir = _ins.direction;
@@ -195,6 +220,11 @@
             var moveTime = 0;
             var endTime = 0;
             var durationTime = 0;
+
+            var lastTime = 0;
+            var lastPostionX = 0;
+            var lastPostionY = 0;
+            var stopInertiaMovement = false;
 
             if("h" == dir){
                 if(scrollerbox.width <= viewerbox.width){
@@ -217,11 +247,20 @@
                 var pointer = (("changedTouches" in e) ? e.changedTouches[0] : e);
                 var x = startX = pointer.pageX;
                 var y = startY = pointer.pageY;
+                var now = Util.getTime();
 
                 isStarted = true;
                 triggerPull = false;
                 triggerPush = false;
-                startTime = (new Date().getTime());
+
+                startTime = now;
+
+                //------------------------
+                lastPostionX = x;
+                lastPostionY = y;
+                lastTime = now;
+                stopInertiaMovement = true;
+
                 _ins.exec("start", [e, x, y]);
 
             }).on(moveEvent, function(e){
@@ -236,17 +275,27 @@
                 var dx = scrollX = x + moveX - startX;
                 var dy = scrollY = y + moveY - startY;
 
+                var now = Util.getTime();
+
                 var p = {
-                    "x": dx,
-                    "y": dy
+                    "x": _ins.rx(dx),
+                    "y": _ins.ry(dy)
                 };
 
                 _ins.directionX = x - startX;
                 _ins.directionY = y - startY;
 
-                moveTime = (new Date().getTime());
+                moveTime = now;
 
                 _ins.scrollTo(p);
+
+                stopInertiaMovement = true;
+
+                if(now - lastTime > 300){
+                    lastPostionX = x;
+                    lastPostionY = y;
+                    lastTime = now;
+                }
 
                 //console.info("move: " + (moveTime - startTime));
 
@@ -270,8 +319,12 @@
 
                 var pointer = (("changedTouches" in e) ? e.changedTouches[0] : e);
 
+                var x = pointer.pageX;
+                var y = pointer.pageY;
+
                 var dx = moveX = scrollX;
                 var dy = moveY = scrollY;
+                var endPosition = "h" == dir ? x : y; //现在结束位置
                 var cp = "h" == dir ? dx : dy;
                 var mp = "h" == dir ? _ins.maxScrollX : _ins.maxScrollY;
                 var du = "h" == dir ? _ins.directionX : _ins.directionY;
@@ -279,24 +332,34 @@
                 var v = 0;
                 var d = 0;
 
+                var now = Util.getTime();
+                var lastPosition = "h" == dir ? lastPostionX : lastPostionY;
+
+                v = (endPosition - lastPosition) / (now - lastTime);
+                stopInertiaMovement = false;
+
+                var ad = v > 0 ? 1 : -1; //加速度方向
+                var deceleration = ad * 0.0006; //减速
+                var duration = v / deceleration; // 速度消减至0所需时间
+                var dist = v * duration / 2; //最终移动多少
+
                 endTime = (new Date().getTime());
                 durationTime = endTime - moveTime;
 
-                if(durationTime < 20){
-                    v = du / (durationTime / 1000) * 0.0006;
 
-                    d = v / 0.0375;
+                if(durationTime < 300 && _ins.allowOutOfRange > 0){
+                    d = dist;
 
-                    Style.css(_ins.scroller, "transition", "all 0.4s ease");
+                    Style.css(_ins.scroller, "transition", "all 0.2s ease");
 
                     var p = {
                         "x": dx,
-                        "y": dy + d
+                        "y": (dy + d)
                     };
 
                     if("h" == dir){
                         p = {
-                            "x": dx + d,
+                            "x": (dx + d),
                             "y": dy
                         };
                     }
@@ -361,7 +424,7 @@
             var _ls = _LightScroll.Cache[name] || (_LightScroll.Cache[name] = new _LightScroll(viewer, scroller, ratio));
 
             return {
-                "version": "R17B0430.01",
+                "version": "R17B0621",
                 "viewer": _ls.viewer,
                 "scroller": _ls.scroller,
                 "ratio": _ls.ratio,

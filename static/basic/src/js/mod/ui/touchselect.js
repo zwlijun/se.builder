@@ -1,0 +1,715 @@
+/**********************************************************
+ * Copyright (c) SESHENGHUO.COM All rights reserved       *
+ **********************************************************/
+
+/**
+ * TouchSelect模块
+ * @charset utf-8
+ * @author lijun
+ * @git: https://github.com/zwlijun/se.builder
+ * @date 2017.6
+ */
+;define(function TouchSelect(require, exports, module){
+    var Util            = require("mod/se/util");
+    var ActionSheet     = require("mod/ui/actionsheet");
+    var DataType        = require("mod/se/datatype");
+    var TemplateEngine  = require("mod/se/template");
+    var CMD             = require("mod/se/cmd");
+    var Style           = require("mod/se/css");
+    var Listener        = require("mod/se/listener");
+    var HandleStack     = Listener.HandleStack; 
+
+    var TouchSelectTemplate = TemplateEngine.getTemplate("mod_touchselect", {
+        "root": "ts"
+    });
+
+    var __SUPPORT_TOUCH = ("ontouchstart" in window);
+
+    var __START_EVENT_PREFIX = __SUPPORT_TOUCH ? "touchstart.touchselect" : "mousedown.touchselect";
+    var __END_EVENT_PREFIX   = __SUPPORT_TOUCH ? "touchend.touchselect"   : "mouseup.touchselect";
+    var __MOVE_EVENT_PREFIX  = __SUPPORT_TOUCH ? "touchmove.touchselect"  : "mousemove.touchselect"; 
+
+    var _HTML_STRING = ''
+                     + '<div class="mod-actionsheet mod-actionsheet-mask exit" data-actionsheet="<%=ts.name%>"></div>'
+                     + '<div class="mod-actionsheet mod-actionsheet-panel exit touchselect <%=ts.type%>" data-actionsheet="<%=ts.name%>">'
+                     + '  <h1 class="flexbox middle justify touchselect-header">'
+                     + '    <var class="touchselect-cancel" data-action-<%=ts.action%>="ts://cancel#<%=ts.name%>">取消</var>'
+                     + '    <span class="touchselect-title ellipsis"><%=ts.title%></span>'
+                     + '    <var class="touchselect-confirm" data-action-<%=ts.action%>="ts://confirm#<%=ts.name%>">确定</var>'
+                     + '  </h1>'
+                     + '  <div class="touchselect-box flexbox top center">'
+                     + '    <%=ts.columns%>'
+                     + '  </div>'
+                     + '</div>'
+                     + '';
+    var _HTML_DATA = ''
+                   + '<div class="flexbox top center touchselect-column column<%=ts.index%>" data-column="<%=ts.index%>">'
+                   + '  <div class="touchselect-items">'
+                   + '    <%'
+                   + '    var offset = 0;'
+                   + '    if(ts.label){'
+                   + '        offset = 1;'
+                   + '        ts.setSelectedOption(ts.name, ts.index, 0, ts.label);'
+                   + '    %>'
+                   + '    <div class="touchselect-item ellipsis" data-index="0" data-value="<%=ts.label.value%>" data-linkedvalue=""><%=ts.label.text%></div>'
+                   + '    <%}%>'
+                   + '    <%'
+                   + '    var options = ts.options;'
+                   + '    var size = options.length;'
+                   + '    var option = null;'
+                   + '    var cls = "";'
+                   + '    var defaultOption = ts.defaultOption;'
+                   + '    var firstOption = null;'
+                   + '    for(var i = 0; i < ts.options.length; i++){'
+                   + '    option = options[i];'
+                   + '    if(0 === i){firstOption = option;}'
+                   + '    if(defaultOption && defaultOption.value === option.value){'
+                   + '        cls = " selected";'
+                   + '        ts.setSelectedOption(ts.name, ts.index, i + offset, option);'
+                   + '    }'
+                   + '    %>'
+                   + '    <div class="touchselect-item ellipsis" '
+                   + '         data-index="<%=i + offset%>" '
+                   + '         data-value="<%=option.value%>" '
+                   + '         data-linkedvalue="<%=option.linkedvalue%>"><%=option.text%></div>'
+                   + '    <%}%>'
+                   + '    <%'
+                   + '    if(!ts.label && "" == cls){'
+                   + '        ts.setSelectedOption(ts.name, ts.index, offset, firstOption);'
+                   + '    }'
+                   + '    %>'
+                   + '  </div>'
+                   + '</div>'
+                   + '';
+    var _HTML_SELECTED = '<div class="touchselect-selected-line"></div>';
+    
+    var TouchSelectSchema = {
+        schema: "ts",
+        "callout": function(data, node, e, type){
+            var args = (data || "").split(",");
+            var name = args[0];
+
+            Util.requestExternal("actionsheet://show#" + name, [node, e, type]);
+
+            var ts = TouchSelect.getTouchSelect(name);
+            if(ts){
+                ts.exec("callout", [name]);
+            }
+        },
+        "cancel": function(data, node, e, type){
+            var args = (data || "").split(",");
+            var name = args[0];
+
+            Util.requestExternal("actionsheet://hide#" + name, [node, e, type]);
+
+            var ts = TouchSelect.getTouchSelect(name);
+            if(ts){
+                ts.exec("exit", [name]);
+                ts.exec("cancel", [name]);
+            }
+        },
+        "confirm": function(data, node, e, type){
+            var args = (data || "").split(",");
+            var name = args[0];
+
+            Util.requestExternal("actionsheet://hide#" + name, [node, e, type]);
+
+            var ts = TouchSelect.getTouchSelect(name);
+            if(ts){
+                ts.exec("exit", [name]);
+                ts.exec("confirm", [name]);
+            }
+        }
+    };
+
+    var GetDefaultOptions = function(){
+        var opts = {
+            "name": "se_touchselect",
+            "type": "default",
+            "callout": "body",
+            "action": "tap",
+            "title": "",
+            "data": {
+                "linked": false,
+                "list": [
+                    // {
+                    //     "label": {"value": "", "text": "请选择"},
+                    //     "options": [
+                    //         {"value": "", "text": "", "linkedvalue": ""}
+                    //     ]
+                    // }
+                ]
+            },
+            "defaultOptions": [] //默认选择的值，对应data的数据组长度
+        };
+
+        return opts;
+    };
+
+    var TouchSelect = function(){
+        this.opts = GetDefaultOptions();
+
+        this.selectedOptions = [
+            // {
+            //     "index": 0,
+            //     "value": "",
+            //     "text": "",
+            //     "linkedvalue": ""
+            // }
+        ];
+
+        this.handleStack = new HandleStack();
+        this.listener = new Listener({
+            oncallout: null, //[name]
+            onexit: null,
+            onchange: null, //[name]
+            oncancel: null, //[name]
+            onconfirm: null //[name]
+        }, this.handleStack);
+    };
+
+    TouchSelect.prototype = {
+        /**
+         * 执行回调函数
+         * @param String type 类型
+         * @param Array args 消息
+         * @return * result 返回值
+         */
+        exec : function(type, args){
+            return this.listener.exec(type, args);
+        },
+        /**
+         * 设置回调
+         * @param String type 类型
+         * @param Object option 配置 {Function callback, Array args, Object context, Boolean returnValue}
+         */
+        set : function(type, option){
+            this.listener.set(type, option);
+        },
+        /**
+         * 移除回调
+         * @param String type 类型
+         */
+        remove : function(type){
+            this.listener.remove(type);
+        },
+        /**
+         * 获取回调
+         * @param String type 类型
+         * @return Object on
+         */
+        get : function(type){
+            return this.listener.get(type);
+        },
+        /**
+         * 清除所有回调
+         */
+        clear : function(){
+            this.listener.clear();
+        },
+        getHandleStack : function(){
+            return this.handleStack;
+        },
+        options: function(){
+            var args = arguments;
+            var size = args.length;
+            var opts = this.opts;
+
+            if(0 === size){
+                return opts;
+            }else if(1 === size){
+                if(DataType.isObject(args[0])){
+                    this.opts = $.extend(true, {}, opts, args[0]);
+                }else{
+                    return opts[args[0]];
+                }
+            }else if(2 === size){
+                var key = args[0];
+                var value = args[1];
+
+                if(key in opts){
+                    if(DataType.isObject(value)){
+                        this.opts[key] = $.extend({}, opts[key], value);
+                    }else{
+                        this.opts[key] = value;
+                    }
+                }
+            }
+        },
+        getTouchSelectName: function(){
+            return this.options("name");
+        },
+        getTouchSelectMask: function(){
+            var name = this.getTouchSelectName();
+
+            return $('[data-actionsheet="' + name + '"].mod-actionsheet-mask');
+        },
+        getTuochSelectPanel: function(){
+            var name = this.getTouchSelectName();
+
+            return $('[data-actionsheet="' + name + '"].mod-actionsheet-panel');
+        },
+        getTouchSelectBox: function(){
+            var panel = this.getTuochSelectPanel();
+
+            return panel.find(".touchselect-box");
+        },
+        getTouchSelectColumns: function(){
+            var box = this.getTouchSelectBox();
+
+            return box.find(".touchselect-column");
+        },
+        getTouchSelectColumn: function(index){
+            var columns = this.getTouchSelectColumns();
+            var size = columns.length;
+
+            if(index < 0){
+                index = 0;
+            }else if(index >= size){
+                index = size - 1;
+            }
+
+            return $(columns.get(index));
+        },
+        getTouchSelectColumnWrapper: function(index){
+            var column = this.getTouchSelectColumn(index);
+
+            return column.find(".touchselect-items");
+        },
+        getTouchSelectColumnWrapperItems: function(index){
+            var wrapper = this.getTouchSelectColumnWrapper(index);
+
+            return wrapper.find(".touchselect-item");
+        },
+        getTouchSelectSelectedLine: function(){
+            var box = this.getTouchSelectBox();
+
+            return box.find(".touchselect-selected-line");
+        },
+        existed: function(){
+            var panel = this.getTuochSelectPanel();
+
+            return panel.length > 0;
+        },
+        initSelectedOptions: function(size){
+            this.selectedOptions.length = 0;
+            this.selectedOptions = null;
+            this.selectedOptions = new Array(size);
+        },
+        getSelectedOptions: function(){
+            return this.selectedOptions;
+        },
+        setSelectedOption: function(columnIndex, selectedIndex, option){
+            this.selectedOptions[columnIndex] = {
+                "columnIndex": columnIndex,
+                "selectedIndex": selectedIndex,
+                "value": option.value,
+                "text": option.text,
+                "linkedvalue": option.linkedvalue
+            };
+        },
+        getSelectedOption: function(columnIndex){
+            return this.selectedOptions[columnIndex] || null;
+        },
+        filterColumnItems: function(index, options){
+            var prevIndex = index - 1;
+
+            if(index < 0){
+                return options;
+            }
+
+            var selectedOption = this.getSelectedOption(prevIndex);
+            var newOptions = [];
+            var size = options.length;
+            var option = null;
+            var selectedValue = selectedOption.value;
+
+            for(var i = 0; i < size; i++){
+                option = options[i];
+
+                if(selectedValue === option.linkedvalue){
+                    newOptions.push(option);
+                }
+            }
+
+            return newOptions;
+        },
+        writeColumn: function(index, linked, label, options, defaultOptions){
+            var defaultOption = (defaultOptions || [])[index] || null;
+
+            if(true === linked){
+                options = this.filterColumnItems(index, options);
+            }
+
+            var metaData = {
+                "name": this.getTouchSelectName(),
+                "index": index,
+                "label": label,
+                "defaultOption": defaultOption,
+                "options": options,
+                "setSelectedOption": function(name, index, selectedIndex, option){
+                    var ts = TouchSelect.getTouchSelect(name);
+
+                    ts.setSelectedOption(index, selectedIndex, option);
+                }
+            };
+
+            return TouchSelectTemplate.render(true, _HTML_DATA, metaData, {
+                callback: function(ret){
+                    return ret.result;
+                },
+                context: this
+            }).local;
+        },
+        writeColumns: function(linked, dataList, defaultOptions){
+            var size = dataList.length;
+
+            if(0 === size){
+                return _HTML_SELECTED;
+            }
+
+            var data = null;
+            var label = null;
+            var options = null;
+            var option = null;
+            var osize = null;
+
+            // {
+            //     "label": {"value": "", "text": "请选择"},
+            //     "options": [
+            //         {"value": "", "text": "", "linkedvalue": ""}
+            //     ]
+            // }
+
+            var columns = [];
+            this.initSelectedOptions(size);
+
+            for(var i = 0; i < size; i++){
+                data = dataList[i];
+
+                label = data.label;
+                options = data.options;
+
+                columns.push(this.writeColumn(i, linked, label, options, defaultOptions))
+            }
+
+            columns.push(_HTML_SELECTED);
+
+            return columns.join("");
+        },
+        renderColumns: function(){
+            var data = this.options("data");
+            var defaultOptions = this.options("defaultOptions");
+
+            var linked = data.linked;
+            var dataList = data.list;
+            
+            return this.writeColumns(linked, dataList, defaultOptions);
+        },
+        render: function(){
+            var data = this.options("data");
+            var dataList = data.list;
+
+            this.initSelectedOptions(dataList.length);
+
+            if(this.existed()){
+                var box = this.getTouchSelectBox();
+
+                box.html(this.renderColumns());
+
+                this.scrollToSelected();
+                this.bindEvents();
+            }else{
+                var metaData = {
+                    "name": this.getTouchSelectName(),
+                    "type": this.options("type"),
+                    "action": this.options("action"),
+                    "title": this.options("title"),
+                    "columns": this.renderColumns()
+                };
+                TouchSelectTemplate.render(true, _HTML_STRING, metaData, {
+                    callback: function(ret){
+                        $("body").append(ret.result);
+
+                        var callout = this.options("callout");
+                        var action = this.options("action");
+
+                        $(callout).attr("data-action-" + action, "ts://callout#" + this.getTouchSelectName());
+
+                        this.scrollToSelected();
+                        this.bindEvents();
+                    },
+                    context: this
+                });
+            }
+        },
+        scrollToSelected: function(){
+            var selectedOptions = this.getSelectedOptions();
+            var size = selectedOptions.length;
+
+            for(var i = 0; i < size; i++){
+                this.scrollTo(selectedOptions[i]);
+            }
+        },
+        scrollTo: function(option){
+            // columnIndex
+            // selectedIndex
+            // value
+            // text
+            // linkedvalue
+            var line = this.getTouchSelectSelectedLine();
+            var box = this.getTouchSelectBox();
+            var wrapper = this.getTouchSelectColumnWrapper(option.columnIndex);
+            var items = this.getTouchSelectColumnWrapperItems(option.columnIndex);
+            var size = items.length;
+            var even = size % 2 == 0;
+            var selected = items.get(option.selectedIndex);
+            var node = $(selected);
+
+            var boxRect = Util.getBoundingClientRect(box[0]);
+            var lineRect = Util.getBoundingClientRect(line[0]);
+            var itemRect = Util.getBoundingClientRect(selected);
+
+            items.removeClass("selected");
+            node.addClass("selected");
+
+            var height = itemRect.height;
+            var start = lineRect.top - boxRect.top;
+            var y = start - option.selectedIndex * height;
+
+            var matrix = "matrix(1, 0, 0, 1, 0, " + y + ")";
+
+            wrapper.attr("data-position", y)
+                   .attr("data-itemHeight", itemRect.height)
+                   .attr("data-selectedIndex", option.selectedIndex);
+            Style.css(wrapper, "transform", matrix);
+
+            this.exec("change", [this.getTouchSelectName()]);
+        },
+        removeEvents: function(){
+            var columns = this.getTouchSelectColumns();
+            var name = this.getTouchSelectName();
+
+            columns.off(__START_EVENT_PREFIX + "_" + name);
+
+            this.removeDocumentEvents();
+        },
+        removeDocumentEvents: function(){
+            var name = this.getTouchSelectName();
+
+            $(document).off(__MOVE_EVENT_PREFIX + "_" + name)
+                       .off(__END_EVENT_PREFIX + "_" + name);
+        },
+        bindEvents: function(){
+            var columns = this.getTouchSelectColumns();
+            var name = this.getTouchSelectName();
+
+            var data = {
+                "touchselect": this,
+            };
+            columns.on(__START_EVENT_PREFIX + "_" + name, "", data, this.touchStart);
+        },
+        touchStart: function(e){
+            var pointer = (("changedTouches" in e) ? e.changedTouches[0] : e);
+            var now = Util.getTime();
+            var data = e.data;
+            var ts = data.touchselect;
+            var name = ts.getTouchSelectName();
+            var columnIndex = Number($(e.currentTarget).attr("data-column"));
+
+            var _data = {
+                "touchselect": ts,
+                "columnIndex": columnIndex
+            };
+
+            TouchSelect.TouchEvent.lastPosition = pointer.pageY;
+            TouchSelect.TouchEvent.startPosition = pointer.pageY;
+            TouchSelect.TouchEvent.dir = 0;
+
+            $(document).on(__MOVE_EVENT_PREFIX + "_" + name, "", _data, ts.touchMove)
+                       .on(__END_EVENT_PREFIX + "_" + name, "", _data, ts.touchEnd);
+        },
+        touchMove: function(e){
+            var pointer = (("changedTouches" in e) ? e.changedTouches[0] : e);
+
+            var data = e.data;
+            var ts = data.touchselect;
+            var columnIndex = data.columnIndex;
+
+            var now = Util.getTime();
+
+            var wrapper = ts.getTouchSelectColumnWrapper(columnIndex);
+            var wrapperPosition = Number(wrapper.attr("data-position"));
+
+            var shift = pointer.pageY - TouchSelect.TouchEvent.lastPosition;
+            var moveY = shift + wrapperPosition;
+            var matrix = "matrix(1, 0, 0, 1, 0, " + moveY + ")";
+
+            TouchSelect.TouchEvent.dir = shift < 0 ? 1 : (shift > 0 ? -1 : 0);
+            
+            Style.css(wrapper, "transform", matrix);
+        },
+        touchEnd: function(e){
+            var pointer = (("changedTouches" in e) ? e.changedTouches[0] : e);
+
+            var data = e.data;
+            var ts = data.touchselect;
+            var columnIndex = data.columnIndex;
+
+            var now = Util.getTime();
+
+            var wrapper = ts.getTouchSelectColumnWrapper(columnIndex);
+            var wrapperPosition = Number(wrapper.attr("data-position"));
+            var itemHeight = Number(wrapper.attr("data-itemHeight"));
+            var selectedIndex = Number(wrapper.attr("data-selectedIndex"));
+            var items = ts.getTouchSelectColumnWrapperItems(columnIndex);
+            var size = items.length;
+
+            var shift = pointer.pageY - TouchSelect.TouchEvent.lastPosition;
+            var moveY = shift + wrapperPosition;
+
+            var absShift = Math.abs(shift);
+            var scrolling = Math.round(absShift / itemHeight);
+            var targetIndex = shift < 0 ? selectedIndex + scrolling : selectedIndex - scrolling;
+            
+            targetIndex = targetIndex < 0 ? 0 : (targetIndex >= size ? size - 1 : targetIndex);
+            
+            var target = $(items.get(targetIndex));
+            var option = {
+                "index": Number(target.attr("data-index")),
+                "value": target.attr("data-value"),
+                "linkedvalue": target.attr("data-linkedvalue") || "",
+                "text": target.html()
+            };
+
+            ts.setSelectedOption(columnIndex, targetIndex, option);
+
+            ts.scrollTo(ts.getSelectedOption(columnIndex));
+            // var matrix = "matrix(1, 0, 0, 1, 0, " + moveY + ")";
+            // Style.css(wrapper, "transform", matrix);
+
+            ts.removeDocumentEvents();
+        },
+        destory: function(){
+            var mask = this.getTouchSelectMask();
+            var panel = this.getTuochSelectPanel();
+
+            this.removeEvents();
+
+            mask.remove();
+            panel.remove();
+        }
+    };
+
+    TouchSelect.TouchEvent = {
+        "startPosition": 0,
+        "lastPosition": 0,
+        "dir": 0
+    };
+
+    TouchSelect.Cache = {};
+
+    TouchSelect.newTouchSelect = function(name){
+        var ts = (TouchSelect.Cache[name] || (TouchSelect.Cache[name] = new TouchSelect()));
+
+        var _public = {
+            exec: function(type, args){
+                return ts.exec(type, args);
+            },
+            remove: function(type){
+                ts.remove(type);
+
+                return this;
+            },
+            get: function(type){
+                return ts.get(type);
+            },
+            clear: function(){
+                ts.clear();
+
+                return this;
+            },
+            set: function(type, option){
+                ts.set(type, option);
+
+                return this;
+            },
+            getHandleStack: function(){
+                return ts.getHandleStack();
+            },
+            options: function(){
+                return ts.options.apply(ts, arguments);
+            },
+            getTouchSelectName: function(){
+                return ts.getTouchSelectName();
+            },
+            getTouchSelectMask: function(){
+                return ts.getTouchSelectMask();
+            },
+            getTuochSelectPanel: function(){
+                return ts.getTuochSelectPanel();
+            },
+            getTouchSelectBox: function(){
+                return ts.getTouchSelectBox();
+            },
+            getTouchSelectColumns: function(){
+                return ts.getTouchSelectColumns();
+            },
+            getTouchSelectColumn: function(index){
+                return ts.getTouchSelectColumn(index);
+            },
+            getTouchSelectColumnWrapper: function(index){
+                return ts.getTouchSelectColumnWrapper(index);
+            },
+            getTouchSelectColumnWrapperItems: function(index){
+                return ts.getTouchSelectColumnWrapperItems(index);
+            },
+            getTouchSelectSelectedLine: function(){
+                return ts.getTouchSelectSelectedLine();
+            },
+            getSelectedOptions: function(){
+                return ts.getSelectedOptions();
+            },
+            setSelectedOption: function(columnIndex, selectedIndex, option){
+                return ts.setSelectedOption(columnIndex, selectedIndex, option);
+            },
+            getSelectedOption: function(columnIndex){
+                return ts.getSelectedOption(columnIndex);
+            },
+            render: function(){
+                ts.render();
+
+                return this;
+            },
+            destory: function(){
+                ts.destory();
+
+                return this;
+            }
+        };
+
+        return _public;
+    };
+
+    TouchSelect.getTouchSelect = function(name){
+        if(name in TouchSelect.Cache){
+            return TouchSelect.newTouchSelect(name);
+        }
+
+        return null;
+    };
+
+    (function(){
+        Util.source(TouchSelectSchema);
+    })();
+
+    module.exports = {
+        "version": "R17B0622",
+        newTouchSelect: function(name){
+            return TouchSelect.newTouchSelect(name);
+        },
+        getTouchSelect: function(name){
+            return TouchSelect.getTouchSelect(name);
+        }
+    }
+});
