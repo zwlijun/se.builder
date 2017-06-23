@@ -24,6 +24,7 @@ http://static.seshenghuo.com/${STATIC_PATH}
 <a href="http://static.seshenghuo.com/static/basic/test/mod_framebox.shtml" target="_blank">Module#Frame Box</a> @see UI Component
 <a href="http://static.seshenghuo.com/static/basic/test/mod_lightscroll.shtml" target="_blank">Module#LightScroll</a>
 <a href="http://static.seshenghuo.com/static/basic/test/mod_touchselect.shtml" target="_blank">Module#TouchSelect</a>
+<a href="http://static.seshenghuo.com/static/basic/test/mod_touchcity.shtml" target="_blank">Module#TouchCity</a>
 </pre>
 
 #ICON Font Demo

@@ -297,7 +297,7 @@
             this.selectedOptions = new Array(size);
         },
         getSelectedOptions: function(){
-            return this.selectedOptions;
+            return [].concat(this.selectedOptions);
         },
         setSelectedOption: function(columnIndex, selectedIndex, option){
             this.selectedOptions[columnIndex] = {
@@ -309,12 +309,14 @@
             };
         },
         getSelectedOption: function(columnIndex){
-            return this.selectedOptions[columnIndex] || null;
+            var options = this.getSelectedOptions();
+
+            return options[columnIndex] || null;
         },
         filterColumnItems: function(index, options){
             var prevIndex = index - 1;
 
-            if(index < 0){
+            if(prevIndex < 0){
                 return options;
             }
 
@@ -371,8 +373,6 @@
             var data = null;
             var label = null;
             var options = null;
-            var option = null;
-            var osize = null;
 
             // {
             //     "label": {"value": "", "text": "请选择"},
@@ -405,6 +405,50 @@
             var dataList = data.list;
             
             return this.writeColumns(linked, dataList, defaultOptions);
+        },
+        replaceColumns: function(startColumnIndex, linked, dataList, defaultOptions){
+            var size = dataList.length;
+            var data = null;
+            var label = null;
+            var options = null;
+
+            // {
+            //     "label": {"value": "", "text": "请选择"},
+            //     "options": [
+            //         {"value": "", "text": "", "linkedvalue": ""}
+            //     ]
+            // }
+
+            var columns = [];
+
+            for(var i = 0; i < size; i++){
+                data = dataList[i];
+
+                label = data.label;
+                options = data.options;
+
+                columns.push(this.writeColumn(i, linked, label, options, defaultOptions))
+            }
+
+            columns.push(_HTML_SELECTED);
+
+            var columnNode = null;
+            for(var i = startColumnIndex; i < size; i++){
+                columnNode = this.getTouchSelectColumn(i);
+
+                columnNode.replaceWith(columns[i]);
+            }
+        },
+        update: function(startColumnIndex){
+            var data = this.options("data");
+            var defaultOptions = this.options("defaultOptions");
+
+            var linked = data.linked;
+            var dataList = data.list;
+
+            this.replaceColumns(startColumnIndex, linked, dataList, defaultOptions);
+            this.scrollToSelected();
+            this.bindEvents();
         },
         render: function(){
             var data = this.options("data");
@@ -448,10 +492,10 @@
             var size = selectedOptions.length;
 
             for(var i = 0; i < size; i++){
-                this.scrollTo(selectedOptions[i]);
+                this.scrollTo(selectedOptions[i], true);
             }
         },
-        scrollTo: function(option){
+        scrollTo: function(option, isChanged){
             // columnIndex
             // selectedIndex
             // value
@@ -484,7 +528,9 @@
                    .attr("data-selectedIndex", option.selectedIndex);
             Style.css(wrapper, "transform", matrix);
 
-            this.exec("change", [this.getTouchSelectName()]);
+            if(isChanged){
+                this.exec("change", [this.getTouchSelectName()]);
+            }
         },
         removeEvents: function(){
             var columns = this.getTouchSelectColumns();
@@ -507,6 +553,8 @@
             var data = {
                 "touchselect": this,
             };
+
+            this.removeEvents();
             columns.on(__START_EVENT_PREFIX + "_" + name, "", data, this.touchStart);
         },
         touchStart: function(e){
@@ -582,11 +630,21 @@
                 "text": target.html()
             };
 
-            ts.setSelectedOption(columnIndex, targetIndex, option);
+            var prevSelectedOption = ts.getSelectedOption(columnIndex);
+            var isChanged = (prevSelectedOption && prevSelectedOption.selectedIndex !== targetIndex);
 
-            ts.scrollTo(ts.getSelectedOption(columnIndex));
-            // var matrix = "matrix(1, 0, 0, 1, 0, " + moveY + ")";
-            // Style.css(wrapper, "transform", matrix);
+            ts.setSelectedOption(columnIndex, targetIndex, option);
+            ts.scrollTo(ts.getSelectedOption(columnIndex), isChanged);
+
+            if(isChanged && ts.options("data").linked){
+                ts.options("defaultOptions", ts.getSelectedOptions());
+
+                if(0 === columnIndex){
+                    ts.render();
+                }else{
+                    ts.update(columnIndex);
+                }
+            }
 
             ts.removeDocumentEvents();
         },
