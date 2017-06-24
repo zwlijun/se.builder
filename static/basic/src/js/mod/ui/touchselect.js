@@ -63,7 +63,7 @@
                    + '    for(var i = 0; i < ts.options.length; i++){'
                    + '    option = options[i];'
                    + '    if(0 === i){firstOption = option;}'
-                   + '    if(defaultOption && defaultOption.value === option.value){'
+                   + '    if(defaultOption && (String(defaultOption.value) === String(option.value))){'
                    + '        cls = " selected";'
                    + '        ts.setSelectedOption(ts.name, ts.index, i + offset, option);'
                    + '    }'
@@ -161,10 +161,11 @@
         this.handleStack = new HandleStack();
         this.listener = new Listener({
             oncallout: null, //[name]
-            onexit: null,
-            onchange: null, //[name]
+            onchange: null, //[name, columnIndex]
             oncancel: null, //[name]
-            onconfirm: null //[name]
+            onconfirm: null, //[name]
+            onselected: null, //[name, columnIndex]
+            onchangebefore: null //[name, columnIndex]
         }, this.handleStack);
     };
 
@@ -300,9 +301,18 @@
             return [].concat(this.selectedOptions);
         },
         setSelectedOption: function(columnIndex, selectedIndex, option){
+            var data = this.options("data");
+            var list = data.list;
+            var selected = list[columnIndex];
+            var label = selected.label;
+            var options = selected.options;
+            var size = options.length;
+
             this.selectedOptions[columnIndex] = {
                 "columnIndex": columnIndex,
                 "selectedIndex": selectedIndex,
+                "size": size,
+                "hasLabel": !!label,
                 "value": option.value,
                 "text": option.text,
                 "linkedvalue": option.linkedvalue
@@ -351,7 +361,6 @@
                 "options": options,
                 "setSelectedOption": function(name, index, selectedIndex, option){
                     var ts = TouchSelect.getTouchSelect(name);
-
                     ts.setSelectedOption(index, selectedIndex, option);
                 }
             };
@@ -406,7 +415,7 @@
             
             return this.writeColumns(linked, dataList, defaultOptions);
         },
-        replaceColumns: function(startColumnIndex, linked, dataList, defaultOptions){
+        replaceColumns: function(onlySelf, startColumnIndex, linked, dataList, defaultOptions){
             var size = dataList.length;
             var data = null;
             var label = null;
@@ -430,23 +439,27 @@
                 columns.push(this.writeColumn(i, linked, label, options, defaultOptions))
             }
 
-            columns.push(_HTML_SELECTED);
-
             var columnNode = null;
-            for(var i = startColumnIndex; i < size; i++){
-                columnNode = this.getTouchSelectColumn(i);
 
-                columnNode.replaceWith(columns[i]);
+            if(true === onlySelf){
+                columnNode = this.getTouchSelectColumn(startColumnIndex);
+                columnNode.replaceWith(columns[startColumnIndex]);
+            }else{
+                for(var i = startColumnIndex; i < size; i++){
+                    columnNode = this.getTouchSelectColumn(i);
+
+                    columnNode.replaceWith(columns[i]);
+                }
             }
         },
-        update: function(startColumnIndex){
+        update: function(startColumnIndex, onlySelf){
             var data = this.options("data");
             var defaultOptions = this.options("defaultOptions");
 
             var linked = data.linked;
             var dataList = data.list;
 
-            this.replaceColumns(startColumnIndex, linked, dataList, defaultOptions);
+            this.replaceColumns(onlySelf, startColumnIndex, linked, dataList, defaultOptions);
             this.scrollToSelected();
             this.bindEvents();
         },
@@ -486,6 +499,13 @@
                     context: this
                 });
             }
+        },
+        updateColumnData: function(columnIndex, newData){
+            var data = this.options("data");
+
+            data.list[columnIndex] = newData;
+
+            this.options("data", data);
         },
         scrollToSelected: function(){
             var selectedOptions = this.getSelectedOptions();
@@ -529,7 +549,8 @@
             Style.css(wrapper, "transform", matrix);
 
             if(isChanged){
-                this.exec("change", [this.getTouchSelectName()]);
+                this.exec("change", [this.getTouchSelectName(), option.columnIndex]);
+
             }
         },
         removeEvents: function(){
@@ -633,18 +654,23 @@
             var prevSelectedOption = ts.getSelectedOption(columnIndex);
             var isChanged = (prevSelectedOption && prevSelectedOption.selectedIndex !== targetIndex);
 
+            ts.exec("changebefore", [ts.getTouchSelectName(), columnIndex]);
+
             ts.setSelectedOption(columnIndex, targetIndex, option);
             ts.scrollTo(ts.getSelectedOption(columnIndex), isChanged);
 
             if(isChanged && ts.options("data").linked){
                 ts.options("defaultOptions", ts.getSelectedOptions());
 
-                if(0 === columnIndex){
-                    ts.render();
-                }else{
-                    ts.update(columnIndex);
-                }
+                ts.update(columnIndex + 1, false);
+                // if(0 === columnIndex){
+                //     ts.render();
+                // }else{
+                //     ts.update(columnIndex + 1);
+                // }
             }
+
+            ts.exec("selected", [ts.getTouchSelectName(), columnIndex]);
 
             ts.removeDocumentEvents();
         },
@@ -736,6 +762,16 @@
             },
             render: function(){
                 ts.render();
+
+                return this;
+            },
+            update: function(columnIndex, onlySelf){
+                ts.update(columnIndex, onlySelf);
+
+                return this;
+            },
+            updateColumnData: function(columnIndex, data){
+                ts.updateColumnData(columnIndex, data);
 
                 return this;
             },

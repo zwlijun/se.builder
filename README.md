@@ -25,6 +25,7 @@ http://static.seshenghuo.com/${STATIC_PATH}
 <a href="http://static.seshenghuo.com/static/basic/test/mod_lightscroll.shtml" target="_blank">Module#LightScroll</a>
 <a href="http://static.seshenghuo.com/static/basic/test/mod_touchselect.shtml" target="_blank">Module#TouchSelect</a>
 <a href="http://static.seshenghuo.com/static/basic/test/mod_touchcity.shtml" target="_blank">Module#TouchCity</a>
+<a href="http://static.seshenghuo.com/static/basic/test/mod_touchdatetime.shtml" target="_blank">Module#TouchDatetime</a>
 </pre>
 
 #ICON Font Demo

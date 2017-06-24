@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html data-page-alias="data-actionsheet" <!--#include virtual="/static/basic/inc/rem_mattr.html"-->>
+<head>
+<!--#include virtual="/static/basic/inc/meta.html"-->
+<!--#include virtual="/static/basic/inc/rem.html"-->
+<title>Mod/TouchDatetime</title>
+<!--#include virtual="/static/basic/inc/css_common_gm.html"-->
+<link rel="stylesheet" type="text/css" href="/static/basic/src/css/mod/touchselect.css">
+</head>
+<body>
+<div id="render"></div>
+<button id="ast">TouchDatetime</button>
+<!-- <div class="mod-actionsheet mod-actionsheet-mask"></div>
+<div class="mod-actionsheet mod-actionsheet-panel touchselect">
+  <h1 class="flexbox middle justify touchselect-header">
+    <var class="touchselect-cancel" data-action-tap="ts://cancel#${ts.name}">取消</var>
+    <span class="touchselect-title ellipsis">我是标题栏哦我是标题</span>
+    <var class="touchselect-confirm" data-action-tap="ts://confirm#${ts.name}">确定</var>
+  </h1>
+  <div class="touchselect-box flexbox top center">
+    <div class="flexbox middle center touchselect-column">
+      <div class="touchselect-items">
+        <div class="touchselect-item ellipsis" data-value="" data-linkedvalue="">北京</div>
+        <div class="touchselect-item ellipsis selected" data-value="" data-linkedvalue="">上海</div>
+        <div class="touchselect-item ellipsis" data-value="" data-linkedvalue="">河北</div>
+      </div>
+    </div>
+    <div class="touchselect-selected-line"></div>
+  </div>
+</div>   -->
+<!-- <div class="mod-actionsheet mod-actionsheet-panel exit sheetbox">
+  
+</div>  -->
+<!--#include virtual="/static/basic/inc/js_common_z.120.html" --> 
+<script>
+seajs.use(["logic/test/test_touchdatetime"]);
+</script>
+</body>
+</html>

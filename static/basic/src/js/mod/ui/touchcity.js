@@ -3,14 +3,13 @@
  **********************************************************/
 
 /**
- * TouchSelect模块
+ * TouchCity模块 extends TouchSelect
  * @charset utf-8
  * @author lijun
  * @git: https://github.com/zwlijun/se.builder
  * @date 2017.6
  */
 ;define(function TouchSelect(require, exports, module){
-    var Util              = require("mod/se/util");
     var TouchSelect       = require("mod/ui/touchselect");
 
     var CITY_DATA = {
@@ -3707,6 +3706,8 @@
             },
             render: function(opts){
                 tc.render(opts);
+
+                return this;
             }
         };
     };
