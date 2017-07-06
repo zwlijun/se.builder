@@ -172,6 +172,18 @@
 
                 return check.ok;
             },
+            shortdate: function(data, v, el){
+                var fmt = el.attr("data-dtpicker-format") || "%y-%M";
+                var check = DateUtil.parse(v, fmt);
+
+                return check.ok;
+            },
+            shortdate2: function(data, v, el){
+                var fmt = el.attr("data-dtpicker-format") || "%M-%d";
+                var check = DateUtil.parse(v, fmt);
+
+                return check.ok;
+            },
             time: function(data, v, el){
                 var fmt = el.attr("data-dtpicker-format") || "%h:%m:%s";
                 var check = DateUtil.parse(v, fmt);
@@ -180,6 +192,12 @@
             },
             shorttime: function(data, v, el){
                 var fmt = el.attr("data-dtpicker-format") || "%h:%m";
+                var check = DateUtil.parse(v, fmt);
+
+                return check.ok;
+            },
+            shorttime2: function(data, v, el){
+                var fmt = el.attr("data-dtpicker-format") || "%m:%s";
                 var check = DateUtil.parse(v, fmt);
 
                 return check.ok;
