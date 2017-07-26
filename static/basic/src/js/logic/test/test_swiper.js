@@ -1,5 +1,5 @@
 define(function(require, exports, module){
-	var SwiperFactory = require("mod/se/swiper.ie");
+	var SwiperFactory = require("mod/se/swiper");
 
 	var _Swiper = SwiperFactory.createSwiper("test", {
 		"type": "random",

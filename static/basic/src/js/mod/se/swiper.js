@@ -114,6 +114,7 @@
             current: ".mod-swiper-item.current",
             before: ".mod-swiper-item.maybe.before",
             after: ".mod-swiper-item.maybe.after",
+            anypossible: ".mod-swiper-item.maybe.before.after",
             impossible: ".mod-swiper-item.impossible"
         },
         format: function(selector){
@@ -481,6 +482,7 @@
             var data = {
                 swiper: this
             };
+
             if(true !== this.isbind){
                 viewport.on(this.start_event, data, function(e){
                     var data = e.data;
@@ -954,17 +956,24 @@
             // this.viewport[0].className = "mod-swiper dots-float-" + this.options("dots");
             this.viewport.removeClass(_CONTROL_CLASSNAME.join(" "));
 
+            // console.log(prevIndex, nextIndex);
+
             for(var i = 0; i < size; i++){
                 item = this.getItem(i);
 
                 item.className = formatter(selector.impossible);
 
-                if(prevIndex === i){
-                    item.className = formatter(selector.before);
+                if(prevIndex === i && nextIndex === i){
+                    item.className = formatter(selector.anypossible);
+                }else{
+                    if(prevIndex === i){
+                        item.className = formatter(selector.before);
+                    }
+                    if(nextIndex === i){
+                        item.className = formatter(selector.after);
+                    }
                 }
-                if(nextIndex === i){
-                    item.className = formatter(selector.after);
-                }
+                
                 if(index === i){
                     item.className = formatter(selector.current);
                 }

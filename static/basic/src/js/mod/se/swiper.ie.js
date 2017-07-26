@@ -110,6 +110,7 @@
             current: ".mod-swiper-item.current",
             before: ".mod-swiper-item.maybe.before",
             after: ".mod-swiper-item.maybe.after",
+            anypossible: ".mod-swiper-item.maybe.before.after",
             impossible: ".mod-swiper-item.impossible"
         },
         format: function(selector){
@@ -1164,12 +1165,17 @@
 
                 item.className = formatter(selector.impossible);
 
-                if(prevIndex === i){
-                    item.className = formatter(selector.before);
+                if(prevIndex === i && nextIndex === i){
+                    item.className = formatter(selector.anypossible);
+                }else{
+                    if(prevIndex === i){
+                        item.className = formatter(selector.before);
+                    }
+                    if(nextIndex === i){
+                        item.className = formatter(selector.after);
+                    }
                 }
-                if(nextIndex === i){
-                    item.className = formatter(selector.after);
-                }
+
                 if(index === i){
                     item.className = formatter(selector.current);
                 }

@@ -16,16 +16,16 @@
 <body>
 <header class="app-header"></header> 
 <article class="app-body">
-  <div class="mod-swiper" data-swiper="test" data-swiper-type="fade" data-swiper-autoplay="0">
+  <div class="mod-swiper" data-swiper="test" data-swiper-type="slider" data-swiper-autoplay="0">
     <div class="mod-swiper-body">
       <div class="mod-swiper-item current" data-swiper-mode="x">
         <div class="mod-swiper-subject">PAGE 1</div>
         <div class="mod-swiper-desc">我在要枯在地</div>
       </div>
-      <div class="mod-swiper-item maybe after" data-swiper-mode="free">
+      <div class="mod-swiper-item maybe after" data-swiper-mode="x">
         <div class="mod-swiper-subject">PAGE 2</div>
         <div class="mod-swiper-desc">我在要枯在地</div>
-      </div>
+      </div><!-- 
       <div class="mod-swiper-item impossible" data-swiper-mode="x">
         <div class="mod-swiper-subject">PAGE 3</div>
         <div class="mod-swiper-desc">我在要枯在地</div>
@@ -33,7 +33,7 @@
       <div class="mod-swiper-item maybe before" data-swiper-mode="x">
         <div class="mod-swiper-subject">PAGE 4</div>
         <div class="mod-swiper-desc">我在要枯在地</div>
-      </div>
+      </div> -->
     </div>
     <div class="mod-swiper-control hide icofont prev"></div>
     <div class="mod-swiper-control hide icofont next"></div>

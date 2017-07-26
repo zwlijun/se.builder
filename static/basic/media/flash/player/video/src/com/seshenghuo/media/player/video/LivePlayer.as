@@ -9,12 +9,18 @@
     import flash.events.SecurityErrorEvent;
     import flash.events.IOErrorEvent;
 	
+	import com.seshenghuo.media.player.video.LivePlayerClient;
+	import flash.media.SoundTransform;
+	
 	public class LivePlayer extends Sprite {
 		private var ExternalPlayer:Object = null;
 		
 		private var ns:NetStream = null;
 		private var nc:NetConnection = null;
 		private var video:Video = null;
+		private var sound:SoundTransform = null;
+		
+		private var client:LivePlayerClient = null;
 		
 		private var _width:Number = 640;
 		private var _height:Number = 360;
@@ -27,10 +33,32 @@
 			this.nc.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this.onSecurityError);
 			this.nc.addEventListener(AsyncErrorEvent.ASYNC_ERROR, this.onAsyncError);
 			this.nc.addEventListener(IOErrorEvent.IO_ERROR, this.onIOError);
+			
+			this.nc.connect(null);
+			this.client = new LivePlayerClient();
+			this.sound = new SoundTransform();
+			
+			this.ns = new NetStream(this.nc);
+			this.ns.addEventListener(NetStatusEvent.NET_STATUS, this.onNetStatusChange);
+			
+			this.ns.client = this.client;
+			this.ns.soundTransform = this.sound;
+			
+			test();
+		}
+		
+		private function test():void{
+			this.video = new Video(this._width, this._height);
+			addChild(this.video);
+			
+			video.attachNetStream(this.ns);
+			this.ns.play("http://www.helpexamples.com/flash/video/cuepoints.flv");
+			
 		}
 		
 		private function onNetStatusChange(e:NetStatusEvent):void{
 			//@see http://help.adobe.com/zh_CN/FlashPlatform/reference/actionscript/3/flash/events/NetStatusEvent.html
+			trace("LivePlayer::Event#" + e.info.code);
 			switch(e.info.code){
 				case "NetConnection.Connect.Closed":
 					//fire emptied
@@ -116,19 +144,22 @@
 		
 		private function onSecurityError(e:SecurityErrorEvent):void{
 			//fire error
+			trace("LivePlayer::Event#SecuretyError");
 		}
 		
 		private function onAsyncError(e:AsyncErrorEvent):void{
 			//fire error
+			trace("LivePlayer::Event#AsyncError");
 		}
 		
 		private function onIOError(e:IOErrorEvent):void{
 			//fire error
+			trace("LivePlayer::Event#IOError");
 		}
 		
-		public function connect(player:Object):Object{
-			this.ExternalLivePlayer = player;
-		}
+		//public function connect(player:Object):Object{
+		//	this.ExternalLivePlayer = player;
+		//}
 	}
 	
 }
