@@ -4,71 +4,6 @@
 //minFontSize: 最小字体大小
 //maxFontSize: 最大字体大小
 (function(design, fontSize, minFontSize, maxFontSize){
-    var remTimer = null;
-    var _reset = function(){
-        var root = document.documentElement;
-        var body = document.body;
-
-        if(!root || !body){
-            return false;
-        }
-
-        try{
-            var _designWidth = root.getAttribute("data-adaptor-design") || design;
-            var _fontSize = root.getAttribute("data-adaptor-base") || fontSize;
-            var _minFontSize = Number(root.getAttribute("data-adaptor-min") || minFontSize);
-            var _maxFontSize = Number(root.getAttribute("data-adaptor-max") || maxFontSize);
-            var clientWidth = Math.max(root.clientWidth, body.clientWidth);
-            var width = window.innerWidth || clientWidth;
-
-            var percentage = width / _designWidth;
-            var fsize = _fontSize * percentage;
-
-            if(fsize < _minFontSize){
-                fsize = _minFontSize;
-            }
-
-            if(fsize > _maxFontSize){
-                fsize = _maxFontSize;
-            }
-
-            percentage = fsize / _fontSize;
-
-            root.style.fontSize = fsize + 'px';
-            root.setAttribute("data-adaptor-percentage", percentage);
-        }catch(e){
-            return false;
-        }
-
-        return true;
-    };
-    var _listener = function(e){
-        setTimeout(_reset, 300);
-    };
-
-    remTimer = setTimeout(function(){
-        if(remTimer){
-            clearTimeout(remTimer);
-            remTimer = null;
-        }
-
-        if(_reset()){
-            if(("onorientationchange" in window)){
-                window.addEventListener("orientationchange", _listener, false);
-            }else{
-                if("addEventListener" in window){
-                    window.addEventListener("resize", _listener, false);
-                }else if("attachEvent" in window){
-                    window.attachEvent("onresize", _listener);
-                }else{
-                    window.onresize = _listener;
-                }
-            }
-        }else{
-            setTimeout(arguments.callee, 0);
-        }
-    }, 0);
-
     //----------------------------------------------------------------|||
     var _ua = navigator.userAgent;
     var CheckMap = {
@@ -666,6 +601,110 @@
         return result;
     };
     //----------------------------------------------------------------|||
+    var remTimer = null;
+    var isNumber = function(v){
+        var s = String(v);
+        var p = /^[\d]+$/;
+
+        return p.test(s);
+    };
+    var parseDesignWidth = function(v){
+        var env = __parse(_ua);
+        var os = env.os;
+        var items = v.split(/[\s]*,[\s]*/);
+        var size = items.length;
+        var item = null;
+        var map = {};
+
+        for(var i = 0; i < size; i++){
+            item = items[i].split(/[\s]*=[\s]*/);
+            map[item[0]] = Number(item[1]);
+        }
+
+        if(os.android.major > 0 || 
+           os.ios.major > 0 || 
+           os.windowsphone.major > 0 || 
+           os.blackberry.major > 0 || 
+           os.symbian.major > 0
+        ){ //移动端
+            return map["mobile"];
+        }else{ //pc端
+            return map["desktop"];
+        }
+    };
+    var _reset = function(){
+        var root = document.documentElement;
+        var body = document.body;
+
+        if(!root || !body){
+            return false;
+        }
+
+        try{
+
+            var _designWidth = root.getAttribute("data-adaptor-design") || design;
+            var _fontSize = root.getAttribute("data-adaptor-base") || fontSize;
+            var _minFontSize = Number(root.getAttribute("data-adaptor-min") || minFontSize);
+            var _maxFontSize = Number(root.getAttribute("data-adaptor-max") || maxFontSize);
+            var clientWidth = Math.max(root.clientWidth, body.clientWidth);
+            var width = window.innerWidth || clientWidth;
+
+            if(isNumber(_designWidth)){
+                _designWidth = Number(_designWidth);
+            }else{
+                _designWidth = parseDesignWidth(_designWidth);
+            }
+
+            root.setAttribute("data-adaptor-design", _designWidth);
+
+            var percentage = width / _designWidth;
+            var fsize = _fontSize * percentage;
+
+            if(fsize < _minFontSize){
+                fsize = _minFontSize;
+            }
+
+            if(fsize > _maxFontSize){
+                fsize = _maxFontSize;
+            }
+
+            percentage = fsize / _fontSize;
+
+            root.style.fontSize = fsize + 'px';
+            root.setAttribute("data-adaptor-percentage", percentage);
+        }catch(e){
+            return false;
+        }
+
+        return true;
+    };
+    var _listener = function(e){
+        setTimeout(_reset, 300);
+    };
+
+    remTimer = setTimeout(function(){
+        if(remTimer){
+            clearTimeout(remTimer);
+            remTimer = null;
+        }
+
+        if(_reset()){
+            if(("onorientationchange" in window)){
+                window.addEventListener("orientationchange", _listener, false);
+            }else{
+                if("addEventListener" in window){
+                    window.addEventListener("resize", _listener, false);
+                }else if("attachEvent" in window){
+                    window.attachEvent("onresize", _listener);
+                }else{
+                    window.onresize = _listener;
+                }
+            }
+        }else{
+            setTimeout(arguments.callee, 0);
+        }
+    }, 0);
+    //----------------------------------------------------------------|||
     (function main(){
         var env = __parse(_ua);
         var arr = [];
@@ -767,5 +806,5 @@
         "parse": __parse,
         "env": __parse(_ua)
     };
-})(640, 100, 50, 100);
+})("mobile=750,desktop=1400", 100, 25, 100);
 </script>
