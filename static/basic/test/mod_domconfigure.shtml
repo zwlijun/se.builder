@@ -3,7 +3,7 @@
 <head>
 <!--#include virtual="/static/basic/inc/meta.html"-->
 <!--#include virtual="/static/basic/inc/rem.html"-->
-<title>移动终端页面框架DEMO</title>
+<title>DOMConfigure</title>
 <!--#include virtual="/static/basic/inc/css_common_gm.html"-->
 <!--#include virtual="/static/basic/inc/css_common_mm.html"-->
 <!--#include virtual="/static/basic/inc/static_version.html"-->
@@ -11,9 +11,22 @@
 </head>
 <body>
 <header class="app-header"></header> 
-<article class="app-body"></article>
+<article class="app-body">
+<div id="dconf0"
+     data-domconf-name="carl"
+     data-domconf-age="45"
+     data-domconf-qq="1234567"
+     data-domconf-birthday="1980-10-01"
+     data-domconf-sn="12a-sd3-223"
+     data-domconf-menus="m1,m2,m3"
+     data-domconf-dataset="{a:0,b:true,c:[1,2,3,'success'],d:'i\'m ok.'}"
+     data-domconf-flag="1">DOMConfigure</div>
+</article>
 <footer class="app-footer"></footer>
 <!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
+<script>
+seajs.use(["logic/test/test_domconfigure"]);
+</script>
 <!--#include virtual="/static/basic/inc/stat_code_footer.html"-->
 </body>
 </html>

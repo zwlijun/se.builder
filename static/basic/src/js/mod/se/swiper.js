@@ -119,24 +119,33 @@
         },
         format: function(selector){
             return selector.substr(1).split(".").join(" ");
+        },
+        clear: function(item){
+            $(item).removeClass("current maybe before after impossible");
+        },
+        render: function(item, selector){
+            _SwiperItemSelector.clear(item);
+
+            $(item).addClass(_SwiperItemSelector.format(selector));
         }
     };
 
     //DOM Options
-    //data-swiper-type      :: 类型 [slider | scale | fade | draw | cube]
-    //data-swiper-mode      :: 模式 [x | y | free]
-    //data-swiper-distance  :: 滑屏距离（手指滑动多少个PX后触发切换）[number]
-    //data-swiper-dots      :: 滑屏定位点或缩略图 [none | static | bottom | right]
-    //data-swiper-width     :: 宽度 -1: 100% [number]
-    //data-swiper-height    :: 高度 [number]
-    //data-swiper-control   :: 是否显示控制箭头 [0 | 1]
-    //data-swiper-autoplay  :: 是否自动播放 [0 | 1]
-    //data-swiper-loop      :: 是否循环播放 [0 | 1]
-    //data-swiper-interval  :: 自动播放时间隔周期 [number]，单位ms
-    //data-swiper-duration  :: 滑屏切换时间 [number]，单位s
-    //data-swiper-timing    :: 滑屏过渡效果 [ease | ease-in | ease-out | ease-in-out | cubic-bezier(n,n,n,n) | linear]
-    //data-swiper-delay     :: 滑屏延迟时长 [number]，单位s
-    //data-swiper-unit      :: 尺寸单位 [% | em | px | pt| rem | ex | pc | in | cm | mm]
+    //data-swiper-type          :: 类型 [slider | scale | fade | draw | cube]
+    //data-swiper-mode          :: 模式 [x | y | free]
+    //data-swiper-distance      :: 滑屏距离（手指滑动多少个PX后触发切换）[number]
+    //data-swiper-dots          :: 滑屏定位点或缩略图 [none | static | bottom | right]
+    //data-swiper-width         :: 宽度 -1: 100% [number]
+    //data-swiper-height        :: 高度 [number]
+    //data-swiper-control       :: 是否显示控制箭头 [0 | 1]
+    //data-swiper-ctrlvisible   :: 控制箭头显示方式 [static | hover]
+    //data-swiper-autoplay      :: 是否自动播放 [0 | 1]
+    //data-swiper-loop          :: 是否循环播放 [0 | 1]
+    //data-swiper-interval      :: 自动播放时间隔周期 [number]，单位ms
+    //data-swiper-duration      :: 滑屏切换时间 [number]，单位s
+    //data-swiper-timing        :: 滑屏过渡效果 [ease | ease-in | ease-out | ease-in-out | cubic-bezier(n,n,n,n) | linear]
+    //data-swiper-delay         :: 滑屏延迟时长 [number]，单位s
+    //data-swiper-unit          :: 尺寸单位 [% | em | px | pt| rem | ex | pc | in | cm | mm]
     var GetDefaultOptions = function(){
         return {
             "type": "slider",                   //类型 [slider | ...]
@@ -146,6 +155,7 @@
             "width": -1,                        //宽度 -1: 100%
             "height": 400,                      //高度
             "control": false,                   //控制器
+            "ctrlvisible": "default",           //控制器显示方式
             "autoplay": false,                  //是否自动播放
             "loop": true,                       //是否循环
             "interval": 4000,                   //自动播放时间隔周期
@@ -165,6 +175,7 @@
             {"name": "width", "dataType": "number", "defaultValue": "-1"},
             {"name": "height", "dataType": "number", "defaultValue": "400"},
             {"name": "control", "dataType": "boolean", "defaultValue": "0"},
+            {"name": "ctrlvisible", "dataType": "string", "defaultValue": "static"},
             {"name": "autoplay", "dataType": "boolean", "defaultValue": "0"},
             {"name": "loop", "dataType": "boolean", "defaultValue": "1"},
             {"name": "interval", "dataType": "number", "defaultValue": "4000"},
@@ -870,11 +881,12 @@
         },
         initControl: function(){
             var control = this.options("control");
+            var controlVisible = this.options("ctrlvisible");
 
             this.leftControler.attr("data-action-tap", "swiper://navigator/prev#" + this.name);
             this.rightControler.attr("data-action-tap", "swiper://navigator/next#" + this.name);
 
-            if(true === control){
+            if(true === control && "hover" != controlVisible){
                 this.controller.removeClass("hide");
             }else{
                 this.controller.addClass("hide");
@@ -906,8 +918,11 @@
                 case "before":
                     dom = before[0];
                 break;
-                default:
+                case "current":
                     dom = current[0];
+                break;
+                default:
+                    dom = viewport[0];
                 break;
             }
             rect = Util.getBoundingClientRect(dom);
@@ -961,21 +976,26 @@
             for(var i = 0; i < size; i++){
                 item = this.getItem(i);
 
-                item.className = formatter(selector.impossible);
+                // item.className = formatter(selector.impossible);
+                _SwiperItemSelector.render(item, selector.impossible);
 
                 if(prevIndex === i && nextIndex === i){
-                    item.className = formatter(selector.anypossible);
+                    // item.className = formatter(selector.anypossible);
+                    _SwiperItemSelector.render(item, selector.anypossible);
                 }else{
                     if(prevIndex === i){
-                        item.className = formatter(selector.before);
+                        // item.className = formatter(selector.before);
+                        _SwiperItemSelector.render(item, selector.before);
                     }
                     if(nextIndex === i){
-                        item.className = formatter(selector.after);
+                        // item.className = formatter(selector.after);
+                        _SwiperItemSelector.render(item, selector.after);
                     }
                 }
                 
                 if(index === i){
-                    item.className = formatter(selector.current);
+                    // item.className = formatter(selector.current);
+                    _SwiperItemSelector.render(item, selector.current);
                 }
             }
 
@@ -1168,16 +1188,26 @@
             for(var i = 0; i < size; i++){
                 item = swiper.getItem(i);
 
-                item.className = formatter(selector.impossible);
+                // item.className = formatter(selector.impossible);
+                _SwiperItemSelector.render(item, selector.impossible);
 
-                if(prevIndex === i){
-                    item.className = formatter(selector.before);
+                if(prevIndex === i && nextIndex === i){
+                    // item.className = formatter(selector.anypossible);
+                    _SwiperItemSelector.render(item, selector.anypossible);
+                }else{
+                    if(prevIndex === i){
+                        // item.className = formatter(selector.before);
+                        _SwiperItemSelector.render(item, selector.before);
+                    }
+                    if(nextIndex === i){
+                        // item.className = formatter(selector.after);
+                        _SwiperItemSelector.render(item, selector.after);
+                    }
                 }
-                if(nextIndex === i){
-                    item.className = formatter(selector.after);
-                }
+                
                 if(currentIndex === i){
-                    item.className = formatter(selector.current);
+                    // item.className = formatter(selector.current);
+                    _SwiperItemSelector.render(item, selector.current);
                 }
             }
 
@@ -1449,7 +1479,7 @@
     };
 
     module.exports = {
-        "version": "R17B0430.01",
+        "version": "R17B0730",
         createSwiper: function(name, options){
             return _Swiper.createSwiper(name, options);
         },

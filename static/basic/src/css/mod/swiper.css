@@ -25,15 +25,13 @@
     top: 0;
 }
 .mod-swiper-item.current{
-    display: inherit;
     z-index: 9
 }
 .mod-swiper-item.maybe{
-    display: inherit;
     z-index: 5;
 }
 .mod-swiper-item.impossible{
-    display: none;
+    display: none!important;
     z-index: 1;
 }
 .mod-swiper-subject{
