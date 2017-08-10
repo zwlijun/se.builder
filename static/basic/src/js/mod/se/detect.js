@@ -100,105 +100,105 @@
             ],
             "ios": [
                 {
-                    "pattern": "iPhone;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "iPhone[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iOS"
                 },
                 {
-                    "pattern": "iPhone;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "iPhone[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iOS"
                 },
                 {
-                    "pattern": "iPhone;.+OS (\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "iPhone[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iOS"
                 },
                 {
-                    "pattern": "iPhone;.+OS (\\d+)",
+                    "pattern": "iPhone[^;]*;.+OS (\\d+)",
                     "alias": "iOS"
                 },
                 {
-                    "pattern": "iPad;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "iPad[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iOS"
                 },
                 {
-                    "pattern": "iPad;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "iPad[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iOS"
                 },
                 {
-                    "pattern": "iPad;.+OS (\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "iPad[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iOS"
                 },
                 {
-                    "pattern": "iPad;.+OS (\\d+)",
+                    "pattern": "iPad[^;]*;.+OS (\\d+)",
                     "alias": "iOS"
                 },
                 {
-                    "pattern": "iPod;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "iPod[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iOS"
                 },
                 {
-                    "pattern": "iPod;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "iPod[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iOS"
                 },
                 {
-                    "pattern": "iPod;.+OS (\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "iPod[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iOS"
                 },
                 {
-                    "pattern": "iPod;.+OS (\\d+)",
+                    "pattern": "iPod[^;]*;.+OS (\\d+)",
                     "alias": "iOS"
                 }
             ],
             "iphone": [
                 {
-                    "pattern": "iPhone;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "iPhone[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iPhone"
                 },
                 {
-                    "pattern": "iPhone;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "iPhone[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iPhone"
                 },
                 {
-                    "pattern": "iPhone;.+OS (\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "iPhone[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iPhone"
                 },
                 {
-                    "pattern": "iPhone;.+OS (\\d+)",
+                    "pattern": "iPhone[^;]*;.+OS (\\d+)",
                     "alias": "iPhone"
                 }
             ],
             "ipad": [
                 {
-                    "pattern": "iPad;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "iPad[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iPad"
                 },
                 {
-                    "pattern": "iPad;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "iPad[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iPad"
                 },
                 {
-                    "pattern": "iPad;.+OS (\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "iPad[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iPad"
                 },
                 {
-                    "pattern": "iPad;.+OS (\\d+)",
+                    "pattern": "iPad[^;]*;.+OS (\\d+)",
                     "alias": "iPad"
                 }
             ],
             "ipod": [
                 {
-                    "pattern": "iPod;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "iPod[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iPod"
                 },
                 {
-                    "pattern": "iPod;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "iPod[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iPod"
                 },
                 {
-                    "pattern": "iPod;.+OS (\\d+)[^0-9\\s ](\\d+)",
+                    "pattern": "iPod[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)",
                     "alias": "iPod"
                 },
                 {
-                    "pattern": "iPod;.+OS (\\d+)",
+                    "pattern": "iPod[^;]*;.+OS (\\d+)",
                     "alias": "iPod"
                 }
             ],
