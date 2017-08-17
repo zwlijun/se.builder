@@ -2233,7 +2233,7 @@
     };
 
     module.exports = {
-        "version": "R17B0606",
+        "version": "R17B0817",
         "MediaReadyState": MediaReadyState,
         "MediaNetworkState": MediaNetworkState,
         "MediaError": MediaError,

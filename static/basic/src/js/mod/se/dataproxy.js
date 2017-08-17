@@ -138,7 +138,7 @@
     };
 
     module.exports = {
-        "version": "R17B0430.01",
+        "version": "R17B0817",
         DataCache: {
             put: function(type, key, data){
                 _DataManage.put(type, key, data);

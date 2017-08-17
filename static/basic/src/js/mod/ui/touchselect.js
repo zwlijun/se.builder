@@ -798,7 +798,7 @@
     })();
 
     module.exports = {
-        "version": "R17B0622",
+        "version": "R17B0817",
         newTouchSelect: function(name){
             return TouchSelect.newTouchSelect(name);
         },

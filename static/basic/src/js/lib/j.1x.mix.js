@@ -12538,8 +12538,13 @@ if(aliasItemSize > 1){
     };
 }
 
+var WEIXIN_JSSDK_URL = ($('meta[name="open-wechat-jssdk"]').attr("content") || "http://res.wx.qq.com/open/js/jweixin-1.0.0.js");
+
 var conf = {
-    base: __JAVASCRIPT__
+    base: __JAVASCRIPT__,
+    alias: {
+        "wxjssdk": WEIXIN_JSSDK_URL
+    }
 };
 
 if(!__COMBO__ || (__COMBO__ && __DEBUG__)){

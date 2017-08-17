@@ -29,25 +29,33 @@
                 var before = currentTarget.attr("data-" + originType + "-before");
                 var after = currentTarget.attr("data-" + originType + "-after");
 
-                console.log("external: " + external + "; beforecheck: " + beforeCheck + "; before: " + before + "; after: " + after);
-                console.log("fireType: " + e.type + "; originType: " + originType);
+                console.log("ActionEvent#external: " + external + "; beforecheck: " + beforeCheck + "; before: " + before + "; after: " + after);
+                console.log("ActionEvent#fireType: " + e.type + "; originType: " + originType);
 
                 if(beforeCheck){
+                    console.log("ActionEvent#beforecheck > call before");
                     var ret = _util.requestExternal(beforeCheck, [currentTarget, e, originType]);
 
+                    console.log("ActionEvent#beforecheck > call after, result = " + ret);
                     if(0 === ret.code && true !== ret.result){
                         return ;
                     }
                 }
 
                 if(before){
+                    console.log("ActionEvent#before > call before");
                     _util.requestExternal(before, [currentTarget, e, originType]);
+                    console.log("ActionEvent#before > call after");
                 }
 
+                console.log("ActionEvent#requestExternal > call before");
                 _util.requestExternal(external, [currentTarget, e, originType]);
+                console.log("ActionEvent#requestExternal > call after");
 
                 if(after){
+                    console.log("ActionEvent#after > call before");
                     _util.requestExternal(after, [currentTarget, e, originType]);
+                    console.log("ActionEvent#after > call after");
                 }
             });
         }
@@ -181,11 +189,15 @@
         source: function(data){
             var schema = data.schema;
 
+            console.log("Util.source#schema = " + schema);
+
             if(schema){
                 if(!(schema in $)){
                     $[schema] = data;
+                    console.log("Util.source#not existed > object($[" + schema + "]) = " + $[schema]);
                 }else{
-                    $.extend(true, $[schema], data);
+                    $[schema] = $.extend(true, {}, $[schema], data);
+                    console.log("Util.source#existed > object($[" + schema + "]) = " + $[schema]);
                 }
             }
         },
@@ -204,11 +216,15 @@
                 "args": _args
             };
 
+            console.log("Util.requestExternal#call > uri = " + uri + "; matcher = " + result);
+
             if(result){
                 _className = result[1];
                 _namespace = result[2];            
                 _data = result[4] || null;
                 _class = $[_className] || null;
+
+                 console.log("Util.requestExternal#call > class = " + _className + "; namespace = " + _namespace + "; data = " + _data);
 
                 if(_class){
 
@@ -237,13 +253,21 @@
                         _method = _pkgs[_size - 1];
                     }
 
+                    console.log("Util.requestExternal#call > method = " + _method);
+
                     if(null != _class && (_method in _class)){
+                        console.log("Util.requestExternal#call success");
+
                         return {
                             "result": _class[_method].apply(context, [_data].concat(_args)),
                             "code": 0,
                             "msg": "ok"
                         };
                     }
+
+                    console.log("Util.requestExternal#call error, message = no such class or method");
+                    console.log("Util.requestExternal#call error, class is null? " + (null == _class));
+                    console.log("Util.requestExternal#call error, method? " + (null != _class && (_method in _class)));
 
                     return {
                         "result": undefined,
@@ -252,6 +276,7 @@
                     };
                 }
             }else{
+                console.log("Util.requestExternal#call error, message = not match");
                 return {
                     "result": undefined,
                     "code": -2,

@@ -10,7 +10,7 @@
  * @date 2015.1
  */
 ;define(function WeiXinAPI(require, exports, module){
-    var WeiXinJSSDK         = require($('meta[name="open-wechat-jssdk"]').attr("content") || "http://res.wx.qq.com/open/js/jweixin-1.0.0.js");
+    var WeiXinJSSDK         = require("wxjssdk");
     var Util                = require("mod/se/util");
     var DataType            = require("mod/se/datatype");
 
@@ -226,7 +226,7 @@
     };
 
     var WeiXinAPI = {
-        "version": "R17B0630",
+        "version": "R17B0817",
         MetaData : MetaData,
         readyState: 0,
         _readyList: [],

@@ -811,7 +811,7 @@
     var _Cache = {};
 
     module.exports = {
-        "version": "R17B0606",
+        "version": "R17B0817",
         "CheckTypes": Types,
         "getInstance" : function(name, prefix){
             var ins = (_Cache[name] || new _Form(name, prefix)); 

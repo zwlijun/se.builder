@@ -180,6 +180,16 @@ textarea {
 .hidden{visibility: hidden!important;}
 .visible{visibility: visible!important;}
 
+a,
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+[data-action-click],
+[data-action-tap]{
+  -webkit-tap-highlight-color:transparent;
+}
+
 .disable-select{
     -webkit-user-select: none;
        -moz-user-select: none;

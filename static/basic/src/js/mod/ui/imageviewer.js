@@ -316,7 +316,7 @@
     };
 
     module.exports = {
-        "version": "R17B0430.01",
+        "version": "R17B0817",
         "createImageViewer": ImageViewer.createImageViewer,
         "getImageViewer": ImageViewer.getImageViewer
     };

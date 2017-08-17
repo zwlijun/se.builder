@@ -270,7 +270,7 @@
     };
 
     module.exports = {
-        "version": "R17B0531",
+        "version": "R17B0817",
         "newFullScreenInstance": _FullScreen.newFullScreenInstance,
         "getFullScreenInstance": _FullScreen.getFullScreenInstance
     };
