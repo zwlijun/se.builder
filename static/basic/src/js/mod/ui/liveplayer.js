@@ -119,6 +119,7 @@
                       + '      <source src="<%=liveplayer.meta.source%>" />'
                       + '      <%}%>'
                       + '    <%}%>'
+                      + '      <%=liveplayer.notsupport%>'
                       + '    </video>'
                       + '    <div class="liveplayer-master-mask flexbox middle center<%=(liveplayer.autoplay || "native" === liveplayer.appearance) ? " hide" : ""%>">'
                       + '       <ins class="icofont" data-action-click="liveplayer://play#<%=liveplayer.name%>"></ins>'
@@ -347,6 +348,8 @@
       data-liveplayer-x5­orientation="设置腾讯X5内核视频的横竖屏  landscape 横屏, portraint竖屏"
 
       data-liveplayer-contextmenu="是否允许视频区的contextmenu 1 - 允许 0 - 不允许"
+
+      data-liveplayer-notsupport="对不支持的情况下的提示信息"
     ></element>
     **/
     var GetDefaultOptions = function(){
@@ -380,7 +383,8 @@
             appearance: "define",
             x5h5: false,
             x5fullscreen: "",
-            x5orientation: ""
+            x5orientation: "",
+            notsupport: "Your browser does not support video tag, please use IE10+, Chrome, Firefox, Safari etc modern browser."
         };
 
         return options;
@@ -839,14 +843,15 @@
             // console.log(JSON.stringify(sourceInfo));
             // console.log("<<-----------------------")
 
+            var notsupportText = this.options("notsupport") || "";
 
             if(sourceInfo && sourceInfo.source){
                 if(sourceInfo.type){
                     video.removeAttr("src")
-                         .html('<source src="' + sourceInfo.source + '" type="' + sourceInfo.type + '" />');
+                         .html('<source src="' + sourceInfo.source + '" type="' + sourceInfo.type + '" />' + notsupportText);
                 }else{
                     video.removeAttr("src")
-                         .html('<source src="' + sourceInfo.source + '" />');
+                         .html('<source src="' + sourceInfo.source + '" />' + notsupportText);
                 }
 
                 this.listenSourceError();
@@ -1247,7 +1252,8 @@
                 //     appearance: "define",
                 //     x5h5: false,
                 //     x5fullscreen: "",
-                //     x5orientation: ""
+                //     x5orientation: "",
+                //     notsupport: "Your browser does not support video tag, please use IE10+, Chrome, Firefox, Safari etc modern browser."
                 // };
                 var _conf = [
                     {name: "type", dataType: "string"},
@@ -1278,7 +1284,8 @@
                     {name: "appearance", dataType: "string"},
                     {name: "x5h5", dataType: "boolean"},
                     {name: "x5fullscreen", dataType: "string"},
-                    {name: "x5orientation", dataType: "string"}
+                    {name: "x5orientation", dataType: "string"},
+                    {name: "notsupport", dataType: "string"}
                 ];
 
                 return _conf;
