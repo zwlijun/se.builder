@@ -140,6 +140,7 @@
     //data-swiper-interval      :: 自动播放时间隔周期 [number]，单位ms
     //data-swiper-duration      :: 滑屏切换时间 [number]，单位s
     //data-swiper-timing        :: 滑屏过渡效果 [ease | ease-in | ease-out | ease-in-out | cubic-bezier(n,n,n,n) | linear]
+    //data-swiper-tween     :: 滑屏过渡效果 @see Tween
     //data-swiper-delay         :: 滑屏延迟时长 [number]，单位s
     //data-swiper-unit          :: 尺寸单位 [% | em | px | pt| rem | ex | pc | in | cm | mm]
     var GetDefaultOptions = function(){
@@ -157,6 +158,7 @@
             "interval": 4000,                   //自动播放时间隔周期
             "duration": 1,                      //滑屏时长 [n]s
             "timing": "ease",                   //滑屏过渡类型 [ease | ease-in | ease-out | ease-in-out | cubic-bezier(n,n,n,n) | linear]
+            "tween": Tween.Sine.easeOut,        //滑屏过渡效果 @see Tween
             "delay": 0,                         //滑屏延迟时长 [n]s
             "unit": "px"                        //尺寸单位 [% | em | px | pt| rem | ex | pc | in | cm | mm]
         };
@@ -177,6 +179,7 @@
             {"name": "interval", "dataType": "number", "defaultValue": "4000"},
             {"name": "duration", "dataType": "number", "defaultValue": "1"},
             {"name": "timing", "dataType": "string", "defaultValue": "ease"},
+            {"name": "tween", "dataType": "tween", "defaultValue": "Sine/easeOut"},
             {"name": "delay", "dataType": "number", "defaultValue": "0"},
             {"name": "unit", "dataType": "string", "defaultValue": "px"}
         ];
