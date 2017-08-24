@@ -1,6 +1,5 @@
 ﻿package com.seshenghuo.media.player.video {
 	import flash.display.Sprite;
-	import flash.display.Sprite;
     import flash.net.NetConnection;
     import flash.events.NetStatusEvent;
     import flash.events.AsyncErrorEvent;

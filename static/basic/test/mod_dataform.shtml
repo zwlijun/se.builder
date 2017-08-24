@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html data-page-alias="platform.app.project.module.feature.page"<!--#include virtual="/static/basic/inc/rem_attr.html"-->>
+<head>
+<!--#include virtual="/static/basic/inc/meta.html"-->
+<!--#include virtual="/static/basic/inc/rem.html"-->
+<title>桌面终端页面框架DEMO</title>
+<!--#include virtual="/static/basic/inc/css_common_gm.html"-->
+<!--#include virtual="/static/basic/inc/css_common_dm.html"-->
+<!--#include virtual="/static/basic/inc/static_version.html"-->
+<!--#include virtual="/static/basic/inc/ie.html" -->
+<!--#include virtual="/static/basic/inc/stat_code_header.html"-->
+</head>
+<body>
+<header class="app-header"></header> 
+<article class="app-body">
+<div class="dataform">
+  <form name="dataform">
+    <dl class="dataform-item flexbox top left">
+      <dt>
+        <span>纯文本字段：</span>
+      </dt>
+      <dd>
+        <div class="text-wrapper">要苛夺asdl法拉盛的载在要苛夺asdl法拉盛的载在要苛夺asdl法拉盛的载在要苛夺asdl法拉盛的载在要苛夺asdl法拉盛的载在</div>
+      </dd>
+    </dl>
+    <dl class="dataform-item flexbox top left">
+      <dt>
+        <span>KEY：</span>
+      </dt>
+      <dd>
+        <div class="input-wrapper flexbox top left wrap">
+          <input type="text" class="text" name="" placeholder="请输入key">
+        </div>
+      </dd>
+    </dl>
+    <dl class="dataform-item flexbox top left">
+      <dt>
+        <span>KEY：</span>
+      </dt>
+      <dd>
+        <div class="input-wrapper flexbox top left wrap">
+          <textarea name="" placeholder="..."></textarea>
+        </div>
+      </dd>
+    </dl>
+    <dl class="dataform-item flexbox top left">
+      <dt>
+        <span>KEY：</span>
+      </dt>
+      <dd>
+        <div class="input-wrapper flexbox top left wrap">
+          <cite class="selectbox flexbox middle justify">
+            <select>
+              <option>请选择</option>
+              <option value="1">中国</option>
+              <option value="1">美国</option>
+              <option value="1">英国</option>
+            </select>
+            <i class="icofont"></i>
+          </cite>
+          <cite class="selectbox flexbox middle justify">
+            <select>
+              <option>请选择</option>
+              <option value="1">中国</option>
+              <option value="1">美国</option>
+              <option value="1">英国</option>
+            </select>
+            <i class="icofont"></i>
+          </cite>
+        </div>
+      </dd>
+    </dl>
+    <dl class="dataform-item flexbox top left">
+      <dt>
+        <span>KEY：</span>
+      </dt>
+      <dd>
+        <div class="input-wrapper flexbox top left wrap">
+          <div class="daterange flexbox middle left">
+            <input type="text" class="text datetime" name="" placeholder="年月日">
+            <em>至</em>
+            <input type="text" class="text datetime" name="" placeholder="年月日">
+          </div>
+        </div>
+      </dd>
+    </dl>
+    <dl class="dataform-item flexbox top left">
+      <dt>
+        <span>KEY：</span>
+      </dt>
+      <dd>
+        <div class="input-wrapper flexbox top left wrap">
+          <div class="mcode flexbox middle left">
+            <input type="text" class="text" name="" placeholder="短信验证码">
+            <em>获取验证码(120)</em>
+          </div>
+        </div>
+      </dd>
+    </dl>
+    <dl class="dataform-item flexbox top left">
+      <dt>
+        <span>KEY：</span>
+      </dt>
+      <dd>
+        <div class="input-wrapper flexbox top left wrap">
+          <label class="flexbox middle left checkbox">
+            <input type="checkbox" name="">
+            <span class="icofont">软件开发</span>
+          </label>
+          <label class="flexbox middle left checkbox">
+            <input type="checkbox" name="">
+            <span class="icofont">Web前端开发</span>
+          </label>
+          <label class="flexbox middle left checkbox">
+            <input type="checkbox" name="">
+            <span class="icofont">软件开发</span>
+          </label>
+          <label class="flexbox middle left checkbox">
+            <input type="checkbox" name="">
+            <span class="icofont">Web前端开发</span>
+          </label>
+          <label class="flexbox middle left checkbox">
+            <input type="checkbox" name="">
+            <span class="icofont">软件开发</span>
+          </label>
+          <label class="flexbox middle left checkbox">
+            <input type="checkbox" name="">
+            <span class="icofont">Web前端开发</span>
+          </label>
+          <label class="flexbox middle left checkbox">
+            <input type="checkbox" name="">
+            <span class="icofont">软件开发</span>
+          </label>
+          <label class="flexbox middle left checkbox">
+            <input type="checkbox" name="">
+            <span class="icofont">Web前端开发</span>
+          </label>
+          <label class="flexbox middle left checkbox">
+            <input type="checkbox" name="">
+            <span class="icofont">软件开发</span>
+          </label>
+          <label class="flexbox middle left checkbox">
+            <input type="checkbox" name="">
+            <span class="icofont">Web前端开发</span>
+          </label>
+        </div>
+      </dd>
+    </dl>
+    <dl class="dataform-item flexbox top left">
+      <dt>
+        <span>KEY：</span>
+      </dt>
+      <dd>
+        <div class="input-wrapper flexbox top left wrap">
+          <label class="flexbox middle left radio">
+            <input type="checkbox" name="">
+            <span class="icofont">软件开发</span>
+          </label>
+          <label class="flexbox middle left radio">
+            <input type="checkbox" name="">
+            <span class="icofont">Web前端开发</span>
+          </label>
+        </div>
+      </dd>
+    </dl>
+    <dl class="dataform-item flexbox top left">
+      <dt>
+        <span>&ensp;</span>
+      </dt>
+      <dd>
+        <div class="input-wrapper flexbox top left wrap">
+          <button type="button" class="button orange">确定</button>
+        </div>
+      </dd>
+    </dl>
+  </form>
+</div>
+</article>
+<footer class="app-footer"></footer>
+<!--#include virtual="/static/basic/inc/js_common_j.2.x.html" -->  
+<!--#include virtual="/static/basic/inc/stat_code_footer.html"-->
+</body>
+</html>

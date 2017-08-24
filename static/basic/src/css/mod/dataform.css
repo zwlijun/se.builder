@@ -1,0 +1,177 @@
+.dataform{
+	font-size: .14rem;
+	width: 80%;
+	margin: 0 auto;
+}
+.dataform .dataform-item{
+	margin-bottom: .16rem;
+	line-height: 1.5;
+	min-height: .48rem;
+}
+.dataform .dataform-item dt{
+	width: 1.80rem;
+	margin-right: .12rem;
+	text-align: right;
+}
+.dataform .dataform-item dt > span{
+	display: block;
+	margin-top: .08rem;
+}
+.dataform .dataform-item dd{
+	-webkit-flex: 1;
+	   -moz-flex: 1;
+	    -ms-flex: 1;
+	    	flex: 1;
+}
+.dataform .dataform-item dd > .text-wrapper{
+	margin-top: .08rem;
+	padding: 0 .08rem;
+}
+.dataform .dataform-item input.text{
+	-webkit-appearance: none;
+	border: 1px solid #ececec;
+	height: .32rem;
+	outline: none;
+	outline: 0;
+	padding: 0;
+	margin: 0;
+	font-size: .14rem;
+	width: 80%;
+	padding: 0 .08rem;
+	border-radius: .03rem;
+	margin-right: .12rem;
+}
+.dataform .dataform-item textarea{
+	-webkit-appearance: none;
+	border: 1px solid #ececec;
+	height: .32rem;
+	outline: none;
+	outline: 0;
+	padding: 0;
+	margin: 0;
+	font-size: .14rem;
+	width: 80%;
+	height: .86rem;
+	padding: .08rem;
+	border-radius: .03rem;
+	resize: none;
+	margin-bottom: .14rem;
+	margin-right: .12rem;
+}
+.dataform .dataform-item .selectbox{
+	font-style: normal;
+	border: 1px solid #ececec;
+	height: .32rem;
+	outline: none;
+	outline: 0;
+	padding: 0;
+	margin: 0;
+	font-size: .14rem;
+	padding-left: .08rem;
+	border-radius: .03rem;
+	position: relative;
+	margin-right: .12rem;
+}
+.dataform .dataform-item .selectbox select{
+	-webkit-appearance: button;
+	border: none;
+	border: 0;
+	background-color: transparent;
+	height: 100%;
+	width: 100%;
+	outline: 0;
+	outline: none;
+	-webkit-flex: 1;
+	   -moz-flex: 1;
+	    -ms-flex: 1;
+	    	flex: 1;
+	position: relative;
+	z-index: 10;
+	padding-right: .32rem;
+}
+.dataform .dataform-item .selectbox i{
+	display: block;
+	font-style: normal;
+	display: block;
+	width: .32rem;
+	height: .32rem;
+	line-height: .34rem;
+	text-align: center;
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 3;
+}
+.dataform .dataform-item .selectbox i:before{
+	content: "\e62f";
+	font-size: .16rem;
+	color: #777;
+}
+.dataform .dataform-item .daterange{
+	width: 60%;
+}
+.dataform .dataform-item .daterange em{
+	font-style: normal;
+	margin-right: .12rem;
+	color: #999;
+}
+.dataform .dataform-item .mcode{
+	border: 1px solid #ececec;
+	border-radius: .03rem;
+	margin-right: .12rem;
+	overflow: hidden;
+}
+.dataform .dataform-item .mcode input.text{
+	border: 0;
+	border: none;
+	margin-right: 0;
+	-webkit-flex: 1;
+	   -moz-flex: 1;
+	    -ms-flex: 1;
+	    	flex: 1;
+}
+.dataform .dataform-item .mcode em{
+	display: block;
+	font-style: normal;
+	width: 1.20rem;
+	height: .32rem;
+	line-height: .32rem;
+	background-color: #ff6e1f;
+	color: #fff;
+	text-align: center;
+}
+.dataform .dataform-item .checkbox,
+.dataform .dataform-item .radio{
+	height: .36rem;
+	position: relative;
+	margin-right: .12rem;
+}
+.dataform .dataform-item .checkbox input,
+.dataform .dataform-item .radio input{
+	opacity: 0;
+	position: absolute;
+}
+.dataform .dataform-item .checkbox span,
+.dataform .dataform-item .radio span{
+
+}
+.dataform .dataform-item .checkbox span:before{
+	content: "\e65a";
+	font-size: .16rem;
+	color: #666;
+	margin-right: .02rem;
+}
+.dataform .dataform-item .checkbox input:checked ~ span:before{
+	content: "\e65b";
+	color: #00c700;
+}
+.dataform .dataform-item .radio span:before{
+	content: "\e6ae";
+	font-size: .16rem;
+	color: #666;
+	margin-right: .04rem;
+}
+.dataform .dataform-item .radio input:checked ~ span:before{
+	content: "\e730";
+	color: #00c700;
+}
