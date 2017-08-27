@@ -7,6 +7,7 @@
 <!--#include virtual="/static/basic/inc/css_common_gm.html"-->
 <!--#include virtual="/static/basic/inc/css_common_dm.html"-->
 <!--#include virtual="/static/basic/inc/static_version.html"-->
+<link rel="stylesheet" type="text/css" href="/static/basic/src/css/mod/dataform.css">
 <!--#include virtual="/static/basic/inc/ie.html" -->
 <!--#include virtual="/static/basic/inc/stat_code_header.html"-->
 </head>
@@ -30,7 +31,13 @@
       <dd>
         <div class="input-wrapper flexbox top left wrap">
           <input type="text" class="text" name="" placeholder="请输入key">
+          <span class="helptext">限输入200个汉字</span>
         </div>
+        <ins class="icofont retmsg">返回信息</ins>
+        <ins class="icofont retmsg error">返回信息</ins>
+        <ins class="icofont retmsg success">返回信息</ins>
+        <ins class="icofont retmsg info">返回信息</ins>
+        <ins class="icofont retmsg alarm">返回信息</ins>
       </dd>
     </dl>
     <dl class="dataform-item flexbox top left">
@@ -67,6 +74,9 @@
             </select>
             <i class="icofont"></i>
           </cite>
+          <a href="#" class="helplink">添加所属地</a>
+          <a href="#" class="helplink">添加所属地</a>
+          <a href="#" class="helplink">添加所属地</a>
         </div>
       </dd>
     </dl>
@@ -92,7 +102,7 @@
         <div class="input-wrapper flexbox top left wrap">
           <div class="mcode flexbox middle left">
             <input type="text" class="text" name="" placeholder="短信验证码">
-            <em>获取验证码(120)</em>
+            <em class="disabled">获取验证码(120)</em>
           </div>
         </div>
       </dd>

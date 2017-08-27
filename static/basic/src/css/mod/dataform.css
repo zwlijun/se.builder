@@ -140,6 +140,10 @@
 	color: #fff;
 	text-align: center;
 }
+.dataform .dataform-item .mcode em.disabled{
+	background-color: #ccc;
+	color: #fff;
+}
 .dataform .dataform-item .checkbox,
 .dataform .dataform-item .radio{
 	height: .36rem;
@@ -175,3 +179,35 @@
 	content: "\e730";
 	color: #00c700;
 }
+.dataform .retmsg{
+	display: block;
+	background-color: transparent;
+	margin-top: .03rem;
+	line-height: 1.3;
+}
+.retmsg{
+	color: #999;
+}
+.dataform .helplink,
+.dataform .helplink:visited,
+.dataform .helplink:hover,
+.dataform .helplink:active{
+	text-decoration: none;
+	display: inline-block;
+	margin-top: .07rem;
+	color: #0075fb;
+	margin-right: .12rem;
+}
+.dataform .helplink:hover{
+	text-decoration: underline;
+}
+.dataform .helptext{
+	display: inline-block;
+	color: #999;
+	margin-top: .07rem;
+	margin-right: .12rem;
+
+}
+
+
+

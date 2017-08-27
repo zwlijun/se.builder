@@ -294,7 +294,7 @@ input[type="reset"],
   }
 }
 .icofont.info{
-  color: #AAA;
+  color: #999;
 }
 .icofont.info:before{
   content: "\e63a";
@@ -309,26 +309,28 @@ input[type="reset"],
   content: "\e63f";
   margin-right: 5px;
 }
-.icofont.alarm{
+.icofont.alarm,
+.icofont.warn{
   color: #FF8D21;
 }
-.icofont.alarm:before{
+.icofont.alarm:before,
+.icofont.warn:before{
   content: "\e626";
   margin-right: 5px;
 }
-.icofont.error{
+.icofont.error,
+.icofont.failure{
   color: #FF1B1B;
 }
-.icofont.error:before{
+.icofont.error:before,
+.icofont.failure:before{
   content: "\e63b";
   margin-right: 5px;
 }
-.icofont.right,
 .icofont.success,
 .icofont.ok{
   color: #00C102;
 }
-.icofont.right:before,
 .icofont.success:before,
 .icofont.ok:before{
   content: "\e623";
