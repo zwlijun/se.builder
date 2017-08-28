@@ -163,11 +163,11 @@
       <dd>
         <div class="input-wrapper flexbox top left wrap">
           <label class="flexbox middle left radio">
-            <input type="checkbox" name="">
+            <input type="radio" name="">
             <span class="icofont">软件开发</span>
           </label>
           <label class="flexbox middle left radio">
-            <input type="checkbox" name="">
+            <input type="radio" name="">
             <span class="icofont">Web前端开发</span>
           </label>
         </div>
