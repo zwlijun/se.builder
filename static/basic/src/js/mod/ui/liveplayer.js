@@ -141,7 +141,7 @@
     var LivePlayerSchema = {
         schema: "liveplayer",
         swapState: function(data, node, e, type){
-            e.stopPropagation();
+            e && e.stopPropagation();
 
             var args = (data || "").split(",");
             var name = args[0];
@@ -158,7 +158,7 @@
             }
         },
         swapBars: function(data, node, e, type){
-            e.stopPropagation();
+            e && e.stopPropagation();
 
             var args = (data || "").split(",");
             var name = args[0];
@@ -175,7 +175,7 @@
             }
         },
         play: function(data, node, e, type){
-            e.stopPropagation();
+            e && e.stopPropagation();
 
             var args = (data || "").split(",");
             var name = args[0];
@@ -188,7 +188,7 @@
             }
         },
         fullscreen: function(data, node, e, type){
-            e.stopPropagation();
+            e && e.stopPropagation();
 
             var args = (data || "").split(",");
             var name = args[0];
@@ -204,7 +204,7 @@
             }
         },
         reconnect: function(data, node, e, type){
-            e.stopPropagation();
+            e && e.stopPropagation();
 
             var args = (data || "").split(",");
             var name = args[0];
@@ -238,6 +238,8 @@
         },
         progress: {
             seek: function(data, node, e, type){
+                e && e.stopPropagation();
+
                 var evt = ("changedTouches" in e ? e["changedTouches"][0] : e);
                 var args = (data || "").split(",");
                 var name = args[0];
@@ -253,8 +255,8 @@
         },
         volume: {
             muted: function(data, node, e, type){
-                e.stopPropagation();
-                e.preventDefault();
+                e && e.stopPropagation();
+                e && e.preventDefault();
 
                 var args = (data || "").split(",");
                 var name = args[0];
@@ -277,6 +279,8 @@
         },
         playback: {
             rate: function(data, node, e, type){
+                e && e.stopPropagation();
+                
                 var args = (data || "").split(",");
                 var name = args[0];
 
