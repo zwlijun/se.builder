@@ -26,7 +26,7 @@
     </dl>
     <dl class="dataform-item flexbox top left">
       <dt>
-        <span>KEY：</span>
+        <span>普通文本：</span>
       </dt>
       <dd>
         <div class="input-wrapper flexbox top left wrap">
@@ -42,7 +42,7 @@
     </dl>
     <dl class="dataform-item flexbox top left">
       <dt>
-        <span>KEY：</span>
+        <span>多行文本：</span>
       </dt>
       <dd>
         <div class="input-wrapper flexbox top left wrap">
@@ -52,7 +52,35 @@
     </dl>
     <dl class="dataform-item flexbox top left">
       <dt>
-        <span>KEY：</span>
+        <span>头像：</span>
+      </dt>
+      <dd>
+        <div class="input-wrapper flexbox bottom left wrap">
+          <div class="filebrowser avator flexbox top left vertical">
+            <input type="file" name="">
+            <em></em>
+          </div>
+          <sub>尺寸为：128 * 128<br>文件类型：*.jpg, *.png, *.jpeg</sub>
+        </div>
+      </dd>
+    </dl>
+    <dl class="dataform-item flexbox top left">
+      <dt>
+        <span>文件选择：</span>
+      </dt>
+      <dd>
+        <div class="input-wrapper flexbox bottom left wrap">
+          <div class="filebrowser flexbox top left vertical">
+            <input type="file" name="">
+            <em></em>
+          </div>
+          <sub>尺寸为：16:9的图片<br>文件类型：*.jpg, *.png, *.jpeg</sub>
+        </div>
+      </dd>
+    </dl>
+    <dl class="dataform-item flexbox top left">
+      <dt>
+        <span>下拉选择：</span>
       </dt>
       <dd>
         <div class="input-wrapper flexbox top left wrap">
@@ -82,7 +110,7 @@
     </dl>
     <dl class="dataform-item flexbox top left">
       <dt>
-        <span>KEY：</span>
+        <span>日期范围：</span>
       </dt>
       <dd>
         <div class="input-wrapper flexbox top left wrap">
@@ -96,7 +124,7 @@
     </dl>
     <dl class="dataform-item flexbox top left">
       <dt>
-        <span>KEY：</span>
+        <span>短信验证码：</span>
       </dt>
       <dd>
         <div class="input-wrapper flexbox top left wrap">
@@ -109,7 +137,20 @@
     </dl>
     <dl class="dataform-item flexbox top left">
       <dt>
-        <span>KEY：</span>
+        <span>验证码：</span>
+      </dt>
+      <dd>
+        <div class="input-wrapper flexbox top left wrap">
+          <div class="verifycode flexbox top left vertical">
+            <input type="text" class="text" name="" placeholder="验证码">
+            <em></em>
+          </div>
+        </div>
+      </dd>
+    </dl>
+    <dl class="dataform-item flexbox top left">
+      <dt>
+        <span>多项选择：</span>
       </dt>
       <dd>
         <div class="input-wrapper flexbox top left wrap">
@@ -158,7 +199,7 @@
     </dl>
     <dl class="dataform-item flexbox top left">
       <dt>
-        <span>KEY：</span>
+        <span>单项选择：</span>
       </dt>
       <dd>
         <div class="input-wrapper flexbox top left wrap">
