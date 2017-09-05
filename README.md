@@ -17,6 +17,7 @@ http://static.seshenghuo.com/${STATIC_PATH}
 <a href="http://static.seshenghuo.com/static/basic/test/mod_liveplayer.shtml" target="_blank">Module#Live Player</a>
 <a href="http://static.seshenghuo.com/static/basic/test/mod_request.shtml" target="_blank">Module#Request</a>
 <a href="http://static.seshenghuo.com/static/basic/test/mod_form.shtml" target="_blank">Module#Form</a>
+<a href="http://static.seshenghuo.com/static/basic/test/mod_dataform.shtml" target="_blank">Module#DataForm</a>
 <a href="http://static.seshenghuo.com/static/basic/test/mod_uicomponent.shtml" target="_blank">Module#UI Component</a>
 <a href="http://static.seshenghuo.com/static/basic/test/mod_layerbox.shtml" target="_blank">Module#Layer Box</a> @see UI Component
 <a href="http://static.seshenghuo.com/static/basic/test/mod_loading.shtml" target="_blank">Module#Loading</a> @see UI Component
