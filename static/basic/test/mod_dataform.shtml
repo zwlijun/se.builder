@@ -57,7 +57,8 @@
       <dd>
         <div class="input-wrapper flexbox bottom left wrap">
           <div class="filebrowser avator flexbox top left vertical">
-            <input type="file" name="">
+            <input type="hidden" name="avator">
+            <input type="file" name="avator_file">
             <em></em>
           </div>
           <sub>尺寸为：128 * 128<br>文件类型：*.jpg, *.png, *.jpeg</sub>
@@ -71,7 +72,8 @@
       <dd>
         <div class="input-wrapper flexbox bottom left wrap">
           <div class="filebrowser flexbox top left vertical">
-            <input type="file" name="">
+            <input type="hidden" name="image">
+            <input type="file" name="image_file">
             <em></em>
           </div>
           <sub>尺寸为：16:9的图片<br>文件类型：*.jpg, *.png, *.jpeg</sub>
