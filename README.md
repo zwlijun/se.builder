@@ -15,6 +15,7 @@ http://static.seshenghuo.com/${STATIC_PATH}
 <a href="http://static.seshenghuo.com/static/basic/test/mod_svg.shtml" target="_blank">Module#SVG</a>
 <a href="http://static.seshenghuo.com/static/basic/test/mod_swiper.shtml" target="_blank">Module#Swiper</a>
 <a href="http://static.seshenghuo.com/static/basic/test/mod_liveplayer.shtml" target="_blank">Module#Live Player</a>
+<a href="http://static.seshenghuo.com/static/basic/test/mod_audiovisualizer.shtml" target="_blank">Module#Audio Visualizer</a>
 <a href="http://static.seshenghuo.com/static/basic/test/mod_request.shtml" target="_blank">Module#Request</a>
 <a href="http://static.seshenghuo.com/static/basic/test/mod_form.shtml" target="_blank">Module#Form</a>
 <a href="http://static.seshenghuo.com/static/basic/test/mod_dataform.shtml" target="_blank">Module#DataForm</a>
