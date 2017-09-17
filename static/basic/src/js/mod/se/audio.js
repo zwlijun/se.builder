@@ -36,7 +36,7 @@
 
     var _AudioContext = function(name){
         this.name = name;
-        this.audioContext = AudioContext ? new AudioContext(): undefined;
+        this.audioContext = AudioContext ? new AudioContext() : undefined;
         this.support = undefined !== this.audioContext;
         this.audioList = [
             //{
@@ -45,7 +45,6 @@
             //  url             音频地址 或 本地音频文件(File对象)
             //  ------------------------------------------------------------
             //  buffer          音频解码后的buffer数据，由接口赋值更新
-            //  audioContext    AudioContext实例引用，由接口赋值更新
             //  source          音频解码出来的数据源，由接口赋值更新
             //}
         ];
@@ -207,17 +206,16 @@
             }
         },
         load: function(){
-            this.exec("support", [this.supported(), this.audioContext]);
+            this.exec("support", [this.supported()]);
             
             if(this.supported()){
-                this.exec("dataloadbefore", [this.audioContext]);
+                this.exec("dataloadbefore", []);
                 this.loaded = 0;
                 this.loadAudioBuffer(0);
             }
         },
         loadAudioBuffer: function(index){
             var ins = this;
-            var ctx = ins.audioContext;
             var audio = ins.getAudioData(index);
             var next = ins.getAudioData(index + 1);
 
@@ -227,13 +225,13 @@
                         var fileReader = new FileReader();
 
                         fileReader.onload = function(e){
-                            ins.exec("dataloadsuccess", [e, ctx, index]);
+                            ins.exec("dataloadsuccess", [e, index]);
                             ins.loaded++;
                             ins.checkLoadDone();
                             ins.decode(e.target.result, index, next);
                         }
                         fileReader.onerror = function(e){
-                            ins.exec("dataloaderror", [e, ctx, index]);
+                            ins.exec("dataloaderror", [e, index]);
                             ins.loaded++;
                             ins.checkLoadDone();
                         }
@@ -247,13 +245,13 @@
                         xhr.responseType = "arraybuffer";
 
                         xhr.onload = function(e){
-                            ins.exec("dataloadsuccess", [e, ctx, index]);
+                            ins.exec("dataloadsuccess", [e, index]);
                             ins.loaded++;
                             ins.checkLoadDone();
                             ins.decode(xhr.response, index, next);
                         };
                         xhr.onerror = function(e){
-                            ins.exec("dataloaderror", [e, ctx, index]);
+                            ins.exec("dataloaderror", [e, index]);
                             ins.loaded++;
                             ins.checkLoadDone();
                         }
@@ -277,33 +275,32 @@
 
                 source.buffer = buffer;
 
-                ins.update(index, buffer, ctx, null);
+                ins.update(index, buffer, null);
 
-                ins.exec("decodesuccess", [null, ctx, index]);
+                ins.exec("decodesuccess", [null, index]);
                 
                 if(next){
                     ins.loadAudioBuffer(index + 1);
                 }else{
-                    ins.exec("decodecomplete", [null, ctx]);
+                    ins.exec("decodecomplete", [null]);
                 }
             }, function fail(e){
-                ins.update(index, null, null, null);
+                ins.update(index, null, null);
 
-                ins.exec("decodefail", [e, ctx, index]);
+                ins.exec("decodefail", [e, index]);
 
                 if(next){
                     ins.loadAudioBuffer(index + 1);
                 }else{
-                    ins.exec("decodecomplete", [e, ctx]);
+                    ins.exec("decodecomplete", [e]);
                 }
             });
         },
-        update: function(index, buffer, ctx, source){
+        update: function(index, buffer, source){
             var audio = this.getAudioData(index);
 
             if(audio){
                 audio.buffer = buffer || null;
-                audio.audioContext = ctx || null;
                 audio.source = source || null;
 
                 this.updateAudioData(index, audio);
@@ -313,44 +310,56 @@
             index = index || 0;
             when = when || 0;
 
-            var audio = this.getAudioData(index);
-            var source = null;
+            if(this.supported()){
+                var audio = this.getAudioData(index);
+                var source = null;
+                var ctx = this.audioContext;
 
-            if(audio && audio.buffer && audio.audioContext){
-                this.playing = true;
+                if(audio && audio.buffer){
+                    this.playing = true;
 
-                source = audio.audioContext.createBufferSource();
-                
-                this.update(index, audio.buffer, audio.audioContext, source);
+                    source = ctx.createBufferSource();
+                    
+                    this.update(index, audio.buffer, source);
 
-                //实现 conntect 
-                this.exec("playbefore", [index]);
+                    //实现 conntect 
+                    this.exec("playbefore", [index]);
 
-                source.buffer = audio.buffer;
-                source.start(when);
+                    source.buffer = audio.buffer;
+                    source.start(when);
 
-                this.exec("playafter", [index]);
+                    this.exec("playafter", [index]);
+                }
             }
         },
         stop: function(index, when){
             index = index || 0;
             when = when || 0;
 
-            var audio = this.getAudioData(index);
-            var source = null;
+            if(this.supported()){
+                var audio = this.getAudioData(index);
+                var source = null;
 
-            if(audio && audio.source){
-                this.playing = false;
+                if(audio && audio.source){
+                    this.playing = false;
 
-                source = audio.source;
-                source.stop(when);
+                    source = audio.source;
+                    source.stop(when);
+                }
             }
         },
         pause: function(index){
-            if(undefined === this.playing || false === this.playing){
-                this.play(index, this.audioContext.currentTime);
-            }else{
-                this.stop(index, this.audioContext.currentTime);
+            index = index || 0;
+
+            if(this.supported()){
+                var ctx = this.audioContext;
+                var ct = ctx.currentTime;
+
+                if(undefined === this.playing || false === this.playing){
+                    this.play(index, ct);
+                }else{
+                    this.stop(index, ct);
+                }
             }
         },
         close: function(){
@@ -403,7 +412,7 @@
         var ac = _AudioContext.Cache[name] || (_AudioContext.Cache[name] = new _AudioContext(name));
 
         return {
-            context: ac.audioContext,
+            audioContext: ac.audioContext,
             set: function(type, option){
                 ac.set(type, option);
 

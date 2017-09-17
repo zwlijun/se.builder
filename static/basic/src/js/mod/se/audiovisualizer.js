@@ -13,12 +13,36 @@
     var Audio           = require("mod/se/audio");
     var Timer           = require("mod/se/timer");
 
+    var GetDefaultAudioVisualizerOptions = function(){
+        //options => {
+        //    gradient         [require]填充样式
+        //    visualizer       [require]可视化节点    
+        //    energySize       [require]能量条数量
+        //    energyWidth      [optional]能量条宽度
+        //    energyGap        [optional]能量条间隙
+        //    energyCapHeight  [optional]能量帽高度
+        //    stayHeight       [optional]保留高度
+        //}
+        var options = {
+            "gradient": null,
+            "visualizer": null,
+            "energySize": 0,
+            "energyWidth": 10,
+            "energyGap": 2,
+            "energyCapHeight": 2,
+            "stayHeight": 2
+        };
+
+        return options;
+    };
+
     var AudioVisualizer = function(name){
         this.name = name;
         this.audio = Audio.newInstance(name);
         this.canvas = null;
         this.canvasContext = null;
         this.timer = Timer.getTimer(this.name, 60, null);
+        this.opts = {};
     };
 
     AudioVisualizer.prototype = {
@@ -51,28 +75,19 @@
 
             return this.getVisualizerNode(targetSelector + " #" + this.name + "_visulizer");
         },
-        render: function(analyser, options){
-            //options => {
-            //    gradient         [require]填充样式
-            //    visualizer       [require]可视化节点    
-            //    energySize       [require]能量条数量
-            //    energyWidth      [optional]能量条宽度
-            //    energyGap        [optional]能量条间隙
-            //    energyCapHeight  [optional]能量帽高度
-            //    stayHeight       [optional]保留高度
-            //    selector         [optional]可视化节点(canvas)的选择器
-            //}
-            options = options || {};
+        render: function(analyser){
+            var options = this.opts;
 
+            var gradient = options.gradient;
             var node = options.visualizer;
             var canvas = node.renderNode;
             var canvasContext = node.renderContext;
 
             var energySize = options.energySize;
-            var energyWidth = options.energyWidth || 10;
-            var energyGap = options.energyGap || 2;
-            var energyCapHeight = options.energyCapHeight || 2;
-            var stayHeight = options.stayHeight || 2;
+            var energyWidth = options.energyWidth;
+            var energyGap = options.energyGap;
+            var energyCapHeight = options.energyCapHeight;
+            var stayHeight = options.stayHeight;
 
             var width = canvas.width;
             var height = canvas.height - stayHeight;
@@ -87,7 +102,7 @@
             for (var i = 0; i < energySize; i++){
                 energy = dataArray[step * i];
 
-                canvasContext.fillStyle = options.gradient;
+                canvasContext.fillStyle = gradient;
                 canvasContext.fillRect(
                     i * (energyWidth + energyGap), 
                     height - energy + energyCapHeight, 
@@ -105,6 +120,26 @@
             });
 
             this.timer.start();
+        },
+        erase: function(opts){
+            var options = (this.opts = $.extend(true, {}, GetDefaultAudioVisualizerOptions(), opts));
+            var gradient = options.gradient;
+
+            var node = options.visualizer;
+            var canvas = node.renderNode;
+            var canvasContext = node.renderContext;
+
+            canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (var i = 0; i < options.energySize; i++){
+                canvasContext.fillStyle = options.gradient;
+                canvasContext.fillRect(
+                    i * (options.energyWidth + options.energyGap), 
+                    canvas.height - options.stayHeight, 
+                    options.energyWidth, 
+                    options.stayHeight
+                );
+            }
         },
         destroy: function(){
             this.timer.stop();
@@ -146,6 +181,11 @@
             },
             render: function(analyser, options){
                 av.render(analyser, options || {});
+
+                return this;
+            },
+            erase: function(options){
+                av.erase(options);
 
                 return this;
             },
