@@ -5,7 +5,6 @@
 		var logger = LoggerUtil.getLogger("test", "/log", "|");
         var dataset = logger.dataset();
 
-
         var os = logger.os();
         var browser = logger.browser();
 
@@ -16,7 +15,7 @@
                .put("q", os)
                .put("q", browser);
 
-        LoggerUtil.out.info(decodeURIComponent(dataset.toString()));
+        LoggerUtil.out.invoke("warn", decodeURIComponent(dataset.toString()));
         logger.collect(true);
 	})();
 });

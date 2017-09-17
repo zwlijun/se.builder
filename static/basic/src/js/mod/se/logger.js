@@ -13,6 +13,8 @@
     var DetectUtil      = require("mod/se/detect");
 
     var Env = DetectUtil.env;
+    var console = window.console;
+
     var LoggerDataSet = function(valueSeparator){
         this.dataSet = {};
         this.valueSeparator = valueSeparator || "|";
@@ -185,26 +187,18 @@
     var Logger = {
         "version": "R17B0503",
         "out": {
-            info: function(){
-                console && console.info.apply(console, arguments);
-            },
-            log: function(){
-                console && console.log.apply(console, arguments);
-            },
-            warn: function(){
-                console && console.warn.apply(console, arguments);
-            },
-            error: function(){
-                console && console.error.apply(console, arguments);
-            },
-            dir: function(){
-                console && console.dir.apply(console, arguments);
+            invoke: function(){
+                var args = Array.prototype.slice.call(arguments);
+                var type = args[0] + "";
+                var inArgs = args.slice(1);
+
+                if(console && (type in console)){
+                    console[type].apply(console, inArgs);
+                }
             }
         },
         getLogger: function(name, url, valueSeparator){
-            var loggerCore = null;
-
-            loggerCore = (LoggerCore.Cache[name] || new LoggerCore(new LoggerDataSet(valueSeparator), url));
+            var loggerCore = LoggerCore.Cache[name] || (LoggerCore.Cache[name] = new LoggerCore(new LoggerDataSet(valueSeparator), url));
 
             return loggerCore;
         }
