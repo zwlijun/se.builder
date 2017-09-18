@@ -37,10 +37,10 @@
 	text-align: center;
 }
 .mod-dtpicker-date-choosen .prev:before{
-	content: "\e634";
+	content: "\e642";
 }
 .mod-dtpicker-date-choosen .next:before{
-	content: "\e60b";
+	content: "\e646";
 }
 .mod-dtpicker-date-choosen .separator{
 	font-style: normal;
@@ -103,10 +103,10 @@
 	font-size: .36rem;
 }
 .mod-dtpicker-years .prev:before{
-	content: "\e634";
+	content: "\e642";
 }
 .mod-dtpicker-years .next:before{
-	content: "\e60b";
+	content: "\e646";
 }
 .mod-dtpicker-months{
 	border-top: 1px solid #e5e5e5;
@@ -187,10 +187,10 @@
 	font-size: .20rem;
 }
 .mod-dtpicker-time-options .prev:before{
-	content: "\e635";
+	content: "\e647";
 }
 .mod-dtpicker-time-options .next:before{
-	content: "\e62f";
+	content: "\e641";
 }
 .mod-dtpicker-time-values{
 	height: 1.24rem;

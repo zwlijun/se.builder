@@ -26,9 +26,9 @@
     color: #848484;
 }
 .mod-layerbox-content:before{
-    font-family: iconfont;
+    font-family: "basefont";
     font-size: .72rem;
-    content: "\e63a";
+    content: "\e665";
     display: block;
     margin-bottom: .18rem;
     color: #848484;
@@ -60,18 +60,18 @@
     color: #0FC33F;
 }
 .mod-layerbox-mask.confirm .mod-layerbox-content:before{
-    content: "\e63f";
+    content: "\e67e";
     color: #3C85FF;
 }
 .mod-layerbox-mask.alarm .mod-layerbox-content:before{
-    content: "\e626";
+    content: "\e6a8";
     color: #FF8D21;
 }
 .mod-layerbox-mask.error .mod-layerbox-content:before{
-    content: "\e63b";
+    content: "\e65c";
     color: #FF1B1B;
 }
 .mod-layerbox-mask.success .mod-layerbox-content:before{
-    content: "\e623";
+    content: "\e69d";
     color: #00C102;
 }

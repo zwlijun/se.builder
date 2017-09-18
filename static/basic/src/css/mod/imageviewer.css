@@ -72,7 +72,7 @@
 	content: "\e642";
 }
 .mod-imageviewer-slider-next:before{
-	content: "\e641";
+	content: "\e646";
 }
 
 .mod-imageviewer-thumbnail{
@@ -94,11 +94,11 @@
 }
 .mod-imageviewer-thumbnail-prev:before{
 	display: block;
-	content: "\e638";
+	content: "\e642";
 }
 .mod-imageviewer-thumbnail-next:before{
 	display: block;
-	content: "\e639";
+	content: "\e646";
 }
 
 .mod-imageviewer-thumbnails{

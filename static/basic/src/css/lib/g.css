@@ -1,10 +1,10 @@
 @font-face {
-  font-family: "iconfont";
-  src: url('../../../fonts/iconfont/base/r1.0.0/iconfont.eot?t=R17B0824'); /* IE9*/
-  src: url('../../../fonts/iconfont/base/r1.0.0/iconfont.eot?t=R17B0824#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('../../../fonts/iconfont/base/r1.0.0/iconfont.woff?t=R17B0824') format('woff'), /* chrome, firefox */
-       url('../../../fonts/iconfont/base/r1.0.0/iconfont.ttf?t=R17B0824') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-       url('../../../fonts/iconfont/base/r1.0.0/iconfont.svg?t=R17B0824#iconfont') format('svg'); /* iOS 4.1- */
+  font-family: "basefont";
+  src: url('../../../fonts/iconfont/base/r2.0.0/iconfont.eot?t=R17B0918'); /* IE9*/
+  src: url('../../../fonts/iconfont/base/r2.0.0/iconfont.eot?t=R17B0918#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../../../fonts/iconfont/base/r2.0.0/iconfont.woff?t=R17B0918') format('woff'), /* chrome, firefox */
+       url('../../../fonts/iconfont/base/r2.0.0/iconfont.ttf?t=R17B0918') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+       url('../../../fonts/iconfont/base/r2.0.0/iconfont.svg?t=R17B0918#basefont') format('svg'); /* iOS 4.1- */
 }
 
 /**
@@ -217,7 +217,7 @@ input[type="reset"],
 .icofont:before,
 .icofont:after{
   cursor: inherit;
-  font-family: "iconfont";
+  font-family: "basefont";
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -297,7 +297,7 @@ input[type="reset"],
   color: #999;
 }
 .icofont.info:before{
-  content: "\e63a";
+  content: "\e665";
   margin-right: 5px;
 }
 .icofont.question,
@@ -306,7 +306,7 @@ input[type="reset"],
 }
 .icofont.question:before,
 .icofont.confirm:before{
-  content: "\e63f";
+  content: "\e67e";
   margin-right: 5px;
 }
 .icofont.alarm,
@@ -315,7 +315,7 @@ input[type="reset"],
 }
 .icofont.alarm:before,
 .icofont.warn:before{
-  content: "\e626";
+  content: "\e6a8";
   margin-right: 5px;
 }
 .icofont.error,
@@ -324,7 +324,7 @@ input[type="reset"],
 }
 .icofont.error:before,
 .icofont.failure:before{
-  content: "\e63b";
+  content: "\e65c";
   margin-right: 5px;
 }
 .icofont.success,
@@ -333,7 +333,7 @@ input[type="reset"],
 }
 .icofont.success:before,
 .icofont.ok:before{
-  content: "\e623";
+  content: "\e69d";
   margin-right: 5px;
 }
 
@@ -757,7 +757,7 @@ input[type="reset"],
     content: "\e61c";
     letter-spacing: 0;
     margin-right: 12px;
-    font-family: iconfont;
+    font-family: "basefont";
     font-style: normal;
     font-weight: normal;
     text-rendering: auto;

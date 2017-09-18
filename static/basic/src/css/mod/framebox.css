@@ -36,7 +36,7 @@
 	z-index: 10;
 }
 .mod-framebox-box > del:before{
-	content: "\e619";
+	content: "\e64b";
 }
 .mod-framebox-box > del:hover{
 	color: #B30000;

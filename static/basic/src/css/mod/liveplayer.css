@@ -36,7 +36,7 @@
 	background-color: rgba(0, 0, 0, .45);
 }
 .liveplayer-navbar > a:before{
-	content: "\e607";
+	content: "\e645";
 }
 .liveplayer-navbar > span{
 	display: block;
@@ -120,14 +120,14 @@
 	margin-right: .08rem;
 }
 .liveplayer-control-state.pause .icofont:before{
-	content: "\e64c";
+	content: "\e674";
 }
 .liveplayer-control-state.play .icofont:before,
 .liveplayer-frame.live .liveplayer-control-state.play .icofont:before{
-	content: "\e64b";
+	content: "\e673";
 }
 .liveplayer-frame.vod .liveplayer-control-state.play .icofont:before{
-	content: "\e649";
+	content: "\e675";
 }
 
 .liveplayer-rate{
@@ -174,11 +174,11 @@
 	margin-right: 0;
 }
 .liveplayer-control-player .liveplayer-button-volume b:before{
-	content: "\e64d";
+	content: "\e678";
 	margin-right: 0;
 }
 .liveplayer-control-player .liveplayer-button-volume b.muted:before{
-	content: "\e64a";
+	content: "\e677";
 }
 .liveplayer-control-player .liveplayer-button-volume code{
 	position: relative;
@@ -202,11 +202,10 @@
 
 }
 .liveplayer-control-player .fullscreen:before{
-	content: "\e654";
-	font-size: .48rem;
+	content: "\e670";
 }
 .liveplayer-control-player .fullscreen.exit:before{
-	content: "\e653";
+	content: "\e672";
 }
 .liveplayer-master{
 	position: absolute;
@@ -244,7 +243,7 @@
 	color: #fff;
 }
 .liveplayer-master-mask ins:before{
-	content: "\e651";
+	content: "\e66f";
 	font-size: .64rem;
 	background-color: rgba(0, 0, 0, .35);
     border-radius: 100%;
