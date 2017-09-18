@@ -1,9 +1,35 @@
-# se.builder
+# SE.Builder
 SE前端构建工具及静态资源基础版本库
 
 <pre>
 ./app - 前端构建工具
 ./static - 静态资源基础版本
+</pre>
+
+# Static目录结构说明
+<pre>
+./static
+  + [version]
+    + demo   示例文件
+    + extra  第三方引用文件
+    + fonts  iconfont存放目录
+    + html   静态页面目录
+    + inc    全局公共引用文件，如：样式，脚本，HTML片断
+    + media  媒体文件，如：视频，音频，Flash等
+      + audio   音频文件
+      + flash   Flash文件
+      + video   视频文件
+    + res    src下的资源文件(javascript/css/image)构建后的目录
+      + css  样式文件(下设固定的lib/mod/logic三个统一目录)
+      + img  图片文件(下设固定的lib/mod/logic三个统一目录)
+      + js   脚本文件(下设固定的lib/mod/logic三个统一目录)
+    + src    资源文件(javascript/css/image)源文件
+      + css  样式文件(下设固定的lib/mod/logic三个统一目录)
+      + img  图片文件(下设固定的lib/mod/logic三个统一目录)
+      + js   脚本文件(下设固定的lib/mod/logic三个统一目录)
+    + svg    svg文件
+    + test   测试文件
+
 </pre>
 
 # 测试地址
