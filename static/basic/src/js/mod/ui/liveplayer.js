@@ -216,7 +216,7 @@
             if(onreconnect){
                 player.exec("reconnect", [name, code, {
                     callback: function(){
-                        // this.destory(false);
+                        // this.destroy(false);
                         // this.render(true);
                         this.updateMasterSource(
                             this.getCurrentSourceMetaData()
@@ -227,7 +227,7 @@
                     context: player
                 }]);
             }else{
-                // player.destory(false);
+                // player.destroy(false);
                 // player.render(true);
                 player.updateMasterSource(
                     player.getCurrentSourceMetaData()
@@ -1580,7 +1580,7 @@
                     context: this
                 });
             }else{
-                console.warn("媒体播放器已经存在，如果您要重新渲染，请先调用destory()方法");
+                console.warn("媒体播放器已经存在，如果您要重新渲染，请先调用destroy()方法");
             }
         },
         restore: function(){
@@ -1805,7 +1805,7 @@
 
             this.exec("runtimeexception", [this.getLivePlayerName(), code, msg, evt]);
         },
-        destory: function(){
+        destroy: function(){
             var frame = this.getLivePlayerFrame();
 
             if(this.stateTimer){
@@ -2220,8 +2220,8 @@
  
                 return this;
             },
-            "destory": function(removeCache){
-                player.destory();
+            "destroy": function(removeCache){
+                player.destroy();
 
                 if(true === removeCache || undefined === removeCache){
                     LivePlayer.LivePlayers[name] = null;
@@ -2244,7 +2244,7 @@
     };
 
     module.exports = {
-        "version": "R17B0817",
+        "version": "R17B0919",
         "MediaReadyState": MediaReadyState,
         "MediaNetworkState": MediaNetworkState,
         "MediaError": MediaError,
@@ -2273,14 +2273,14 @@
         getSourceMIMETypes: function(source){
             return LivePlayer.SOURCE_MIME_TYPES(source);
         },
-        destory: function(name, removeCache){
+        destroy: function(name, removeCache){
             var player = null;
 
             if(name){
                 var player = LivePlayer.getLivePlayer(name);
 
                 if(player){
-                    player.destory(removeCache);
+                    player.destroy(removeCache);
                 }
             }else{
                 for(var _name in LivePlayer.LivePlayers){
@@ -2288,7 +2288,7 @@
                         player = LivePlayer.getLivePlayer(_name);
 
                         if(player){
-                            player.destory(removeCache);
+                            player.destroy(removeCache);
                         }
                     }
                 }
