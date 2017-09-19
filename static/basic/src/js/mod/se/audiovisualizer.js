@@ -97,18 +97,29 @@
             var energy = 0;
 
             analyser.getByteFrequencyData(dataArray);
-            
+
             canvasContext.clearRect(0, 0, width, height);
+
+            var x = 0;
+            var y = 0;
+            var w = 0;
+            var h = 0;
             for (var i = 0; i < energySize; i++){
                 energy = dataArray[step * i];
 
+                x = i * (energyWidth + energyGap);
+                y = height - energy + energyCapHeight;
+                w = energyWidth;
+                h = height;
+
+                if(y < 0){
+                    y = 0;
+                }
+
+                // console.log("x: " + x + ", y: " + y + ", w: " + w + ", h: " + h);
+
                 canvasContext.fillStyle = gradient;
-                canvasContext.fillRect(
-                    i * (energyWidth + energyGap), 
-                    height - energy + energyCapHeight, 
-                    energyWidth, 
-                    height
-                );
+                canvasContext.fillRect(x, y, w, h);
             }
 
             this.timer.setTimerHandler({
@@ -206,7 +217,7 @@
     } 
 
     module.exports = {
-        "version": "R17B0917",
+        "version": "R17B0919",
         newInstance: function(name){
             return AudioVisualizer.newInstance(name);
         },

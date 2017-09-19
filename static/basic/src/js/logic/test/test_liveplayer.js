@@ -129,6 +129,28 @@
 		},
 		context: player
 	});
+	player.set("loadedmetadata", {
+		callback: function(e, name){
+			console.log(e);
+		},
+		context: player
+	});
+
+	player.set("visualizerrenderbefore", {
+		callback: function(origin, analyser, handler){
+			var gradient = null;
+			var canvasContext = origin.visualizer.renderContext;
+
+			gradient = canvasContext.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(1, '#0f0');
+            gradient.addColorStop(0.5, '#ff0');
+            gradient.addColorStop(0, '#f00');
+
+            Util.execHandler(handler, [{
+            	"gradient": gradient
+            }]);
+		}
+	});
 	
     player.render();
 

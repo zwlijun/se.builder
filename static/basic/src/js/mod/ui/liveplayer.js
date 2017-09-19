@@ -10,16 +10,17 @@
  * @date 2016.10 
  */
 ;define(function LivePlayer(require, exports, module){
-    var TemplateEngine  = require("mod/se/template");
-    var Util            = require("mod/se/util");
-    var DataType        = require("mod/se/datatype");
-    var Listener        = require("mod/se/listener");
-    var Timer           = require("mod/se/timer");
-    var Detect          = require("mod/se/detect");
-    var Request         = require("mod/se/request");
-    var FullScreen      = require("mod/se/fullscreen");
-    var HandleStack     = Listener.HandleStack;
-    var Env             = Detect.env;
+    var TemplateEngine        = require("mod/se/template");
+    var Util                  = require("mod/se/util");
+    var DataType              = require("mod/se/datatype");
+    var Listener              = require("mod/se/listener");
+    var Timer                 = require("mod/se/timer");
+    var Detect                = require("mod/se/detect");
+    var Request               = require("mod/se/request");
+    var FullScreen            = require("mod/se/fullscreen");
+    var AudioVisualizer       = require("mod/se/audiovisualizer");
+    var HandleStack           = Listener.HandleStack;
+    var Env                   = Detect.env;
 
     var LivePlayerTemplate = TemplateEngine.getTemplate("mod_liveplayer", {
         "root": "liveplayer"
@@ -89,7 +90,7 @@
                       + '  </div>'
                       + '  <%}%>'
                       + '  <div class="liveplayer-master" data-action-click="liveplayer://swapBars#<%=liveplayer.name%>">'
-                      + '    <video '
+                      + '    <video class="liveplayer-video" '
                       + '      <%=liveplayer.loop ? " loop" : ""%> '
                       + '      <%=liveplayer.autoplay ? " autoplay" : ""%> '
                       + '      <%=liveplayer.muted ? " muted" : ""%> '
@@ -99,6 +100,9 @@
                       + '      x-webkit-airplay="allow" '
                       + '      webkit-playsinline '
                       + '      playsinline '
+                      + '      <%if(liveplayer.crossOrigin){%>'
+                      + '      crossOrigin="<%=liveplayer.crossOrigin%>"'
+                      + '      <%}%>'
                       + '      <%if(liveplayer.x5h5){%>'
                       + '      x5-video-player-type="h5" '
                       + '      <%}%>'
@@ -121,6 +125,7 @@
                       + '    <%}%>'
                       + '      <%=liveplayer.notsupport%>'
                       + '    </video>'
+                      + '    <canvas class="liveplayer-visualizer hide"></canvas>'
                       + '    <div class="liveplayer-master-mask flexbox middle center<%=(liveplayer.autoplay || "native" === liveplayer.appearance) ? " hide" : ""%>">'
                       + '       <ins class="icofont" data-action-click="liveplayer://play#<%=liveplayer.name%>"></ins>'
                       + '    </div>'
@@ -166,6 +171,13 @@
             var player = LivePlayer.getLivePlayer(name);
             var frame = player.getLivePlayerFrame();
             var timer = player.watch();
+            var video = player.getLivePlayerMasterVideo(true);
+
+            if(video && video.paused){
+                frame.removeClass("hidebars");
+  
+                return ;
+            }
 
             frame.toggleClass("hidebars");
 
@@ -351,6 +363,8 @@
       data-liveplayer-x5fullscreen="设置腾讯X5内核播放器全屏模式 true|false"
       data-liveplayer-x5­orientation="设置腾讯X5内核视频的横竖屏  landscape 横屏, portraint竖屏"
 
+      data-liveplayer-crossOrigin="跨域设置  *|anonymous|use-credentials，默认不设置"
+
       data-liveplayer-contextmenu="是否允许视频区的contextmenu 1 - 允许 0 - 不允许"
 
       data-liveplayer-notsupport="对不支持的情况下的提示信息"
@@ -383,6 +397,7 @@
             autoplay: true,
             muted: false,
             controls: true,
+            crossOrigin: "",
             contextmenu: false,
             appearance: "define",
             x5h5: false,
@@ -419,6 +434,8 @@
 
         this.readyState = MediaReadyState.HAVE_NOTHING;
         this.networkState = MediaNetworkState.NETWORK_EMPTY;
+
+        this.visualizer = AudioVisualizer.newInstance(name);
 
         this.handleStack = new HandleStack();
         this.events = {
@@ -457,7 +474,9 @@
             onx5videoenterfullscreen: null, //进入全屏模式(Tencent X5)
             onx5videoexitfullscreen: null,  //退出全屏模式(Tencent X5)
             onrequestfullscreen: null,      //请求进入全屏时触发
-            onexitfullscreen: null          //请求退出全屏时触发
+            onexitfullscreen: null,         //请求退出全屏时触发
+            //------------------------------------------------------------------------------------------------
+            onvisualizerrenderbefore: null  //音频频谱可视化渲染之前
         };
         this.listner = new Listener(this.events, this.handleStack);
     };
@@ -465,6 +484,23 @@
     LivePlayer.prototype = {
         //默认处理器
         LivePlayerProcessor: {
+            "loadedmetadata": function(e){
+                var target = e.target;
+
+                var videoWidth = target.videoWidth;
+                var videoHeight = target.videoHeight;
+                // var audioDecoded = target.webkitAudioDecodedByteCount;
+                // var videoDecoded = target.webkitVideoDecodedByteCount;
+                // var hasAudio = target.mozHasAudio;
+
+                if(videoWidth === 0 || videoHeight === 0){
+                    LivePlayer.Visualizer.connect(this).render();
+                }else{
+                    var visualizerNode = this.getLivePlayerMasterVisualizer();
+
+                    visualizerNode.addClass("hide");
+                }
+            },
             "timeupdate": function(e){
                 var master = this.getLivePlayerMasterVideo(true);
                 var duration = master.duration;
@@ -712,15 +748,21 @@
         },
         getLivePlayerMasterZone: function(){
             var frame = this.getLivePlayerFrame();
-            var mask = frame.find(".liveplayer-master");
+            var master = frame.find(".liveplayer-master");
 
-            return mask;
+            return master;
         },
         getLivePlayerMasterVideo: function(isDOM){
             var frame = this.getLivePlayerFrame();
-            var master = frame.find(".liveplayer-master video");
+            var video = frame.find(".liveplayer-master .liveplayer-video");
 
-            return isDOM ? master[0] : master;
+            return isDOM ? video[0] : video;
+        },
+        getLivePlayerMasterVisualizer: function(isDOM){
+            var frame = this.getLivePlayerFrame();
+            var visualizer = frame.find(".liveplayer-master .liveplayer-visualizer");
+
+            return isDOM ? visualizer[0] : visualizer;
         },
         getLivePlayerMasterMask: function(){
             var frame = this.getLivePlayerFrame();
@@ -1252,6 +1294,7 @@
                 //     autoplay: true,
                 //     muted: false,
                 //     controls: true,
+                //     crossOrigin: "",
                 //     contextmenu: false,
                 //     appearance: "define",
                 //     x5h5: false,
@@ -1284,6 +1327,7 @@
                     {name: "autoplay", dataType: "boolean"},
                     {name: "muted", dataType: "boolean"},
                     {name: "controls", dataType: "boolean"},
+                    {name: "crossOrigin", dataType: "string"},
                     {name: "contextmenu", dataType: "boolean"},
                     {name: "appearance", dataType: "string"},
                     {name: "x5h5", dataType: "boolean"},
@@ -1512,6 +1556,48 @@
 
             volumeBarNode.on(_volume_start + "_" + this.getLivePlayerName(), "", ctx, this.volumestart);
         },
+        init: function(isInvokePlay){
+            //监听事件
+            this.listen();
+            this.listenSourceError();
+
+            //监听状态
+            this.watchState();
+            this.watch();
+
+            //设置声音
+            this.setVolume(this.options("volume"));
+            
+            //绑定进度条事件
+            this.bindSeekEvent();
+            this.bindVolumeEvent();
+
+            //初始化全屏控制
+            this.initFullScreen();
+
+            //设置默认播放速率
+            this.setDefaultPlaybackRate(this.options("defaultPlaybackRate"));
+
+            var meta = this.getCurrentSourceMetaData();
+            if(meta){
+                this.loadMasterSource(); //加载资源
+
+                if(true === isInvokePlay){
+                    this.play();
+                }
+            }
+
+            //设置当前播放速率
+            this.setPlaybackRate(this.options("playbackRate"));
+        },
+        replaceVideoWidth: function(videoHtml, isInvokePlay){
+            var videoNode = this.getLivePlayerMasterVideo();
+
+            videoNode.replaceWith(videoHtml);
+
+            this.isListened = false;
+            this.init(true === isInvokePlay);
+        },
         render: function(isInvokePlay){
             var container = this.getLivePlayerPlugin();
 
@@ -1530,37 +1616,7 @@
                     callback: function(ret, _container, _isInvokePlay){
                         _container.html(ret.result);
 
-                        //监听事件
-                        this.listen();
-                        this.listenSourceError();
-
-                        //监听状态
-                        this.watchState();
-                        this.watch();
-
-                        //设置声音
-                        this.setVolume(this.options("volume"));
-                        
-                        //绑定进度条事件
-                        this.bindSeekEvent();
-                        this.bindVolumeEvent();
-
-                        //初始化全屏控制
-                        this.initFullScreen();
-
-                        //设置默认播放速率
-                        this.setDefaultPlaybackRate(this.options("defaultPlaybackRate"));
-
-                        if(ret.metaData.meta){
-                            this.loadMasterSource(); //加载资源
-
-                            if(true === _isInvokePlay){
-                                this.play();
-                            }
-                        }
-
-                        //设置当前播放速率
-                        this.setPlaybackRate(this.options("playbackRate"));
+                        this.init(_isInvokePlay);
 
                         //调用render回调
                         this.exec("render", [this.getLivePlayerName()]);
@@ -2013,6 +2069,9 @@
             "getLivePlayerMasterVideo": function(isDOM){
                 return player.getLivePlayerMasterVideo(isDOM);
             },
+            "getLivePlayerMasterVisualizer": function(isDOM){
+                return player.getLivePlayerMasterVisualizer(isDOM);
+            },
             "getLivePlayerMasterMask": function(){
                 return player.getLivePlayerMasterMask();
             },
@@ -2241,6 +2300,98 @@
         }
 
         return null;
+    };
+
+    LivePlayer.Visualizer = function(liveplayer){
+        this.liveplayer = liveplayer;
+        this.isRender = false;
+        this.opts = {
+            "visualizer": null,
+            "gradient": null,
+            "energyWidth": 10,
+            "energyGap": 2,
+            "energyCapHeight": 2,
+            "stayHeight": 2,
+            "energySize": 0
+        };
+    };
+
+    LivePlayer.Visualizer.prototype = {
+        update: function(opts){
+            this.opts = $.extend({}, this.opts, opts);
+        },
+        render: function(){
+            var player = this.liveplayer;
+            var av = player.visualizer;
+            var audio = av.audio;
+            var timer = av.timer;
+            var analyser = null;
+            var source = null;
+            var ac = audio.audioContext;
+
+            if(false === this.isRender && audio.supported()){
+                this.isRender = true;
+                
+                var video = player.getLivePlayerMasterVideo(true);
+                var node = player.getLivePlayerMasterVisualizer();
+                var canvas = node[0];
+                var canvasContext = canvas.getContext("2d");
+                var gradient = null;
+
+                var frame = player.getLivePlayerFrame();
+                var rect = Util.getBoundingClientRect(frame[0]);
+
+                player.setCrossOrigin("anonymous");
+                player.replaceVideoWidth(video.outerHTML);
+
+                video = player.getLivePlayerMasterVideo(true);
+
+                node.removeClass("hide");
+
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+
+                gradient = canvasContext.createLinearGradient(0, 0, 0, 300);
+                gradient.addColorStop(1, '#0f0');
+                gradient.addColorStop(0.5, '#ff0');
+                gradient.addColorStop(0, '#f00');
+
+                this.opts = $.extend({}, this.opts, {
+                    "visualizer": {
+                        "renderNode": canvas,
+                        "renderContext": canvasContext
+                    },
+                    "gradient": gradient,
+                    "energySize": Math.round(canvas.width / (this.opts.energyWidth + this.opts.energyGap))
+                });
+                
+                source = ac.createMediaElementSource(video);
+
+                analyser = ac.createAnalyser();
+                analyser.fftSize = 2048;
+
+                player.exec("visualizerrenderbefore", [this.opts, analyser, {
+                    callback: function(opts){
+                        this.update(opts);
+                    },
+                    context: this
+                }]);
+
+                source.connect(analyser);
+                analyser.connect(ac.destination);
+
+                av.erase(this.opts).render(analyser);
+            }
+        }
+    };
+
+    LivePlayer.Visualizer.Cache = {};
+
+    LivePlayer.Visualizer.connect = function(liveplayer){
+        var name = liveplayer.getLivePlayerName();
+        var v = LivePlayer.Visualizer.Cache[name] || (LivePlayer.Visualizer.Cache[name] = new LivePlayer.Visualizer(liveplayer));
+
+        return v;
     };
 
     module.exports = {
