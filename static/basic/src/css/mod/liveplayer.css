@@ -126,7 +126,8 @@
 .liveplayer-frame.live .liveplayer-control-state.play .icofont:before{
 	content: "\e673";
 }
-.liveplayer-frame.vod .liveplayer-control-state.play .icofont:before{
+.liveplayer-frame.vod .liveplayer-control-state.play .icofont:before,
+.liveplayer-frame.audio .liveplayer-control-state.play .icofont:before{
 	content: "\e675";
 }
 
@@ -217,7 +218,7 @@
 	overflow: hidden;
 	background-color: rgba(0, 0, 0, .75);
 }
-.liveplayer-master .liveplayer-video{
+.liveplayer-master .liveplayer-media{
 	width: 100%;
 	height: 100%;
 	position: absolute;
@@ -249,16 +250,59 @@
 	/*background-color: transparent;*/
 	background-color: rgba(0, 0, 0, .50);
 }
-.liveplayer-master-mask ins{
+.liveplayer-master-mask ins,
+.liveplayer-master-mask sub,
+.liveplayer-master-mask sup{
 	background-color: transparent;
 	color: #fff;
+	display: block;
+}
+.liveplayer-frame.audio .liveplayer-master-mask ins{
+	margin: 0 .48rem;
 }
 .liveplayer-master-mask ins:before{
-	content: "\e66f";
-	font-size: .64rem;
+	content: "\e674";
+	font-size: .48rem;
 	background-color: rgba(0, 0, 0, .35);
     border-radius: 100%;
     overflow: hidden;
+    display: block;
+    width: .72rem;
+    height: .72rem;
+    line-height: .76rem;
+    text-align: center;
+    text-indent: .08rem;
+    border: 2px solid #fff;
+}
+.liveplayer-master-mask ins.pause:before{
+	content: "\e675";
+	text-indent: 0;
+}
+.liveplayer-master-mask sub:before,
+.liveplayer-master-mask sup:before{
+	content: "\e6ad";
+	font-size: .28rem;
+	background-color: rgba(0, 0, 0, .35);
+    border-radius: 100%;
+    overflow: hidden;
+    display: block;
+    width: .56rem;
+    height: .56rem;
+    line-height: .56rem;
+    text-align: center;
+    border: 2px solid #fff;
+}
+.liveplayer-master-mask sup:before{
+	content: "\e6ac";
+}
+.liveplayer-master-mask sub.disabled,
+.liveplayer-master-mask sup.disabled{
+	color: #666;
+	cursor: not-allowed;
+}
+.liveplayer-master-mask sub.disabled:before,
+.liveplayer-master-mask sup.disabled:before{
+	border-color: #666;
 }
 .liveplayer-master-mask.liveplayer-error ins{
 	color: #fff;
@@ -267,9 +311,13 @@
     line-height: 1.3;
     font-size: .32rem;
 }
+.liveplayer-master-mask.liveplayer-error sub,
+.liveplayer-master-mask.liveplayer-error sup{
+	display: none;
+}
 .liveplayer-master-mask.liveplayer-error ins:before,
 .use-native .liveplayer-master-mask ins:before{
-	content: none;
+	content: none!important;
 }
 .liveplayer-master-mask.liveplayer-error ins a,
 .liveplayer-master-mask.liveplayer-error ins a:visited,
@@ -310,11 +358,11 @@
 	display: none;
 }
 
-:-webkit-full-screen .liveplayer-video,
-:-moz-full-screen .liveplayer-video,
-:-ms-full-screen .liveplayer-video,
-:-o-full-screen .liveplayer-video,
-:full-screen .liveplayer-video{
+:-webkit-full-screen .liveplayer-media,
+:-moz-full-screen .liveplayer-media,
+:-ms-full-screen .liveplayer-media,
+:-o-full-screen .liveplayer-media,
+:full-screen .liveplayer-media{
   width: 100%;
   height: 100%;
 }

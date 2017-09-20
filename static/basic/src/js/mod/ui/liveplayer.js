@@ -48,90 +48,96 @@
         HAVE_ENOUGH_DATA: 4    //可用数据足以开始播放
     };
 
-    var HTML_TEMPLATE = ''
-                      + '<div class="liveplayer-frame disable-select use-<%=liveplayer.appearance%> <%=liveplayer.type%>" id="<%=liveplayer.name%>" style="width: <%=liveplayer.width%>; height: <%=liveplayer.height%>;">'
-                      + '  <%if("none" != liveplayer.appearance && true === liveplayer.showNavigationBar){%>'
-                      + '  <div class="liveplayer-navbar flexbox middle justify">'
-                      + '    <a href="<%=liveplayer.back%>" class="liveplayer-back icofont"></a>'
-                      + '    <span class="liveplayer-title ellipsis"><%=liveplayer.title%></span>'
-                      + '  </div>'
-                      + '  <%}%>'
-                      + '  <%if(liveplayer.controls && "define" == liveplayer.appearance){%>'
-                      + '  <div class="liveplayer-controlbar">'
-                      + '    <div class="liveplayer-progressbar<%="live" == liveplayer.type ? " hidden" : ""%>" data-action-touchstart="liveplayer://progress/seek#<%=liveplayer.name%>">'
-                      + '      <div class="liveplayer-progressbar-buffered" style="width: 0%"></div>'
-                      + '      <div class="liveplayer-progressbar-seeked" style="width: 0%"></div>'
-                      + '      <div class="liveplayer-progressbar-seeked-bar"></div>'
-                      + '    </div>'
-                      + '    <div class="liveplayer-control flexbox middle justify">'
-                      + '      <div class="liveplayer-control-state flexbox middle left <%=liveplayer.autoplay ? "play" : "pause"%>">'
-                      + '        <cite class="liveplayer-button-play icofont" data-action-click="liveplayer://swapState#<%=liveplayer.name%>"></cite>'
-                      + '        <%if("live" != liveplayer.type){%>'
-                      + '        <span class="liveplayer-timeseek">00:00:00/00:00:00</span>'
-                      + '          <%if(true === liveplayer.allowChangePlaybackRate){%>'
-                      + '          <span class="liveplayer-rate flexbox middle center" data-action-click="liveplayer://playback/rate#<%=liveplayer.name%>"><%=(liveplayer.defaultPlaybackRate).toFixed(1)%>&ensp;x</span>'
-                      + '          <%}%>'
-                      + '        <%}%>'
-                      + '      </div>'
-                      + '      <div class="liveplayer-control-player flexbox middle right">'
-                      + '        <%if(liveplayer.allowAdjustVolume){%>'
-                      + '        <div class="liveplayer-button-volume flexbox middle justify">'
-                      + '          <b class="icofont" data-action-click="liveplayer://volume/muted#<%=liveplayer.name%>"></b>'
-                      + '          <code>'
-                      + '            <i></i>'
-                      + '          </code>'
-                      + '        </div>'
-                      + '        <%}%>'
-                      + '        <%if(liveplayer.allowFullScreen){%>'
-                      + '        <cite class="liveplayer-button-fullscreen icofont fullscreen" data-action-click="liveplayer://fullscreen#<%=liveplayer.name%>"></cite>'
-                      + '        <%}%>'
-                      + '      </div>'
-                      + '    </div>'
-                      + '  </div>'
-                      + '  <%}%>'
-                      + '  <div class="liveplayer-master" data-action-click="liveplayer://swapBars#<%=liveplayer.name%>">'
-                      + '    <video class="liveplayer-video" '
-                      + '      <%=liveplayer.loop ? " loop" : ""%> '
-                      + '      <%=liveplayer.autoplay ? " autoplay" : ""%> '
-                      + '      <%=liveplayer.muted ? " muted" : ""%> '
-                      + '      <%=(liveplayer.controls &&  "native" == liveplayer.appearance) ? " controls" : ""%> '
-                      + '      preload="<%=liveplayer.preload%>" '
-                      + '      poster="<%=liveplayer.poster%>" '
-                      + '      x-webkit-airplay="allow" '
-                      + '      webkit-playsinline '
-                      + '      playsinline '
-                      + '      <%if(liveplayer.crossOrigin){%>'
-                      + '      crossOrigin="<%=liveplayer.crossOrigin%>"'
-                      + '      <%}%>'
-                      + '      <%if(liveplayer.x5h5){%>'
-                      + '      x5-video-player-type="h5" '
-                      + '      <%}%>'
-                      + '      <%if("true" == liveplayer.x5fullscreen || "false" == liveplayer.x5fullscreen){%>'
-                      + '      x5-video-player-fullscreen="<%=liveplayer.x5fullscreen%>" '
-                      + '      <%}%>'
-                      + '      <%if(liveplayer.x5orientation){%>'
-                      + '      x5-video-orientation="<%=liveplayer.x5orientation%>" '
-                      + '      <%}%>'
-                      + '      <%if(!liveplayer.contextmenu){%>'
-                      + '      oncontextmenu="return false;" '
-                      + '      <%}%>'
-                      + '    >'
-                      + '    <%if(liveplayer.meta){%>'
-                      + '      <%if(liveplayer.meta.type){%>'
-                      + '      <source src="<%=liveplayer.meta.source%>" type="<%=liveplayer.meta.type%>" />'
-                      + '      <%}else{%>'
-                      + '      <source src="<%=liveplayer.meta.source%>" />'
-                      + '      <%}%>'
-                      + '    <%}%>'
-                      + '      <%=liveplayer.notsupport%>'
-                      + '    </video>'
-                      + '    <canvas class="liveplayer-visualizer hide"></canvas>'
-                      + '    <div class="liveplayer-master-mask flexbox middle center<%=(liveplayer.autoplay || "native" === liveplayer.appearance) ? " hide" : ""%>">'
-                      + '       <ins class="icofont" data-action-click="liveplayer://play#<%=liveplayer.name%>"></ins>'
-                      + '    </div>'
-                      + '  </div>'
-                      + '</div>'
-                      + '';
+    var MEDIA_TEMPLATE = ''
+                       + '<div class="liveplayer-frame disable-select use-<%=liveplayer.appearance%> <%=liveplayer.type%>" id="<%=liveplayer.name%>" style="width: <%=liveplayer.width%>; height: <%=liveplayer.height%>;">'
+                       + '  <%if("none" != liveplayer.appearance && true === liveplayer.showNavigationBar){%>'
+                       + '  <div class="liveplayer-navbar flexbox middle justify">'
+                       + '    <a href="<%=liveplayer.back%>" class="liveplayer-back icofont"></a>'
+                       + '    <span class="liveplayer-title ellipsis"><%=liveplayer.title%></span>'
+                       + '  </div>'
+                       + '  <%}%>'
+                       + '  <%if(liveplayer.controls && "define" == liveplayer.appearance){%>'
+                       + '  <div class="liveplayer-controlbar">'
+                       + '    <div class="liveplayer-progressbar<%="live" == liveplayer.type ? " hidden" : ""%>" data-action-touchstart="liveplayer://progress/seek#<%=liveplayer.name%>">'
+                       + '      <div class="liveplayer-progressbar-buffered" style="width: 0%"></div>'
+                       + '      <div class="liveplayer-progressbar-seeked" style="width: 0%"></div>'
+                       + '      <div class="liveplayer-progressbar-seeked-bar"></div>'
+                       + '    </div>'
+                       + '    <div class="liveplayer-control flexbox middle justify">'
+                       + '      <div class="liveplayer-control-state flexbox middle left <%=liveplayer.autoplay ? "play" : "pause"%>">'
+                       + '        <cite class="liveplayer-button-play icofont" data-action-click="liveplayer://swapState#<%=liveplayer.name%>"></cite>'
+                       + '        <%if("live" != liveplayer.type){%>'
+                       + '        <span class="liveplayer-timeseek">00:00:00/00:00:00</span>'
+                       + '          <%if(true === liveplayer.allowChangePlaybackRate){%>'
+                       + '          <span class="liveplayer-rate flexbox middle center" data-action-click="liveplayer://playback/rate#<%=liveplayer.name%>"><%=(liveplayer.defaultPlaybackRate).toFixed(1)%>&ensp;x</span>'
+                       + '          <%}%>'
+                       + '        <%}%>'
+                       + '      </div>'
+                       + '      <div class="liveplayer-control-player flexbox middle right">'
+                       + '        <%if(liveplayer.allowAdjustVolume){%>'
+                       + '        <div class="liveplayer-button-volume flexbox middle justify">'
+                       + '          <b class="icofont" data-action-click="liveplayer://volume/muted#<%=liveplayer.name%>"></b>'
+                       + '          <code>'
+                       + '            <i></i>'
+                       + '          </code>'
+                       + '        </div>'
+                       + '        <%}%>'
+                       + '        <%if(liveplayer.allowFullScreen && "audio" != liveplayer.type){%>'
+                       + '        <cite class="liveplayer-button-fullscreen icofont fullscreen" data-action-click="liveplayer://fullscreen#<%=liveplayer.name%>"></cite>'
+                       + '        <%}%>'
+                       + '      </div>'
+                       + '    </div>'
+                       + '  </div>'
+                       + '  <%}%>'
+                       + '  <div class="liveplayer-master" data-action-click="liveplayer://swapBars#<%=liveplayer.name%>">'
+                       + '    <<%="audio" == liveplayer.type ? "audio" : "video"%> class="liveplayer-media" '
+                       + '      <%=liveplayer.loop ? " loop" : ""%> '
+                       + '      <%=liveplayer.autoplay ? " autoplay" : ""%> '
+                       + '      <%=liveplayer.muted ? " muted" : ""%> '
+                       + '      <%=(liveplayer.controls &&  "native" == liveplayer.appearance) ? " controls" : ""%> '
+                       + '      preload="<%=liveplayer.preload%>" '
+                       + '      poster="<%=liveplayer.poster%>" '
+                       + '      x-webkit-airplay="allow" '
+                       + '      webkit-playsinline '
+                       + '      playsinline '
+                       + '      <%if(liveplayer.crossOrigin){%>'
+                       + '      crossOrigin="<%=liveplayer.crossOrigin%>"'
+                       + '      <%}%>'
+                       + '      <%if(liveplayer.x5h5){%>'
+                       + '      x5-video-player-type="h5" '
+                       + '      <%}%>'
+                       + '      <%if("true" == liveplayer.x5fullscreen || "false" == liveplayer.x5fullscreen){%>'
+                       + '      x5-video-player-fullscreen="<%=liveplayer.x5fullscreen%>" '
+                       + '      <%}%>'
+                       + '      <%if(liveplayer.x5orientation){%>'
+                       + '      x5-video-orientation="<%=liveplayer.x5orientation%>" '
+                       + '      <%}%>'
+                       + '      <%if(!liveplayer.contextmenu){%>'
+                       + '      oncontextmenu="return false;" '
+                       + '      <%}%>'
+                       + '    >'
+                       + '    <%if(liveplayer.meta){%>'
+                       + '      <%if(liveplayer.meta.type){%>'
+                       + '      <source src="<%=liveplayer.meta.source%>" type="<%=liveplayer.meta.type%>" />'
+                       + '      <%}else{%>'
+                       + '      <source src="<%=liveplayer.meta.source%>" />'
+                       + '      <%}%>'
+                       + '    <%}%>'
+                       + '      <%=liveplayer.notsupport%>'
+                       + '    </<%="audio" == liveplayer.type ? "audio" : "video"%>>'
+                       + '    <canvas class="liveplayer-visualizer hide"></canvas>'
+                       + '    <div class="liveplayer-master-mask flexbox middle center<%=(liveplayer.autoplay || "native" === liveplayer.appearance) ? " hide" : ""%>">'
+                       + '       <%if("audio" == liveplayer.type){%>'
+                       + '       <sub class="icofont disabled" data-action-click="liveplayer://prev#<%=liveplayer.name%>"></sub>'
+                       + '       <%}%>'
+                       + '       <ins class="icofont" data-action-click="liveplayer://play#<%=liveplayer.name%>"></ins>'
+                       + '       <%if("audio" == liveplayer.type){%>'
+                       + '       <sup class="icofont disabled" data-action-click="liveplayer://next#<%=liveplayer.name%>"></sup>'
+                       + '       <%}%>'
+                       + '    </div>'
+                       + '  </div>'
+                       + '</div>'
+                       + '';
 
     var _seek_start = ("ontouchstart" in document) ? "touchstart.liveplayer_seek" : "mousedown.liveplayer_seek";
     var _seek_move = ("ontouchmove" in document) ? "touchmove.liveplayer_seek" : "mousemove.liveplayer_seek";
@@ -173,6 +179,13 @@
             var timer = player.watch();
             var video = player.getLivePlayerMasterVideo(true);
 
+            if(player.isAudio()){
+                timer.stop();
+                frame.removeClass("hidebars");
+
+                return;
+            }
+
             if(video && video.paused){
                 frame.removeClass("hidebars");
   
@@ -196,8 +209,59 @@
             var mask = player.getLivePlayerMasterMask();
 
             if(!mask.hasClass("liveplayer-error") && !node.hasClass("use-native")){
-                player.play();
+                if(node.hasClass("pause")){
+                    player.pause();
+                }else{
+                    player.play();
+                }
             }
+        },
+        prev: function(data, node, e, type){
+            e && e.stopPropagation();
+
+            var args = (data || "").split(",");
+            var name = args[0];
+
+            var player = LivePlayer.getLivePlayer(name);
+
+            if(node.hasClass("disabled")){
+                return ;
+            }
+
+            var index = player.getSourceIndex();
+            var prevIndex = index - 1;
+
+            if(prevIndex < 0){
+                node.addClass("disabled");
+                return ;
+            }
+
+            player.gotoAndPlay(prevIndex);
+        },
+        next: function(data, node, e, type){
+            e && e.stopPropagation();
+
+            var args = (data || "").split(",");
+            var name = args[0];
+
+            var player = LivePlayer.getLivePlayer(name);
+
+            if(node.hasClass("disabled")){
+                return ;
+            }
+
+            var index = player.getSourceIndex();
+            var list = player.getSourceList();
+            var size = list.length;
+            var lastIndex = size - 1;
+            var nextIndex = index + 1;
+
+            if(nextIndex > lastIndex){
+                node.addClass("disabled");
+                return ;
+            }
+
+            player.gotoAndPlay(nextIndex);
         },
         fullscreen: function(data, node, e, type){
             e && e.stopPropagation();
@@ -326,7 +390,7 @@
     /**
     <element
       data-liveplayer="播放器实例名称" 
-      data-liveplayer-type="播放器类型，[vod|live]" 
+      data-liveplayer-type="播放器类型，[vod|live|audio]" 
       data-liveplayer-back="返回URL" 
       data-liveplayer-title="视频标题" 
       data-liveplayer-width="宽度，默认：100%" 
@@ -403,7 +467,7 @@
             x5h5: false,
             x5fullscreen: "",
             x5orientation: "",
-            notsupport: "Your browser does not support video tag, please use IE10+, Chrome, Firefox, Safari etc modern browser."
+            notsupport: "Your browser does not support HTMLMediaElement, please use IE10+, Chrome, Firefox, Safari etc modern browser."
         };
 
         return options;
@@ -493,7 +557,7 @@
                 // var videoDecoded = target.webkitVideoDecodedByteCount;
                 // var hasAudio = target.mozHasAudio;
 
-                if(videoWidth === 0 || videoHeight === 0){
+                if(videoWidth === 0 || videoHeight === 0 || this.isAudio()){
                     LivePlayer.Visualizer.connect(this).render();
                 }else{
                     var visualizerNode = this.getLivePlayerMasterVisualizer();
@@ -583,15 +647,21 @@
             },
             "play": function(e){
                 this.updatePlayStateUI();
+                this.updateNextButton();
+                this.updatePrevButton();
             },
             "playing": function(e){
                 var mask = this.getLivePlayerMasterMask();
 
-                mask.addClass("hide");
+                if(!this.isAudio()){
+                    mask.addClass("hide");
+                }else{
+                    mask.removeClass("hide");
+                }
                 this.updatePlayStateUI();
             },
             "ended": function(e){
-                if(this.isVOD()){
+                if(this.isVOD() || this.isAudio()){
                     if(this.options("autonext")){
                         var nextIndex = this.getSourceIndex() + 1;
                         var list = this.getSourceList();
@@ -753,16 +823,19 @@
             return master;
         },
         getLivePlayerMasterVideo: function(isDOM){
+            return this.getLivePlayerMasterMedia(true === isDOM);
+        },
+        getLivePlayerMasterMedia: function(isDOM){
             var frame = this.getLivePlayerFrame();
-            var video = frame.find(".liveplayer-master .liveplayer-video");
+            var media = frame.find(".liveplayer-master .liveplayer-media");
 
-            return isDOM ? video[0] : video;
+            return true === isDOM ? media[0] : media;
         },
         getLivePlayerMasterVisualizer: function(isDOM){
             var frame = this.getLivePlayerFrame();
             var visualizer = frame.find(".liveplayer-master .liveplayer-visualizer");
 
-            return isDOM ? visualizer[0] : visualizer;
+            return true === isDOM ? visualizer[0] : visualizer;
         },
         getLivePlayerMasterMask: function(){
             var frame = this.getLivePlayerFrame();
@@ -982,7 +1055,7 @@
         },
         parseSourceList: function(){
             var source = this.options("source") || "";
-            var items = source.split(",");
+            var items = source.split(/[\s]*,[\s]*/);
             var size = items.length;
             var url = null;
             var list = [];
@@ -1044,6 +1117,11 @@
             var type = this.options("type");
 
             return "vod" == type;
+        },
+        isAudio: function(){
+            var type = this.options("type");
+
+            return "audio" == type;
         },
         initFullScreen: function(){
             var master = this.getLivePlayerMasterVideo(true);
@@ -1204,7 +1282,8 @@
 
             if(true === this.forceLockBars 
                   || false === this.allowHideBars 
-                      || (master && true === master.paused))
+                      || (master && true === master.paused)
+                          || this.isAudio())
             { //如果当前设置为不允许隐藏、强制锁定或者视频为暂停状态时显示工具栏
                 if(frame.hasClass("hidebars")){
                     frame.removeClass("hidebars");
@@ -1556,6 +1635,36 @@
 
             volumeBarNode.on(_volume_start + "_" + this.getLivePlayerName(), "", ctx, this.volumestart);
         },
+        updateNextButton: function(){
+            var sourceList = this.getSourceList();
+            var size = sourceList.length;
+            var index = this.getSourceIndex();
+            var mask = this.getLivePlayerMasterMask();
+            var sup = mask.find("sup");
+
+            if(sup.length > 0){
+                if(size <= 1 || index >= (size - 1)){
+                    sup.addClass("disabled");
+                }else{
+                    sup.removeClass("disabled");
+                }
+            }
+        },
+        updatePrevButton: function(){
+            var sourceList = this.getSourceList();
+            var size = sourceList.length;
+            var index = this.getSourceIndex();
+            var mask = this.getLivePlayerMasterMask();
+            var sub = mask.find("sub");
+
+            if(sub.length > 0){
+                if(size <= 1 || index <= 0){
+                    sub.addClass("disabled");
+                }else{
+                    sub.removeClass("disabled");
+                }
+            }
+        },
         init: function(isInvokePlay){
             //监听事件
             this.listen();
@@ -1577,6 +1686,10 @@
 
             //设置默认播放速率
             this.setDefaultPlaybackRate(this.options("defaultPlaybackRate"));
+
+            //更新上一个和下一下的样式
+            this.updateNextButton();
+            this.updatePrevButton();
 
             var meta = this.getCurrentSourceMetaData();
             if(meta){
@@ -1612,7 +1725,7 @@
                     "meta": this.getCurrentSourceMetaData()
                 });
 
-                LivePlayerTemplate.render(true, HTML_TEMPLATE, metaData, {
+                LivePlayerTemplate.render(true, MEDIA_TEMPLATE, metaData, {
                     callback: function(ret, _container, _isInvokePlay){
                         _container.html(ret.result);
 
@@ -1659,21 +1772,22 @@
             var master = this.getLivePlayerMasterVideo(true);
             var state = this.getLivePlayerMasterControlState();
             var mask = this.getLivePlayerMasterMask();
+            var maskPlayNode = mask.find("ins");
 
             if(master){
                 // mask.addClass("hide")
                 //     .removeClass("liveplayer-error");
 
                 if(master.paused){
-                    state.removeClass("play")
-                         .addClass("pause");
+                    state.removeClass("play").addClass("pause");
+                    maskPlayNode.removeClass("pause");
 
                     if("define" == this.options("appearance")){
                         mask.removeClass("hide");
                     } 
                 }else{
-                    state.removeClass("pause")
-                          .addClass("play");
+                    state.removeClass("pause").addClass("play");
+                    maskPlayNode.addClass("pause");
                 }
             }
         },
@@ -2069,6 +2183,9 @@
             "getLivePlayerMasterVideo": function(isDOM){
                 return player.getLivePlayerMasterVideo(isDOM);
             },
+            "getLivePlayerMasterMedia": function(isDOM){
+                return player.getLivePlayerMasterMedia(isDOM);
+            },
             "getLivePlayerMasterVisualizer": function(isDOM){
                 return player.getLivePlayerMasterVisualizer(isDOM);
             },
@@ -2134,7 +2251,7 @@
                 return this;
             },
             "getSourceList": function(){
-                return this.getSourceList();
+                return player.getSourceList();
             },
             "setSourceIndex": function(index){
                 player.setSourceIndex(index);
@@ -2199,6 +2316,9 @@
             },
             "isVOD": function(){
                 return player.isVOD();
+            },
+            "isAudio": function(){
+                return player.isAudio();
             },
             "gotoAndPlay": function(index){
                 player.gotoAndPlay(index);
@@ -2332,7 +2452,7 @@
             if(false === this.isRender && audio.supported()){
                 this.isRender = true;
                 
-                var video = player.getLivePlayerMasterVideo(true);
+                var media = player.getLivePlayerMasterMedia(true);
                 var node = player.getLivePlayerMasterVisualizer();
                 var canvas = node[0];
                 var canvasContext = canvas.getContext("2d");
@@ -2341,10 +2461,12 @@
                 var frame = player.getLivePlayerFrame();
                 var rect = Util.getBoundingClientRect(frame[0]);
 
-                player.setCrossOrigin("anonymous");
-                player.replaceVideoWidth(video.outerHTML);
+                if(!media.hasAttribute("crossOrigin")){
+                    player.setCrossOrigin("anonymous");
+                    player.replaceVideoWidth(media.outerHTML);
 
-                video = player.getLivePlayerMasterVideo(true);
+                    media = player.getLivePlayerMasterMedia(true);
+                }
 
                 node.removeClass("hide");
 
@@ -2365,7 +2487,7 @@
                     "energySize": Math.round(canvas.width / (this.opts.energyWidth + this.opts.energyGap))
                 });
                 
-                source = ac.createMediaElementSource(video);
+                source = ac.createMediaElementSource(media);
 
                 analyser = ac.createAnalyser();
                 analyser.fftSize = 2048;
