@@ -13,8 +13,15 @@
 				this.setTencentX5VideoFit("contain");
 			}
 
+			var sourceList = this.getSourceList();
+			var size = sourceList.length;
+
 			$("body").append("<p>" + (navigator.userAgent) + "</p>");
 			$("body").append("<p>LivePlayer::Event#Render</p>");
+			$("body").append("<p>LivePlayer::Source Size#" + size + "</p>");
+			for(var i = 0; i < size; i++){
+				$("body").append("<p>LivePlayer::CanPlaySource[" + i + "]#" + this.canPlaySource(sourceList[i].source) + "</p>");
+			}
 			$("body").append("<p>LivePlayer::UseTencentX5#" + this.maybeUseTencentX5Core() + "</p>");
 			$("body").append("<p>LivePlayer::Style#" + master.getAttribute("style") + "</p>");
 		},

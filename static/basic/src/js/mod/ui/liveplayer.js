@@ -19,6 +19,7 @@
     var Request               = require("mod/se/request");
     var FullScreen            = require("mod/se/fullscreen");
     var AudioVisualizer       = require("mod/se/audiovisualizer");
+    var MIME                  = require("mod/se/mime");
     var HandleStack           = Listener.HandleStack;
     var Env                   = Detect.env;
 
@@ -2047,16 +2048,21 @@
     LivePlayer.canPlaySource = function(source){
         var mimeTypes = LivePlayer.SOURCE_MIME_TYPES(source);
 
-        if(!mimeTypes){
+        if(!mimeTypes || (mimeTypes && mimeTypes.length === 0)){
             return false;
         }
 
         var video = document.createElement("video");
+        var audio = document.createElement("audio");
+
         var canplay = "";
         var supported = false;
+        var type = "";
 
         for(var i = 0; i < mimeTypes.length; i++){
-            canplay = video.canPlayType(mimeTypes[i]);
+            type = mimeTypes[i];
+
+            canplay = audio.canPlayType(type) || video.canPlayType(type);
 
             if(!!canplay){
                 supported = true;
@@ -2064,6 +2070,7 @@
         }
 
         video = null;
+        audio = null;
         
         return supported;
     };
@@ -2071,57 +2078,12 @@
     LivePlayer.SOURCE_MIME_TYPES = function(source){
         var urlInfo = Request.parseURL(source);
         var fileName = urlInfo.filename;
-        var ext = fileName.replace(/^[^\.]+\./, "");
+        var pattern = /([^\.]+)$/g; pattern.lastIndex = 0;
+        var matcher = pattern.exec(fileName);
+        var ext = matcher ? matcher[1] : "";
         var mimeTypes = null;
 
-        switch(ext.toLowerCase()){
-            case "mp4":
-            case "mp4v":
-            case "mpg4":
-                mimeTypes = [
-                    "video/mp4"
-                ];
-            break;
-            case "mpeg":
-            case "mpg":
-            case "mpe":
-            case "m1v":
-            case "m2v":
-                mimeTypes = [
-                    "video/mpeg"
-                ];
-            break;
-            case "ogv":
-            case "ogg":
-            case "ogm":
-                mimeTypes = [
-                    "video/ogg"
-                ];
-            break;
-            case "webm":
-                mimeTypes = [
-                    "video/webm"
-                ];
-            break;
-            case "f4v":
-                mimeTypes = [
-                    "video/x-f4v"
-                ];
-            break;
-            case "flv":
-                mimeTypes = [
-                    "video/x-flv"
-                ];
-            break;
-            case "m3u8":
-                mimeTypes = [
-                    "application/vnd.apple.mpegurl"
-                ];
-            break;
-            default:
-                mimeTypes = null;
-            break;
-        }
+        mimeTypes = MIME.maybe(ext);
 
         return mimeTypes;
     };
