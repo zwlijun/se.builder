@@ -123,7 +123,7 @@
     };
 
     module.exports = {
-        "version": "R17B0920",
+        "version": "R17B0922",
         ext: function(mime){
             mime = (mime || "").toLowerCase();
 
@@ -132,24 +132,6 @@
             }
 
             return [];
-        },
-        mime: function(ext){
-            var a = [];
-
-            ext = (ext || "").toLowerCase();
-            for(var t in Types){
-                if(Types.hasOwnProperty(t)){
-                    a = Types[t];
-
-                    for(var i = 0; i < a.length; i++){
-                        if(a[i] === ext){
-                            return t;
-                        }
-                    }
-                }
-            }
-
-            return "";
         },
         maybe: function(ext){
             var a = [];
@@ -223,9 +205,15 @@
             ext = (ext || "").toLowerCase();
             mime = (mime || "").toLowerCase();
             
-            var m = this.mime(ext);
+            var a = this.maybe(ext);
 
-            return m === mime;
+            for(var i = 0; i < a.length; i++){
+                if(a[i] === mime){
+                    return true;
+                }
+            }
+            
+            return false;
         }
     };
 });
