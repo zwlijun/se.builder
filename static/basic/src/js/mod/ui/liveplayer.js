@@ -550,15 +550,15 @@
         //默认处理器
         LivePlayerProcessor: {
             "loadedmetadata": function(e){
-                var target = e.target;
+                // var target = e.target;
 
-                var videoWidth = target.videoWidth;
-                var videoHeight = target.videoHeight;
+                // var videoWidth = target.videoWidth;
+                // var videoHeight = target.videoHeight;
                 // var audioDecoded = target.webkitAudioDecodedByteCount;
                 // var videoDecoded = target.webkitVideoDecodedByteCount;
                 // var hasAudio = target.mozHasAudio;
 
-                if(videoWidth === 0 || videoHeight === 0 || this.isAudio()){
+                if(this.isAudio()){
                     LivePlayer.Visualizer.connect(this).render();
                 }else{
                     var visualizerNode = this.getLivePlayerMasterVisualizer();
@@ -2479,7 +2479,7 @@
     };
 
     module.exports = {
-        "version": "R17B0922",
+        "version": "R17B0925",
         "MediaReadyState": MediaReadyState,
         "MediaNetworkState": MediaNetworkState,
         "MediaError": MediaError,
