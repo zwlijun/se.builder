@@ -1,5 +1,6 @@
 ;define(function(require, exports, module){
     var AudioVisualizer = require("mod/se/audiovisualizer");
+    var Util            = require("mod/se/util");
 
     var av = AudioVisualizer.newInstance("test_av");
 
@@ -34,6 +35,16 @@
         return opts;
     })();
 
+    var loadBackgroundImage = function(){
+        Util.getImageInfoByURL("/static/basic/src/img/mod/bgimage_viz.png", {
+            callback: function(img, w, h){
+                av.setBackgroundImage(img);
+            }
+        });
+    };
+
+    loadBackgroundImage();
+
     audio.set("support", {
         callback: function(supported){
             $(".app-header").append("<p>AudioContext is supported = " + supported + "</p>");
@@ -65,7 +76,7 @@
 
     audio.set("playafter", {
         callback: function(index, audioVisualizer){
-            audioVisualizer.erase(options).render(analyser);
+            audioVisualizer.erase(options).render(analyser).fork(analyser);
         },
         args: [av],
         context: audio

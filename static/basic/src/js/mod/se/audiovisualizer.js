@@ -42,6 +42,7 @@
         this.canvas = null;
         this.canvasContext = null;
         this.timer = Timer.getTimer(this.name, 60, null);
+        this.backgroundImage = null;
         this.opts = {};
     };
 
@@ -75,6 +76,16 @@
 
             return this.getVisualizerNode(targetSelector + " #" + this.name + "_visulizer");
         },
+        setBackgroundImage: function(img, width, height){
+            this.backgroundImage = {
+                "image": img || null,
+                "width": width || 1280,
+                "height": height || 720
+            };
+        },
+        getBackgroundImage: function(){
+            return this.backgroundImage;
+        },
         render: function(analyser){
             var options = this.opts;
 
@@ -82,6 +93,8 @@
             var node = options.visualizer;
             var canvas = node.renderNode;
             var canvasContext = node.renderContext;
+
+            var backgroundImage = this.getBackgroundImage();
 
             var energySize = options.energySize;
             var energyWidth = options.energyWidth;
@@ -99,6 +112,20 @@
             analyser.getByteFrequencyData(dataArray);
 
             canvasContext.clearRect(0, 0, width, height);
+
+            if(backgroundImage && backgroundImage.image){
+                canvasContext.drawImage(backgroundImage.image, 0, 0, backgroundImage.width, backgroundImage.height);
+            }
+
+            for (var i = 0; i < energySize; i++){
+                canvasContext.fillStyle = gradient;
+                canvasContext.fillRect(
+                    i * (energyWidth + energyGap), 
+                    height, 
+                    energyWidth, 
+                    stayHeight
+                );
+            }
 
             var x = 0;
             var y = 0;
@@ -120,6 +147,13 @@
 
                 canvasContext.fillStyle = gradient;
                 canvasContext.fillRect(x, y, w, h);
+            }
+        },
+        fork: function(analyser, interval){
+            var options = this.opts;
+
+            if(interval > 0){
+                this.timer.setTimerFPS(Timer.toFPS(interval));
             }
 
             this.timer.setTimerHandler({
@@ -190,8 +224,21 @@
             createVisualizerNode: function(targetSelector){
                 return av.createVisualizerNode(targetSelector);
             },
-            render: function(analyser, options){
-                av.render(analyser, options || {});
+            setBackgroundImage: function(img, width, height){
+                av.setBackgroundImage(img, width, height);
+
+                return this;
+            },
+            getBackgroundImage: function(){
+                return av.getBackgroundImage();
+            },
+            fork: function(analyser, interval){
+                av.fork(analyser, interval);
+
+                return this;
+            },
+            render: function(analyser){
+                av.render(analyser);
 
                 return this;
             },
@@ -217,7 +264,7 @@
     } 
 
     module.exports = {
-        "version": "R17B0919",
+        "version": "R17B0929",
         newInstance: function(name){
             return AudioVisualizer.newInstance(name);
         },

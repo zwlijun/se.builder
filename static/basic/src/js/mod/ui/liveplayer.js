@@ -178,7 +178,7 @@
             var player = LivePlayer.getLivePlayer(name);
             var frame = player.getLivePlayerFrame();
             var timer = player.watch();
-            var video = player.getLivePlayerMasterVideo(true);
+            var video = player.getLivePlayerMasterMedia(true);
 
             if(player.isAudio()){
                 timer.stop();
@@ -433,6 +433,10 @@
       data-liveplayer-contextmenu="是否允许视频区的contextmenu 1 - 允许 0 - 不允许"
 
       data-liveplayer-notsupport="对不支持的情况下的提示信息"
+      data-liveplayer-visualizerBackgroundImage="音频可视化背景图片"
+      data-liveplayer-visualizerInterval="音频可视化动态刷新间隔时间(ms)"
+      data-liveplayer-visualizer="音频可视化模式  auto - 如果type为audio就加载|force - 强制加载"
+      data-liveplayer-visualizerCorssOrigin="加载视频化音频频谱时，如果没有设置crossOrigin就取该值"
     ></element>
     **/
     var GetDefaultOptions = function(){
@@ -468,6 +472,10 @@
             x5h5: false,
             x5fullscreen: "",
             x5orientation: "",
+            visualizerBackgroundImage: "",
+            visualizerInterval: 0,
+            visualizer: "auto",
+            visualizerCorssOrigin: "",
             notsupport: "Your browser does not support HTMLMediaElement, please use IE10+, Chrome, Firefox, Safari etc modern browser."
         };
 
@@ -549,25 +557,8 @@
     LivePlayer.prototype = {
         //默认处理器
         LivePlayerProcessor: {
-            "loadedmetadata": function(e){
-                // var target = e.target;
-
-                // var videoWidth = target.videoWidth;
-                // var videoHeight = target.videoHeight;
-                // var audioDecoded = target.webkitAudioDecodedByteCount;
-                // var videoDecoded = target.webkitVideoDecodedByteCount;
-                // var hasAudio = target.mozHasAudio;
-
-                if(this.isAudio()){
-                    LivePlayer.Visualizer.connect(this).render();
-                }else{
-                    var visualizerNode = this.getLivePlayerMasterVisualizer();
-
-                    visualizerNode.addClass("hide");
-                }
-            },
             "timeupdate": function(e){
-                var master = this.getLivePlayerMasterVideo(true);
+                var master = this.getLivePlayerMasterMedia(true);
                 var duration = master.duration;
                 var currentTime = master.currentTime;
 
@@ -584,7 +575,7 @@
                 }
             },
             "durationchange": function(e){
-                var master = this.getLivePlayerMasterVideo(true);
+                var master = this.getLivePlayerMasterMedia(true);
                 var duration = master.duration;
                 var currentTime = master.currentTime;
 
@@ -617,7 +608,7 @@
             },
             "progress": function(e){
                 if(this.isVOD()){
-                    var master = this.getLivePlayerMasterVideo(true);
+                    var master = this.getLivePlayerMasterMedia(true);
 
                     var buffered = master.buffered;
                     var timeBuffered = 0;
@@ -637,7 +628,7 @@
             "pause": function(e){
                 var frame = this.getLivePlayerFrame();
                 var mask = this.getLivePlayerMasterMask();
-                var master = this.getLivePlayerMasterVideo(true);
+                var master = this.getLivePlayerMasterMedia(true);
 
                 if(master.error){
                     this.error(master.error);
@@ -683,21 +674,21 @@
                 }
             },
             "error": function(e){
-                var master = this.getLivePlayerMasterVideo(true);
+                var master = this.getLivePlayerMasterMedia(true);
 
                 if(master.error){
                     this.error(master.error);
                 }
             },
             "abort": function(e){
-                var master = this.getLivePlayerMasterVideo(true);
+                var master = this.getLivePlayerMasterMedia(true);
 
                 if(master.error){
                     this.error(master.error);
                 }
             },
             "emptied": function(e){
-                var master = this.getLivePlayerMasterVideo(true);
+                var master = this.getLivePlayerMasterMedia(true);
 
                 if(master.error){
                     this.error(master.error);
@@ -944,7 +935,7 @@
             return null;
         },
         loadMasterSource: function(){
-            var video = this.getLivePlayerMasterVideo(true);
+            var video = this.getLivePlayerMasterMedia(true);
 
             if(video){
                 try{
@@ -955,7 +946,7 @@
             }
         },
         updateMasterSource: function(source){
-            var video = this.getLivePlayerMasterVideo();
+            var video = this.getLivePlayerMasterMedia();
             var sourceInfo = DataType.isString(source) ? this.parseMasterSource(source) : source;
 
             // console.log(">>-----------------------");
@@ -1111,21 +1102,31 @@
         },
         isLive: function(){
             var type = this.options("type");
+            var attrType = this.getAttribute("type");
 
-            return "live" == type;
+            return ("live" == type || "live" == attrType);
         },
         isVOD: function(){
             var type = this.options("type");
+            var attrType = this.getAttribute("type");
 
-            return "vod" == type;
+            return ("vod" == type || "vod" == attrType);
         },
         isAudio: function(){
             var type = this.options("type");
+            var attrType = this.getAttribute("type");
 
-            return "audio" == type;
+            return ("audio" == type || "audio" == attrType);
+        },
+        isLoadVisualizer: function(){
+            var isAudio = this.isAudio();
+            var visualizerMode = this.options("visualizer");
+            var attrVisualizerMode = this.getAttribute("visualizer");
+
+            return (isAudio || ("force" === visualizerMode || "force" === attrVisualizerMode));
         },
         initFullScreen: function(){
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
             var name = this.getLivePlayerName();
             var fsi = FullScreen.getFullScreenInstance(name);
 
@@ -1177,7 +1178,7 @@
             }
         },
         requestFullscreen: function(){
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
             var name = this.getLivePlayerName();
 
             if(master){
@@ -1189,7 +1190,7 @@
             }
         },
         exitFullscreen: function(){
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
             var name = this.getLivePlayerName();
 
             if(master){
@@ -1244,7 +1245,7 @@
             var interval = this.options("stateInterval");
             var timer = this.stateTimer = Timer.getTimer("liveplayer_" + name + "_state", Timer.toFPS(interval), {
                 callback: function(_timer){
-                    var video = this.getLivePlayerMasterVideo(true);
+                    var video = this.getLivePlayerMasterMedia(true);
                     var readyState = MediaReadyState.HAVE_NOTHING;
                     var networkState = MediaNetworkState.NETWORK_EMPTY;
 
@@ -1279,7 +1280,7 @@
         },
         updateLivePlayerBarsStateUI: function(){
             var frame = this.getLivePlayerFrame();
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
 
             if(true === this.forceLockBars 
                   || false === this.allowHideBars 
@@ -1316,7 +1317,7 @@
         listen: function(){
             if(true !== this.isListened){
                 var events = this.getLivePlayerEvents();
-                var master = this.getLivePlayerMasterVideo();
+                var master = this.getLivePlayerMasterMedia();
 
                 if(master.length > 0){
                     master.on(events.join(" "), "", {
@@ -1334,7 +1335,7 @@
             ins.error(LivePlayer.Error.MEDIA_ERR_LOAD_SOURCE);
         },
         listenSourceError: function(){
-            var master = this.getLivePlayerMasterVideo();
+            var master = this.getLivePlayerMasterMedia();
             var source = master.find("source");
 
             if(source.length > 0){
@@ -1380,6 +1381,10 @@
                 //     x5h5: false,
                 //     x5fullscreen: "",
                 //     x5orientation: "",
+                //     visualizerBackgroundImage: "",
+                //     visualizerInterval: 0,
+                //     visualizer: "auto",
+                //     visualizerCorssOrigin: "",
                 //     notsupport: "Your browser does not support video tag, please use IE10+, Chrome, Firefox, Safari etc modern browser."
                 // };
                 var _conf = [
@@ -1413,6 +1418,10 @@
                     {name: "x5h5", dataType: "boolean"},
                     {name: "x5fullscreen", dataType: "string"},
                     {name: "x5orientation", dataType: "string"},
+                    {name: "visualizerBackgroundImage", dataType: "string"},
+                    {name: "visualizerInterval", dataType: "number"},
+                    {name: "visualizer", dataType: "string"},
+                    {name: "visualizerCorssOrigin", dataType: "string"},
                     {name: "notsupport", dataType: "string"}
                 ];
 
@@ -1482,8 +1491,28 @@
 
             this.options(this.parse());
         },
+        setAttribute: function(attrName, attrValue){
+            var container = this.getLivePlayerPlugin();
+
+            container.attr("data-liveplayer-" + attrName, attrValue);
+        },
+        hasAttribute: function(attrName){
+            var container = this.getLivePlayerPlugin();
+            var dom = container[0];
+
+            if(dom && dom.hasAttribute("data-liveplayer-" + attrName)){
+                return true;
+            }
+
+            return false;
+        },
+        getAttribute: function(attrName){
+            var container = this.getLivePlayerPlugin();
+
+            return container.attr("data-liveplayer-" + attrName) || null;
+        },
         setLivePlayerObjectStyle: function(type, style){
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
 
             if(master){
                 master.style["object-" + type] = style;
@@ -1513,7 +1542,7 @@
         },
         seekToMouse: function(pageX){
             var frame = this.getLivePlayerFrame();
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
             var rect = Util.getBoundingClientRect(frame[0]);
 
             var left = rect.left;
@@ -1704,17 +1733,54 @@
             //设置当前播放速率
             this.setPlaybackRate(this.options("playbackRate"));
         },
-        replaceVideoWidth: function(videoHtml, isInvokePlay){
-            var videoNode = this.getLivePlayerMasterVideo();
+        innerBeforeRender: function(isInvokePlay){
+            // var videoWidth = target.videoWidth;
+            // var videoHeight = target.videoHeight;
+            // var audioDecoded = target.webkitAudioDecodedByteCount;
+            // var videoDecoded = target.webkitVideoDecodedByteCount;
+            // var hasAudio = target.mozHasAudio;
 
-            videoNode.replaceWith(videoHtml);
+            var visualizerBackgroundImage = this.getAttribute("visualizerBackgroundImage");
+            var crossOrigin = this.getAttribute("crossOrigin");
+            var visualizerCorssOrigin = this.getAttribute("visualizerCorssOrigin");
+            
+            if(this.isLoadVisualizer()){
+                if(!crossOrigin && !visualizerCorssOrigin){
+                    this.setAttribute("crossOrigin", visualizerCorssOrigin);
+                }
 
-            this.isListened = false;
-            this.init(true === isInvokePlay);
+                if(visualizerBackgroundImage){
+                    Util.getImageInfoByURL(visualizerBackgroundImage, {
+                        callback: function(img, naturalWidth, naturalHeight){
+                            var viz = LivePlayer.Visualizer.connect(this);
+                            var bg = viz.getBackgroundImage() || {};
+
+                            viz.setBackgroundImage(img, bg.width || naturalWidth, bg.height || naturalHeight);
+                        },
+                        context: this
+                    });
+                }
+            }
+        },
+        innerAfterRender: function(isInvokePlay){
+            this.init(isInvokePlay);
+
+            var visualizerMode = this.options("visualizer");
+
+            if(this.isLoadVisualizer()){
+                var viz = LivePlayer.Visualizer.connect(this);
+                var bg = viz.getBackgroundImage() || {};
+
+                var frame = this.getLivePlayerFrame();
+                var rect = Util.getBoundingClientRect(frame[0]);
+
+                viz.setBackgroundImage(bg.image || null, rect.width, rect.height).render();
+            }
         },
         render: function(isInvokePlay){
             var container = this.getLivePlayerPlugin();
 
+            this.innerBeforeRender(isInvokePlay);
             this.options(this.parse());
             this.setSourceList(this.parseSourceList()); 
             this.setSourceIndex(this.options("sourceIndex"));
@@ -1730,7 +1796,7 @@
                     callback: function(ret, _container, _isInvokePlay){
                         _container.html(ret.result);
 
-                        this.init(_isInvokePlay);
+                        this.innerAfterRender(_isInvokePlay);
 
                         //调用render回调
                         this.exec("render", [this.getLivePlayerName()]);
@@ -1754,7 +1820,7 @@
             }
         },
         restore: function(){
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
             var duration = master.duration;
 
             this.updateTimeSeek(0, duration);
@@ -1770,7 +1836,7 @@
             this.play();
         },
         updatePlayStateUI: function(){
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
             var state = this.getLivePlayerMasterControlState();
             var mask = this.getLivePlayerMasterMask();
             var maskPlayNode = mask.find("ins");
@@ -1793,7 +1859,7 @@
             }
         },
         play: function(){
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
 
             if(master){
                 try{
@@ -1804,7 +1870,7 @@
             }
         },
         pause: function(){
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
 
             if(master){
                 try{
@@ -1816,7 +1882,7 @@
         },
         //---------- NATIVE PROPERTIES SET BEGIN ---------------
         isMuted: function(){
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
 
             if(master){
                 return master.muted;
@@ -1825,14 +1891,14 @@
             return false;
         },
         setMuted: function(isMuted){
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
 
             if(master){
                 master.muted = !!isMuted;
             }
         },
         setVolume: function(volume){
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
 
             volume = Math.min(Math.max(0, volume), MAX_VOLUME);
 
@@ -1843,14 +1909,14 @@
             }
         },
         getVolume: function(){
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
 
             if(master){
                 return master.volume;
             }
         },
         setCrossOrigin: function(crossOrigin){
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
 
             if(master){
                 // anonymous, use-credentials
@@ -1858,28 +1924,28 @@
             }
         },
         getCrossOrigin: function(){
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
 
             if(master){
                 return master.crossOrigin;
             }
         },
         setDefaultPlaybackRate: function(playbackspeed){
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
 
             if(master){
                 master.defaultPlaybackRate = playbackspeed;
             }
         },
         getDefaultPlaybackRate: function(playbackspeed){
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
 
             if(master){
                 return master.defaultPlaybackRate;
             }
         },
         setPlaybackRate: function(playbackspeed){
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
 
             if(master){
                 master.playbackRate = playbackspeed;
@@ -1890,7 +1956,7 @@
             }
         },
         getPlaybackRate: function(playbackspeed){
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
 
             if(master){
                 return master.playbackRate;
@@ -1909,7 +1975,7 @@
             return LivePlayer.canPlaySource(source);
         },
         message: function(msg){
-            var master = this.getLivePlayerMasterVideo(true);
+            var master = this.getLivePlayerMasterMedia(true);
             var mask = this.getLivePlayerMasterMask();
             var ins = mask.find("ins");
 
@@ -2143,7 +2209,7 @@
                 return player.getLivePlayerMasterZone();
             },
             "getLivePlayerMasterVideo": function(isDOM){
-                return player.getLivePlayerMasterVideo(isDOM);
+                return player.getLivePlayerMasterMedia(isDOM);
             },
             "getLivePlayerMasterMedia": function(isDOM){
                 return player.getLivePlayerMasterMedia(isDOM);
@@ -2198,6 +2264,17 @@
                 player.updateAttribute(attrName, attrValue);
 
                 return this;
+            },
+            "setAttribute": function(attrName, attrValue){
+                player.setAttribute(attrName, attrValue);
+
+                return this;
+            },
+            "hasAttribute": function(attrName){
+                return player.hasAttribute(attrName);
+            },
+            "getAttribute": function(attrName){
+                return player.getAttribute(attrName);
             },
             "seekToMouse": function(pageX){
                 player.seekToMouse(pageX);
@@ -2281,6 +2358,9 @@
             },
             "isAudio": function(){
                 return player.isAudio();
+            },
+            "isLoadVisualizer": function(){
+                return player.isLoadVisualizer();
             },
             "gotoAndPlay": function(index){
                 player.gotoAndPlay(index);
@@ -2402,6 +2482,18 @@
         update: function(opts){
             this.opts = $.extend({}, this.opts, opts);
         },
+        setBackgroundImage: function(img, width, height){
+            var player = this.liveplayer;
+            var av = player.visualizer;
+
+            av.setBackgroundImage(img, width, height);
+        },
+        getBackgroundImage: function(){
+            var player = this.liveplayer;
+            var av = player.visualizer;
+
+            return av.getBackgroundImage();
+        },
         render: function(){
             var player = this.liveplayer;
             var av = player.visualizer;
@@ -2420,15 +2512,9 @@
                 var canvasContext = canvas.getContext("2d");
                 var gradient = null;
 
+                var interval = player.options("visualizerInterval");
                 var frame = player.getLivePlayerFrame();
                 var rect = Util.getBoundingClientRect(frame[0]);
-
-                if(!media.hasAttribute("crossOrigin")){
-                    player.setCrossOrigin("anonymous");
-                    player.replaceVideoWidth(media.outerHTML);
-
-                    media = player.getLivePlayerMasterMedia(true);
-                }
 
                 node.removeClass("hide");
 
@@ -2464,7 +2550,7 @@
                 source.connect(analyser);
                 analyser.connect(ac.destination);
 
-                av.erase(this.opts).render(analyser);
+                av.erase(this.opts).render(analyser).fork(analyser, interval);
             }
         }
     };
@@ -2475,11 +2561,32 @@
         var name = liveplayer.getLivePlayerName();
         var v = LivePlayer.Visualizer.Cache[name] || (LivePlayer.Visualizer.Cache[name] = new LivePlayer.Visualizer(liveplayer));
 
-        return v;
+        var o = {
+            setBackgroundImage: function(img, width, height){
+                v.setBackgroundImage(img, width, height);
+
+                return this;
+            },
+            getBackgroundImage: function(){
+                return v.getBackgroundImage();
+            },
+            update: function(opts){
+                v.update(opts);
+
+                return this;
+            },
+            render: function(){
+                v.render();
+
+                return this;
+            }
+        };
+
+        return o;
     };
 
     module.exports = {
-        "version": "R17B0925",
+        "version": "R17B0929",
         "MediaReadyState": MediaReadyState,
         "MediaNetworkState": MediaNetworkState,
         "MediaError": MediaError,

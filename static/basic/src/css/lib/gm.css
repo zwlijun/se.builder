@@ -2027,6 +2027,9 @@ input[type="reset"],
 	color: #fff;
 	display: block;
 }
+.liveplayer-frame.audio .liveplayer-master-mask{
+	background-color: rgba(0, 0, 0, 0);
+}
 .liveplayer-frame.audio .liveplayer-master-mask ins{
 	margin: 0 .48rem;
 }
