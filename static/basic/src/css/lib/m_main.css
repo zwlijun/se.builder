@@ -84,6 +84,32 @@
   <div class="dataset-moredata">
     <span class="icofont">点击加载更多</span>
   </div>
+  <div class="dataset-pagebar flexbox middle center">
+    <cite>总<em>120</em>条记录</cite>
+    <ul class="pagebar flexbox">
+      <li class="pre-page" data-action-click="go://url#?page=1">上一页</li>
+      <li class="page" data-action-click="go://url#?page=1">1</li>
+      <li class="ellipsis">...</li>
+      <li class="page" data-action-click="go://url#?page=1">9</li>
+      <li class="page" data-action-click="go://url#?page=1">10</li>
+      <li class="page" data-action-click="go://url#?page=1">11</li>
+      <li class="page on" data-action-click="go://url#?page=1">12</li>
+      <li class="page" data-action-click="go://url#?page=1">13</li>
+      <li class="page" data-action-click="go://url#?page=1">14</li>
+      <li class="ellipsis">...</li>
+      <li class="page" data-action-click="go://url#?page=1">9999</li>
+      <li class="next-page" data-action-click="go://url#?page=1">下一页</li>
+      <li class="jump">
+        <form method="get" name="jump" action="/?q=" class="flexbox middle right">
+          <cite>共&ensp;100&ensp;页</cite>
+          <span>到</span>
+          <input type="text" name="page">
+          <span>页</span>
+          <button type="submit" class="button">GO</button>
+        </form>
+      </li>
+    </ul>
+  </div>
 </div>
 ================================================
  */
@@ -115,3 +141,98 @@
 .dataset-moredata:active{
   background-color: rgba(0, 0, 0, .15);
 }
+.dataset-pagebar{
+  height: .86rem;
+}
+
+.dataset-pagebar cite{
+  font-style: normal;
+  color: #333;
+  font-size: .15rem;
+}
+
+.dataset-pagebar cite em{
+  font-style: normal;
+  color: #ff6e1f;
+  font-size: .16rem;
+  margin-right: .03rem;
+}
+
+.dataset-pagebar cite a{
+  font-size: .15rem;
+  color: #0691F4;
+  text-decoration: none;
+  margin-left: .16rem;
+}
+.dataset-pagebar cite a:hover {
+  text-decoration:underline;
+}
+
+.pagebar{
+  list-style: none;
+  color: #666666;
+  height: .36rem;
+  line-height: .36rem;
+  text-align: center;
+}
+.pagebar li{
+  border: 1px solid #d5d5d5;
+  margin-left: .05rem;
+  width: .44rem;
+  height: 100%;
+  border-radius: .03rem;
+}
+.pagebar li.pre-page,
+.pagebar li.next-page{
+  width: .84rem;
+}
+.pagebar li.ellipsis{
+  border: 0;
+  border: none;
+  width: auto;
+}
+.pagebar li.on,
+.pagebar li:not(.ellipsis):not(.jump):hover{
+  background-color: #ff6e1f;
+  border-color: #ff6e1f;
+  color: #fff;
+}
+.pagebar li.jump{
+  width: auto;
+  border: 0;
+  border: none;
+
+}
+.pagebar li.jump cite{
+  color: #666;
+  font-style: normal;
+  font-size: .14rem;
+  margin-left: .16rem;
+  margin-right: .08rem;
+}
+.pagebar li.jump input{
+  width: .36rem;
+  height: .36rem;
+  border: 1px solid #d5d5d5;
+  outline: 0;
+  outline: none;
+  text-align: center;
+  margin: 0 .03rem;
+  border-radius: .03rem;
+}
+.pagebar li.jump button{
+  width: .38rem;
+  height: .38rem;
+  background-color: transparent;
+  color: #666;
+  border: 1px solid #d5d5d5;
+  margin-left: .05rem;
+  border-radius: .03rem;
+}
+.pagebar li.jump button:hover{
+  background-color: #ff6e1f;
+  border-color: #ff6e1f;
+  color: #fff;
+}
+
+
