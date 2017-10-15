@@ -16,30 +16,35 @@
 <article class="app-body">
 <div class="dataform">
   <form name="dataform">
-    <dl class="dataform-item flexbox top left">
-      <dt>
-        <span>纯文本字段：</span>
-      </dt>
-      <dd>
-        <div class="text-wrapper">要苛夺asdl法拉盛的载在要苛夺asdl法拉盛的载在要苛夺asdl法拉盛的载在要苛夺asdl法拉盛的载在要苛夺asdl法拉盛的载在</div>
-      </dd>
-    </dl>
-    <dl class="dataform-item flexbox top left">
-      <dt>
-        <span>普通文本：</span>
-      </dt>
-      <dd>
-        <div class="input-wrapper flexbox top left wrap">
-          <input type="text" class="text" name="" placeholder="请输入key">
-          <span class="helptext">限输入200个汉字</span>
-        </div>
-        <ins class="icofont retmsg">返回信息</ins>
-        <ins class="icofont retmsg error">返回信息</ins>
-        <ins class="icofont retmsg success">返回信息</ins>
-        <ins class="icofont retmsg info">返回信息</ins>
-        <ins class="icofont retmsg alarm">返回信息</ins>
-      </dd>
-    </dl>
+    <figure class="dataform-block">
+      <figcaption class="dataform-caption flexbox middle">
+        <span>基础信息</span>
+      </figcaption>
+      <dl class="dataform-item flexbox top left">
+        <dt>
+          <span>纯文本字段：</span>
+        </dt>
+        <dd>
+          <div class="text-wrapper">要苛夺asdl法拉盛的载在要苛夺asdl法拉盛的载在要苛夺asdl法拉盛的载在要苛夺asdl法拉盛的载在要苛夺asdl法拉盛的载在</div>
+        </dd>
+      </dl>
+      <dl class="dataform-item flexbox top left">
+        <dt>
+          <span>普通文本：</span>
+        </dt>
+        <dd>
+          <div class="input-wrapper flexbox top left wrap">
+            <input type="text" class="text" name="" placeholder="请输入key">
+            <span class="helptext">限输入200个汉字</span>
+          </div>
+          <ins class="icofont retmsg">返回信息</ins>
+          <ins class="icofont retmsg error">返回信息</ins>
+          <ins class="icofont retmsg success">返回信息</ins>
+          <ins class="icofont retmsg info">返回信息</ins>
+          <ins class="icofont retmsg alarm">返回信息</ins>
+        </dd>
+      </dl>
+    </figure>
     <dl class="dataform-item flexbox top left">
       <dt>
         <span>多行文本：</span>
