@@ -54,6 +54,7 @@ http://static.seshenghuo.com/${STATIC_PATH}
 <a href="http://static.seshenghuo.com/static/basic/test/mod_touchselect.shtml" target="_blank">Module#TouchSelect</a>
 <a href="http://static.seshenghuo.com/static/basic/test/mod_touchcity.shtml" target="_blank">Module#TouchCity</a>
 <a href="http://static.seshenghuo.com/static/basic/test/mod_touchdatetime.shtml" target="_blank">Module#TouchDatetime</a>
+<a href="http://static.seshenghuo.com/static/basic/test/mod_toast.shtml" target="_blank">Module#Toast</a>
 </pre>
 
 #ICON Font R2.0.0 Demo
