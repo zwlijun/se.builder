@@ -1,7 +1,7 @@
 /**
  * 日期控件弹层
- * loading > datetimepicker > imageviewer > layerbox > actionsheet > logicbox > framebox
- * @file logicbox.css
+ * loading(60000) > toast(59990) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
+ * @file datetimepicker.css
  */
 .mod-dtpicker-frame{
 	position: absolute;

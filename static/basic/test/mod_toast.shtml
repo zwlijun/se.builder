@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html data-page-alias="ui-component#logicbox">
+<head>
+<!--#include virtual="/static/basic/inc/meta.html"-->
+<!--#include virtual="/static/basic/inc/rem.html"-->
+<title>Mod/Toast</title>
+<link rel="stylesheet" type="text/css" href="/static/basic/src/css/lib/g.css">
+<link rel="stylesheet" type="text/css" href="/static/basic/src/css/mod/toast.css">
+<style type="text/css">
+.button{
+  width: 110px!important;
+  height: 36px!important;
+  margin-bottom: 16px;
+  margin-right: 8px;
+}
+</style>
+</head>
+<body style="padding-top: 10px;">
+<button type="button" class="button" data-action-click="toast://message#Toast Message,TOP_LEFT">Toast TL</button>
+<button type="button" class="button" data-action-click="toast://message#Toast Message,TOP_CENTER">Toast TC</button>
+<button type="button" class="button" data-action-click="toast://message#Toast Message,TOP_RIGHT">Toast TR</button>
+<button type="button" class="button" data-action-click="toast://message#Toast Message,MIDDLE_LEFT">Toast ML</button>
+<button type="button" class="button" data-action-click="toast://message#Toast Message,MIDDLE_CENTER">Toast MC</button>
+<button type="button" class="button" data-action-click="toast://message#Toast Message,MIDDLE_RIGHT">Toast MR</button>
+<button type="button" class="button" data-action-click="toast://message#Toast Message,BOTTOM_LEFT">Toast BL</button>
+<button type="button" class="button" data-action-click="toast://message#Toast Message,BOTTOM_CENTER">Toast BC</button>
+<button type="button" class="button" data-action-click="toast://message#Toast Message,BOTTOM_RIGHT">Toast BR</button>
+<!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
+<script>
+seajs.use(["logic/test/test_toast"]);
+</script>
+</body>
+</html>

@@ -222,6 +222,18 @@ input[type="reset"],
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.icosymbol{
+  /* 通过设置 font-size 来改变图标大小 */
+  width: 1em; height: 1em;
+  /* 图标和文字相邻时，垂直对齐 */
+  vertical-align: -0.15em;
+  /* 通过设置 color 来改变 SVG 的颜色/fill */
+  fill: currentColor;
+  /* path 和 stroke 溢出 viewBox 部分在 IE 下会显示 normalize.css 中也包含这行 */
+  overflow: hidden;
+}
+
 .icofont.none{
   
 }
@@ -773,7 +785,7 @@ input[type="reset"],
 
 /**
  * ActionSheet模块
- * loading > datetimepicker > imageviewer > layerbox > actionsheet > logicbox > framebox
+ * loading(60000) > toast(59990) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
  * @file actionsheet.css
  */
 .mod-actionsheet{
@@ -1193,8 +1205,8 @@ input[type="reset"],
 
 /**
  * 日期控件弹层
- * loading > datetimepicker > imageviewer > layerbox > actionsheet > logicbox > framebox
- * @file logicbox.css
+ * loading(60000) > toast(59990) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
+ * @file datetimepicker.css
  */
 .mod-dtpicker-frame{
 	position: absolute;
@@ -1477,7 +1489,7 @@ input[type="reset"],
 
 /**
  * 窗口弹层
- * loading > datetimepicker > imageviewer > layerbox > actionsheet > logicbox > framebox
+ * loading(60000) > toast(59990) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
  * @file framebox.css
  */
 .mod-framebox-mask{
@@ -1554,7 +1566,7 @@ input[type="reset"],
 
 /**
  * 图片查看器模块
- * loading > datetimepicker > imageviewer > layerbox > actionsheet > logicbox > framebox
+ * loading(60000) > toast(59990) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
  * @file imageviewer.css
  */
 
@@ -1693,7 +1705,7 @@ input[type="reset"],
 
 /**
  * 信息弹层
- * loading > datetimepicker > imageviewer > layerbox > actionsheet > logicbox > framebox
+ * loading(60000) > toast(59990) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
  * @file layerbox.css
  */
 
@@ -2152,7 +2164,7 @@ input[type="reset"],
 
 /**
  * Loading模块
- * loading > datetimepicker > layerbox > actionsheet > logicbox > framebox
+ * loading(60000) > toast(59990) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
  * @file loading.css
  */
 
@@ -2206,7 +2218,7 @@ input[type="reset"],
 
 /**
  * 逻辑弹层
- * loading > datetimepicker > imageviewer > layerbox > actionsheet > logicbox > framebox
+ * loading(60000) > toast(59990) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
  * @file logicbox.css
  */
 .mod-logicbox-mask{
@@ -3675,6 +3687,93 @@ input[type="reset"],
     100% {
         transform: translate(0, 0) translateZ(0);
     }
+}
+/**
+ * Toast模块
+ * loading(60000) > toast(59990) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
+ * @file toast.css
+ */
+.toast{
+	position: fixed;
+	z-index: 59990;
+	max-width: -webkit-calc(100% - 1.60rem);
+	max-width:    -moz-calc(100% - 1.60rem);
+	max-width:     -ms-calc(100% - 1.60rem);
+	max-width:         calc(100% - 1.60rem);
+	background-color: rgba(0, 0, 0, .75);
+	color: #fff;
+	padding: .16rem .40rem;
+	border-radius: 4rem;
+	line-height: 1.5;
+	opacity: 0;
+	text-align: center;
+	-webkit-transition: opacity .4s;
+	   -moz-transition: opacity .4s;
+	    -ms-transition: opacity .4s;
+			transition: opacity .4s;
+}
+.toast.init{
+	left: -100000px;
+	top: -100000px;
+}
+.toast.show{
+	opacity: 1;
+}
+.toast.toast-top-center{
+	top: .40rem;
+	left: 50%;
+	    -ms-transform: translate(-50%, 0%) translateZ(0);
+       -moz-transform: translate(-50%, 0%) translateZ(0);
+    -webkit-transform: translate(-50%, 0%) translateZ(0);
+            transform: translate(-50%, 0%) translateZ(0);
+}
+.toast.toast-top-left{
+	top: .40rem;
+	left: .40rem;
+}
+.toast.toast-top-right{
+	top: .40rem;
+	right: .40rem;
+}
+.toast.toast-bottom-center{
+	bottom: .40rem;
+	left: 50%;
+	    -ms-transform: translate(-50%, 0%) translateZ(0);
+       -moz-transform: translate(-50%, 0%) translateZ(0);
+    -webkit-transform: translate(-50%, 0%) translateZ(0);
+            transform: translate(-50%, 0%) translateZ(0);
+}
+.toast.toast-bottom-left{
+	bottom: .40rem;
+	left: .40rem;
+}
+.toast.toast-bottom-right{
+	bottom: .40rem;
+	right: .40rem;
+}
+.toast.toast-middle-center{
+	top: 50%;
+	left: 50%;
+	    -ms-transform: translate(-50%, -50%) translateZ(0);
+       -moz-transform: translate(-50%, -50%) translateZ(0);
+    -webkit-transform: translate(-50%, -50%) translateZ(0);
+            transform: translate(-50%, -50%) translateZ(0);
+}
+.toast.toast-middle-left{
+	top: 50%;
+	left: .40rem;
+	    -ms-transform: translate(0%, -50%) translateZ(0);
+       -moz-transform: translate(0%, -50%) translateZ(0);
+    -webkit-transform: translate(0%, -50%) translateZ(0);
+            transform: translate(0%, -50%) translateZ(0);
+}
+.toast.toast-middle-right{
+	top: 50%;
+	right: .40rem;
+	    -ms-transform: translate(0%, -50%) translateZ(0);
+       -moz-transform: translate(0%, -50%) translateZ(0);
+    -webkit-transform: translate(0%, -50%) translateZ(0);
+            transform: translate(0%, -50%) translateZ(0);
 }
 /**
  * 触摸选择

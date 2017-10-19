@@ -1,0 +1,87 @@
+/**
+ * Toast模块
+ * loading(60000) > toast(59990) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
+ * @file toast.css
+ */
+.toast{
+	position: fixed;
+	z-index: 59990;
+	max-width: -webkit-calc(100% - 1.60rem);
+	max-width:    -moz-calc(100% - 1.60rem);
+	max-width:     -ms-calc(100% - 1.60rem);
+	max-width:         calc(100% - 1.60rem);
+	background-color: rgba(0, 0, 0, .75);
+	color: #fff;
+	padding: .16rem .40rem;
+	border-radius: 4rem;
+	line-height: 1.5;
+	opacity: 0;
+	text-align: center;
+	-webkit-transition: opacity .4s;
+	   -moz-transition: opacity .4s;
+	    -ms-transition: opacity .4s;
+			transition: opacity .4s;
+}
+.toast.init{
+	left: -100000px;
+	top: -100000px;
+}
+.toast.show{
+	opacity: 1;
+}
+.toast.toast-top-center{
+	top: .40rem;
+	left: 50%;
+	    -ms-transform: translate(-50%, 0%) translateZ(0);
+       -moz-transform: translate(-50%, 0%) translateZ(0);
+    -webkit-transform: translate(-50%, 0%) translateZ(0);
+            transform: translate(-50%, 0%) translateZ(0);
+}
+.toast.toast-top-left{
+	top: .40rem;
+	left: .40rem;
+}
+.toast.toast-top-right{
+	top: .40rem;
+	right: .40rem;
+}
+.toast.toast-bottom-center{
+	bottom: .40rem;
+	left: 50%;
+	    -ms-transform: translate(-50%, 0%) translateZ(0);
+       -moz-transform: translate(-50%, 0%) translateZ(0);
+    -webkit-transform: translate(-50%, 0%) translateZ(0);
+            transform: translate(-50%, 0%) translateZ(0);
+}
+.toast.toast-bottom-left{
+	bottom: .40rem;
+	left: .40rem;
+}
+.toast.toast-bottom-right{
+	bottom: .40rem;
+	right: .40rem;
+}
+.toast.toast-middle-center{
+	top: 50%;
+	left: 50%;
+	    -ms-transform: translate(-50%, -50%) translateZ(0);
+       -moz-transform: translate(-50%, -50%) translateZ(0);
+    -webkit-transform: translate(-50%, -50%) translateZ(0);
+            transform: translate(-50%, -50%) translateZ(0);
+}
+.toast.toast-middle-left{
+	top: 50%;
+	left: .40rem;
+	    -ms-transform: translate(0%, -50%) translateZ(0);
+       -moz-transform: translate(0%, -50%) translateZ(0);
+    -webkit-transform: translate(0%, -50%) translateZ(0);
+            transform: translate(0%, -50%) translateZ(0);
+}
+.toast.toast-middle-right{
+	top: 50%;
+	right: .40rem;
+	    -ms-transform: translate(0%, -50%) translateZ(0);
+       -moz-transform: translate(0%, -50%) translateZ(0);
+    -webkit-transform: translate(0%, -50%) translateZ(0);
+            transform: translate(0%, -50%) translateZ(0);
+}
