@@ -37,6 +37,9 @@
                 xhr.setRequestHeader(head.name, head.value);
             }
 
+            xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+            xhr.setRequestHeader("X-Upload-SerialCode", fileInfo.key);
+
             xhr.onload = function(){
                 us.uploading = false;
                 us.upload.exec("load", [fileInfo]);
