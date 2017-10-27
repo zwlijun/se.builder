@@ -3711,6 +3711,7 @@ input[type="reset"],
 	   -moz-transition: opacity .4s;
 	    -ms-transition: opacity .4s;
 			transition: opacity .4s;
+	white-space: nowrap;
 }
 .toast.init{
 	left: -100000px;

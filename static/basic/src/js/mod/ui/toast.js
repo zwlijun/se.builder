@@ -31,7 +31,43 @@
             var sn = Util.GUID();
             var id = "toast_" + sn;
 
-            $("body").append('<div id="' + id + '" class="toast ' + (position || Toast.MIDDLE_CENTER) + ' show">' + message + '</div>');
+            $("body").append('<div id="' + id + '" class="toast ' + (position || Toast.MIDDLE_CENTER) + ' hidden">' + message + '</div>');
+
+            var intValue = function(key, target){
+                var computed = getComputedStyle(target, null);
+                var val = computed[key] || "0";
+
+                val = val.replace(/[^\d\.\-]+/g, "");
+
+                val = parseInt(val, 10);
+                val = isNaN(val) ? 0 : val;
+                val = val + (val % 2);
+
+                $(target).css(key, val + "px");
+
+                return val;
+            };
+
+            var toastBox = $("#" + id);
+            var toast = toastBox[0];
+            
+
+            var paddingLeft = intValue("paddingLeft", toast);
+            var paddingTop = intValue("paddingTop", toast);
+            var paddingRight = intValue("paddingRight", toast);
+            var paddingBottom = intValue("paddingBottom", toast);
+
+            var rect = Util.getBoundingClientRect(toast);
+            var width = Math.round(rect.width - (paddingLeft + paddingRight));
+            var height = Math.round(rect.height - (paddingTop + paddingBottom));
+
+            width = width + (width % 2);
+            height = height + (height % 2);
+
+            toastBox.css({
+                "width": width + "px",
+                "height": height + "px"
+            }).removeClass("hidden").addClass("show");
 
             setTimeout(function(){
                 $("#" + id).removeClass("show");
