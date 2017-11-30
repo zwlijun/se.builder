@@ -435,7 +435,7 @@
       data-liveplayer-notsupport="对不支持的情况下的提示信息"
       data-liveplayer-visualizerBackgroundImage="音频可视化背景图片"
       data-liveplayer-visualizerInterval="音频可视化动态刷新间隔时间(ms)"
-      data-liveplayer-visualizer="音频可视化模式  auto - 如果type为audio就加载|force - 强制加载"
+      data-liveplayer-visualizer="音频可视化模式  auto - 如果type为audio就加载, force - 强制加载, none - 不使用vistualizer"
       data-liveplayer-visualizerCorssOrigin="加载视频化音频频谱时，如果没有设置crossOrigin就取该值"
     ></element>
     **/
@@ -1123,7 +1123,11 @@
             var visualizerMode = this.options("visualizer");
             var attrVisualizerMode = this.getAttribute("visualizer");
 
-            return (isAudio || ("force" === visualizerMode || "force" === attrVisualizerMode));
+            if("none" == visualizerMode || "none" == attrVisualizerMode){
+                return false;
+            }
+
+            return (("auto" == visualizerMode && isAudio) || ("force" === visualizerMode || "force" === attrVisualizerMode));
         },
         initFullScreen: function(){
             var master = this.getLivePlayerMasterMedia(true);
@@ -2586,7 +2590,7 @@
     };
 
     module.exports = {
-        "version": "R17B0929",
+        "version": "R17B1130",
         "MediaReadyState": MediaReadyState,
         "MediaNetworkState": MediaNetworkState,
         "MediaError": MediaError,
