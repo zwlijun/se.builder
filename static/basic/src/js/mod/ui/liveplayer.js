@@ -1755,12 +1755,50 @@
 
                 if(visualizerBackgroundImage){
                     Util.getImageInfoByURL(visualizerBackgroundImage, {
-                        callback: function(img, naturalWidth, naturalHeight){
+                        callback: function(img, naturalWidth, naturalHeight, source){
                             var viz = LivePlayer.Visualizer.connect(this);
                             var bg = viz.getBackgroundImage() || {};
 
-                            viz.setBackgroundImage(img, bg.width || naturalWidth, bg.height || naturalHeight);
+                            var imgObj = {
+                                "image": img,
+                                "width": bg.width || naturalWidth,
+                                "height": bg.height || naturalHeight,
+                                "source": source,
+                                "type": "canvas"
+                            };
+
+                            var cssObj = {};
+
+                            viz.setBackgroundImage(imgObj, cssObj);
                         },
+                        args: [visualizerBackgroundImage],
+                        context: this
+                    });
+                }
+            }else{
+                if(this.isAudio() && visualizerBackgroundImage){
+                    Util.getImageInfoByURL(visualizerBackgroundImage, {
+                        callback: function(img, naturalWidth, naturalHeight, source){
+                            var viz = LivePlayer.Visualizer.connect(this);
+                            var bg = viz.getBackgroundImage() || {};
+
+                            var imgObj = {
+                                "image": img,
+                                "width": bg.width || naturalWidth,
+                                "height": bg.height || naturalHeight,
+                                "source": source,
+                                "type": "css"
+                            };
+
+                            var cssObj = {};
+
+                            var vn = this.getLivePlayerMasterVisualizer();
+
+                            vn.removeClass("hide");
+                            viz.setVisualizerNode(vn[0]);
+                            viz.setBackgroundImage(imgObj, cssObj);
+                        },
+                        args: [visualizerBackgroundImage],
                         context: this
                     });
                 }
@@ -1778,7 +1816,17 @@
                 var frame = this.getLivePlayerFrame();
                 var rect = Util.getBoundingClientRect(frame[0]);
 
-                viz.setBackgroundImage(bg.image || null, rect.width, rect.height).render();
+                var imgObj = {
+                    "image": bg.image || null,
+                    "width": rect.width,
+                    "height": rect.height,
+                    "source": bg.source || "",
+                    "type": bg.type
+                };
+
+                var cssObj = {};
+
+                viz.setBackgroundImage(imgObj, cssObj).render();
             }
         },
         render: function(isInvokePlay){
@@ -2486,11 +2534,17 @@
         update: function(opts){
             this.opts = $.extend({}, this.opts, opts);
         },
-        setBackgroundImage: function(img, width, height){
+        setVisualizerNode: function(canvas){
+          var player = this.liveplayer;
+          var av = player.visualizer;
+
+          av.setVisualizerNode(canvas);
+        },
+        setBackgroundImage: function(imgObj, cssObj){
             var player = this.liveplayer;
             var av = player.visualizer;
 
-            av.setBackgroundImage(img, width, height);
+            av.setBackgroundImage(imgObj, cssObj);
         },
         getBackgroundImage: function(){
             var player = this.liveplayer;
@@ -2566,8 +2620,13 @@
         var v = LivePlayer.Visualizer.Cache[name] || (LivePlayer.Visualizer.Cache[name] = new LivePlayer.Visualizer(liveplayer));
 
         var o = {
-            setBackgroundImage: function(img, width, height){
-                v.setBackgroundImage(img, width, height);
+            setVisualizerNode: function(canvas){
+              v.setVisualizerNode(canvas);
+
+              return this;
+            },
+            setBackgroundImage: function(imgObj, cssObj){
+                v.setBackgroundImage(imgObj, cssObj);
 
                 return this;
             },
@@ -2590,7 +2649,7 @@
     };
 
     module.exports = {
-        "version": "R17B1130",
+        "version": "R17B1204",
         "MediaReadyState": MediaReadyState,
         "MediaNetworkState": MediaNetworkState,
         "MediaError": MediaError,

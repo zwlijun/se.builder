@@ -38,7 +38,16 @@
     var loadBackgroundImage = function(){
         Util.getImageInfoByURL("/static/basic/src/img/mod/bgimage_viz.png", {
             callback: function(img, w, h){
-                av.setBackgroundImage(img);
+                var imgObj = {
+                    "image": img,
+                    "width": w,
+                    "height": h,
+                    "source": "/static/basic/src/img/mod/bgimage_viz.png",
+                    "type": "canvas"
+                };
+                var cssObj = {};
+
+                av.setBackgroundImage(imgObj, cssObj);
             }
         });
     };

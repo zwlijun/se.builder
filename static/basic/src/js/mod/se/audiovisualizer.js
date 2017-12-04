@@ -47,13 +47,21 @@
     };
 
     AudioVisualizer.prototype = {
+        setVisualizerNode: function(canvas){
+            var context = null;
+
+            if(canvas){
+                context = canvas.getContext("2d");
+            }
+
+            this.canvas = canvas;
+            this.canvasContext = context;
+        },
         getVisualizerNode: function(visualizerSelector){
             if(visualizerSelector){
-                this.canvas = document.querySelector(visualizerSelector);
+                var canvas = document.querySelector(visualizerSelector);
 
-                if(this.canvas){
-                    this.canvasContext = this.canvas.getContext("2d");
-                }
+                this.setVisualizerNode(canvas);
             }
 
             return {
@@ -62,7 +70,8 @@
             };
         },
         createVisualizerNode: function(targetSelector){
-            var node = this.getVisualizerNode(targetSelector + " #" + this.name + "_visulizer");
+            var selector = targetSelector + " #" + this.name + "_visulizer";
+            var node = this.getVisualizerNode(selector);
 
             if(node.renderNode && node.renderContext){
                 return node;
@@ -74,14 +83,36 @@
 
             $(targetSelector).append(_html);
 
-            return this.getVisualizerNode(targetSelector + " #" + this.name + "_visulizer");
+            return this.getVisualizerNode(selector);
         },
-        setBackgroundImage: function(img, width, height){
-            this.backgroundImage = {
-                "image": img || null,
-                "width": width || 1280,
-                "height": height || 720
-            };
+        setBackgroundImage: function(imgObj, cssObj){
+            var img = imgObj || {};
+            this.backgroundImage = $.extend(img, {
+                "image": img.image || null,
+                "width": img.width || 1280,
+                "height": img.height || 720,
+                "source": img.source || "",
+                "type": img.type || "canvas"  // css | canvas
+            });
+
+            if(this.canvas && "css" === img.type){
+                var node = $(this.canvas);
+                var setted = node.attr("data-background-setted");
+
+                if("1" !== setted){
+                    var styles = $.extend({
+                        "backgroundColor": "rgba(0, 0, 0, 0)",
+                        "backgroundRepeat": "no-repeat",
+                        "backgroundPosition": "center center",
+                        "backgroundSize": "cover",
+                        "backgroundImage": "url(" + img.source + ")"
+                    }, cssObj || {});
+
+                    $(this.canvas).css(styles);
+
+                    node.attr("data-background-setted", "1");
+                }
+            }
         },
         getBackgroundImage: function(){
             return this.backgroundImage;
@@ -113,7 +144,7 @@
 
             canvasContext.clearRect(0, 0, width, height);
 
-            if(backgroundImage && backgroundImage.image){
+            if(backgroundImage && backgroundImage.image && "canvas" === backgroundImage.type){
                 canvasContext.drawImage(backgroundImage.image, 0, 0, backgroundImage.width, backgroundImage.height);
             }
 
@@ -218,14 +249,19 @@
         return {
             "audio": av.audio,
             "timer": av.timer,
+            setVisualizerNode: function(canvas){
+                av.setVisualizerNode(canvas);
+
+                return this;
+            },
             getVisualizerNode: function(visualizerSelector){
                 return av.getVisualizerNode(visualizerSelector);
             },
             createVisualizerNode: function(targetSelector){
                 return av.createVisualizerNode(targetSelector);
             },
-            setBackgroundImage: function(img, width, height){
-                av.setBackgroundImage(img, width, height);
+            setBackgroundImage: function(imgObj, cssObj){
+                av.setBackgroundImage(imgObj, cssObj);
 
                 return this;
             },
@@ -264,7 +300,7 @@
     } 
 
     module.exports = {
-        "version": "R17B0929",
+        "version": "R17B1204",
         newInstance: function(name){
             return AudioVisualizer.newInstance(name);
         },
