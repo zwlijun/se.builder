@@ -7,6 +7,7 @@ var DataProxy       = require("mod/se/dataproxy");
 var Request         = require("mod/se/request");
 var Storage         = require("mod/se/storage");
 var TemplateEngine  = require("mod/se/template");
+var Toast           = require("mod/ui/toast");
 
 var ErrorTypes = CMD.ErrorTypes;
 var RespTypes = CMD.ResponseTypes;
@@ -365,7 +366,8 @@ var _App = {
         Util.source(InputSchema);
 
         if(conf.message){
-            CMD.setBubbleTips(conf.message);
+            // CMD.setBubbleTips(conf.message);
+            Toast.text(conf.message, Toast.BOTTOM_CENTER, 3000);
         }
         PreventDefaultLink();
     }
@@ -386,7 +388,8 @@ module.exports = {
         "template": TemplateEngine,
         "persistent": Persistent,
         "session": Session,
-        "typeof": DataType
+        "typeof": DataType,
+        "toast": Toast
     }
 }
 //---------------------------
