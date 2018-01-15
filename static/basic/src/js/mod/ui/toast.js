@@ -25,7 +25,7 @@
         "MIDDLE_RIGHT": "toast-middle-right",
         "MIDDLE_CENTER": "toast-middle-center",
         //-------------------------------------------------------------------------------
-        "version": "R171020",
+        "version": "R18B0115",
         //-------------------------------------------------------------------------------
         text: function(message, position, delay){
             var sn = Util.GUID();
@@ -60,6 +60,19 @@
             var rect = Util.getBoundingClientRect(toast);
             var width = Math.round(rect.width - (paddingLeft + paddingRight));
             var height = Math.round(rect.height - (paddingTop + paddingBottom));
+
+            width = width + (width % 2);
+            height = height + (height % 2);
+
+            toastBox.css({
+                "width": width + "px",
+                "whiteSpace": "normal"
+            });
+
+            // 重新计算
+            rect = Util.getBoundingClientRect(toast);
+            width = Math.round(rect.width - (paddingLeft + paddingRight));
+            height = Math.round(rect.height - (paddingTop + paddingBottom));
 
             width = width + (width % 2);
             height = height + (height % 2);

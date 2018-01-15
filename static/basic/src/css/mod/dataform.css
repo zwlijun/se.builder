@@ -45,6 +45,27 @@
 	border-radius: .03rem;
 	margin-right: .12rem;
 }
+.dataform .dataform-item .pickerbox{
+	width: 80%;
+}
+.dataform .dataform-item .pickerbox input.text{
+	border: 0;
+	border: none;
+	text-align: right;
+	margin-right: 0;
+	line-height: 1;
+	padding: 0;
+}
+.dataform .dataform-item .pickerbox > i{
+	color: #666;
+	line-height: 1.5;
+	font-style: normal;
+	margin-top: .02rem;
+	margin-left: .06rem;
+}
+.dataform .dataform-item .pickerbox > i:before{
+	content: "\e646";
+}
 .dataform .dataform-item textarea{
 	-webkit-appearance: none;
 	border: 1px solid #ececec;

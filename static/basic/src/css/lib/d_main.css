@@ -128,7 +128,7 @@
 
 }
 .dataset-moredata.loading .icofont:before{
-  content: "\e61c";
+  content: "\e667";
   display: inline-block;
   margin-right: .06rem;
   -webkit-transform-origin: center center;

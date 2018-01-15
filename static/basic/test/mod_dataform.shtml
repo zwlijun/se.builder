@@ -3,7 +3,7 @@
 <head>
 <!--#include virtual="/static/basic/inc/meta.html"-->
 <!--#include virtual="/static/basic/inc/rem.html"-->
-<title>桌面终端页面框架DEMO</title>
+<title>DataForm</title>
 <!--#include virtual="/static/basic/inc/css_common_gm.html"-->
 <!--#include virtual="/static/basic/inc/css_common_dm.html"-->
 <!--#include virtual="/static/basic/inc/static_version.html"-->
@@ -26,6 +26,19 @@
         </dt>
         <dd>
           <div class="text-wrapper">要苛夺asdl法拉盛的载在要苛夺asdl法拉盛的载在要苛夺asdl法拉盛的载在要苛夺asdl法拉盛的载在要苛夺asdl法拉盛的载在</div>
+        </dd>
+      </dl>
+      <dl class="dataform-item flexbox top left">
+        <dt>
+          <span>选择器：</span>
+        </dt>
+        <dd>
+          <div class="input-wrapper flexbox top left wrap">
+            <div class="pickerbox flexbox middle right">
+              <input type="text" class="text" name="" placeholder="选择所在地区" readonly="readonly">
+              <i class="icofont"></i>
+            </div>
+          </div>
         </dd>
       </dl>
       <dl class="dataform-item flexbox top left">
