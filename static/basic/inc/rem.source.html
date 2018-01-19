@@ -1,0 +1,841 @@
+<script>
+//design: 设计稿尺寸
+//fontSize: 基础字体大小
+//minFontSize: 最小字体大小
+//maxFontSize: 最大字体大小
+(function(design, fontSize, minFontSize, maxFontSize){
+    //----------------------------------------------------------------|||
+    var _ua = navigator.userAgent;
+    var CheckMap = {
+        "os": {
+            "windows": [
+                {
+                    "pattern": "Windows NT (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "WindowsNT"
+                },
+                {
+                    "pattern": "Windows (\\d+)",
+                    "alias": "Windows"
+                }
+            ],
+            "osx": [
+                {
+                    "pattern": "Mac OS X (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "OSX"
+                },
+                {
+                    "pattern": "Mac OS X (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "OSX"
+                },
+                {
+                    "pattern": "Mac OS X (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "OSX"
+                },
+                {
+                    "pattern": "Mac OS X (\\d+)",
+                    "alias": "OSX"
+                }
+            ],
+            "android": [
+                {
+                    "pattern": "Android (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Android"
+                },
+                {
+                    "pattern": "Android (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Android"
+                },
+                {
+                    "pattern": "Android (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Android"
+                },
+                {
+                    "pattern": "Android (\\d+)",
+                    "alias": "Android"
+                }
+            ],
+            "ios": [
+                {
+                    "pattern": "iPhone[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPhone[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPhone[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPhone[^;]*;.+OS (\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPad[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPad[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPad[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPad[^;]*;.+OS (\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPod[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPod[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPod[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iOS"
+                },
+                {
+                    "pattern": "iPod[^;]*;.+OS (\\d+)",
+                    "alias": "iOS"
+                }
+            ],
+            "iphone": [
+                {
+                    "pattern": "iPhone[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iPhone"
+                },
+                {
+                    "pattern": "iPhone[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iPhone"
+                },
+                {
+                    "pattern": "iPhone[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iPhone"
+                },
+                {
+                    "pattern": "iPhone[^;]*;.+OS (\\d+)",
+                    "alias": "iPhone"
+                }
+            ],
+            "ipad": [
+                {
+                    "pattern": "iPad[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iPad"
+                },
+                {
+                    "pattern": "iPad[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iPad"
+                },
+                {
+                    "pattern": "iPad[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iPad"
+                },
+                {
+                    "pattern": "iPad[^;]*;.+OS (\\d+)",
+                    "alias": "iPad"
+                }
+            ],
+            "ipod": [
+                {
+                    "pattern": "iPod[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iPod"
+                },
+                {
+                    "pattern": "iPod[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iPod"
+                },
+                {
+                    "pattern": "iPod[^;]*;.+OS (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "iPod"
+                },
+                {
+                    "pattern": "iPod[^;]*;.+OS (\\d+)",
+                    "alias": "iPod"
+                }
+            ],
+            "windowsphone": [
+                {
+                    "pattern": "Windows Phone OS (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "WindowsPhone"
+                },
+                {
+                    "pattern": "Windows Phone (\\d+)",
+                    "alias": "WindowsPhone"
+                }
+            ],
+            "blackberry": [
+                {
+                    "pattern": "BlackBerry (\\d+)",
+                    "alias": "BlackBerry"
+                }
+            ],
+            "symbian": [
+                {
+                    "pattern": "SymbianOS/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "SymbianOS"
+                }
+            ]
+        },
+        "browser": {
+            "ie": [
+                {
+                    "pattern": "MSIE (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MSIE"
+                },
+                {
+                    "pattern": "MSIE (\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MSIE"
+                },
+                {
+                    "pattern": "MSIE (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MSIE"
+                },
+                {
+                    "pattern": "MSIE (\\d+)",
+                    "alias": "MSIE"
+                },
+                {
+                    "pattern": "Trident/[^\\s ]+; [^\\)]*rv\\:(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MSIE"
+                },
+                {
+                    "pattern": "Trident/[^\\s ]+; [^\\)]*rv\\:(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MSIE"
+                },
+                {
+                    "pattern": "Trident/[^\\s ]+; [^\\)]*rv\\:(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MSIE"
+                },
+                {
+                    "pattern": "Trident/[^\\s ]+; [^\\)]*rv\\:(\\d+)",
+                    "alias": "MSIE"
+                }
+            ],
+            "edge": [
+                {
+                    "pattern": "Edge/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Edge"
+                },
+                {
+                    "pattern": "Edge/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Edge"
+                },
+                {
+                    "pattern": "Edge/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Edge"
+                },
+                {
+                    "pattern": "Edge/(\\d+)",
+                    "alias": "Edge"
+                }
+            ],
+            "iemobile": [
+                {
+                    "pattern": "IEMobile[/ ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "IEMobile"
+                },
+                {
+                    "pattern": "IEMobile[/ ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "IEMobile"
+                },
+                {
+                    "pattern": "IEMobile[/ ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "IEMobile"
+                },
+                {
+                    "pattern": "IEMobile[/ ](\\d+)",
+                    "alias": "IEMobile"
+                }
+            ],
+            "chrome": [
+                {
+                    "pattern": "Chrome/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Chrome"
+                },
+                {
+                    "pattern": "Chrome/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Chrome"
+                },
+                {
+                    "pattern": "Chrome/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Chrome"
+                },
+                {
+                    "pattern": "Chrome/(\\d+)",
+                    "alias": "Chrome"
+                }
+            ],
+            "safari": [
+                {
+                    "pattern": "Version/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[\s ](Mobile/[0-9a-zA-Z]+[\s ])?Safari",
+                    "alias": "Safari"
+                },
+                {
+                    "pattern": "Version/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[\s ](Mobile/[0-9a-zA-Z]+[\s ])?Safari",
+                    "alias": "Safari"
+                },
+                {
+                    "pattern": "Version/(\\d+)[^0-9\\s ](\\d+)[\s ](Mobile/[0-9a-zA-Z]+[\s ])?Safari",
+                    "alias": "Safari"
+                },
+                {
+                    "pattern": "Version/(\\d+)[\s ](Mobile/[0-9a-zA-Z]+[\s ])?Safari",
+                    "alias": "Safari"
+                }
+            ],
+            "firefox": [
+                {
+                    "pattern": "Firefox/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Firefox"
+                },
+                {
+                    "pattern": "Firefox/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Firefox"
+                },
+                {
+                    "pattern": "Firefox/(\\d+)",
+                    "alias": "Firefox"
+                }
+            ],
+            "opera": [
+                {
+                    "pattern": "Opera (\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Opera"
+                },
+                {
+                    "pattern": "Opera/.+ Version/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Opera"
+                }
+            ],
+            "operamini": [
+                {
+                    "pattern": "Opera Mini/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "OperaMini"
+                }
+            ],
+            "operamobile": [
+                {
+                    "pattern": "Opera Mobi/.+ Version/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "OperaMobile"
+                }
+            ],
+            "ucbrowser": [
+                {
+                    "pattern": "UC Browser[ /]?(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "UCBrowser"
+                },
+                {
+                    "pattern": "UCBrowser/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "UCBrowser"
+                }
+            ],
+            "qqbrowser": [
+                {
+                    "pattern": " QQBrowser/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "QQBrowser"
+                },
+                {
+                    "pattern": " QQBrowser/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "QQBrowser"
+                },
+                {
+                    "pattern": " QQBrowser/(\\d+)",
+                    "alias": "QQBrowser"
+                }
+            ],
+            "mqqbrowser": [
+                {
+                    "pattern": " MQQBrowser/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MQQBrowser"
+                },
+                {
+                    "pattern": " MQQBrowser/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MQQBrowser"
+                },
+                {
+                    "pattern": " MQQBrowser/(\\d+)",
+                    "alias": "MQQBrowser"
+                }
+            ],
+            "blackberry": [
+                {
+                    "pattern": "BlackBerry.+ Version/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "BlackBerry"
+                }
+            ],
+            "mqq": [
+                {
+                    "pattern": "SQ_[^/]+ QQ/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MQQ"
+                },
+                {
+                    "pattern": "SQ_[^/]+ QQ/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MQQ"
+                },
+                {
+                    "pattern": "SQ_[^/]+ QQ/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "MQQ"
+                },
+                {
+                    "pattern": "SQ_[^/]+ QQ/(\\d+)",
+                    "alias": "MQQ"
+                }
+            ],
+            "qq": [
+                {
+                    "pattern": "QQ/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "QQ"
+                },
+                {
+                    "pattern": "QQ/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "QQ"
+                },
+                {
+                    "pattern": "QQ/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "QQ"
+                },
+                {
+                    "pattern": "QQ/(\\d+)",
+                    "alias": "QQ"
+                }
+            ],
+            "wechat": [
+                {
+                    "pattern": "MicroMessenger/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "WeChat"
+                },
+                {
+                    "pattern": "MicroMessenger/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "WeChat"
+                },
+                {
+                    "pattern": "MicroMessenger/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "WeChat"
+                },
+                {
+                    "pattern": "MicroMessenger/(\\d+)",
+                    "alias": "WeChat"
+                }
+            ],
+            "tbs": [
+                {
+                    "pattern": "TBS/(\\d+)",
+                    "alias": "TBS"
+                }
+            ],
+            "aliapp": [
+                {
+                    "pattern": "AliApp\\(AP/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "AliApp"
+                },
+                {
+                    "pattern": "AliApp\\(AP/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "AliApp"
+                },
+                {
+                    "pattern": "AliApp\\(AP/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "AliApp"
+                },
+                {
+                    "pattern": "AliApp\\(AP/(\\d+)",
+                    "alias": "AliApp"
+                }
+            ]
+        },
+        "engine": {
+            "trident": [
+                {
+                    "pattern": "Trident/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Trident"
+                },
+                {
+                    "pattern": "Trident/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Trident"
+                },
+                {
+                    "pattern": "Trident/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Trident"
+                },
+                {
+                    "pattern": "Trident/(\\d+)",
+                    "alias": "Trident"
+                }
+            ],
+            "webkit": [
+                {
+                    "pattern": "WebKit/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "WebKit"
+                },
+                {
+                    "pattern": "WebKit/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "WebKit"
+                },
+                {
+                    "pattern": "WebKit/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "WebKit"
+                },
+                {
+                    "pattern": "WebKit/(\\d+)",
+                    "alias": "WebKit"
+                }
+            ],
+            "gecko": [
+                {
+                    "pattern": "Gecko/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Gecko"
+                },
+                {
+                    "pattern": "Gecko/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Gecko"
+                },
+                {
+                    "pattern": "Gecko/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Gecko"
+                },
+                {
+                    "pattern": "Gecko/(\\d+)",
+                    "alias": "Gecko"
+                }
+            ],
+            "presto": [
+                {
+                    "pattern": "Presto/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Presto"
+                },
+                {
+                    "pattern": "Presto/(\\d+)[^0-9\\s ](\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Presto"
+                },
+                {
+                    "pattern": "Presto/(\\d+)[^0-9\\s ](\\d+)",
+                    "alias": "Presto"
+                },
+                {
+                    "pattern": "Presto/(\\d+)",
+                    "alias": "Presto"
+                }
+            ]
+        }
+    };
+    var __check = function(ua, reg){
+        var result = {
+            "major": -1,
+            "minor": -1,
+            "patch": -1,
+            "build": -1,
+            "short": -1,
+            "version": "",
+            "name": ""
+        };
+
+        var pattern = new RegExp(reg.pattern, "i");
+        var matcher = null;
+
+        pattern.lastIndex = 0;
+
+        if(null != (matcher = pattern.exec(ua))){
+            var tmp = [];
+            var r = 0;
+            var l = 0;
+
+            for(var i = 1; i < matcher.length; i++){
+                r = matcher[i];
+
+                if(/^[\d]+$/.test(r)){
+                    tmp.push(Number(r));
+                }
+            }
+
+            l = tmp.length;
+
+            result.major = l > 0 ? tmp[0] : -1;
+            result.minor = l > 1 ? tmp[1] : -1;
+            result.patch = l > 2 ? tmp[2] : -1;
+            result.build = l > 3 ? tmp[3] : -1;
+            result.short = Number(result.major > -1 ? result.major + (result.minor > -1 ? "." + result.minor : ".0") : -1);
+            result.version = tmp.join(".");
+            result.name = reg.alias;
+        }
+
+        return result;
+    };
+
+    var __exec = function(ua, conf){
+        var item = null;
+        var result = {};
+
+        for(var key in conf){
+            if(conf.hasOwnProperty(key)){
+                item = conf[key];
+
+                if(Object.prototype.toString.call(item) == "[object Array]"){
+                    for(var i = 0; i < item.length; i++){
+                        result[key] = __check(ua, item[i]);
+
+                        if(result[key].version && result[key].major > -1){
+                            break;
+                        }
+                    }
+                }else{
+                    result[key] = __check(ua, item);
+                }
+            }
+        }
+
+        return result;
+    };
+
+    var __parse = function(ua){
+        var regexps = CheckMap;
+        var result = {
+            "os": __exec(ua, regexps["os"]),
+            "browser": __exec(ua, regexps["browser"]),
+            "engine": __exec(ua, regexps["engine"])
+        };
+
+        return result;
+    };
+    //----------------------------------------------------------------|||
+    var remTimer = null;
+    var isNumber = function(v){
+        var s = String(v);
+        var p = /^[\d]+$/;
+
+        return p.test(s);
+    };
+    var parseDesignWidth = function(v){
+        var env = __parse(_ua);
+        var os = env.os;
+        var items = v.split(/[\s]*,[\s]*/);
+        var size = items.length;
+        var item = null;
+        var map = {};
+
+        for(var i = 0; i < size; i++){
+            item = items[i].split(/[\s]*=[\s]*/);
+            map[item[0]] = Number(item[1]);
+        }
+
+        if(os.android.major > 0 || 
+           os.ios.major > 0 || 
+           os.windowsphone.major > 0 || 
+           os.blackberry.major > 0 || 
+           os.symbian.major > 0
+        ){ //移动端
+            return map["mobile"];
+        }else{ //pc端
+            return map["desktop"];
+        }
+    };
+    var _reset = function(){
+        var root = document.documentElement;
+        var body = document.body;
+
+        if(!root || !body){
+            return false;
+        }
+
+        try{
+
+            var _designWidth = root.getAttribute("data-adaptor-design") || design;
+            var _fontSize = root.getAttribute("data-adaptor-base") || fontSize;
+            var _minFontSize = Number(root.getAttribute("data-adaptor-min") || minFontSize);
+            var _maxFontSize = Number(root.getAttribute("data-adaptor-max") || maxFontSize);
+            var clientWidth = Math.max(root.clientWidth, body.clientWidth);
+            var width = window.innerWidth || clientWidth;
+
+            if(isNumber(_designWidth)){
+                _designWidth = Number(_designWidth);
+            }else{
+                _designWidth = parseDesignWidth(_designWidth);
+            }
+
+            root.setAttribute("data-adaptor-design", _designWidth);
+
+            var percentage = width / _designWidth;
+            var fsize = _fontSize * percentage;
+
+            if(fsize < _minFontSize){
+                fsize = _minFontSize;
+            }
+
+            if(fsize > _maxFontSize){
+                fsize = _maxFontSize;
+            }
+
+            percentage = fsize / _fontSize;
+
+            root.style.fontSize = fsize + 'px';
+            root.setAttribute("data-adaptor-percentage", percentage);
+        }catch(e){
+            return false;
+        }
+
+        return true;
+    };
+    var _listener = function(e){
+        setTimeout(_reset, 300);
+    };
+
+    remTimer = setTimeout(function(){
+        if(remTimer){
+            clearTimeout(remTimer);
+            remTimer = null;
+        }
+
+        if(_reset()){
+            if(("onorientationchange" in window)){
+                window.addEventListener("orientationchange", _listener, false);
+            }else{
+                if("addEventListener" in window){
+                    window.addEventListener("resize", _listener, false);
+                }else if("attachEvent" in window){
+                    window.attachEvent("onresize", _listener);
+                }else{
+                    window.onresize = _listener;
+                }
+            }
+        }else{
+            setTimeout(arguments.callee, 0);
+        }
+    }, 0);
+    //----------------------------------------------------------------|||
+    (function main(){
+        var env = __parse(_ua);
+        var arr = [];
+
+        var __analyze = function(o){
+            var tmp = null;
+
+            for(var key in o){
+                if(o.hasOwnProperty(key)){
+                    tmp  = o[key];
+
+                    if(tmp.major > -1){
+                        arr.push(key);
+                        arr.push(key + tmp.major);
+                    }
+                }
+            }
+        };
+
+        var __render = function(){
+            var r = document.documentElement;
+            var cls = r.className;
+            var items = cls.split(/[\s ]+/);
+            var formatItems = [];
+
+            for(var i = 0; i < items.length; i++){
+                if(!items[i]){
+                    continue;
+                }
+
+                formatItems.push(items[i]);
+            }
+
+            var ncls = formatItems.concat(arr);
+
+            r.className = ncls.join(" ");
+        };
+
+        for(var e in env){
+            if(env.hasOwnProperty(e)){
+                __analyze(env[e]);
+            }
+        }
+
+        __render();
+    })();
+    //----------------------------------------------------------------|||
+    window["RemAdaptor"] = {
+        getRemAdaptorAttribute: function(attrName){
+            var el = document.documentElement;
+
+            return el.getAttribute("data-adaptor-" + attrName);
+        },
+        getRemAdaptorDesignValue: function(){
+            var val = Number(this.getRemAdaptorAttribute("design") || 0);
+
+            if(isNaN(val)){
+                return 0;
+            }
+
+            return val;
+        },
+        getRemAdaptorBaseValue: function(){
+            var val = Number(this.getRemAdaptorAttribute("base") || 0);
+
+            if(isNaN(val)){
+                return 0;
+            }
+
+            return val;
+        },
+        getRemAdaptorMinValue: function(){
+            var val = Number(this.getRemAdaptorAttribute("min") || 0);
+
+            if(isNaN(val)){
+                return 0;
+            }
+
+            return val;
+        },
+        getRemAdaptorMaxValue: function(){
+            var val = Number(this.getRemAdaptorAttribute("max") || 0);
+
+            if(isNaN(val)){
+                return 0;
+            }
+
+            return val;
+        },
+        getRemAdaptorPercentageValue: function(){
+            var val = Number(this.getRemAdaptorAttribute("percentage") || 0);
+
+            if(isNaN(val)){
+                return 0;
+            }
+
+            return val;
+        },
+        filterScript: function(str){
+            var text = document.createTextNode(str);
+            var parser = document.createElement("div");
+            var value = "";
+
+            parser.appendChild(text);
+
+            value = parser.innerHTML;
+            
+            text = null; parser = null;
+
+            return value;
+        },         
+        getParameter:function(key, querystring){
+            var search = (querystring || document.location.search);
+            var pattern = new RegExp("[\?&]"+key+"\=([^&#\?]*)", "g");
+            var matcher = pattern.exec(search);
+            var items = null;
+            
+            if(null != matcher){
+                items = matcher[1];
+            }
+
+            if(null != items){
+                items = this.filterScript(items);
+            }
+
+            pattern = null;
+
+            return items;
+        },
+        "parse": __parse,
+        "env": __parse(_ua)
+    };
+})("mobile=750,desktop=1400", 100, 25, 100);
+</script>
