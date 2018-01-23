@@ -44,7 +44,7 @@
     };
 
     module.exports = {
-        "version": "R17B0817",
+        "version": "R18B0123",
         "connect": Bridge.connect
     }
 });

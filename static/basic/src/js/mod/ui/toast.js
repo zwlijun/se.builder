@@ -25,11 +25,12 @@
         "MIDDLE_RIGHT": "toast-middle-right",
         "MIDDLE_CENTER": "toast-middle-center",
         //-------------------------------------------------------------------------------
-        "version": "R18B0115",
+        "version": "R18B0123",
         //-------------------------------------------------------------------------------
-        text: function(message, position, delay){
+        text: function(message, position, delay, callbacks){
             var sn = Util.GUID();
             var id = "toast_" + sn;
+            var _cbs = callbacks || {};
 
             $("body").append('<div id="' + id + '" class="toast ' + (position || Toast.MIDDLE_CENTER) + ' hidden">' + message + '</div>');
 
@@ -82,9 +83,16 @@
                 "height": height + "px"
             }).removeClass("hidden").addClass("show");
 
+            if(_cbs.show && _cbs.show.callback){
+                Util.execHandler(_cbs.show, [id]);
+            }
+
             setTimeout(function(){
                 $("#" + id).removeClass("show");
 
+                if(_cbs.hide && _cbs.hide.callback){
+                    Util.execHandler(_cbs.hide, [id]);
+                }
                 setTimeout(function(){
                     $("#" + id).remove();
                 }, 1000);
