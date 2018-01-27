@@ -197,7 +197,7 @@
 
             return style;
         },
-        clacDistanceBetween : function(startPoint, endPoint){
+        calcDistanceBetween : function(startPoint, endPoint){
             return Math.sqrt(Math.pow(endPoint.x - startPoint.x, 2) + Math.pow(endPoint.y - startPoint.y, 2));
         },
         calcAngleBetween : function(startPoint, endPoint){

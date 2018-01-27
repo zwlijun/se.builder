@@ -52,6 +52,9 @@
             var toastBox = $("#" + id);
             var toast = toastBox[0];
             
+            if(_cbs.before && _cbs.before.callback){
+                Util.execHandler(_cbs.before, [id]);
+            }
 
             var paddingLeft = intValue("paddingLeft", toast);
             var paddingTop = intValue("paddingTop", toast);
