@@ -11,6 +11,7 @@
  */
 ;define(function (require, exports, module){
     var Listener = $.Listener  = require("mod/se/listener");
+    var Util                   = require("mod/se/util");
 
     var StyleTypes = window["StyleTypes"] = {
         "LINEAR" : "linear",
@@ -213,27 +214,14 @@
             return Math.floor(Math.random() * (max - min + 1)) + min;
         },
         getPointerPosition : function(e){
-            if(e.changedTouches){
-                e = e.changedTouches[e.changedTouches.length - 1];
+            if(e.type.indexOf('touch') !== -1){
+                e = e.touches[0];
             }
 
             var scale = this.scale;
-            var x = 0;
-            var y = 0;
-            var clientX = e.clientX;
-            var clientY = e.clientY;
-            var body = document.body;
-            var scrollLeft = body.scrollLeft;
-            var scrollTop = body.scrollTop;
-            var stage = $(this.stage);
-            var offset = stage.offset();
-
-            this.stageOffsetX = offset.left;
-            this.stageOffsetY = offset.top;
-
-                
-            x = (clientX + scrollLeft || e.pageX) - offset.left || 0;
-            y = (clientY + scrollTop || e.pageY) - offset.top || 0;
+            var rect = Util.getBoundingClientRect(this.stage);
+            var x = (e.clientX - rect.left) * (this.stage.width / rect.width);
+            var y = (e.clientY - rect.top) * (this.stage.height / rect.height);
 
             return {"x": x / scale.x, "y": y / scale.y};
         },
