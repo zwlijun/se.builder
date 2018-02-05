@@ -82,7 +82,8 @@
             "replace": false, 
             "cache": "auto", 
             "append": "auto", 
-            "dataType": RespTypes.J
+            "dataType": RespTypes.J,
+            "name": "secommand"
         };
     };
 
@@ -106,7 +107,8 @@
         //             "replace":false, 
         //             "cache":"auto", 
         //             "append":"auto", 
-        //             "dataType":RespTypes.J
+        //             "dataType":RespTypes.J,
+        //             "name": "secommand"
         //         }
         //     },
         //     "request_type2" : {
@@ -118,7 +120,8 @@
         //             "replace":false, 
         //             "cache":"auto", 
         //             "append":"auto", 
-        //             "dataType":RespTypes.J
+        //             "dataType":RespTypes.J,
+        //             "name": "secommand"
         //         }
         //     }
         // }       
