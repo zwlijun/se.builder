@@ -357,8 +357,10 @@ var _App = {
         var alias = _App.conf("alias");
 
         Util.watchAction("body", [
+            {type: "tap", mapping: "click", compatible: null},
             {type: "click", mapping: null, compatible: null},
-            {type: "input", mapping: null, compatible: null}
+            {type: "input", mapping: null, compatible: null},
+            {type: "submit", mapping: null, compatible: null}
         ], null);
 
         Util.source(AppSchema);
