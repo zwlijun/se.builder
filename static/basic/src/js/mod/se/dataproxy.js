@@ -23,6 +23,38 @@
     };
 
     var ResponseProxy = {
+        /**
+         * JSON数据响应
+         * @param  Object context    上下文(this指针)
+         * @param  Object data       服务器返回的JSON数据
+         * @param  Handler handler   服务器成功后的回调函数  
+         *         {
+         *             Function callback 
+         *             Object context
+         *             Array args
+         *         }
+         * @param  Object exception  错误或异常情况 
+         *         {
+         *             Boolean tips         false - 仅仅只执行errorMap配置的回调  true - 如果有配置errorMap，那么执行errorMap回调，否则直接提示
+         *             Handler handle
+         *             Object errorMap      错误码回调，示例：
+         *                                  errorMap => {
+         *                                      "noresponse": {
+         *                                          callback: function(ctx, code, msg, resp){
+         *                                               //@TODO   
+         *                                          }
+         *                                      }
+         *                                      "20100001000": {
+         *                                          callback: function(ctx, code, msg, resp){
+         *                                              //@TODO
+         *                                          },
+         *                                          args: [],
+         *                                          context: null
+         *                                      }
+         *                                  }      
+         *         }
+         * @param  Object conf       数据判断条件配置 @see _config
+         */
         json: function(context, data, handler, exception, conf){
             exception = exception || {};
             conf = conf || {};

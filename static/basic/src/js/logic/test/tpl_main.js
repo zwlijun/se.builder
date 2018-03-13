@@ -9,13 +9,52 @@ var Storage         = require("mod/se/storage");
 var TemplateEngine  = require("mod/se/template");
 var Toast           = require("mod/ui/toast");
 
-var ErrorTypes = CMD.ErrorTypes;
-var RespTypes = CMD.ResponseTypes;
-var ResponseProxy = DataProxy.ResponseProxy;
-var DataCache =  DataProxy.DataCache;
+var ErrorTypes      = CMD.ErrorTypes;
+var RespTypes       = CMD.ResponseTypes;
+var ResponseProxy   = DataProxy.ResponseProxy;
+var DataCache       = DataProxy.DataCache;
+var Persistent      = Storage.Persistent;
+var Session         = Storage.Session;
 
-var Persistent = Storage.Persistent;
-var Session = Storage.Session;
+//错误回调处理函数配置（根据实际情况调整）
+var ErrorHandlers = {
+    ErrorTips: {
+        callback: function(code, message, type){
+            Toast.text(message, Toast.MIDDLE_CENTER, 3000);
+        }
+    },
+    Login: {
+        callback: function(elapsedTime){
+            Util.requestExternal("go://url#/login?url=" + encodeURIComponent(Util.removeURLHash()), [null, null, null]);
+        }
+    }
+};
+
+//错误码特殊处理回调（根据实际情况调整）
+var ErrorInfo = {
+    // "EXAMPLE_CODE" : function(handler){
+    //     //todo
+    //     Util.execHandler(handler);
+    //     return true;
+    // }
+    "20100001000": function(handler){
+        Util.execHandler(handler);
+
+        Util.delay(500, ErrorHandlers.Login);
+
+        return true;
+    }
+};
+
+//设置数据代理响应配置（根据实际的数据接口进行调整）
+ResponseProxy.conf({
+    "code": "code",                             //服务器返回用于判断是否成功的代码key，如：{"retCode": 0, "retMsg": "ok"}
+    "msg": "message",                           //服务器返回用于提示的信息key，如：{"retCode": 0, "retMsg": "ok"}
+    "success": "0",                             //服务器返回的代码，对应code里的值，resp[_config["code"]] === _config["success"] ? 成功 : 失败
+    "errorHandler": ErrorHandlers.ErrorTips     //错误提示处理回调
+});
+
+//************************************************************************************************************************************************
 
 var PreventDefaultLink = function(){
     $("body").on("click", 'a[href="#none"]', function(e){
@@ -32,7 +71,8 @@ var SecurityURL = {
         var info = Request.parseURL(url);
         var host = info.host;
 
-        var pattern = /(seshenghuo\.com)$/i
+        //需要根据实际情况调整，否则在调用时无法正常跳转页面
+        var pattern = /(seshenghuo\.com)$/i;
 
         if(pattern.test(host)){
             return url;
@@ -367,6 +407,8 @@ var _App = {
         Util.source(GoSchema);
         Util.source(InputSchema);
 
+        CMD.injectErrorInfo(ErrorInfo);
+
         if(conf.message){
             // CMD.setBubbleTips(conf.message);
             Toast.text(conf.message, Toast.BOTTOM_CENTER, 3000);
@@ -376,7 +418,7 @@ var _App = {
 };
 
 module.exports = {
-    "version": "R18B0123",
+    "version": "R18B0313",
     "init": _App.init,
     "conf": _App.conf,
     "expando": {

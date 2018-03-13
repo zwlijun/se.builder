@@ -142,21 +142,30 @@
 
         var fireHandle = $.extend({}, handler);
         var args = handler.args || [];
+        var err = (code in ErrorMap) ? ErrorMap[code] || null : null;
 
         fireHandle.args = [code, msg, type].concat(args);
 
         if(true === onlyCheckErrorMap){
-            if(code in ErrorMap){
-                return ErrorMap[code].apply(null, [fireHandle]);
+            if(err){
+                if(err.apply){
+                    return err.apply(null, [fireHandle]);
+                }else{
+                    return Util.execHandler(err, [fireHandle]);
+                }
             }
         }else{
-            if(code in ErrorMap){
-                return ErrorMap[code].apply(null, [fireHandle]);
+            if(err){
+                if(err.apply){
+                    return err.apply(null, [fireHandle]);
+                }else{
+                    return Util.execHandler(err, [fireHandle]);
+                }
             }else{
                 return Util.execHandler(fireHandle);
             }
         }
-    }
+    };
 
     /**
      * 缓存请求信息
