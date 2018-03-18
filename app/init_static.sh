@@ -135,18 +135,18 @@ if [ "$#" -eq "1" ]; then
     echo -n "<link id=\"seed_style\" rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_BASE_RELATIVE_DIR}/src/css/lib/gm.css\">" > ${STATIC_BASE_PREFIX}/inc/css_common_gm.html
     echo -n "<link rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_BASE_RELATIVE_DIR}/src/css/lib/m_main.css\">" > ${STATIC_BASE_PREFIX}/inc/css_common_mm.html
     echo -n "<link rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_BASE_RELATIVE_DIR}/src/css/lib/d_main.css\">" > ${STATIC_BASE_PREFIX}/inc/css_common_dm.html
-    echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_BASE_RELATIVE_DIR}/src/js/lib/j.1x.mix.js\"></script>" > ${STATIC_BASE_PREFIX}/inc/js_common_j.1.x.html
-    echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_BASE_RELATIVE_DIR}/src/js/lib/j.2x.mix.js\"></script>" > ${STATIC_BASE_PREFIX}/inc/js_common_j.2.x.html
-    echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_BASE_RELATIVE_DIR}/src/js/lib/z.120.mix.js\"></script>" > ${STATIC_BASE_PREFIX}/inc/js_common_z.120.html
+    echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" data-use-source=\"0\" src=\"${STATIC_BASE_RELATIVE_DIR}/src/js/lib/j.1x.mix.js\"></script>" > ${STATIC_BASE_PREFIX}/inc/js_common_j.1.x.html
+    echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" data-use-source=\"0\" src=\"${STATIC_BASE_RELATIVE_DIR}/src/js/lib/j.2x.mix.js\"></script>" > ${STATIC_BASE_PREFIX}/inc/js_common_j.2.x.html
+    echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" data-use-source=\"0\" src=\"${STATIC_BASE_RELATIVE_DIR}/src/js/lib/z.120.mix.js\"></script>" > ${STATIC_BASE_PREFIX}/inc/js_common_z.120.html
     
     #生成目标版本INC文件
     echo -n "<script>window[\"SE_BUILDER_STATIC_VERSION\"] = \"${STATIC_TARGET_VERSION}\";</script>" > ${STATIC_PREFIX}/inc/static_version.html
     echo -n "<link id=\"seed_style\" rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_RELATIVE_DIR}/src/css/lib/gm.css\">" > ${STATIC_PREFIX}/inc/css_common_gm.html
     echo -n "<link rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_RELATIVE_DIR}/src/css/lib/m_main.css\">" > ${STATIC_PREFIX}/inc/css_common_mm.html
     echo -n "<link rel=\"stylesheet\" type=\"text/css\" href=\"${STATIC_RELATIVE_DIR}/src/css/lib/d_main.css\">" > ${STATIC_PREFIX}/inc/css_common_dm.html
-    echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_RELATIVE_DIR}/src/js/lib/j.1x.mix.js\"></script>" > ${STATIC_PREFIX}/inc/js_common_j.1.x.html
-    echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_RELATIVE_DIR}/src/js/lib/j.2x.mix.js\"></script>" > ${STATIC_PREFIX}/inc/js_common_j.2.x.html
-    echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" src=\"${STATIC_RELATIVE_DIR}/src/js/lib/z.120.mix.js\"></script>" > ${STATIC_PREFIX}/inc/js_common_z.120.html
+    echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" data-use-source=\"0\" src=\"${STATIC_RELATIVE_DIR}/src/js/lib/j.1x.mix.js\"></script>" > ${STATIC_PREFIX}/inc/js_common_j.1.x.html
+    echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" data-use-source=\"0\" src=\"${STATIC_RELATIVE_DIR}/src/js/lib/j.2x.mix.js\"></script>" > ${STATIC_PREFIX}/inc/js_common_j.2.x.html
+    echo -n "<script id=\"seed_script\" data-debug=\"0\" data-combo=\"1\" data-use-source=\"0\" src=\"${STATIC_RELATIVE_DIR}/src/js/lib/z.120.mix.js\"></script>" > ${STATIC_PREFIX}/inc/js_common_z.120.html
 
     #svn check & commit
     SVN_REVISION=`svn info |grep "Last Changed Rev:" |awk '{print $4}'`  
