@@ -1,6 +1,9 @@
 <script>
 (function(){
-var AliasSet = $.__ROOT__.ALIAS_SET;
+var RootSet  = $.__ROOT__;
+var AliasSet = RootSet.ALIAS_SET;
+
+var useSource = RootSet.USE_SOURCE;
 
 var platform = AliasSet.PLATFORM;
 var app = AliasSet.APP;
@@ -83,6 +86,12 @@ var requireLogicFile = nslookup(bridge, [feature, page]);
 
 if(requireLogicFile){
     requires.push(requireLogicFile);
+}
+
+if(useSource){
+    for(var i = 0; i < requires.length; i++){
+        requires[i] = requires[i].replace(/\.[a-f0-9]{40}$/i, "");
+    }
 }
 
 seajs.use(requires, sea_callback);

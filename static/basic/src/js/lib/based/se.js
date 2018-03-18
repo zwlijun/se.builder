@@ -12,6 +12,7 @@ var __IMAGE__           = $.__ROOT__.IMAGE          = __RES_ROOT__ + "img/";
 var __CSS__             = $.__ROOT__.CSS            = __RES_ROOT__ + "css/";
 var __DEBUG__           = $.__ROOT__.DEBUG          = "1" === (__SEED_SCRIPT__.attr("data-debug") || "0");
 var __COMBO__           = $.__ROOT__.COMBO          = "1" === (__SEED_SCRIPT__.attr("data-combo") || "1");
+var __USE_SOURCE__      = $.__ROOT__.USE_SOURCE     = "1" === (__SEED_SCRIPT__.attr("data-use-source") || "0");
 var __PAGE_ALIAS__      = $.__ROOT__.PAGE_ALIAS     = __APP__.attr("data-page-alias") || "";
 var __REFERER__         = $.__ROOT__.REFERER        = document.URL;
 var __DOC_REFERER__     = $.__ROOT__.DOC_REFERER    = document.referrer;
@@ -32,6 +33,11 @@ var GetAlistItemIndex = function(size, n){
 
 if(true === isSourceDir){
     __DEBUG__ = $.__ROOT__.DEBUG = true;
+}
+
+if(!isSourceDir && true === __USE_SOURCE__){
+    __DEBUG__           = $.__ROOT__.DEBUG          = true;
+    __JAVASCRIPT__      = $.__ROOT__.JAVASCRIPT     = __JAVASCRIPT__.replace("/res/", "/src/");
 }
 
 //force debug
