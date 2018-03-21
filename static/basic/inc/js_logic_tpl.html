@@ -16,7 +16,7 @@ var debug = $.__ROOT__.DEBUG;
 var __conf__ = window.__CONFIG || {};
 
 var requires = [
-    "logic/m/main"
+    "logic/test/tpl_main"
 ];
 
 var sea_callback = function(){
@@ -52,6 +52,8 @@ var sea_callback = function(){
             }
         }
     }
+
+    window["SEBridge"] = main;
 };
 
 var bridge = {

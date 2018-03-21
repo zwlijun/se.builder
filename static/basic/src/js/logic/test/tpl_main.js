@@ -410,8 +410,12 @@ var _App = {
         CMD.injectErrorInfo(ErrorInfo);
 
         if(conf.message){
-            // CMD.setBubbleTips(conf.message);
-            Toast.text(conf.message, Toast.BOTTOM_CENTER, 3000);
+            var toastConfig = conf.toast || null;
+            if(toastConfig){
+                Toast.text(conf.message, toastConfig.align || Toast.BOTTOM_CENTER, toastConfig.delay || 3000, toastConfig.callbacks || {});
+            }else{
+                CMD.setBubbleTips(conf.message);
+            }            
         }
         PreventDefaultLink();
     }

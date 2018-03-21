@@ -14,7 +14,54 @@
 <header class="app-header"></header> 
 <article class="app-body"></article>
 <footer class="app-footer"></footer>
+<script>
+window.__CONFIG = (function(){
+    var conf = {
+        "code": "",
+        "message": "",
+        "toast": {
+            "align": "toast-bottom-center",
+            "delay": 3000,
+            "callbacks": {
+                "before": {
+                    callback: function(toastId){
+                        //@TODO
+                    },
+                    "args": [],
+                    "context": conf
+                },
+                "show": {
+                    callback: function(toastId){
+                        //@TODO
+                    },
+                    "args": [],
+                    "context": conf
+                },
+                "hide": {
+                    callback: function(toastId){
+                        //@TODO
+                    },
+                    "args": [],
+                    "context": conf
+                }
+            }
+        },
+        //BEGIN 重定向配置
+        "redirectTo": {  
+            //业务名称，默认：default
+            "default": {   
+                //业务状态(自定义key或错误码)对应的跳转URL
+                "success": "" 
+            }
+        } 
+        //END 重定向配置
+    };
+
+    return conf;
+})();
+</script>
 <!--#include virtual="/static/basic/inc/js_common_j.2.x.html" -->  
+<!--#include virtual="/static/basic/inc/js_logic_tpl.html" -->  
 <!--#include virtual="/static/basic/inc/stat_code_footer.html" -->
 </body>
 </html>
