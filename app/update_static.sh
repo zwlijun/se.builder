@@ -129,6 +129,8 @@ if [ "$#" -eq "1" ]; then
     cp -rf ${STATIC_BASE_PREFIX}/src/js/mod ${STATIC_PREFIX}/src/js/
     cp -rf ${STATIC_BASE_PREFIX}/src/js/logic/test/tpl.js ${STATIC_PREFIX}/src/js/logic/test/
     cp -rf ${STATIC_BASE_PREFIX}/src/js/logic/test/tpl_main.js ${STATIC_PREFIX}/src/js/logic/test/
+    cp -rf ${STATIC_BASE_PREFIX}/src/js/logic/test/tpl_dataset.js ${STATIC_PREFIX}/src/js/logic/test/
+    cp -rf ${STATIC_BASE_PREFIX}/src/js/logic/test/tpl_dataform.js ${STATIC_PREFIX}/src/js/logic/test/
     #复制样式文件
     cp -rf ${STATIC_BASE_PREFIX}/src/css/lib/extra ${STATIC_PREFIX}/src/css/lib/
     cp -rf ${STATIC_BASE_PREFIX}/src/css/lib/gm.css ${STATIC_PREFIX}/src/css/lib/
