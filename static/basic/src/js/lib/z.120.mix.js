@@ -3128,6 +3128,8 @@ var __DOC_REFERER__     = $.__ROOT__.DOC_REFERER    = document.referrer;
 var aliasItems = __PAGE_ALIAS__.split(".");
 var aliasItemSize = aliasItems.length;
 var isSourceDir = __RES_ROOT__.indexOf("/src/") != -1;
+var isForceUseSource = __REFERER__.indexOf("FORCE_USE_SOURCE=1") != -1;
+var isForceDebug = __REFERER__.indexOf("FORCE_DEBUG=1") != -1;
 
 var GetAliasItem = function(index){
     return aliasItems[index];
@@ -3139,17 +3141,19 @@ var GetAlistItemIndex = function(size, n){
     return Math.max(lastIndex - n, 0);
 }
 
-if(true === isSourceDir){
-    __DEBUG__ = $.__ROOT__.DEBUG = true;
+if(true === isSourceDir || true === isForceDebug){
+    __DEBUG__           = $.__ROOT__.DEBUG          = true;
+}
+
+if(isForceUseSource){
+    __DEBUG__           = $.__ROOT__.DEBUG          = true;
+    __USE_SOURCE__      = $.__ROOT__.USE_SOURCE     = true;
 }
 
 if(!isSourceDir && true === __USE_SOURCE__){
     __DEBUG__           = $.__ROOT__.DEBUG          = true;
     __JAVASCRIPT__      = $.__ROOT__.JAVASCRIPT     = __JAVASCRIPT__.replace("/res/", "/src/");
 }
-
-//force debug
-// __DEBUG__ = $.__ROOT__.DEBUG = true;
 
 $.__ROOT__.ALIAS_SET = {
     "PLATFORM": __PAGE_ALIAS__,     //平台

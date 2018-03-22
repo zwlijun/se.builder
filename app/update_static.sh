@@ -145,6 +145,8 @@ if [ "$#" -eq "1" ]; then
     cp -rf ${STATIC_BASE_PREFIX}/media/* ${STATIC_PREFIX}/media/
     #复制 inc/rem
     cp -rf ${STATIC_BASE_PREFIX}/inc/rem.html ${STATIC_PREFIX}/inc/
+    #复制 业务脚本模板文件
+    cp -rf ${STATIC_BASE_PREFIX}/inc/js_logic_tpl.html ${STATIC_PREFIX}/inc/
     #复制 inc/ie
     #cp -rf ${STATIC_BASE_PREFIX}/inc/ie.html ${STATIC_PREFIX}/inc/
 
