@@ -11383,6 +11383,21 @@ var conf = {
         "wxjssdk": WEIXIN_JSSDK_URL
     }
 };
+(function(){
+    var seajsAlias = $('meta[name="seajs-alias"]');
+    var size = seajsAlias.length;
+    var meta = null;
+    var aliasName = null;
+    var content = null;
+
+    for(var i = 0; i < size; i++){
+        meta = $(seajsAlias[i]);
+        aliasName = meta.attr("data-alias");
+        content = meta.attr("content");
+
+        conf.alias[aliasName] = content;
+    }
+})();
 
 if(!__COMBO__ || (__COMBO__ && __DEBUG__)){
     conf["comboExcludes"] = /.*/;
