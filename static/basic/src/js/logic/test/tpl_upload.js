@@ -57,7 +57,7 @@
 
             $(hiddenInputSelector).val(val || "");
         },
-        init: function(){
+        listen: function(){
             this.destroy();
 
             var conf = this.conf;
@@ -79,18 +79,19 @@
 
             service.set("notsupport", {
                 callback: function(){
-                    CMD.fireError(
+                    Uploader.fireErrorMessage(
                         "0x100229", 
                         "对不起，您当前所在的浏览器或APP不支持", 
                         ErrorTypes.ALARM
                     );
 
+                    
                     this.uploader.disabled(false);
                 },
                 context: _ctx
             }).set("maxsize", {
                 callback: function(fileInfo, maxsize){
-                    CMD.fireError(
+                    Uploader.fireErrorMessage(
                         "0x100231", 
                         "文件“" + fileInfo.name + "”超过最大上传大小，单个文件允许上传大小为：" + this.service.getFileSize(maxsize), 
                         ErrorTypes.INFO
@@ -101,7 +102,7 @@
                 context: _ctx
             }).set("maxupload", {
                 callback: function(size, maxupload){
-                    CMD.fireError(
+                    Uploader.fireErrorMessage(
                         "0x100230", 
                         "选择的文件个数超过最大允许数，最多允许上传（" + size + "/" + maxupload + "）个文件", 
                         ErrorTypes.INFO
@@ -112,7 +113,7 @@
                 context: _ctx
             }).set("filter", {
                 callback: function(fileInfo){
-                    CMD.fireError(
+                    Uploader.fireErrorMessage(
                         "0x100230", 
                         "文件“" + fileInfo.name + "”的文件类型不允许上传，请重新选择。", 
                         ErrorTypes.INFO
@@ -123,7 +124,7 @@
                 context: _ctx
             }).set("servererror", {
                 callback: function(fileInfo, status){
-                    CMD.fireError(
+                    Uploader.fireErrorMessage(
                         "0x100232", 
                         "文件“" + fileInfo.name + "”上传失败，服务器返回：" + status, 
                         ErrorTypes.ERROR
@@ -144,16 +145,29 @@
                     //todo
                     this.uploader.progress.update(0);
 
+                    var plugin = Bridge.plugin;
+                    var uploaderSettings = plugin.conf("uploader") || {};
+
+                    if(uploaderSettings.responseDataConverter){
+                        response = uploaderSettings.responseDataConverter(response);
+                    }
+
                     if("0" === response.code){
                         var dataSet = response.dataSet;
                         var uploadFile = dataSet[0];
 
                         this.uploader.updateHiddenValue(uploadFile.source);
                         this.uploader.updateBackgroundImage(uploadFile.source);
-                    }else{
-                        CMD.fireError(
+
+                        Uploader.fireErrorMessage(
                             response.code, 
-                            "文件“" + fileInfo.name + "”上传失败" + (response.message ? "，" + response.message : ""), 
+                            response.message || "上传成功",
+                            ErrorTypes.SUCCESS
+                        );
+                    }else{
+                        Uploader.fireErrorMessage(
+                            response.code, 
+                            response.message || "上传失败",
                             ErrorTypes.ERROR
                         );
                     }
@@ -252,6 +266,83 @@
 
         return null;
     };
+    Uploader.fireErrorMessage = function(errorCode, errorMessage, errorType){
+        var plugin = Bridge.plugin;
+        var uploaderSettings = plugin.conf("uploader") || {};
+        var uploaderToast = uploaderSettings.toast;
+
+        if(uploaderToast){
+            Toast.text(errorMessage, uploaderToast.align || Toast.MIDDLE_CENTER, uploaderToast.delay || 3000, uploaderToast.callbacks || {});
+        }else{
+            CMD.fireError(errorCode, errorMessage, errorType);
+        }
+    };
+
+    /**
+    "uploader": {
+        "toast": {
+            "align": "toast-middle-center",
+            "delay": 3000,
+            "callbacks": {
+                "before": {
+                    callback: function(toastId){
+                        //@TODO
+                    },
+                    "args": [],
+                    "context": conf
+                },
+                "show": {
+                    callback: function(toastId){
+                        //@TODO
+                    },
+                    "args": [],
+                    "context": conf
+                },
+                "hide": {
+                    callback: function(toastId){
+                        //@TODO
+                    },
+                    "args": [],
+                    "context": conf
+                }
+            }
+        },
+        "responseDataConverter": function(resp){
+            // resp = {
+            //     "code":"0",
+            //     "message":"success",
+            //     "dataSet":[
+            //         {
+            //             "fileName":"avator_1910331639_1521902257440_800.png",
+            //             "srcFileName":"avator.png",
+            //             "localPath":"avator.png",
+            //             "remotePath":"avator/2018/3/24/avator_1910331639_1521902257440_800.png",
+            //             "extendName":".png",
+            //             "contentType":"image/png",
+            //             "host":"http://file2.seshenghuo.com/",
+            //             "source":"http://file2.seshenghuo.com/avator/2018/3/24/avator_1910331639_1521902257440_800.png",
+            //             "sourceMap":null,
+            //             "size":4234,
+            //             "maxSize":2097152,
+            //             "fileSize":4234,
+            //             "data":null,
+            //             "serialCode":"0f155a1639063b5e17370a0e3e"
+            //         }
+            //     ],
+            //     "pageIndex":0,
+            //     "pageSize":20,
+            //     "recordSize":0,
+            //     "helperMessage":"",
+            //     "token":"",
+            //     "success":true,
+            //     "timestamp":1521902257193,
+            //     "expired":false
+            // }
+            
+            return resp;
+        }
+    }
+    **/
     //===Uploader Service Logic End===
 
     var UploaderService = {
@@ -260,7 +351,7 @@
             init: function(serviceKey){
                 return this.uploader || (this.uploader = Uploader.newInstance({
                     "key": serviceKey,
-                    "maxsize": 2097152,
+                    "maxsize": 2 * 1024 * 1024,
                     "filter": /(image\/jpeg|image\/jpg|image\/png)/,
                     "url": "/upload",
                     "maxupload": 1,
@@ -268,7 +359,7 @@
                         {"name": "X-Upload-Type", "value": serviceKey}
                     ],
                     "dragZone": "non",
-                    "inputSelector": 'input[data-uploader="' + serviceKey + '"]',
+                    "inputSelector": 'input[data-uploader="' + serviceKey + '_file"]',
                     "enterStyle": "dragdrop"
                 }));
             }
