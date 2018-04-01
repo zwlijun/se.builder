@@ -480,6 +480,47 @@
 
             resourceParameters = [type, p_alias, e_alias, d_alias];
 
+            //======================
+            setTimeout(function(){
+                var projs = document.querySelectorAll(".project-nav .project");
+                var size = projs.length;
+                var proj = null;
+                var envs = null;
+                var env = null;
+
+                var projRadio = null;
+                var envRadio = null;
+
+                var currentProj = null;
+                var currentEnv = null;
+
+                for(var i = 0; i < size; i++){
+                    proj = projs[i];
+
+                    projRadio = proj.querySelector('input[name="project"]');
+
+                    if(true === projRadio.checked){
+                        proj.setAttribute("data-visible", "1");
+                    }else{
+                        proj.removeAttribute("data-visible");
+                    }
+
+                    envs = proj.querySelectorAll("dl.env");
+                    for(var j = 0; j < envs.length; j++){
+                        env = envs[j];
+
+                        envRadio = env.querySelector('input[name="env"]');
+
+                        if(true === envRadio.checked){
+                            env.setAttribute("data-visible", "1");
+                        }else{
+                            env.removeAttribute("data-visible");
+                        }
+                    }
+                }
+            }, 60);
+            //======================
+
             Logic.resource.apply(Logic, resourceParameters);
         }
     });
