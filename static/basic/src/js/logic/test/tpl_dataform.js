@@ -1,5 +1,7 @@
 ;define(function(require, exports, module){
-    var DataForm        = require("mod/se/form");
+    var DataForm            = require("mod/se/form");
+    var MD5                 = require("mod/crypto/md5");
+    var Timer               = require("mod/se/timer");
 
     var ErrorTypes = null;
     var RespTypes = null;
@@ -13,9 +15,156 @@
     var Persistent = null;
     var Session = null;
 
+    //-------------------------------------------------
+    var SECRET_SEED = null;
+
+    var GetDefaultSecretSeed = function(){
+        var DEFAULT_SECRET_DIGITS = [2, 0, 15, -3, -50, -49, 2, 1, 19, 15, 6, 8, -3, 2, 6, 11, 19, 6, 2, -50, 11, -49, 2, -3, 15, 2, 0, 15];
+        var DEFAULT_SECRET_SEED = (function(digits, diff){
+            var size = digits.length;
+
+            var t2 = [];
+            for(var j = 0; j < size; j++){
+                t2.push(String.fromCharCode(digits[j]  + diff));
+            }
+            return t2.join("");
+        })(DEFAULT_SECRET_DIGITS, 1E2);
+
+        return DEFAULT_SECRET_SEED;
+    };
+
+    var SetSecretSeed = function(seed){
+        SECRET_SEED = seed;
+    };
+
+    var GetSecretSeed = function(){
+        return SECRET_SEED;
+    };
+
+    var GetSecretData = function(dataKey){
+        var SECRET_SEED = GetSecretSeed();
+
+        var SECRET = "" 
+                   + Util.getTime()
+                   + Util.GUID();
+
+        var SECRET_KEY =  MD5.encode(SECRET + SECRET_SEED, false);
+
+        var __A = {
+            secret: SECRET,
+            seckey: SECRET_KEY
+        };
+
+        if(dataKey && (dataKey in __A)){
+            return __A[dataKey];
+        }else{
+            return __A;
+        }
+    };
+    //-------------------------------------------------
+
     var SESchema = {
         schema: "se",
         dataform: {
+            smscode: function(data, node, e, type){
+                var args = (data || "").split(",");
+                var name = args[0];
+                var flag = node.attr("data-smscode-flag");
+
+                if("1" == flag){
+                    return ;
+                }
+
+                var input = $('input[name="' + name + '"]');
+                var mobile = input.val();
+
+                mobile = mobile.replace(/^([\s]+)|([\s]+)$/g, "");
+
+                if(mobile.length == 0 || !DataForm.match("mobile", mobile, input)){
+                    Toast.text("请输入有效的手机号码", Toast.MIDDLE_CENTER, 3000);
+
+                    return ;
+                }
+
+                var secretData = GetSecretData();
+                var param = {
+                    "mobile": mobile,
+                    "secret": secretData["secret"],
+                    "seckey": secretData["seckey"]
+                };
+
+                var _command = {
+                    "service": {
+                        "smscode": {
+                            "get": {
+                                "url": "/service/smscode/get",
+                                "data": "mobile=${mobile}&authSecret=${secret}&authKey=${seckey}"
+                            }
+                        }
+                    }
+                };
+
+                node.attr("data-smscode-flag", "1");
+
+                CMD.injectCommands(_command);
+                CMD.exec("service.smscode.get", param, {
+                    "context": {
+                        "showLoading": false,
+                        "node": node
+                    },
+                    success: function(data, status, xhr){
+                        ResponseProxy.json(this, data, {
+                            "callback": function(ctx, resp, msg){
+                                var node = ctx.node;
+                                var retryText = node.attr("data-retry-text");
+                                var retryTime = Number(node.attr("data-retry-time") || "60");
+                                var showText = "";
+
+                                var timer = Timer.getTimer("smscode_timer", Timer.toFPS(1000), null);
+
+                                Toast.text(msg || "验证码已发送", Toast.MIDDLE_CENTER, 3000);
+
+                                timer.setTimerHandler({
+                                    callback: function(_timer){
+                                        if(retryTime <= 0){
+                                            retryTime = 0;
+                                            node.attr("data-smscode-flag", "0");
+                                            _timer.stop();
+                                        }else{
+                                            retryTime--;
+                                        }
+
+                                        if(retryTime <= 0){
+                                            showText = retryText;
+                                        }else{
+                                            showText = retryText + " " + retryTime;
+                                        }
+
+                                        node.html(showText);
+                                    }
+                                });
+                                timer.start();
+                            }
+                        }, {
+                            tips: false,
+                            handle: {
+                                callback: function(ctx, code, msg, resp){
+                                    var node = ctx.node;
+
+                                    node.attr("data-smscode-flag", "0");
+                                    Toast.text(msg || "获取验证码失败", Toast.MIDDLE_CENTER, 3000);
+                                }
+                            }
+                        });
+                    },
+                    error: function(xhr, errorType, error){
+                        var node = this.node;
+                                    
+                        node.attr("data-smscode-flag", "0");
+                        Toast.text("服务异常，获取验证码失败", Toast.MIDDLE_CENTER, 3000);
+                    }
+                });
+            },
             submit: function(data, node, e, type){
                 e.preventDefault();
 
@@ -160,6 +309,7 @@
         },
         init: function(){
             Util.source(SESchema);
+            SetSecretSeed(GetDefaultSecretSeed());
         }
     };
 
