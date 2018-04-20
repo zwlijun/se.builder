@@ -293,7 +293,9 @@
                                             url = decodeURIComponent(jumpURL);
                                         }
 
-                                        Util.requestExternal("go://url#" + url, []);
+                                        if(url){
+                                            Util.requestExternal("go://url#" + url, []);
+                                        }
                                         // 业务重定向逻辑 ========= ]]
                                     }
                                 }
