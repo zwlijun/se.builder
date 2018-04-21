@@ -12,6 +12,7 @@
     var Request = null;
     var Persistent = null;
     var Session = null;
+    var Toast = null;
 
     //===Uploader Service Logic Start===
     var Uploader = function(conf){
@@ -394,6 +395,7 @@
             TemplateEngine  = expando["template"];
             Persistent      = expando["persistent"];
             Session         = expando["session"];
+            Toast           = expando["toast"];
 
             //业务初始化入口
             Logic.init();

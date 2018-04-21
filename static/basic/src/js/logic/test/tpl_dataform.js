@@ -14,6 +14,7 @@
     var Request = null;
     var Persistent = null;
     var Session = null;
+    var Toast = null;
 
     //-------------------------------------------------
     var SECRET_SEED = null;
@@ -333,6 +334,7 @@
             TemplateEngine  = expando["template"];
             Persistent      = expando["persistent"];
             Session         = expando["session"];
+            Toast           = expando["toast"];
 
             //业务初始化入口
             Logic.init();
