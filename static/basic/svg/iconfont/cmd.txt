@@ -1,0 +1,1 @@
+/data/app/node0.10.28/bin/svgo -f ./basefont.single.src -o ./basefont.single.out
