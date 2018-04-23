@@ -57,20 +57,11 @@ http://static.seshenghuo.com/${STATIC_PATH}
 <a href="http://static.seshenghuo.com/static/basic/test/mod_toast.shtml" target="_blank">Module#Toast</a>
 </pre>
 
-#ICON Font R2.0.0 Demo
+#ICON Font Demo
 <pre>
-<a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/base/r2.0.0/demo.html" target="_blank">demo</a>
-<a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/base/r2.0.0/demo_fontclass.html" target="_blank">demo_fontclass</a>
-<a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/base/r2.0.0/demo_symbol.html" target="_blank">demo_symbol</a>
-<a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/base/r2.0.0/demo_unicode.html" target="_blank">demo_unicode</a>
-</pre>
-
-#ICON Font R1.0.0 Demo - 废除项目，如有需要自行引用
-<pre>
-<a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/base/r1.0.0/demo.html" target="_blank">demo</a>
-<a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/base/r1.0.0/demo_fontclass.html" target="_blank">demo_fontclass</a>
-<a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/base/r1.0.0/demo_symbol.html" target="_blank">demo_symbol</a>
-<a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/base/r1.0.0/demo_unicode.html" target="_blank">demo_unicode</a>
+<a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/basefont/demo_fontclass.html" target="_blank">demo_fontclass</a>
+<a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/basefont/demo_symbol.html" target="_blank">demo_symbol</a>
+<a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/basefont/demo_unicode.html" target="_blank">demo_unicode</a>
 </pre>
 
 
