@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html data-page-alias="platform.app.project.module.feature.page"<!--#include virtual="/static/basic/inc/rem_attr.html" -->>
+<head>
+<!--#include virtual="/static/basic/inc/meta.html" -->
+<!--#include virtual="/static/basic/inc/rem.html" -->
+<title>Marquee</title>
+<!--#include virtual="/static/basic/inc/css_common_gm.html" -->
+<!--#include virtual="/static/basic/inc/css_common_mm.html" -->
+<!--#include virtual="/static/basic/inc/static_version.html" -->
+<!--#include virtual="/static/basic/inc/stat_code_header.html" -->
+<style type="text/css">
+.marquee{
+  width: 100%;
+  height: .78rem;
+  background-color: #f3f3f3;
+  color: #565596;
+  font-size: .24rem;
+
+  margin-bottom: .50rem;
+}
+.marquee .icofont{
+  margin-left: .24rem;
+  display: block;
+  width: .36rem;
+}
+.marquee .icofont:before{
+  content: "\e6fe";
+  color: #565596;
+  font-size: .36rem;
+}
+.marquee-items-wrapper{
+  width: -webkit-calc(100% - .48rem - .36rem);
+  width: -moz-calc(100% - .48rem - .36rem);
+  width: -ms-calc(100% - .48rem - .36rem);
+  width: calc(100% - .48rem - .36rem);
+  height: .50rem;
+  overflow-y: hidden;
+  margin-right: .24rem;
+  margin-left: .16rem;
+  position: relative;
+}
+.marquee-items .marquee-item{
+  display: block;
+  width: 100%;
+  height: .30rem;
+  line-height: .30rem;
+  padding: .14rem 0;
+}
+.marquee.todown .marquee-items{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+.marquee.toleft .marquee-items{
+  position: absolute;
+  left: 0;
+}
+.marquee.toleft .marquee-items .marquee-item{
+  padding-right: .30rem;
+}
+.marquee.toright .marquee-items{
+  position: absolute;
+  right: 0;
+}
+.marquee.toright .marquee-items .marquee-item{
+  padding-left: .30rem;
+}
+</style>
+</head>
+<body>
+<header class="app-header"></header> 
+<article class="app-body">
+  <div class="marquee flexbox middle justify" data-marquee="m1" data-marquee-open="1">
+    <i class="icofont gassets"></i>
+    <div class="marquee-items-wrapper">
+      <div class="marquee-items flexbox top left vertical-r">
+        <span class="marquee-item ellipsis">云顶第二期第三轮投票上币结果公布及第四轮投票开始云顶第二期第三轮投票上币结果公布及第四轮投票开始</span>
+        <span class="marquee-item ellipsis">云顶第二期第三轮投票上币结果公布及第四轮投票开始</span>
+      </div>
+    </div>
+  </div>
+  <div class="marquee todown flexbox middle justify" data-marquee="m2" data-marquee-open="1">
+    <i class="icofont gassets"></i>
+    <div class="marquee-items-wrapper">
+      <div class="marquee-items">
+        <span class="marquee-item ellipsis">云顶第二期第三轮投票上币结果公布及第四轮投票开始云顶第二期第三轮投票上币结果公布及第四轮投票开始</span>
+        <span class="marquee-item ellipsis">云顶第二期第三轮投票上币结果公布及第四轮投票开始</span>
+      </div>
+    </div>
+  </div>
+  <div class="marquee toleft flexbox middle justify" data-marquee="m3" data-marquee-open="1">
+    <i class="icofont gassets"></i>
+    <div class="marquee-items-wrapper">
+      <div class="marquee-items flexbox middle left">
+        <span class="marquee-item ellipsis">云顶第二期第三轮投票上币结果公布及第四轮投票开始云顶第二期第三轮投票上币结果公布及第四轮投票开始</span>
+        <span class="marquee-item ellipsis">云顶第二期第三轮投票上币结果公布及第四轮投票开始</span>
+      </div>
+    </div>
+  </div>
+  <div class="marquee toright flexbox middle justify" data-marquee="m4" data-marquee-open="1">
+    <i class="icofont gassets"></i>
+    <div class="marquee-items-wrapper">
+      <div class="marquee-items flexbox middle left">
+        <span class="marquee-item ellipsis">云顶第二期第三轮投票上币结果公布及第四轮投票开始云顶第二期第三轮投票上币结果公布及第四轮投票开始</span>
+        <span class="marquee-item ellipsis">云顶第二期第三轮投票上币结果公布及第四轮投票开始</span>
+      </div>
+    </div>
+  </div>
+</article>
+<footer class="app-footer"></footer>
+<script>
+window.__CONFIG = (function(){
+    var conf = {
+        "code": "",
+        "message": "",
+        "toast": {
+            "align": "toast-bottom-center",
+            "delay": 3000,
+            "callbacks": {
+                "before": {
+                    callback: function(toastId){
+                        //@TODO
+                    },
+                    "args": [],
+                    "context": conf
+                },
+                "show": {
+                    callback: function(toastId){
+                        //@TODO
+                    },
+                    "args": [],
+                    "context": conf
+                },
+                "hide": {
+                    callback: function(toastId){
+                        //@TODO
+                    },
+                    "args": [],
+                    "context": conf
+                }
+            }
+        },
+        //BEGIN 重定向配置
+        "redirectTo": {  
+            //业务名称，默认：default
+            "default": {   
+                //业务状态(自定义key或错误码)对应的跳转URL
+                "success": "" 
+            }
+        } 
+        //END 重定向配置
+    };
+
+    return conf;
+})();
+</script>
+<!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
+<script>
+seajs.use(["logic/test/test_marquee"]);
+</script>
+<!--#include virtual="/static/basic/inc/stat_code_footer.html" -->
+</body>
+</html>
