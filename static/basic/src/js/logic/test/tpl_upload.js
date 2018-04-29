@@ -45,7 +45,7 @@
             var input = $(conf.inputSelector);
             var em = input.siblings("em");
 
-            if(url){
+            if(true === conf.isUpdateBackgroundImage && url){
                 em.css({
                     backgroundImage: "url(" + url + ")"
                 });
@@ -56,7 +56,9 @@
             var inputSelector = conf.inputSelector;
             var hiddenInputSelector = inputSelector.replace("_file", "");
 
-            $(hiddenInputSelector).val(val || "");
+            if(true === conf.isUpdateHiddenValue){
+                $(hiddenInputSelector).val(val || "");
+            }
         },
         listen: function(){
             this.destroy();
@@ -146,6 +148,8 @@
                     //todo
                     this.uploader.progress.update(0);
 
+                    var conf = this.conf;
+
                     var plugin = Bridge.plugin;
                     var uploaderSettings = plugin.conf("uploader") || {};
 
@@ -156,9 +160,14 @@
                     if("0" === response.code){
                         var dataSet = response.dataSet;
                         var uploadFile = dataSet[0];
+                        var source = uploadFile.source;
 
-                        this.uploader.updateHiddenValue(uploadFile.source);
-                        this.uploader.updateBackgroundImage(uploadFile.source);
+                        this.uploader.updateHiddenValue(source);
+                        this.uploader.updateBackgroundImage(source);
+
+                        if(conf.complete){
+                            Util.execHandler(conf.complete, [source]);
+                        }
 
                         Uploader.fireErrorMessage(
                             response.code, 
@@ -361,7 +370,15 @@
                     ],
                     "dragZone": "non",
                     "inputSelector": 'input[data-uploader="' + serviceKey + '_file"]',
-                    "enterStyle": "dragdrop"
+                    "enterStyle": "dragdrop",
+                    "isUpdateHiddenValue": true,
+                    "isUpdateBackgroundImage": true,
+                    "complete": {
+                        callback: function(source){
+                            // @TODO
+                            // source => 上传后给出的文件地址
+                        }
+                    }
                 }));
             }
         }
@@ -371,7 +388,9 @@
         init: function(){
             for(var service in UploaderService){
                 if(UploaderService.hasOwnProperty(service)){
-                    UploaderService[service].init.apply(UploaderService[service], [service]);
+                    UploaderService[service].init
+                                            .apply(UploaderService[service], [service])
+                                            .listen();
                 }
             }
         }

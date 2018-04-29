@@ -13,12 +13,17 @@
     var Toast = null;
     
     var SESchema = {
-        "schema": " se",
+        "schema": "se",
         "dataset": {
             more: function(data, node, e, type){
                 var args = (data || "").split(",");
                 var requestNames = (args[0] || "").split("|");
                 var requestSize = requestNames.length;
+                var requestPageKey = args[1] || "page";
+                var requestRenderName = args[2] || "datalist";
+                var requestAPIURL = args[3] || "/datalist";
+                var requestShowLoading = "1" === args[4];
+                var requestLoadingText = args[5] || "处理中，请稍候...";
                 var requestParams = {};
                 var requestName = null;
 
@@ -33,7 +38,13 @@
                 }
                 node.addClass("loading");
 
-                Logic.requestMore(requestParams, node);
+                Logic.requestMore(requestParams, node, {
+                    "pageKey": requestPageKey,
+                    "api": requestAPIURL,
+                    "command": requestRenderName,
+                    "showLoading": requestShowLoading,
+                    "loadingText": requestLoadingText
+                });
             }
         }
     };
@@ -41,17 +52,17 @@
     var DatasetTemplateEngine = null;
 
     var Logic = {
-        requestMore: function(params, moreNode){
+        requestMore: function(params, moreNode, requestExtra){
             var _command = {
                 "request": {
-                    "dataset": {
-                        "more": {
-                            "url": "/dataset/list",
-                            "data": "${data}"
-                        }
-                    }
+                    "dataset": {}
                 }
             };
+
+            _command["request"]["dataset"][requestExtra.command] = {
+                "url": requestExtra.api,
+                "data": "${data}"
+            },
 
             var param = {
                 "data": Request.stringify(params)
@@ -59,12 +70,13 @@
 
             CMD.injectCommands(_command);
 
-            CMD.exec("request.dataset.more", param, {
+            CMD.exec("request.dataset." + requestExtra.command, param, {
                 "context": {
-                    "showLoading": false,
-                    "loadingText": "处理中，请稍候...",
+                    "showLoading": requestExtra.showLoading,
+                    "loadingText": requestExtra.loadingText,
                     "params": params,
-                    "moreNode": moreNode
+                    "moreNode": moreNode,
+                    "requestExtra": requestExtra
                 },
                 "complete": function(xhr, status){
                     var moreNode = this.moreNode;
@@ -74,10 +86,12 @@
                 "success": function(data, status, xhr){
                     ResponseProxy.json(this, data, {
                         "callback": function(ctx, resp, msg){
+                            var extra = ctx.requestExtra;
+
                             var dataList = resp.dataList || [];
                             var size = dataList.length;
 
-                            var render = $("#render_datalist");
+                            var render = $("#render_" + extra.command);
                             var moreNode = ctx.moreNode;
 
                             var reqParams = ctx.params;
@@ -96,9 +110,9 @@
                                 moreNode.removeClass("hide");
                             }
 
-                            moreNode.attr("data-request-pageNo", Number(reqParams.pageNo) + 1);
+                            moreNode.attr("data-request-" + extra.pageKey, Number(reqParams[extra.pageKey]) + 1);
 
-                            DatasetTemplateEngine.render(false, "tpl_datalist", dataList, {
+                            DatasetTemplateEngine.render(false, "tpl_" + extra.command, dataList, {
                                 callback: function(ret){
                                     this.append(ret.result);
                                 },

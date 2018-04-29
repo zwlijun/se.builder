@@ -65,8 +65,8 @@
     //-------------------------------------------------
 
     var SESchema = {
-        schema: "se",
-        dataform: {
+        "schema": "se",
+        "dataform": {
             smscode: function(data, node, e, type){
                 var args = (data || "").split(",");
                 var name = args[0];
@@ -285,10 +285,12 @@
                                     callback: function(id){
                                         //TODO
                                         // 业务重定向逻辑 ========= [[
+                                        var oc = ctx.OriginCommand;
                                         var jumpURL = Request.getParameter("url");
                                         var plugin = Bridge.plugin;
-                                        var redirectTo = plugin.conf("redirectTo");
-                                        var url = redirectTo["default"].success;
+                                        var redirectTo = plugin.conf("redirectTo") || {};
+                                        var redirectConfig = redirectTo[oc.namespace] || redirectTo["default"] || {};
+                                        var url = redirectConfig.success;
 
                                         if(jumpURL){
                                             url = decodeURIComponent(jumpURL);
