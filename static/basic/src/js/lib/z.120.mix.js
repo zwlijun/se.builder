@@ -3127,7 +3127,7 @@ var __DOC_REFERER__     = $.__ROOT__.DOC_REFERER    = document.referrer;
 
 var aliasItems = __PAGE_ALIAS__.split(".");
 var aliasItemSize = aliasItems.length;
-var isSourceDir = __RES_ROOT__.indexOf("/src/") != -1;
+var isSourceDir = __RES_ROOT__.indexOf("/" + "src" + "/") != -1;
 var isForceUseSource = __REFERER__.indexOf("FORCE_USE_SOURCE=1") != -1;
 var isForceDebug = __REFERER__.indexOf("FORCE_DEBUG=1") != -1;
 
