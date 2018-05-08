@@ -62,7 +62,7 @@
             _command["request"]["dataset"][requestExtra.command] = {
                 "url": requestExtra.api,
                 "data": "${data}"
-            },
+            };
 
             var param = {
                 "data": Request.stringify(params)
