@@ -1,4 +1,7 @@
 ;define(function(require, exports, module){
+    var oPaths           = require("mod/se/opaths");
+
+
     var ErrorTypes = null;
     var RespTypes = null;
     var ResponseProxy = null;
@@ -22,8 +25,9 @@
                 var requestPageKey = args[1] || "page";
                 var requestRenderName = args[2] || "datalist";
                 var requestAPIURL = args[3] || "/datalist";
-                var requestShowLoading = "1" === args[4];
-                var requestLoadingText = args[5] || "处理中，请稍候...";
+                var requestDataListPath = args[4] || "dataList";
+                var requestShowLoading = "1" === args[5];
+                var requestLoadingText = args[6] || "处理中，请稍候...";
                 var requestParams = {};
                 var requestName = null;
 
@@ -43,7 +47,8 @@
                     "api": requestAPIURL,
                     "command": requestRenderName,
                     "showLoading": requestShowLoading,
-                    "loadingText": requestLoadingText
+                    "loadingText": requestLoadingText,
+                    "paths": requestDataListPath
                 });
             }
         }
@@ -88,7 +93,9 @@
                         "callback": function(ctx, resp, msg){
                             var extra = ctx.requestExtra;
 
-                            var dataList = resp.dataList || [];
+                            var paths = extra.paths;
+                            // var dataList = resp.dataList || [];
+                            var dataList = oPaths.find(resp, paths) || [];
                             var size = dataList.length;
 
                             var render = $("#render_" + extra.command);
