@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html class="fixedpage" data-page-alias="platform.app.project.module.feature.page"<!--#include virtual="/static/basic/inc/rem_attr.html" -->>
+<head>
+<!--#include virtual="/static/basic/inc/meta.html" -->
+<!--#include virtual="/static/basic/inc/rem.html" -->
+<title>ORG</title>
+<!--#include virtual="/static/basic/inc/css_common_gm.html" -->
+<!--#include virtual="/static/basic/inc/css_common_mm.html" -->
+<!--#include virtual="/static/basic/inc/static_version.html" -->
+<!--#include virtual="/static/basic/inc/stat_code_header.html" -->
+<style type="text/css">
+html{
+  background-color: #f3f3f3;
+}
+body{
+  color: #333;
+  font-size: .24rem;
+}
+html.fixedpage{
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  /*overflow: hidden;*/
+  display: block;
+}
+html.fixedpage body{
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  /*overflow: hidden;*/
+  display: block;
+}
+html.fixedpage .app-body{
+  overflow: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  display: block;
+}
+html.fixedpage.fxbottom .app-body{
+  height: -webkit-calc(100% - .98rem);
+  height: -moz-calc(100% - .98rem);
+  height: -ms-calc(100% - .98rem);
+  height: calc(100% - .98rem);
+}
+html.fixedpage.fxtop .app-body{
+  height: -webkit-calc(100% - .88rem);
+  height: -moz-calc(100% - .88rem);
+  height: -ms-calc(100% - .88rem);
+  height: calc(100% - .88rem);
+}
+html.fixedpage.fxboth .app-body{
+  height: -webkit-calc(100% - .88rem - .98rem);
+  height: -moz-calc(100% - .88rem - .98rem);
+  height: -ms-calc(100% - .88rem - .98rem);
+  height: calc(100% - .88rem - .98rem);
+}
+.app-header{
+  width: 100%; 
+  position: relative; 
+  z-index: 20;
+}
+.app-body{
+  width: 100%; 
+  position: relative; 
+  z-index: 10;
+}
+.app-footer{
+  width: 100%; 
+  position: relative; 
+  z-index: 20;
+}
+html.fixedpage{
+  width: initial;
+  height: initial;
+  max-height: initial;
+  display: initial;
+}
+html.fixedpage body{
+  width: initial;
+  height: initial;
+  max-height: initial;
+  display: initial;
+}
+html.fixedpage .app-body{
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  display: block;
+}
+.root{
+    /*position: absolute;
+    left: 0;
+    top: 0;*/
+    position: relative;
+    margin-top: .40rem;
+}
+.node{
+    margin: 0 .20rem;
+    position: relative;
+}
+.root > .node::before{
+    content: none!important;
+}
+.root > .node > .node-data::before{
+    content: none!important;
+}
+.node::before{
+    content: "";
+    display: block;
+    height: .20rem;
+    width: -webkit-calc(100% + .40rem);
+    border-top:  1px solid #565596;
+    position: absolute;
+    top: -.20rem;
+}
+.node:first-child::before{
+    content: "";
+    display: block;
+    height: .20rem;
+    width: -webkit-calc(50% + .20rem);
+    /*border-left: 1px solid #565596;*/
+    border-top:  1px solid #565596;
+    position: absolute;
+    top: -.20rem;
+    left: 50%;
+}
+.node:last-child::before{
+    content: "";
+    display: block;
+    height: .20rem;
+    width: -webkit-calc(50% + .20rem);
+    /*border-right: 1px solid #565596;*/
+    border-top:  1px solid #565596;
+    position: absolute;
+    top: -.20rem;
+    right: 50%;
+}
+.node:only-child::before{
+    content: "";
+    border-top: 0;
+    border-right: 0;
+    margin-left: -1px;
+}
+.node-data{
+    border: 1px solid #565596;
+    background-color: #fff;
+    color: #565596;
+    width: 2.00rem;
+    text-align: center;
+    border-radius: .10rem;
+    position: relative;
+}
+.node-data::before{
+    content: "";
+    display: block;
+    height: .20rem;
+    width: 0;
+    border-left: 1px solid #565596;
+    position: absolute;
+    top: -.20rem;
+    left: 50%;
+    margin-left: -1px;
+}
+.node-data::after{
+    content: "";
+    display: block;
+    height: .20rem;
+    width: 0;
+    border-left: 1px solid #565596;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -1px;
+}
+.node-data.no-children::after{
+    content: none;
+}
+.node-data h2{
+    font-weight: normal;
+    font-size: .24rem;
+    line-height: 1.7;
+}
+.node-data p{
+    font-size: .24rem;
+    color: #666;
+    line-height: 1.5;
+}
+.node-children{
+    margin-top: .40rem;
+    position: relative;
+}
+/*.node-children::before{
+    content: "";
+    display: block;
+    width: 50%;
+    height: .20rem;
+    position: absolute;
+    top: -.20rem;
+    left: 25%;
+    border: 1px solid #565596;
+    border-bottom: 0;
+}*/
+</style>
+</head>
+<body>
+<header class="app-header flexbox middle justify hide">
+  <a href="#" class="icofont back"></a>
+  <a href="#" class="icofont func none hide"></a>
+  <div class="page-title flexbox middle center">
+    <span>ORG</span>
+  </div>
+</header> 
+<article class="app-body">
+  <script type="text/template" id="tpl0">
+    <~
+    var node = rd.node;
+    var children = rd.children;
+    ~>
+    <div class="node flexbox middle center vertical nowrap">
+      <div class="node-data<~=children && children.length > 0 ? '' : ' no-children'~>">
+        <h2><~=node.userName~></h2>
+        <p>ID：<~=node.money~></p>
+      </div>
+      <div class="node-children flexbox top center">
+        <~
+        for(var i = 0; i < children.length; i++){
+        var child = children[i];
+        ~>
+        <div class="node flexbox middle center vertical nowrap">
+          <div class="node-data<~=child.children && child.children.length > 0 ? '' : ' no-children'~>">
+            <h2><~=child.node.userName~></h2>
+            <p>ID：<~=child.node.money~></p>
+          </div>
+          <div class="node-children flexbox top center">
+            <~=_children(child.children)~>
+          </div>
+        </div>
+        <~
+        }
+        ~>
+      </div>
+    </div>
+  </script>
+  <div class="root flexbox top left">
+    
+  </div>
+</article>
+<footer class="app-footer flexbox middle center hide"></footer>
+<script>
+window.__CONFIG = (function(){
+    var conf = {
+        "code": "",
+        "message": "",
+        "toast": {
+            "align": "toast-bottom-center",
+            "delay": 3000,
+            "callbacks": {
+                "before": {
+                    callback: function(toastId){
+                        //@TODO
+                    },
+                    "args": [],
+                    "context": conf
+                },
+                "show": {
+                    callback: function(toastId){
+                        //@TODO
+                    },
+                    "args": [],
+                    "context": conf
+                },
+                "hide": {
+                    callback: function(toastId){
+                        //@TODO
+                    },
+                    "args": [],
+                    "context": conf
+                }
+            }
+        },
+        //BEGIN 重定向配置
+        "redirectTo": {  
+            //业务名称，默认：default
+            "default": {   
+                //业务状态(自定义key或错误码)对应的跳转URL
+                "success": "" 
+            }
+        } 
+        //END 重定向配置
+    };
+
+    return conf;
+})();
+</script>
+<!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
+<script>
+var data = {
+    "node": {
+        "userName": "小网UU",
+        "money": 1234
+    },
+    "children": [
+        {
+            "node": {
+                "userName": "1234",
+                "money": 1234
+            },
+            "children": [
+                {
+                    "node": {
+                        "userName": "1234",
+                        "money": 1234
+                    },
+                    "children": [
+                        {
+                            "node": {
+                                "userName": "1234",
+                                "money": 1234
+                            },
+                            "children": [
+                                {
+                                    "node": {
+                                        "userName": "1234",
+                                        "money": 1234
+                                    },
+                                    "children": [
+
+                                    ]
+                                },
+                                {
+                                    "node": {
+                                        "userName": "1234",
+                                        "money": 1234
+                                    },
+                                    "children": [
+
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "node": {
+                                "userName": "1234",
+                                "money": 1234
+                            },
+                            "children": [
+                                {
+                                    "node": {
+                                        "userName": "1234",
+                                        "money": 1234
+                                    },
+                                    "children": [
+
+                                    ]
+                                },
+                                {
+                                    "node": {
+                                        "userName": "1234",
+                                        "money": 1234
+                                    },
+                                    "children": [
+
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "node": {
+                        "userName": "1234",
+                        "money": 1234
+                    },
+                    "children": [
+                        {
+                            "node": {
+                                "userName": "1234",
+                                "money": 1234
+                            },
+                            "children": [
+                                {
+                                    "node": {
+                                        "userName": "1234",
+                                        "money": 1234
+                                    },
+                                    "children": [
+
+                                    ]
+                                },
+                                {
+                                    "node": {
+                                        "userName": "1234",
+                                        "money": 1234
+                                    },
+                                    "children": [
+
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "node": {
+                                "userName": "1234",
+                                "money": 1234
+                            },
+                            "children": [
+                                {
+                                    "node": {
+                                        "userName": "1234",
+                                        "money": 1234
+                                    },
+                                    "children": [
+
+                                    ]
+                                },
+                                {
+                                    "node": {
+                                        "userName": "1234",
+                                        "money": 1234
+                                    },
+                                    "children": [
+
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "node": {
+                                "userName": "1234",
+                                "money": 1234
+                            },
+                            "children": [
+                                {
+                                    "node": {
+                                        "userName": "1234",
+                                        "money": 1234
+                                    },
+                                    "children": [
+
+                                    ]
+                                },
+                                {
+                                    "node": {
+                                        "userName": "1234",
+                                        "money": 1234
+                                    },
+                                    "children": [
+
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "node": {
+                                "userName": "1234",
+                                "money": 1234
+                            },
+                            "children": [
+                                {
+                                    "node": {
+                                        "userName": "1234",
+                                        "money": 1234
+                                    },
+                                    "children": [
+
+                                    ]
+                                },
+                                {
+                                    "node": {
+                                        "userName": "1234",
+                                        "money": 1234
+                                    },
+                                    "children": [
+
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "node": {
+                "userName": "1234",
+                "money": 1234
+            },
+            "children": [
+                {
+                    "node": {
+                        "userName": "1234",
+                        "money": 1234
+                    },
+                    "children": [
+                        {
+                            "node": {
+                                "userName": "1234",
+                                "money": 1234
+                            },
+                            "children": [
+
+                            ]
+                        },
+                        {
+                            "node": {
+                                "userName": "1234",
+                                "money": 1234
+                            },
+                            "children": [
+
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "node": {
+                        "userName": "1234",
+                        "money": 1234
+                    },
+                    "children": [
+                        {
+                            "node": {
+                                "userName": "1234",
+                                "money": 1234
+                            },
+                            "children": [
+
+                            ]
+                        },
+                        {
+                            "node": {
+                                "userName": "1234",
+                                "money": 1234
+                            },
+                            "children": [
+
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "node": {
+                "userName": "1234",
+                "money": 1234
+            },
+            "children": [
+                {
+                    "node": {
+                        "userName": "1234",
+                        "money": 1234
+                    },
+                    "children": [
+                        {
+                            "node": {
+                                "userName": "1234",
+                                "money": 1234
+                            },
+                            "children": [
+
+                            ]
+                        },
+                        {
+                            "node": {
+                                "userName": "1234",
+                                "money": 1234
+                            },
+                            "children": [
+
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "node": {
+                        "userName": "1234",
+                        "money": 1234
+                    },
+                    "children": [
+                        {
+                            "node": {
+                                "userName": "1234",
+                                "money": 1234
+                            },
+                            "children": [
+
+                            ]
+                        },
+                        {
+                            "node": {
+                                "userName": "1234",
+                                "money": 1234
+                            },
+                            "children": [
+                                {
+                                    "node": {
+                                        "userName": "1234",
+                                        "money": 1234
+                                    },
+                                    "children": [
+                                        {
+                                            "node": {
+                                                "userName": "1234",
+                                                "money": 1234
+                                            },
+                                            "children": [
+
+                                            ]
+                                        },
+                                        {
+                                            "node": {
+                                                "userName": "1234",
+                                                "money": 1234
+                                            },
+                                            "children": [
+
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+};
+</script>
+<script>
+var oTemplateEngine = (function(){
+    var Util = {
+      /**
+         * 执行回调
+         * @param Object handler {Function callback, Array args, Object context, int delay}
+         * @param * __args 附加参数，些参数将会置于 handler.args 之前
+         */
+        execHandler : function(handler, __args){
+            if(handler && handler instanceof Object){
+                var callback = handler.callback || null;
+                var args = [].concat(handler.args || []);
+                var context = handler.context || null;
+                var delay = handler.delay || -1;
+
+                if(__args){
+                    __args = [].concat(__args);
+
+                    args = __args.concat(args);
+                }
+
+                if(callback && callback instanceof Function){
+                    if(typeof(delay) == "number" && delay >= 0){
+                        if(callback.tid){
+                            clearTimeout(callback.tid);
+                            callback.tid = undefined;
+                        }
+
+                        return (callback.tid = setTimeout(function(){
+                            callback.apply(context, args);
+                        }, delay));
+                    }else{
+                        return callback.apply(context, args);
+                    }
+                }
+            }
+        },
+        getTime: function(){
+            return Date.now ? Date.now() : (new Date().getTime());
+        }
+    };
+    //options::start 启始标签
+    //options::close 结束标签
+    //options::handle 渲染后回调函数
+    //options::root 模板渲染时的本地对象空间
+    var _Template = function(name, options){
+        this.name = name;
+        this.options = options; 
+        this.start = options.start || "<%";
+        this.close = options.close || "%>";
+        this.handle = options.handle || null;
+        this.root = options.root || "obj";
+    };
+
+    _Template.TPLCache = {};
+    _Template.Cache = {};
+
+    _Template.prototype = {
+        /**
+         * 模板渲染
+         * @param boolean isDirect 是否为直接量，true: tplId为模板片断, false: tplId为模板容器ID
+         * @param String tplId 模板或模板容器ID
+         * @param Object metaData 模板数据
+         * @param Object handle 渲染回调
+         * @return Object ret {Object global, Object local}
+         */
+        render: function(isDirect, tplId, metaData, handle){
+            var tpl = (true === isDirect ? tplId : (_Template.TPLCache[tplId] || (_Template.TPLCache[tplId] = $("#" + tplId).html())));
+
+            return (function(_t, str, data, callback){
+                // Generate a reusable function that will serve as a template
+                // generator (and which will be cached).
+                var startTime = Util.getTime();
+                var chr = function(str){
+                    var tmp = "";
+                    for(var i = 0, size = str.length; i < size; i++){
+                        tmp += "\\" + str.charAt(i);
+                    }
+
+                    return tmp;
+                };
+                var template = str;
+                var fn = new Function(
+                    _t.root,
+                    "var p=[],print=function(){p.push.apply(p,arguments);};" +
+
+                    // Introduce the data as local variables using with(){}
+                    "with(" + _t.root + "){p.push('" +
+                    //------------------------------------
+                        // Convert the template into pure JavaScript
+                        str
+                            .replace(/[\r\t\n]/g, " ")
+                            .split(_t.start).join("\t")
+                            .replace(new RegExp("((^|" + chr(_t.close) + ")[^\\t]*)'", "g"), "$1\r")
+                            .replace(new RegExp("\\t=(.*?)" + chr(_t.close), "g"), "',$1,'")
+                            .split("\t").join("');")
+                            .split(_t.close).join("p.push('")
+                            .split("\r").join("\\'")
+                    //------------------------------------    
+                    + "');}return p.join('');"
+                );
+
+                // Provide some basic currying to the user
+                var result =  data ? fn( data ) : str;
+                var endTime = Util.getTime();
+                var elapsedTime = endTime - startTime;
+                var o = {
+                    "result": result,
+                    "elapsedTime": elapsedTime,
+                    "template": template,
+                    "metaData": metaData
+                };
+                var ret = {
+                    "global": undefined,
+                    "local": undefined
+                };
+
+                if(_t.handle){
+                    ret["global"] = Util.execHandler(_t.handle, [o]); //全局
+                }
+                if(callback){
+                    ret["local"] = Util.execHandler(callback, [o]);  //局部
+                }
+
+                return ret;
+            })(this, tpl, metaData, handle);
+        }
+    };
+
+    return {
+        "version": "R17B0817",
+        getTemplate: function(name, options){
+            var _t = _Template.Cache[name] || (_Template.Cache[name] = new _Template(name, options || {}));
+
+            return {
+                render: function(isDirect, tplId, metaData, handle){
+                    var ret = _t.render(isDirect, tplId, metaData, handle || null);
+                    var eng = this;
+
+                    eng["global"] = ret["global"];
+                    eng["local"] = ret["local"];
+
+                    return eng;
+                }
+            }
+        }
+    };
+})();
+</script>
+<script>
+function _children(items){
+    var size = items.length;
+    var html = "";
+
+    var ote = oTemplateEngine.getTemplate("ote", {
+        "start": "<~",
+        "close": "~>",
+        "root": "rd"
+    });
+
+    for(var i = 0; i < size; i++){
+        var item = items[i];
+
+        html += ote.render(false, "tpl0", item, {
+            callback: function(ret){
+                return ret.result;
+            }
+        }).local
+    }
+
+    return html;
+};
+(function(){
+    var ote = oTemplateEngine.getTemplate("ote", {
+        "start": "<~",
+        "close": "~>",
+        "root": "rd"
+    });
+
+    ote.render(false, "tpl0", data, {
+        callback: function(ret){
+            $(".app-body").find(".root").html(ret.result);
+        }
+    });
+
+    setTimeout(function(){
+        var body = document.querySelector(".app-body");
+        var node = document.querySelector(".root > .node");
+        var rect = node.getBoundingClientRect();
+        var width = rect.right - rect.left;
+
+        body.scrollLeft = (width / 2) - window.innerWidth / 2;
+    }, 60);
+})();
+</script>
+<!--#include virtual="/static/basic/inc/js_logic_tpl.html" --> 
+<!--#include virtual="/static/basic/inc/stat_code_footer.html" -->
+</body>
+</html>

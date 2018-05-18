@@ -409,20 +409,25 @@ var _App = {
 
         CMD.injectErrorInfo(ErrorInfo);
 
-        if(conf.message){
+        //---------------------------------------------------
+        var retmsg = (conf.message || "") + "";
+        retmsg = retmsg.replace(/^([\s]+)|([\s]+)$/gi, "");
+
+        if(retmsg){
             var toastConfig = conf.toast || null;
             if(toastConfig){
-                Toast.text(conf.message, toastConfig.align || Toast.BOTTOM_CENTER, toastConfig.delay || 3000, toastConfig.callbacks || {});
+                Toast.text(retmsg, toastConfig.align || Toast.BOTTOM_CENTER, toastConfig.delay || 3000, toastConfig.callbacks || {});
             }else{
-                CMD.setBubbleTips(conf.message);
+                CMD.setBubbleTips(retmsg);
             }            
         }
+        //---------------------------------------------------
         PreventDefaultLink();
     }
 };
 
 module.exports = {
-    "version": "R18B0313",
+    "version": "R18B0517",
     "init": _App.init,
     "conf": _App.conf,
     "expando": {
