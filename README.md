@@ -56,6 +56,7 @@ http://static.seshenghuo.com/${STATIC_PATH}
 <a href="http://static.seshenghuo.com/static/basic/test/mod_touchdatetime.shtml" target="_blank">Module#TouchDatetime</a>
 <a href="http://static.seshenghuo.com/static/basic/test/mod_toast.shtml" target="_blank">Module#Toast</a>
 <a href="http://static.seshenghuo.com/static/basic/test/mod_marquee.shtml" target="_blank">Module#Marquee</a>
+<a href="http://static.seshenghuo.com/static/basic/test/org.shtml" target="_blank">CSS3组织架构生成DEMO</a>
 </pre>
 
 #ICON Font Demo
