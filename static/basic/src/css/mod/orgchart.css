@@ -1,0 +1,107 @@
+.org-root{
+    width: 100%;
+    height: -webkit-calc(100% - .20rem);
+    height: -moz-calc(100% - .20rem);
+    height: -ms-calc(100% - .20rem);
+    height: calc(100% - .20rem);
+    overflow: auto;
+    position: relative;
+    padding-top: .20rem;
+    -webkit-overflow-scrolling: touch;
+}
+.org-node{
+    margin: 0 .10rem;
+    position: relative;
+}
+.org-root > .org-node::before{
+    content: none!important;
+}
+.org-root > .org-node > .org-node-data::before{
+    content: none!important;
+}
+.org-node::before{
+    content: "";
+    display: block;
+    height: .10rem;
+    width: -webkit-calc(100% + .20rem);
+    border-top:  1px solid #565596;
+    position: absolute;
+    top: -.10rem;
+}
+.org-node:first-child::before{
+    content: "";
+    display: block;
+    height: .10rem;
+    width: -webkit-calc(50% + .10rem);
+    border-top:  1px solid #565596;
+    position: absolute;
+    top: -.10rem;
+    left: 50%;
+}
+.org-node:last-child::before{
+    content: "";
+    display: block;
+    height: .10rem;
+    width: -webkit-calc(50% + .10rem);
+    border-top:  1px solid #565596;
+    position: absolute;
+    top: -.10rem;
+    right: 50%;
+}
+.org-node:only-child::before{
+    content: "";
+    border-top: 0;
+    border-right: 0;
+    margin-left: -1px;
+}
+.org-node-data{
+    border: 1px solid #565596;
+    background-color: #fff;
+    color: #565596;
+    width: 1.20rem;
+    text-align: center;
+    border-radius: .05rem;
+    position: relative;
+}
+.org-node-data::before{
+    content: "";
+    display: block;
+    height: .10rem;
+    width: 0;
+    border-left: 1px solid #565596;
+    position: absolute;
+    top: -.10rem;
+    left: 50%;
+    margin-left: -1px;
+}
+.org-node-data::after{
+    content: "";
+    display: block;
+    height: .10rem;
+    width: 0;
+    border-left: 1px solid #565596;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -1px;
+}
+.org-node-data.no-children::after{
+    content: none;
+}
+.org-node-data h2{
+    font-weight: normal;
+    font-size: .12rem;
+    line-height: 1.7;
+}
+.org-node-data p{
+    font-size: .12rem;
+    color: #666;
+    line-height: 1.5;
+}
+.org-node-children{
+    margin-top: .20rem;
+    position: relative;
+}
+
+
+

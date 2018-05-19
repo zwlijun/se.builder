@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html class="fixedpage" data-page-alias="platform.app.project.module.feature.page"<!--#include virtual="/static/basic/inc/rem_attr.html" -->>
+<head>
+<!--#include virtual="/static/basic/inc/meta.html" -->
+<!--#include virtual="/static/basic/inc/rem.html" -->
+<title>ORG</title>
+<!--#include virtual="/static/basic/inc/css_common_gm.html" -->
+<!--#include virtual="/static/basic/inc/css_common_mm.html" -->
+<!--#include virtual="/static/basic/inc/static_version.html" -->
+<!--#include virtual="/static/basic/inc/stat_code_header.html" -->
+<link rel="stylesheet" type="text/css" href="/static/basic/src/css/mod/orgchart.css">
+<style type="text/css">
+html{
+  background-color: #f3f3f3;
+  width: 100%;
+  height: 100%;
+}
+body{
+  color: #333;
+  font-size: .24rem;
+  width: 100%;
+  height: 100%;
+}
+.app-body{
+  width: 100%;
+  height: 100%;
+}
+</style>
+</head>
+<body>
+<header class="app-header flexbox middle justify hide">
+  <a href="#" class="icofont back"></a>
+  <a href="#" class="icofont func none hide"></a>
+  <div class="page-title flexbox middle center">
+    <span>ORG</span>
+  </div>
+</header> 
+<article class="app-body">
+  
+</article>
+<footer class="app-footer flexbox middle center hide"></footer>
+<script>
+window.__CONFIG = (function(){
+    var conf = {
+        "code": "",
+        "message": "",
+        "toast": {
+            "align": "toast-bottom-center",
+            "delay": 3000,
+            "callbacks": {
+                "before": {
+                    callback: function(toastId){
+                        //@TODO
+                    },
+                    "args": [],
+                    "context": conf
+                },
+                "show": {
+                    callback: function(toastId){
+                        //@TODO
+                    },
+                    "args": [],
+                    "context": conf
+                },
+                "hide": {
+                    callback: function(toastId){
+                        //@TODO
+                    },
+                    "args": [],
+                    "context": conf
+                }
+            }
+        },
+        //BEGIN 重定向配置
+        "redirectTo": {  
+            //业务名称，默认：default
+            "default": {   
+                //业务状态(自定义key或错误码)对应的跳转URL
+                "success": "" 
+            }
+        } 
+        //END 重定向配置
+    };
+
+    return conf;
+})();
+</script>
+<script>
+var ORG_NODE_DATA = {
+    "node": {
+        "textContent": "SE生活",
+        "fields": [
+            {
+                "label": "ID：",
+                "value": "123456"
+            }
+        ],
+        "children": [
+            {
+                "node": {
+                    "textContent": "UI23",
+                    "fields": [
+                        {
+                            "label": "ID：",
+                            "value": "123456"
+                        }
+                    ],
+                    "children": [
+                        {
+                            "node": {
+                                "textContent": "UI23",
+                                "fields": [
+                                    {
+                                        "label": "ID：",
+                                        "value": "123456"
+                                    }
+                                ],
+                                "children": [
+                                    {
+                                        "node": {
+                                            "textContent": "UI23",
+                                            "fields": [
+                                                {
+                                                    "label": "ID：",
+                                                    "value": "123456"
+                                                }
+                                            ],
+                                            "children": [
+                                                {
+                                                    "node": {
+                                                        "textContent": "UI23",
+                                                        "fields": [
+                                                            {
+                                                                "label": "ID：",
+                                                                "value": "123456"
+                                                            }
+                                                        ],
+                                                        "children": [
+                                                            {
+                                                                "node": {
+                                                                    "textContent": "UI23",
+                                                                    "fields": [
+                                                                        {
+                                                                            "label": "ID：",
+                                                                            "value": "123456"
+                                                                        }
+                                                                    ],
+                                                                    "children": [
+                                                                        {
+                                                                            "node": {
+                                                                                "textContent": "UI23",
+                                                                                "fields": [
+                                                                                    {
+                                                                                        "label": "ID：",
+                                                                                        "value": "123456"
+                                                                                    }
+                                                                                ],
+                                                                                "children": [
+
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "node": {
+                                                        "textContent": "UI23",
+                                                        "fields": [
+                                                            {
+                                                                "label": "ID：",
+                                                                "value": "123456"
+                                                            }
+                                                        ],
+                                                        "children": [
+
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "node": {
+                                            "textContent": "UI23",
+                                            "fields": [
+                                                {
+                                                    "label": "ID：",
+                                                    "value": "123456"
+                                                }
+                                            ],
+                                            "children": [
+
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "node": {
+                    "textContent": "UI23",
+                    "fields": [
+                        {
+                            "label": "ID：",
+                            "value": "123456"
+                        }
+                    ],
+                    "children": [
+                        {
+                            "node": {
+                                "textContent": "UI23",
+                                "fields": [
+                                    {
+                                        "label": "ID：",
+                                        "value": "123456"
+                                    }
+                                ],
+                                "children": [
+
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "node": {
+                    "textContent": "UI23",
+                    "fields": [
+                        {
+                            "label": "ID：",
+                            "value": "123456"
+                        }
+                    ],
+                    "children": [
+                        {
+                            "node": {
+                                "textContent": "UI23",
+                                "fields": [
+                                    {
+                                        "label": "ID：",
+                                        "value": "123456"
+                                    }
+                                ],
+                                "children": [
+
+                                ]
+                            }
+                        },
+                        {
+                            "node": {
+                                "textContent": "UI23",
+                                "fields": [
+                                    {
+                                        "label": "ID：",
+                                        "value": "123456"
+                                    }
+                                ],
+                                "children": [
+                                    {
+                                        "node": {
+                                            "textContent": "UI23",
+                                            "fields": [
+                                                {
+                                                    "label": "ID：",
+                                                    "value": "123456"
+                                                }
+                                            ],
+                                            "children": [
+
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "node": {
+                                            "textContent": "UI23",
+                                            "fields": [
+                                                {
+                                                    "label": "ID：",
+                                                    "value": "123456"
+                                                }
+                                            ],
+                                            "children": [
+
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "node": {
+                                "textContent": "UI23",
+                                "fields": [
+                                    {
+                                        "label": "ID：",
+                                        "value": "123456"
+                                    }
+                                ],
+                                "children": [
+
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "node": {
+                    "textContent": "UI23",
+                    "fields": [
+                        {
+                            "label": "ID：",
+                            "value": "123456"
+                        }
+                    ],
+                    "children": [
+                        {
+                            "node": {
+                                "textContent": "UI23",
+                                "fields": [
+                                    {
+                                        "label": "ID：",
+                                        "value": "123456"
+                                    }
+                                ],
+                                "children": [
+
+                                ]
+                            }
+                        },
+                        {
+                            "node": {
+                                "textContent": "UI23",
+                                "fields": [
+                                    {
+                                        "label": "ID：",
+                                        "value": "123456"
+                                    }
+                                ],
+                                "children": [
+
+                                ]
+                            }
+                        },
+                        {
+                            "node": {
+                                "textContent": "UI23",
+                                "fields": [
+                                    {
+                                        "label": "ID：",
+                                        "value": "123456"
+                                    }
+                                ],
+                                "children": [
+                                    {
+                                        "node": {
+                                            "textContent": "UI23",
+                                            "fields": [
+                                                {
+                                                    "label": "ID：",
+                                                    "value": "123456"
+                                                }
+                                            ],
+                                            "children": [
+
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "node": {
+                                            "textContent": "UI23",
+                                            "fields": [
+                                                {
+                                                    "label": "ID：",
+                                                    "value": "123456"
+                                                }
+                                            ],
+                                            "children": [
+                                                {
+                                                    "node": {
+                                                        "textContent": "UI23",
+                                                        "fields": [
+                                                            {
+                                                                "label": "ID：",
+                                                                "value": "123456"
+                                                            }
+                                                        ],
+                                                        "children": [
+
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "node": {
+                                                        "textContent": "UI23",
+                                                        "fields": [
+                                                            {
+                                                                "label": "ID：",
+                                                                "value": "123456"
+                                                            }
+                                                        ],
+                                                        "children": [
+
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "node": {
+                                "textContent": "UI23",
+                                "fields": [
+                                    {
+                                        "label": "ID：",
+                                        "value": "123456"
+                                    }
+                                ],
+                                "children": [
+
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+};
+</script>
+<!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
+<script>
+seajs.use(["logic/test/test_orgchart"]);
+</script>
+<!--#include virtual="/static/basic/inc/stat_code_footer.html" -->
+</body>
+</html>
