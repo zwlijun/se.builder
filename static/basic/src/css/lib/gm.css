@@ -2402,7 +2402,7 @@ input[type="reset"],
 }
 .org-node-data p{
     font-size: .12rem;
-    color: #666;
+    color: #888;
     line-height: 1.5;
 }
 .org-node-children{
