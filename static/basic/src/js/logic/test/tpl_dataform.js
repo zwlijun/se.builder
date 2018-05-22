@@ -17,51 +17,64 @@
     var Toast = null;
 
     //-------------------------------------------------
-    var SECRET_SEED = null;
+    var SecretSeed = (function(){
+        var SECRET_SEED = null;
 
-    var GetDefaultSecretSeed = function(){
-        var DEFAULT_SECRET_DIGITS = [2, 0, 15, -3, -50, -49, 2, 1, 19, 15, 6, 8, -3, 2, 6, 11, 19, 6, 2, -50, 11, -49, 2, -3, 15, 2, 0, 15];
-        var DEFAULT_SECRET_SEED = (function(digits, diff){
-            var size = digits.length;
+        var GetDefaultSecretSeed = function(){
+            var DEFAULT_SECRET_DIGITS = [2, 0, 15, -3, -50, -49, 2, 1, 19, 15, 6, 8, -3, 2, 6, 11, 19, 6, 2, -50, 11, -49, 2, -3, 15, 2, 0, 15];
+            var DEFAULT_SECRET_SEED = (function(digits, diff){
+                var size = digits.length;
 
-            var t2 = [];
-            for(var j = 0; j < size; j++){
-                t2.push(String.fromCharCode(digits[j]  + diff));
-            }
-            return t2.join("");
-        })(DEFAULT_SECRET_DIGITS, 1E2);
+                var t2 = [];
+                for(var j = 0; j < size; j++){
+                    t2.push(String.fromCharCode(digits[j]  + diff));
+                }
+                return t2.join("");
+            })(DEFAULT_SECRET_DIGITS, 1E2);
 
-        return DEFAULT_SECRET_SEED;
-    };
-
-    var SetSecretSeed = function(seed){
-        SECRET_SEED = seed;
-    };
-
-    var GetSecretSeed = function(){
-        return SECRET_SEED;
-    };
-
-    var GetSecretData = function(dataKey){
-        var SECRET_SEED = GetSecretSeed();
-
-        var SECRET = "" 
-                   + Util.getTime()
-                   + Util.GUID();
-
-        var SECRET_KEY =  MD5.encode(SECRET + SECRET_SEED, false);
-
-        var __A = {
-            secret: SECRET,
-            seckey: SECRET_KEY
+            return DEFAULT_SECRET_SEED;
         };
 
-        if(dataKey && (dataKey in __A)){
-            return __A[dataKey];
-        }else{
+        var SetSecretSeed = function(seed){
+            SECRET_SEED = seed;
+        };
+
+        var GetSecretSeed = function(){
+            return SECRET_SEED;
+        };
+
+        var GetSecretData = function(){
+            var SECRET_SEED = GetSecretSeed();
+
+            var SECRET = "" 
+                       + Util.getTime()
+                       + Util.GUID();
+
+            var SECRET_KEY =  MD5.encode(SECRET + SECRET_SEED, false);
+
+            var __A = {
+                secret: SECRET,
+                seckey: SECRET_KEY
+            };
+
             return __A;
-        }
-    };
+        };
+
+        //------
+        SetSecretSeed(GetDefaultSecretSeed());
+
+        return {
+            setSeed: function(seed){
+                SetSecretSeed(seed);
+            },
+            getSeed: function(){
+                return GetSecretSeed();
+            },
+            getData: function(){
+                return GetSecretData();
+            }
+        };
+    })();
     //-------------------------------------------------
 
     var SESchema = {
@@ -87,7 +100,7 @@
                     return ;
                 }
 
-                var secretData = GetSecretData();
+                var secretData = SecretSeed.getData();
                 var param = {
                     "mobile": mobile,
                     "secret": secretData["secret"],
@@ -314,7 +327,6 @@
         },
         init: function(){
             Util.source(SESchema);
-            SetSecretSeed(GetDefaultSecretSeed());
         }
     };
 
