@@ -11,6 +11,7 @@
     import flash.events.IOErrorEvent;
 	import flash.display.StageDisplayState;
 	import flash.events.FullScreenEvent;
+	import flash.external.ExternalInterface;
 	
 	import com.seshenghuo.media.player.video.LivePlayerClient;
 	
@@ -62,6 +63,9 @@
 			this.ns.soundTransform = this.sound;
 			
 			this.stage.addEventListener(FullScreenEvent.FULL_SCREEN, this.onFullScreen);
+			
+			
+			this.addJavascriptInterface();
 			
 			test();
 		}
@@ -136,8 +140,11 @@
 				this._volume = this.ns.soundTransform.volume;
 				
 				this.sound.volume = 0;
+				
+				this._muted = true;
 			}else{
 				this.sound.volume = this._volume;
+				this._muted = false;
 			}
 			
 			this.ns.soundTransform = this.sound;
@@ -157,7 +164,7 @@
 					"source": "http://www.helpexamples.com/flash/video/cuepoints.flv"
 				}
 			]);
-				
+			
 			this.play();
 		}
 		
@@ -266,6 +273,22 @@
 			this._fullscreen = e.fullScreen;
 			
 			//@TODO
+		}
+		
+		private function addJavascriptInterface():void{
+			if(ExternalInterface.available){
+				ExternalInterface.addCallback("createLivePlayer", this.createLivePlayer);
+				ExternalInterface.addCallback("attachSourceList", this.attachSourceList);
+				ExternalInterface.addCallback("getSourceObject", this.getSourceObject);
+				ExternalInterface.addCallback("play", this.play);
+				ExternalInterface.addCallback("pause", this.pause);
+				ExternalInterface.addCallback("resume", this.resume);
+				ExternalInterface.addCallback("seek", this.seek);
+				ExternalInterface.addCallback("requestFullscreen", this.requestFullscreen);
+				ExternalInterface.addCallback("exitFullscreen", this.exitFullscreen);
+				ExternalInterface.addCallback("setMute", this.setMute);
+				ExternalInterface.addCallback("setVolume", this.setVolume);
+			}
 		}
 		
 		//public function connect(player:Object):Object{
