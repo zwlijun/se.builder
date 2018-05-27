@@ -386,11 +386,9 @@
 		
 		private function invokeJavascriptInterface(functionName:String, info:Object):*{
 			if(ExternalInterface.available){
-				ExternalInterface.call("console.log", functionName);
 				try{
 					return ExternalInterface.call("SESWFLivePlayer." + functionName, info);
 				}catch(e){
-					ExternalInterface.call("console.log", e);
 					return undefined;
 				}
 			}
