@@ -12,6 +12,11 @@
 	import flash.display.StageDisplayState;
 	import flash.events.FullScreenEvent;
 	import flash.external.ExternalInterface;
+	import flash.ui.ContextMenu;
+	import flash.ui.ContextMenuItem;
+	import flash.events.ContextMenuEvent;
+	import flash.net.URLRequest;
+	import flash.net.navigateToURL;
 	
 	import com.seshenghuo.media.player.video.LivePlayerClient;
 	
@@ -42,10 +47,22 @@
 		private var _fullscreen:Boolean = false;
 		private var _muted:Boolean = false;
 		private var _volume:Number = 0.5;
-			
+		
+		private var livePlayerContextMenu:ContextMenu;
 		
 		public function LivePlayer() {
 			// constructor code
+			this.stage.addEventListener(FullScreenEvent.FULL_SCREEN, this.onFullScreen);
+			this.addJavascriptInterface();
+			this.setConextMenu();
+			
+			//test();
+		}
+		
+		public function createLivePlayer(width:Number = 640, height:Number = 360):void{
+			this._width = width;
+			this._height = height;
+			
 			this.nc = new NetConnection();
 			this.nc.addEventListener(NetStatusEvent.NET_STATUS, this.onNetStatusChange);
 			this.nc.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this.onSecurityError);
@@ -61,18 +78,6 @@
 			
 			this.ns.client = this.client;
 			this.ns.soundTransform = this.sound;
-			
-			this.stage.addEventListener(FullScreenEvent.FULL_SCREEN, this.onFullScreen);
-			
-			
-			this.addJavascriptInterface();
-			
-			test();
-		}
-		
-		public function createLivePlayer(width:Number = 640, height:Number = 360):void{
-			this._width = width;
-			this._height = height;
 			
 			this.video = new Video(width, height);
 			
@@ -157,6 +162,7 @@
 			this.ns.soundTransform = this.sound;
 		}
 		
+		/*
 		private function test():void{
 			this.createLivePlayer();
 			this.attachSourceList([
@@ -167,86 +173,126 @@
 			
 			this.play();
 		}
+		*/
 		
 		private function onNetStatusChange(e:NetStatusEvent):void{
 			//@see http://help.adobe.com/zh_CN/FlashPlatform/reference/actionscript/3/flash/events/NetStatusEvent.html
 			trace("LivePlayer::Event#" + e.info.code);
+			
+			var key:String;
+			var info: Object = {};
+			
+			for(key in e.info){
+				trace(key + ": " + e.info[key]);
+				info[key] = e.info[key];
+			}
+			
+			var o:Object = {
+				"bubbles": e.bubbles,
+				"cancelable": e.cancelable,
+				"eventPhase": e.eventPhase,
+				"type": e.type,
+				"info": info
+			};
+
+			this.invokeJavascriptInterface("onNetStatusChange", o);
+			
 			switch(e.info.code){
 				case "NetConnection.Connect.Closed":
 					//fire emptied
 					//reconnect
+					this.invokeJavascriptInterface("onNetConnectionConnectClosed", o);
 				break;
 				case "NetConnection.Connect.Failed":
 					//fire error
+					this.invokeJavascriptInterface("onNetConnectionConnectFailed", o);
 				break;
 				case "NetConnection.Connect.NetworkChange":
-					
+					this.invokeJavascriptInterface("onNetConnectionConnectNetworkChange", o);
 				break;
 				case "NetConnection.Connect.Rejected":
 					//fire abort
+					this.invokeJavascriptInterface("onNetConnectionConnectRejected", o);
 				break;
 				case "NetConnection.Connect.Success":
 					//
+					this.invokeJavascriptInterface("onNetConnectionConnectSuccess", o);
 				break;
 				case "NetStream.Buffer.Empty":
 					//
+					this.invokeJavascriptInterface("onNetStreamBufferEmpty", o);
 				break;
 				case "NetStream.Buffer.Flush":
 					//
+					this.invokeJavascriptInterface("onNetStreamBufferFlush", o);
 				break;
 				case "NetStream.Buffer.Full":
 					//
+					this.invokeJavascriptInterface("onNetStreamBufferFull", o);
 				break;
 				case "NetStream.Connect.Closed":
 					//
+					this.invokeJavascriptInterface("onNetStreamConnectClosed", o);
 				break;
 				case "NetStream.Connect.Failed":
 					//
+					this.invokeJavascriptInterface("onNetStreamConnectFailed", o);
 				break;
 				case "NetStream.Connect.Rejected":
 					//
+					this.invokeJavascriptInterface("onNetStreamConnectRejected", o);
 				break;
 				case "NetStream.Connect.Success":
 					//
+					this.invokeJavascriptInterface("onNetStreamConnectSuccess", o);
 				break;
 				case "NetStream.Failed":
 					//
+					this.invokeJavascriptInterface("onNetStreamFailed", o);
 				break;
 				case "NetStream.Pause.Notify":
 					// fire pause
+					this.invokeJavascriptInterface("onNetStreamPauseNotify", o);
 				break;
 				case "NetStream.Play.Failed":
 					//
+					this.invokeJavascriptInterface("onNetStreamPlayFailed", o);
 				break;
 				case "NetStream.Play.FileStructureInvalid":
 					//
+					this.invokeJavascriptInterface("onNetStreamPlayFileStructureInvalid", o);
 				break;
 				case "NetStream.Play.InsufficientBW":
 					//
+					this.invokeJavascriptInterface("onNetStreamPlayInsufficientBW", o);
 				break;
 				case "NetStream.Play.Reset":
 					//
+					this.invokeJavascriptInterface("onNetStreamPlayReset", o);
 				break;
 				case "NetStream.Play.Start":
 					// fire play
+					this.invokeJavascriptInterface("onNetStreamPlayStart", o);
 				break;
 				case "NetStream.Play.Stop":
 					// 
+					this.invokeJavascriptInterface("onNetStreamPlayStop", o);
 				break;
 				case "NetStream.Play.StreamNotFound":
 					//
+					this.invokeJavascriptInterface("onNetStreamPlayStreamNotFound", o);
 				break;
 				case "NetStream.Seek.Failed":
 					//
+					this.invokeJavascriptInterface("onNetStreamSeekFailed", o);
 				break;
 				case "NetStream.Seek.InvalidTime":
 					//
+					this.invokeJavascriptInterface("onNetStreamSeekInvalidTime", o);
 				break;
 				case "NetStream.Seek.Notify":
 					//
-				break;
-				case "NetStream.Play.StreamNotFound":
-					//
+					this.invokeJavascriptInterface("onNetStreamSeekNotify", o);
 				break;
 				default:
 					//
@@ -257,22 +303,69 @@
 		private function onSecurityError(e:SecurityErrorEvent):void{
 			//fire error
 			trace("LivePlayer::Event#SecuretyError");
+
+			var o:Object = {
+				"bubbles": e.bubbles,
+				"cancelable": e.cancelable,
+				"eventPhase": e.eventPhase,
+				"type": e.type,
+				"errorID": e.errorID,
+				"text": e.text
+			};
+			
+			this.invokeJavascriptInterface("onSecurityError", o);
 		}
 		
 		private function onAsyncError(e:AsyncErrorEvent):void{
 			//fire error
 			trace("LivePlayer::Event#AsyncError");
+			
+			var o:Object = {
+				"bubbles": e.bubbles,
+				"cancelable": e.cancelable,
+				"eventPhase": e.eventPhase,
+				"type": e.type,
+				"errorID": e.errorID,
+				"text": e.text
+			};
+			
+			this.invokeJavascriptInterface("onAsyncError", o);
 		}
 		
 		private function onIOError(e:IOErrorEvent):void{
 			//fire error
 			trace("LivePlayer::Event#IOError");
+			
+			var o:Object = {
+				"bubbles": e.bubbles,
+				"cancelable": e.cancelable,
+				"eventPhase": e.eventPhase,
+				"type": e.type,
+				"errorID": e.errorID,
+				"text": e.text
+			};
+			
+			this.invokeJavascriptInterface("onIOError", o);
 		}
 		
 		private function onFullScreen(e:FullScreenEvent):void{
 			this._fullscreen = e.fullScreen;
 			
+			var o:Object = {
+				"type": e.type,
+				"fullScreen": e.fullScreen,
+				"eventPhase": e.eventPhase,
+				"activating": e.activating,
+				"bubbles": e.bubbles,
+				"cancelable": e.cancelable,
+				"interactive": e.interactive
+			};
 			//@TODO
+			if(true === e.fullScreen){
+				this.invokeJavascriptInterface("onRequestFullscreen", o);
+			}else{
+				this.invokeJavascriptInterface("onExitFullscreen", o);
+			}
 		}
 		
 		private function addJavascriptInterface():void{
@@ -291,9 +384,37 @@
 			}
 		}
 		
-		//public function connect(player:Object):Object{
-		//	this.ExternalLivePlayer = player;
-		//}
+		private function invokeJavascriptInterface(functionName:String, info:Object):*{
+			if(ExternalInterface.available){
+				ExternalInterface.call("console.log", functionName);
+				try{
+					return ExternalInterface.call("SESWFLivePlayer." + functionName, info);
+				}catch(e){
+					ExternalInterface.call("console.log", e);
+					return undefined;
+				}
+			}
+			
+			return undefined;
+		}
+		
+		private function menuItem_click(event:ContextMenuEvent):void{
+			navigateToURL(new URLRequest("http://www.seshenghuo.com/"), "_blank");
+		}
+		
+		private function setConextMenu():void{
+			this.livePlayerContextMenu = new ContextMenu();
+			
+			this.livePlayerContextMenu.hideBuiltInItems();
+			
+			var item:ContextMenuItem = new ContextMenuItem("LivePlayer v1.0.0");
+            this.livePlayerContextMenu.customItems.push(item);
+			
+			item.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,menuItem_click);
+			
+			
+			this.contextMenu = this.livePlayerContextMenu;
+		}
 	}
 	
 }
