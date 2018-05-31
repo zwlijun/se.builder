@@ -1,5 +1,5 @@
 ﻿package com.seshenghuo.media.player.video {
-	import flash.external.ExternalInterface;
+	import com.seshenghuo.media.player.video.ExternalJavascriptInterface;
 	
 	public class LivePlayerClient {
 
@@ -75,15 +75,7 @@
 		}
 		
 		private function invokeJavascriptInterface(functionName:String, info:Object):*{
-			if(ExternalInterface.available){
-				try{
-					return ExternalInterface.call("SESWFLivePlayer." + functionName, info);
-				}catch(e){
-					return undefined;
-				}
-			}
-			
-			return undefined;
+			return ExternalJavascriptInterface.invokeJavascriptInterface(functionName, info);
 		}
 
 	}

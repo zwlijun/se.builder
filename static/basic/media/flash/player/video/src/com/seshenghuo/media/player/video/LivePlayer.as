@@ -11,7 +11,6 @@
     import flash.events.IOErrorEvent;
 	import flash.display.StageDisplayState;
 	import flash.events.FullScreenEvent;
-	import flash.external.ExternalInterface;
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuItem;
 	import flash.events.ContextMenuEvent;
@@ -19,6 +18,7 @@
 	import flash.net.navigateToURL;
 	
 	import com.seshenghuo.media.player.video.LivePlayerClient;
+	import com.seshenghuo.media.player.video.ExternalJavascriptInterface;
 	
 	
 	public class LivePlayer extends Sprite {
@@ -172,8 +172,8 @@
 			]);
 			
 			this.play();
-		}
-		*/
+		}*/
+		
 		
 		private function onNetStatusChange(e:NetStatusEvent):void{
 			//@see http://help.adobe.com/zh_CN/FlashPlatform/reference/actionscript/3/flash/events/NetStatusEvent.html
@@ -369,31 +369,56 @@
 		}
 		
 		private function addJavascriptInterface():void{
-			if(ExternalInterface.available){
-				ExternalInterface.addCallback("createLivePlayer", this.createLivePlayer);
-				ExternalInterface.addCallback("attachSourceList", this.attachSourceList);
-				ExternalInterface.addCallback("getSourceObject", this.getSourceObject);
-				ExternalInterface.addCallback("play", this.play);
-				ExternalInterface.addCallback("pause", this.pause);
-				ExternalInterface.addCallback("resume", this.resume);
-				ExternalInterface.addCallback("seek", this.seek);
-				ExternalInterface.addCallback("requestFullscreen", this.requestFullscreen);
-				ExternalInterface.addCallback("exitFullscreen", this.exitFullscreen);
-				ExternalInterface.addCallback("setMute", this.setMute);
-				ExternalInterface.addCallback("setVolume", this.setVolume);
-			}
+			ExternalJavascriptInterface.addJavascriptInterface([
+				{
+					"name": "createLivePlayer",
+					"method": this.createLivePlayer
+				},
+				{
+					"name": "attachSourceList",
+					"method": this.attachSourceList
+				},
+				{
+					"name": "getSourceObject",
+					"method": this.getSourceObject
+				},
+				{
+					"name": "play",
+					"method": this.play
+				},
+				{
+					"name": "pause",
+					"method": this.pause
+				},
+				{
+					"name": "resume",
+					"method": this.resume
+				},
+				{
+					"name": "seek",
+					"method": this.seek
+				},
+				{
+					"name": "requestFullscreen",
+					"method": this.requestFullscreen
+				},
+				{
+					"name": "exitFullscreen",
+					"method": this.exitFullscreen
+				},
+				{
+					"name": "setMute",
+					"method": this.setMute
+				},
+				{
+					"name": "setVolume",
+					"method": this.setVolume
+				}
+			]);
 		}
 		
 		private function invokeJavascriptInterface(functionName:String, info:Object):*{
-			if(ExternalInterface.available){
-				try{
-					return ExternalInterface.call("SESWFLivePlayer." + functionName, info);
-				}catch(e){
-					return undefined;
-				}
-			}
-			
-			return undefined;
+			return ExternalJavascriptInterface.invokeJavascriptInterface(functionName, info);
 		}
 		
 		private function menuItem_click(event:ContextMenuEvent):void{
