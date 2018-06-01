@@ -82,8 +82,8 @@
         "dataform": {
             smscode: function(data, node, e, type){
                 var args = (data || "").split(",");
-                var name = args[0];
-                var smscodeAPIURL = args[1] || "/service/smscode/get";
+                var smscodeAPIURL = args[0] || "/service/smscode/get";
+                var name = args[1];
                 var flag = node.attr("data-smscode-flag");
 
                 if("1" == flag){
