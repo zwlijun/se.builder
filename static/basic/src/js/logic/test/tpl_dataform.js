@@ -83,6 +83,7 @@
             smscode: function(data, node, e, type){
                 var args = (data || "").split(",");
                 var name = args[0];
+                var smscodeAPIURL = args[1] || "/service/smscode/get";
                 var flag = node.attr("data-smscode-flag");
 
                 if("1" == flag){
@@ -120,7 +121,7 @@
                     "service": {
                         "smscode": {
                             "get": {
-                                "url": "/service/smscode/get",
+                                "url": smscodeAPIURL,
                                 //"data": "mobile=${mobile}&authSecret=${secret}&authKey=${seckey}"
                                 "data": "${data}"
                             }
