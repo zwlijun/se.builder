@@ -1,7 +1,6 @@
 ;define(function(require, exports, module){
     var oPaths           = require("mod/se/opaths");
 
-
     var ErrorTypes = null;
     var RespTypes = null;
     var ResponseProxy = null;
@@ -20,36 +19,36 @@
         "dataset": {
             more: function(data, node, e, type){
                 var args = (data || "").split(",");
-                var requestNames = (args[0] || "").split("|");
-                var requestSize = requestNames.length;
-                var requestPageKey = args[1] || "page";
-                var requestRenderName = args[2] || "datalist";
-                var requestAPIURL = args[3] || "/datalist";
-                var requestDataListPath = args[4] || "dataList";
-                var requestShowLoading = "1" === args[5];
-                var requestLoadingText = args[6] || "处理中，请稍候...";
-                var requestParams = {};
-                var requestName = null;
+                var name = args[0];
 
-                for(var i = 0; i < requestSize; i++){
-                    requestName = requestNames[i];
+                var plugin = Bridge.plugin;
+                var requests = plugin.conf("requests") || {};
+                var request = requests[name] || {
+                    "names": [],
+                    "params": {},
+                    "pageKey": "page",
+                    "startPage": 1,
+                    "pageSize": 10,
+                    "url": "/datalist",
+                    "name": name,
+                    "paths": "dataList",
+                    "showLoading": false,
+                    "loadingText": "处理中，请稍候..."
+                };
+
+                var requestName = null;
+                for(var i = 0; i < request.names.length; i++){
+                    requestName = request.names[i];
 
                     if(!requestName){
                         continue;
                     }
 
-                    requestParams[requestName] = node.attr("data-request-" + requestName);
+                    request.params[requestName] = node.attr("data-request-" + requestName);
                 }
                 node.addClass("loading");
 
-                Logic.requestMore(requestParams, node, {
-                    "pageKey": requestPageKey,
-                    "api": requestAPIURL,
-                    "command": requestRenderName,
-                    "showLoading": requestShowLoading,
-                    "loadingText": requestLoadingText,
-                    "paths": requestDataListPath
-                });
+                Logic.requestMore(request, node);
             }
         }
     };
@@ -57,31 +56,30 @@
     var DatasetTemplateEngine = null;
 
     var Logic = {
-        requestMore: function(params, moreNode, requestExtra){
+        requestMore: function(request, moreNode){
             var _command = {
                 "request": {
                     "dataset": {}
                 }
             };
 
-            _command["request"]["dataset"][requestExtra.command] = {
-                "url": requestExtra.api,
+            _command["request"]["dataset"][request.name] = {
+                "url": request.url,
                 "data": "${data}"
             };
 
             var param = {
-                "data": Request.stringify(params)
+                "data": Request.stringify(request.params)
             };
 
             CMD.injectCommands(_command);
 
-            CMD.exec("request.dataset." + requestExtra.command, param, {
+            CMD.exec("request.dataset." + request.name, param, {
                 "context": {
-                    "showLoading": requestExtra.showLoading,
-                    "loadingText": requestExtra.loadingText,
-                    "params": params,
-                    "moreNode": moreNode,
-                    "requestExtra": requestExtra
+                    "showLoading": request.showLoading === true,
+                    "loadingText": request.loadingText || "处理中，请稍候...",
+                    "request": request,
+                    "moreNode": moreNode
                 },
                 "complete": function(xhr, status){
                     var moreNode = this.moreNode;
@@ -91,20 +89,33 @@
                 "success": function(data, status, xhr){
                     ResponseProxy.json(this, data, {
                         "callback": function(ctx, resp, msg){
-                            var extra = ctx.requestExtra;
+                            var extra = ctx.request;
+                            // {
+                            //     "names": [],
+                            //     "params": {},
+                            //     "pageKey": "page",
+                            //     "startPage": 1,
+                            //     "pageSize": 10,
+                            //     "url": "/datalist",
+                            //     "name": name,
+                            //     "paths": "dataList",
+                            //     "showLoading": false,
+                            //     "loadingText": "处理中，请稍候..."
+                            // }
 
                             var paths = extra.paths;
                             // var dataList = resp.dataList || [];
                             var dataList = oPaths.find(resp, paths) || [];
                             var size = dataList.length;
 
-                            var render = $("#render_" + extra.command);
+                            var render = $("#render_" + extra.name);
                             var moreNode = ctx.moreNode;
 
-                            var reqParams = ctx.params;
+                            var reqParams = extra.params;
 
                             var respParams = resp.param || {};
-                            var pageSize = Number(respParams.pageSize || "10");
+                            var currenPage = Number(reqParams[extra.pageKey]);
+                            var pageSize = Number(respParams.pageSize || extra.pageSize || "10");
 
                             if(size == 0){
                                 moreNode.addClass("hide");
@@ -117,12 +128,17 @@
                                 moreNode.removeClass("hide");
                             }
 
-                            moreNode.attr("data-request-" + extra.pageKey, Number(reqParams[extra.pageKey]) + 1);
+                            moreNode.attr("data-request-" + extra.pageKey, currenPage + 1);
 
-                            DatasetTemplateEngine.render(false, "tpl_" + extra.command, dataList, {
-                                callback: function(ret){
-                                    this.append(ret.result);
+                            DatasetTemplateEngine.render(false, "tpl_" + extra.name, dataList, {
+                                callback: function(ret, page, start){
+                                    if(page === start){
+                                        this.html(ret.result);
+                                    }else{
+                                        this.append(ret.result);
+                                    }
                                 },
+                                "args": [currenPage, extra.startPage] 
                                 "context": render
                             });
                         }
@@ -136,7 +152,10 @@
                     });
                 },
                 error: function(xhr, errorType, error){
-                    var err = CMD.RequestStatus[errorType];
+                    var plugin = Bridge.plugin;
+                    var requestStatus = plugin.conf("requestStatus") || {};
+
+                    var err = requestStatus[errorType] || CMD.RequestStatus[errorType];
 
                     Toast.text(err.text, Toast.MIDDLE_CENTER, 3000);
                 }

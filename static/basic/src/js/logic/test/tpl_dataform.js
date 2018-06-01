@@ -89,22 +89,31 @@
                     return ;
                 }
 
-                var input = $('input[name="' + name + '"]');
-                var mobile = input.val();
-
-                mobile = mobile.replace(/^([\s]+)|([\s]+)$/g, "");
-
-                if(mobile.length == 0 || !DataForm.match("mobile", mobile, input)){
-                    Toast.text("请输入有效的手机号码", Toast.MIDDLE_CENTER, 3000);
-
-                    return ;
-                }
+                var mobile = "";
 
                 var secretData = SecretSeed.getData();
                 var param = {
-                    "mobile": mobile,
                     "secret": secretData["secret"],
                     "seckey": secretData["seckey"]
+                };
+
+                if(name){
+                    var input = $('input[name="' + name + '"]');
+
+                    mobile = input.val() || "";
+                    mobile = mobile.replace(/^([\s]+)|([\s]+)$/g, "");
+
+                    if(mobile.length == 0 || !DataForm.match("mobile", mobile, input)){
+                        Toast.text("请输入有效的手机号码", Toast.MIDDLE_CENTER, 3000);
+
+                        return ;
+                    }
+
+                    param["mobile"] = mobile;
+                }
+
+                var paramData = {
+                    "data": Request.stringify(param)
                 };
 
                 var _command = {
@@ -112,7 +121,8 @@
                         "smscode": {
                             "get": {
                                 "url": "/service/smscode/get",
-                                "data": "mobile=${mobile}&authSecret=${secret}&authKey=${seckey}"
+                                //"data": "mobile=${mobile}&authSecret=${secret}&authKey=${seckey}"
+                                "data": "${data}"
                             }
                         }
                     }
@@ -121,7 +131,7 @@
                 node.attr("data-smscode-flag", "1");
 
                 CMD.injectCommands(_command);
-                CMD.exec("service.smscode.get", param, {
+                CMD.exec("service.smscode.get", paramData, {
                     "context": {
                         "showLoading": false,
                         "node": node
@@ -249,14 +259,34 @@
                     callback: function(submitEvent, _data, _node, _e, _type){
                         submitEvent.preventDefault();
 
-                        Util.fireAction(_node, _type, _e);
+                        if("submit" != (_type || "").toLowerCase()){
+                            Util.fireAction(_node, _type, _e);
+                        }
                     },
                     args: [data, node, e, type]
                 });
                 checker.set("done", {
                     callback: function(result){
                         // result.form.submit();
-                        Logic.sendRequest(result);
+                        var _result = result || {};
+                        var form = _result.form || {};
+                        var name = form.name || "seDefaultForm";
+
+                        var plugin = Bridge.plugin;
+                        var forms = plugin.conf("forms") || {};
+                        var cur = forms[name] || {
+                            "actionType": "submit",
+                            "actionURL": "/submit",
+                            "actionName": name,
+                            "showLoading": true,
+                            "loadingText": "处理中，请稍候..."
+                        };
+
+                        if(cur.type == "redirect"){
+                            form.submit();
+                        }else if(cur.type == "submit"){
+                            Logic.sendRequest(result, cur);
+                        }
                     }
                 });
 
@@ -266,17 +296,17 @@
     };
     
     var Logic = {
-        sendRequest: function(result){
+        sendRequest: function(result, formAction){
             var _command = {
                 "dataform": {
-                    "submit": {
-                        "tpl": {
-                            "url": "/submit",
-                            "data": "${data}"
-                        }
-                    }
+                    "submit": {}
                 }
             };
+
+            _command["dataform"]["submit"][formAction.actionName] = {
+                "url": formAction.actionURL,
+                "data": "${data}"
+            }
 
             var param = {
                 "data": Request.stringify(result.data)
@@ -284,16 +314,17 @@
 
             CMD.injectCommands(_command);
 
-            CMD.exec("dataform.submit.tpl", param, {
+            CMD.exec("dataform.submit." + formAction.actionName, param, {
                 "context": {
-                    "showLoading": true,
-                    "loadingText": "处理中，请稍候...",
-                    "dataForm": result
+                    "showLoading": (("showLoading" in formAction) ? (formAction.showLoading === true) : true),
+                    "loadingText": (formAction.loadingText || "处理中，请稍候..."),
+                    "dataForm": result,
+                    "formAction": formAction
                 },
                 "success": function(data, status, xhr){
                     ResponseProxy.json(this, data, {
                         "callback": function(ctx, resp, msg){
-                            Toast.text(msg || "操作成功", Toast.MIDDLE_CENTER, 1500, {
+                            Toast.text(msg || "处理成功", Toast.MIDDLE_CENTER, 1500, {
                                 hide: {
                                     callback: function(id){
                                         //TODO
