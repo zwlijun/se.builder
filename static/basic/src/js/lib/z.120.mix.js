@@ -3125,9 +3125,11 @@ var __PAGE_ALIAS__      = $.__ROOT__.PAGE_ALIAS     = __APP__.attr("data-page-al
 var __REFERER__         = $.__ROOT__.REFERER        = document.URL;
 var __DOC_REFERER__     = $.__ROOT__.DOC_REFERER    = document.referrer;
 
+var _SOURCE_DIR_NAME = "src";
+
 var aliasItems = __PAGE_ALIAS__.split(".");
 var aliasItemSize = aliasItems.length;
-var isSourceDir = __RES_ROOT__.indexOf("/" + "src" + "/") != -1;
+var isSourceDir = __RES_ROOT__.indexOf("/" + _SOURCE_DIR_NAME + "/") != -1;
 var isForceUseSource = __REFERER__.indexOf("FORCE_USE_SOURCE=1") != -1;
 var isForceDebug = __REFERER__.indexOf("FORCE_DEBUG=1") != -1;
 
@@ -3152,7 +3154,7 @@ if(isForceUseSource){
 
 if(!isSourceDir && true === __USE_SOURCE__){
     __DEBUG__           = $.__ROOT__.DEBUG          = true;
-    __JAVASCRIPT__      = $.__ROOT__.JAVASCRIPT     = __JAVASCRIPT__.replace("/res/", "/src/");
+    __JAVASCRIPT__      = $.__ROOT__.JAVASCRIPT     = __JAVASCRIPT__.replace("/res/", "/" + _SOURCE_DIR_NAME + "/");
 }
 
 $.__ROOT__.ALIAS_SET = {
