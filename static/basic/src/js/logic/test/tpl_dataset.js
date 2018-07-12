@@ -23,18 +23,20 @@
 
                 var plugin = Bridge.plugin;
                 var requests = plugin.conf("requests") || {};
-                var request = requests[name] || {
+                var request = $.extend({}, {
                     "names": [],
-                    "params": {},
                     "pageKey": "page",
+                    "params": {},
+                    "url": "/datalist",
+                    "paths": "dataList",
+                    /* 以下是可选项 */
+                    "external": null,
                     "startPage": 1,
                     "pageSize": 10,
-                    "url": "/datalist",
                     "name": name,
-                    "paths": "dataList",
                     "showLoading": false,
                     "loadingText": "处理中，请稍候..."
-                };
+                }, requests[name]);
 
                 var requestName = null;
                 for(var i = 0; i < request.names.length; i++){
@@ -131,14 +133,18 @@
                             moreNode.attr("data-request-" + extra.pageKey, currenPage + 1);
 
                             DatasetTemplateEngine.render(false, "tpl_" + extra.name, dataList, {
-                                callback: function(ret, page, start){
+                                callback: function(ret, page, start, external){
                                     if(page === start){
                                         this.html(ret.result);
                                     }else{
                                         this.append(ret.result);
                                     }
+
+                                    if(external){
+                                        Util.requestExternal(external, [page]);
+                                    }
                                 },
-                                "args": [currenPage, extra.startPage] 
+                                "args": [currenPage, extra.startPage, extra.external],
                                 "context": render
                             });
                         }

@@ -94,8 +94,8 @@
 
                 var secretData = SecretSeed.getData();
                 var param = {
-                    "secret": secretData["secret"],
-                    "seckey": secretData["seckey"]
+                    "authSecret": secretData["secret"],
+                    "authKey": secretData["seckey"]
                 };
 
                 if(name){
@@ -275,18 +275,28 @@
 
                         var plugin = Bridge.plugin;
                         var forms = plugin.conf("forms") || {};
-                        var cur = forms[name] || {
+                        var cur = $.extend({}, {
                             "actionType": "submit",
-                            "actionURL": "/submit",
+                            "actionURL": null,
+                            /* 以下是可选项 */
+                            "method": null,
+                            "enctype": null,
                             "actionName": name,
+                            "external": null,
                             "showLoading": true,
                             "loadingText": "处理中，请稍候..."
-                        };
+                        }, forms[name]);
 
-                        if(cur.type == "redirect"){
+                        form.setAttribute("action", cur.actionURL || form.getAttribute("action"));
+                        form.setAttribute("method", cur.method    || form.getAttribute("method")  || "post");
+                        form.setAttribute("enctype", cur.enctype  || form.getAttribute("enctype") || "application/x-www-form-urlencoded");
+
+                        if(cur.actionType == "submit"){
                             form.submit();
-                        }else if(cur.type == "submit"){
+                        }else if(cur.actionType == "request"){
                             Logic.sendRequest(result, cur);
+                        }else if(cur.actionType == "external"){
+                            Util.requestExternal(cur.actionURL, [result]);
                         }
                     }
                 });
@@ -325,6 +335,17 @@
                 "success": function(data, status, xhr){
                     ResponseProxy.json(this, data, {
                         "callback": function(ctx, resp, msg){
+                            var formAction = ctx.formAction;
+                            var external = formAction.external;
+
+                            if(external){
+                                Util.requestExternal(external, [{
+                                    "ctx": ctx, 
+                                    "resp": resp, 
+                                    "msg": msg
+                                }]);
+                            }
+
                             Toast.text(msg || "处理成功", Toast.MIDDLE_CENTER, 1500, {
                                 hide: {
                                     callback: function(id){

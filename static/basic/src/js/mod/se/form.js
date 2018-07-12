@@ -392,6 +392,8 @@
          *            data-max                        //最大值
          *            max                             //最大值
          *            data-nullvalue=""               //除了""之外的空值
+         *            data-trimspaces="0|1"           //首尾去空
+         *            data-clearspaces="0|1"          //清除所有空格
          * />               
          * </form> 
          * </script>        
@@ -420,6 +422,8 @@
             var format = null;
             var encoder = false;
             var xss = true;
+            var trimSpaces = true;
+            var clearSpaces = false;
             var compare = null;
             var lbound = 0;
             var ubound = 0;
@@ -451,12 +455,30 @@
                 
                 if(!name){ continue; }
 
+                trimSpaces = ("1" == (el.attr("data-trimspaces") || "1"));
+                clearSpaces = ("1" == el.attr("data-clearspaces"));
+
                 group = (el.attr("data-group") || name);
 
                 use = el.attr("data-use");
                 useValue = ((use && el[0].hasAttribute("data-" + use)) ? el.attr("data-" + use) : undefined);
                 value = StringUtil.trim(undefined !== useValue ? useValue : el.val());
+                
+                if(true === trimSpaces){
+                    value = StringUtil.trim(value);
+                }
+
+                if(true === clearSpaces){
+                    var clearSpacesPattern = /[\s]+/g;
+                    clearSpacesPattern.lastIndex = 0;
+                    
+                    value = value.replace(clearSpacesPattern, "");
+                }
+
+                el.val(value);
+
                 defaultValue = el[0].hasAttribute("data-default") ? el.attr("data-default") : undefined;
+
                 nullvalue = el.attr("data-nullvalue") || "";
                 filter = (el.prop("disabled") || ("1" == el.attr("data-filter")));
                 holder = (el.attr("placeholder") || el.attr("data-placeholder") || "");
