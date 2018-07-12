@@ -220,11 +220,13 @@ buildGruntFile.js = function(files){
         "all": []
     };
 
+    //旧的用except
+
     conf["uglify"] = {
         "options": {
             "preserveComments": false,
             "mangle": {
-                "except": ["require", "exports", "module"]
+                "reserved": ["require", "exports", "module"]
             },
             "report": "gzip",
             "banner": project.banner

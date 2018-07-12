@@ -17,7 +17,8 @@ var _sed = {
                 "source": matcher[0],
                 "prefix": matcher[1],
                 "sign": matcher[2],
-                "ext": matcher[3] 
+                "ext": matcher[3],
+                "target": matcher[1] + matcher[2]
             }
         }
 
@@ -88,15 +89,17 @@ var _sed = {
 
         if(data.ext){
             regexp = new RegExp(_sed.escape(data.prefix) + "(\\.[0-9a-fA-F]{40}){0,1}", "g");
-            // WScript.echo("regexp: " + regexp.test(content));
-            content = content.replace(regexp, data.source);
+            // WScript.echo("pattern a: " + regexp);
+            // WScript.echo("regexp a: " + regexp.test(content) + ", source: " + data.source);
+            content = content.replace(regexp, data.target);
         }else{
             regexp = new RegExp("\"" + _sed.escape(data.prefix) + "(\\.[0-9a-fA-F]{40}){0,1}" + "\"", "g");
-            // WScript.echo("regexp: " + regexp.test(content));
-            content = content.replace(regexp, "\"" + data.source + "\"");
+            // WScript.echo("pattern b: " + regexp);
+            // WScript.echo("regexp b: " + regexp.test(content) + ", source: " + data.source);
+            content = content.replace(regexp, "\"" + data.target + "\"");
         }
 
-        WScript.echo("regexp: " + regexp);
+        // WScript.echo("regexp: " + regexp);
 
         regexp = null;
 
