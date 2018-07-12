@@ -45,7 +45,12 @@ exports.run = function (sock, project, deploy, win32) {
             });
         }else{
             console.log("shell://" + script + "/timestamp.sh");
-            childProcess.execFile(script + "/timestamp.sh", [], "utf8", function(error, stdout, stderr){
+            childProcess.execFile(script + "/timestamp.sh", [], {
+                encoding: 'utf8',
+                timeout: 0,
+                maxBuffer: 100000 * 1024, // 默认 200 * 1024
+                killSignal: 'SIGTERM'
+            }, function(error, stdout, stderr){
                 console.log("==========执行完成::错误信息 START==========");
                 console.log(error);
                 console.log("==========执行完成::错误信息 END==========");
