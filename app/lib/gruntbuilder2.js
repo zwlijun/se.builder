@@ -5,6 +5,7 @@
 var win32       = "win32" == require('os').platform();
 var fs          = require("fs");
 var fse         = require("fs-extra");
+var path        = require("path");
 var spawn       = require("child_process").spawn;
 var exec        = require("child_process").exec;
 var cs          = require("./checksum");
@@ -13,6 +14,10 @@ var sedShell    = require("./sed");
 var _Socket = null;
 var _Project = null;
 var _Files = null;
+
+var signCount = 0;
+var gruntEnded = 0;
+var buildFileCount = 0;
 
 var npmTask = [];
 var gruntTask = [];
@@ -148,6 +153,7 @@ var createTask = function(){
 
     var alias = build.alias;
     var transport = build.transport;
+    var localConcat = build.localConcat;
 
     npmTask.length = 0;
     npmTask = [];
@@ -158,18 +164,24 @@ var createTask = function(){
         case "js":
             registNpmTask("grunt-contrib-jshint");
             registNpmTask("grunt-contrib-uglify");
-            registNpmTask("grunt-contrib-concat");
 
             if(transport){
                 registNpmTask('grunt-cmd-transport');
+            }
+
+            if(localConcat){
+                registNpmTask('grunt-cmd-concat');
             }
             registGruntTask("jshint");
 
             if(transport){
                 registGruntTask("transport");
             }
+            if(localConcat){
+                registGruntTask("concat");
+            }
+
             registGruntTask("uglify");
-            registGruntTask("concat");
         break;
         case "html":
             registNpmTask("grunt-contrib-htmlmin");
@@ -177,9 +189,7 @@ var createTask = function(){
         break;
         case "css":
             registNpmTask("grunt-contrib-cssmin");
-            registNpmTask("grunt-contrib-concat");
             registGruntTask("cssmin");
-            registGruntTask("concat");
         break;
         case "img":
             registNpmTask("grunt-contrib-imagemin");
@@ -226,12 +236,58 @@ buildGruntFile.js = function(files){
         "options": {
             "preserveComments": false,
             "mangle": {
-                "reserved": ["require", "exports", "module"]
+                "except": ["require", "exports", "module"]
             },
             "report": "gzip",
             "banner": project.banner
         },
         "default": {
+            "files": [
+                {
+                    "expand": true,
+                    "cwd": path.relative(".", doc + src + transportTempDir + "/js"),
+                    "src": "**/*.js",
+                    "dest": path.relative(".", doc + src + buildTempDir + "/js")
+                }
+            ]
+        }
+    };
+
+    conf["transport"] = {
+        "default": {
+            "options": {
+                "debug": false,
+                "paths": [
+                    path.relative(".", doc + src + transportTempDir)
+                ]
+            },
+            "files": [
+                {
+                    "expand": true,
+                    "cwd": path.relative(".", doc + src + transportTempDir + "/js"),
+                    "src": "**/*.js",
+                    "dest": path.relative(".", doc + src + transportTempDir + "/js")
+                }
+            ]
+        }
+    };
+
+    conf["concat"] = {
+        "default": {
+            "options": {
+                "paths": [
+                    path.relative(".", doc + src + transportTempDir)
+                ],
+                "include": "all"
+            },
+            // "files": [
+            //     {
+            //         "expand": true,
+            //         "cwd": path.relative(".", doc + src + transportTempDir + "/js"),
+            //         "src": "**/*.js",
+            //         "dest": path.relative(".", doc + src + buildTempDir + "/js")
+            //     }
+            // ]
             "files": (function(list){
                 var size = list.length;
                 var file = null;
@@ -239,7 +295,7 @@ buildGruntFile.js = function(files){
                 var ret = {};
                 var distFile = null;
                 var srcFile = null;
-                var path = null;
+                var sourcePath = null;
 
                 for(var i = 0; i < size; i++){
                     // map.files.push({
@@ -256,91 +312,18 @@ buildGruntFile.js = function(files){
                     //     "isUpdate": isUpdate
                     // });
                     file = list[i];
-                    path = file.file;
+                    sourcePath = file.file;
 
-                    srcFile = path.replace(doc + src, doc + src + transportTempDir + "/"); //从__transport__目录获取源文件
-                    distFile = path.replace(doc + src, doc + src + buildTempDir + "/") //将__transport__目录下的文件构建到__build__目录
+                    if(sourcePath.indexOf("/js/logic/") != -1){
+                        srcFile = sourcePath.replace(doc + src, doc + src + transportTempDir + "/"); //从__transport__目录获取源文件
+                        distFile = sourcePath.replace(doc + src, doc + src + buildTempDir + "/") //将__transport__目录下的文件构建到__build__目录
 
-                    ret[distFile] = [srcFile];
-                }
-
-                return ret;
-            })(files)
-        }
-    };
-
-    conf["concat"] = {
-        "default": {
-            "options": {
-                "process": true
-            },
-            "files": (function(info){
-                var files = info.files;
-                var item = null;
-                var concat = null;
-                var uglifyFiles = conf["uglify"]["default"]["files"];
-
-                var ret = {};
-                var full = null;
-
-                for(var key in files){
-                    if(files.hasOwnProperty(key)){
-                        item = files[key];
-                        concat = item.concat || {};
-
-                        for(var file in concat){ //-------
-                            if(concat.hasOwnProperty(file)){
-                                full = doc + src + buildTempDir + "/" + item.folder + "/" + file;
-                                if(!(full in ret)){
-                                    ret[full] = [];
-                                }
-
-                                var concatSize = concat[file].length;
-                                var concatItem = null;
-                                var checkCount = 0;
-                                var concatFilePath = null;
-
-                                for(var i = 0; i < concatSize; i++){
-                                    concatItem = concat[file][i];
-
-                                    concatFilePath = doc + src + buildTempDir + "/"  + item.folder + "/"  + concatItem.file;
-
-                                    if((concatFilePath in uglifyFiles)){
-                                        checkCount++;
-                                    }
-
-                                    ret[full].push(concatFilePath);
-                                }
-
-                                if(checkCount != concatSize){
-                                    delete ret[full];
-                                }
-                            }
-                        }
+                        ret[distFile] = [srcFile];
                     }
                 }
 
                 return ret;
-            })(buildInfo)
-        }
-    };
-
-    conf["transport"] = {
-        "expand": {
-            "options": {
-                "debug": false,
-                "paths": [
-                    doc + src + "js"
-                ]
-            },
-            "files": [
-                {
-                    "expand": true,
-                    "cwd": doc + src + transportTempDir + "/js",
-                    "src": "**/*.js",
-                    "dest": doc + src + transportTempDir + "/js"
-                }
-            ]
+            })(files)
         }
     };
 
@@ -398,62 +381,6 @@ buildGruntFile.css = function(files){
 
                 return ret;
             })(files)
-        }
-    };
-
-    conf["concat"] = {
-        "default": {
-            "options": {
-                "process": true
-            },
-            "files": (function(info){
-                var files = info.files;
-                var item = null;
-                var concat = null;
-                var uglifyFiles = conf["cssmin"]["default"]["files"];
-
-                var ret = {};
-                var full = null;
-
-                for(var key in files){
-                    if(files.hasOwnProperty(key)){
-                        item = files[key];
-                        concat = item.concat || {};
-
-                        for(var file in concat){ //-------
-                            if(concat.hasOwnProperty(file)){
-                                full = doc + src + buildTempDir + "/" + item.folder + "/" + file;
-                                if(!(full in ret)){
-                                    ret[full] = [];
-                                }
-
-                                var concatSize = concat[file].length;
-                                var concatItem = null;
-                                var checkCount = 0;
-                                var concatFilePath = null;
-
-                                for(var i = 0; i < concatSize; i++){
-                                    concatItem = concat[file][i];
-
-                                    concatFilePath = doc + src + buildTempDir + "/"  + item.folder + "/"  + concatItem.file;
-
-                                    if((concatFilePath in uglifyFiles)){
-                                        checkCount++;
-                                    }
-
-                                    ret[full].push(concatFilePath);
-                                }
-
-                                if(checkCount != concatSize){
-                                    delete ret[full];
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return ret;
-            })(buildInfo)
         }
     };
 
@@ -533,16 +460,43 @@ var readyBuildFiles = function(){
     var doc = root.doc;
     var src = root.src;
 
-    fse.copy(doc + src + buildInfo.alias, doc + src + transportTempDir + "/" + buildInfo.alias, function(err){
-        if(err){
-            emit("error", "复制源文件(" + doc + src + buildInfo.alias + ")到__transport__目录失败");
-        }else{
-            console.log("copy from: " + doc + src + buildInfo.alias);
-            console.log("copy to: " + doc + src + transportTempDir + "/" + buildInfo.alias);
+    var fileList = _Files;
 
-            startGruntApp();
-        }
-    });
+    var size = fileList.length;
+    var file = null;
+
+    var transportFile = null;
+    var sourcePath = null;
+
+    for(var i = 0; i < size; i++){
+        // map.files.push({
+        //     "type" : treeType,
+        //     "name": itemName,
+        //     "relative": itemRelative,
+        //     "folder": itemFolder,
+        //     "folderCheckSum": itemCheckSum,
+        //     "file" : fileAbsolutePath,
+        //     "fileName": fileName,
+        //     "fileType": fileType,
+        //     "fileExtName": fileExtName,
+        //     "fileCheckSum": fileCheckSum,
+        //     "isUpdate": isUpdate
+        // });
+        file = fileList[i];
+        sourcePath = file.file;
+
+        transportFile = sourcePath.replace(doc + src, doc + src + transportTempDir + "/"); //从__transport__目录获取源文件
+
+        fse.copy(sourcePath, transportFile, function(err){
+            if(err){
+                emit("error", "复制源文件(" + sourcePath + ")到__transport__目录失败");
+            }else{
+                console.log("Copy source file: " + sourcePath + " -> " + transportFile);
+            }
+        });
+    }
+
+    startGruntApp();
 };
 
 var addEscape = function(str){
@@ -697,18 +651,36 @@ var writeChecksum = function(file, isDest){
 
                 emit("encoding", "storage file sign: " + checksum);
             });
+        }else{
+            emit("encoding", "file not found(" + file + ")");
         }
     //}, 0);
 }
 
 var writeDestChecksum = function(file){
-    emit("encoding", "create dest file sign...");
-    writeChecksum(file, true);
+    // setTimeout(function(){
+        emit("encoding", "create dest file(" + file + ") sign...");
+        writeChecksum(file, true);
+        signCount++;
+
+    //     if(signCount >= buildFileCount && true === gruntEnded){
+    //         emit("encoding", "grunt & sign completed.");
+    //         // deploy();
+    //     }
+    // }, 50)
 }
 
 var writeSourceChecksum = function(file){
-    emit("encoding", "create source file sign...");
-    writeChecksum(file, false);
+    // setTimeout(function(){
+        emit("encoding", "create source file(" + file + ") sign...");
+        writeChecksum(file, false);
+        signCount++;
+
+    //     if(signCount >= buildFileCount && true === gruntEnded){
+    //         emit("encoding", "grunt & sign completed.");
+    //         // deploy();
+    //     }
+    // }, 50)
 }
 
 var parseGruntData = function(str){
@@ -754,15 +726,18 @@ var startGruntApp = function(){
     grunt.stdout.on('data', function (data) {
         // console.log(data)
         var str = data.toString("UTF-8");
-        
-        emit("encoding", 'grunt stdout: ' + str);
+        var inputs = str.split(/[\r\n]/);
 
-        // console.log("str: " + str);
+        for(var i = 0; i < inputs.length; i++){
+            str = inputs[i];
 
-        if(str.indexOf("File ") != -1){
-            parseGruntData(str);
-        }else if(str.indexOf("✔ ") != -1){
-            parseGruntImageData(str);
+            if(str.indexOf("File ") != -1){
+                parseGruntData(str);
+            }else if(str.indexOf("✔ ") != -1){
+                parseGruntImageData(str);
+            }
+
+            emit("encoding", 'grunt stdout[' + signCount + '/' + buildFileCount + ']: ' + str);
         }
     });
 
@@ -772,8 +747,16 @@ var startGruntApp = function(){
 
     grunt.on('close', function (code) {
         if(code === 0){
+            gruntEnded = true;
+
             emit("encoding", "grunt exited with code " + code);
-            deploy();
+
+            if(signCount >= buildFileCount){
+                emit("encoding", "Grunt编绎完成，开始进行部署[" + signCount + '/' + buildFileCount + "].");
+                deploy();
+            }else{
+                emit("error", "文件签名数与编绎的文件数不一致 " + code);
+            }
         }else{
             emit("error", "grunt exited with code " + code);
         }
@@ -908,6 +891,10 @@ exports.builder = {
         _Socket = sock;
         _Project = proj;
         _Files = files;
+
+        signCount = 0;
+        gruntEnded = false;
+        buildFileCount = files.length * 2;
 
         LoadGruntfileTemplate();
     }

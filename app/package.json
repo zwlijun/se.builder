@@ -1,28 +1,27 @@
 {
   "name": "SE.Builder",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "private": true,
   "scripts": {
     "start": "node startup.js"
   },
   "dependencies": {
-    "ejs": ">=1.0.0",
-    "express": ">=4.4.3",
-    "fs-extra": ">=0.26.5",
-    "grunt": ">=0.4.5",
-    "grunt-cmd-concat": ">=0.2.8",
-    "grunt-cmd-transport": ">=0.5.1",
-    "grunt-contrib-clean": ">=0.4.0",
-    "grunt-contrib-concat": ">=0.4.0",
-    "grunt-contrib-copy": ">=0.4.0",
-    "grunt-contrib-cssmin": ">=0.4.1",
-    "grunt-contrib-htmlmin": ">=0.3.0",
-    "grunt-contrib-imagemin": ">=0.4.0",
-    "grunt-contrib-jshint": ">=0.4.0",
-    "grunt-contrib-uglify": ">=0.4.0",
-    "grunt-contrib-watch": ">=0.4.0",
-    "socket.io": ">=1.0.4",
-    "fs-extra": ">=0.26.5",
-    "lodash": ">=4.11.1"
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "fs-extra": "^6.0.1",
+    "grunt": "^1.0.3",
+    "grunt-cmd-concat": "^0.2.8",
+    "grunt-cmd-transport": "^0.5.1",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-cssmin": "^2.2.1",
+    "grunt-contrib-htmlmin": "^2.4.0",
+    "grunt-contrib-imagemin": "^2.0.1",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-uglify": "^3.3.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "lodash": "^4.17.10",
+    "socket.io": "^2.1.1"
   }
 }

@@ -33,6 +33,7 @@
                              alias {String} 资源别名 [js | css | img]
                              filter {RegExp} 过滤正则，只读取匹配的文件 /(\.(js))$/mi | /(\.(css))$/mi | /(\.(jpg|jpeg|png))$/mi
                              transport {Boolean} 是否提取seajs依赖，对JS有效
+                             localConcat {Boolean} 本地合并，对JS有效
                              sed {Object} 版本替换配置
                                  {Object} => {
                                      turn {Boolean} 是否开启版本替换
@@ -53,16 +54,6 @@
                                                  includeFiles {Array} 包含的文件，如果为null为所有
                                                  excludeFolders {Array} 去除的目录，如果为null为所有
                                                  excludeFiles {Array} 去除的文件，如果为null为所有
-                                                 concat {Object} 合并文件，如果为null则不需要合并文件
-                                                        {Object} => {
-                                                            filename {Array} 合并目标文件配置
-                                                                     {Array} => [
-                                                                         {Object} => {
-                                                                             banner {String} 文件头注释
-                                                                             file {String} 文件名
-                                                                         }
-                                                                     ]
-                                                        }
                                              }
                                    }
                          }

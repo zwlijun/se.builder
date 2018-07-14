@@ -170,48 +170,6 @@
 </pre>
 ---
 <pre>
-//资源合并配置示例
-concat: {
-    "j.mix.js": [
-        {
-            "banner": "/*! jQuery JavaScript Library v2.1.4 - http://jquery.org/license */\n",
-            "file": "jquery-2.1.4.js"
-        }, 
-        {
-            "banner": "/*! Sea.js 3.0.0 | seajs.org/LICENSE.md */\n",
-            "file": "sea-3.0.0.js"
-        }, 
-        {
-            "banner": "/*! SeaJS-Combo.js 1.0.1 | seajs.org/LICENSE.md */\n",
-            "file": "seajs-combo-1.0.1.js"
-        },
-        {
-            "banner": "/*! Sea.js config */\n",
-            "file": "se.js"
-        }
-    ],
-    "z.mix.js": [
-        {
-            "banner": "/*! Zepto v1.1.6 - zepto event ajax form ie - zeptojs.com/license */\n",
-            "file": "zepto-1.1.6.js"
-        }, 
-        {
-            "banner": "/*! Sea.js 3.0.0 | seajs.org/LICENSE.md */\n",
-            "file": "sea-3.0.0.js"
-        }, 
-        {
-            "banner": "/*! SeaJS-Combo.js 1.0.1 | seajs.org/LICENSE.md */\n",
-            "file": "seajs-combo-1.0.1.js"
-        },
-        {
-            "banner": "/*! Sea.js config */\n",
-            "file": "se.js"
-        }
-    ]
-}
-</pre>
----
-<pre>
 //初始化静态资源基础版本
 @see ./app/merge_base_static.sh
 
