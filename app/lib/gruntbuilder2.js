@@ -80,8 +80,6 @@ var LoadGruntfileTemplate = function(){
         }else{
             gruntfileTemplate = data;
 
-            updateGruntFile("project", JSON.stringify(_Project));
-
             mkdirs(function(){
                 var env = GetEnvInfo();
                 var root = env.root;
@@ -153,7 +151,6 @@ var createTask = function(){
 
     var alias = build.alias;
     var transport = build.transport;
-    var localConcat = build.localConcat;
 
     npmTask.length = 0;
     npmTask = [];
@@ -162,23 +159,14 @@ var createTask = function(){
 
     switch(alias){
         case "js":
-            registNpmTask("grunt-contrib-jshint");
             registNpmTask("grunt-contrib-uglify");
 
             if(transport){
                 registNpmTask('grunt-cmd-transport');
             }
 
-            if(localConcat){
-                registNpmTask('grunt-cmd-concat');
-            }
-            registGruntTask("jshint");
-
             if(transport){
                 registGruntTask("transport");
-            }
-            if(localConcat){
-                registGruntTask("concat");
             }
 
             registGruntTask("uglify");
@@ -226,17 +214,12 @@ buildGruntFile.js = function(files){
     var bin = root.bin;
     var sed = root.sed;
 
-    conf["jshint"] = {
-        "all": []
-    };
-
-    //旧的用except
-
     conf["uglify"] = {
         "options": {
             "preserveComments": false,
             "mangle": {
-                "except": ["require", "exports", "module"]
+                "reserved": ["require", "exports", "module"]
+                // "except": ["require", "exports", "module"]
             },
             "report": "gzip",
             "banner": project.banner
@@ -269,61 +252,6 @@ buildGruntFile.js = function(files){
                     "dest": path.relative(".", doc + src + transportTempDir + "/js")
                 }
             ]
-        }
-    };
-
-    conf["concat"] = {
-        "default": {
-            "options": {
-                "paths": [
-                    path.relative(".", doc + src + transportTempDir)
-                ],
-                "include": "all"
-            },
-            // "files": [
-            //     {
-            //         "expand": true,
-            //         "cwd": path.relative(".", doc + src + transportTempDir + "/js"),
-            //         "src": "**/*.js",
-            //         "dest": path.relative(".", doc + src + buildTempDir + "/js")
-            //     }
-            // ]
-            "files": (function(list){
-                var size = list.length;
-                var file = null;
-
-                var ret = {};
-                var distFile = null;
-                var srcFile = null;
-                var sourcePath = null;
-
-                for(var i = 0; i < size; i++){
-                    // map.files.push({
-                    //     "type" : treeType,
-                    //     "name": itemName,
-                    //     "relative": itemRelative,
-                    //     "folder": itemFolder,
-                    //     "folderCheckSum": itemCheckSum,
-                    //     "file" : fileAbsolutePath,
-                    //     "fileName": fileName,
-                    //     "fileType": fileType,
-                    //     "fileExtName": fileExtName,
-                    //     "fileCheckSum": fileCheckSum,
-                    //     "isUpdate": isUpdate
-                    // });
-                    file = list[i];
-                    sourcePath = file.file;
-
-                    if(sourcePath.indexOf("/js/logic/") != -1){
-                        srcFile = sourcePath.replace(doc + src, doc + src + transportTempDir + "/"); //从__transport__目录获取源文件
-                        distFile = sourcePath.replace(doc + src, doc + src + buildTempDir + "/") //将__transport__目录下的文件构建到__build__目录
-
-                        ret[distFile] = [srcFile];
-                    }
-                }
-
-                return ret;
-            })(files)
         }
     };
 
@@ -755,7 +683,7 @@ var startGruntApp = function(){
                 emit("encoding", "Grunt编绎完成，开始进行部署[" + signCount + '/' + buildFileCount + "].");
                 deploy();
             }else{
-                emit("error", "文件签名数与编绎的文件数不一致 " + code);
+                emit("error", "文件签名数与编绎的文件数不一致 [" + signCount + '/' + buildFileCount + "].");
             }
         }else{
             emit("error", "grunt exited with code " + code);

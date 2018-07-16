@@ -33,7 +33,6 @@
                              alias {String} 资源别名 [js | css | img]
                              filter {RegExp} 过滤正则，只读取匹配的文件 /(\.(js))$/mi | /(\.(css))$/mi | /(\.(jpg|jpeg|png))$/mi
                              transport {Boolean} 是否提取seajs依赖，对JS有效
-                             localConcat {Boolean} 本地合并，对JS有效
                              sed {Object} 版本替换配置
                                  {Object} => {
                                      turn {Boolean} 是否开启版本替换
