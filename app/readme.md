@@ -183,7 +183,7 @@ chmod +x ${SE_BUILDER_ROOT}/se.builder/app/update_static.sh
 
 ln -s ${SE_BUILDER_ROOT}/se.builder/app/merge_base_static.sh /usr/local/bin/merge_base_static
 ln -s ${SE_BUILDER_ROOT}/se.builder/app/init_static.sh /usr/local/bin/init_static
-ln -s ${SE_BUILDER_ROOT}/se.builder/app/init_static.sh /usr/local/bin/update_static
+ln -s ${SE_BUILDER_ROOT}/se.builder/app/update_static.sh /usr/local/bin/update_static
 
 //在osx/linux下构建一个新的静态资源
 STEP 1: merge_base_static
