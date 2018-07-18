@@ -13,6 +13,7 @@ var feature = AliasSet.FEATURE;
 var page = AliasSet.PAGE;
 
 var debug = $.__ROOT__.DEBUG;
+var __global__ = window.SEGlobalConf || {};
 var __conf__ = window.__CONFIG || {};
 
 var requires = [
@@ -29,7 +30,7 @@ var sea_callback = function(){
 
     var main = args[0];
 
-    main.init($.extend({
+    main.init($.extend(true, {
         "alias": {
             "platform": platform,
             "app": app,
@@ -39,7 +40,7 @@ var sea_callback = function(){
             "page": page
         },
         "debug": debug
-    }, __conf__));
+    }, __global__, __conf__));
 
     if(size > 1){
         var logic = null;
@@ -52,8 +53,6 @@ var sea_callback = function(){
             }
         }
     }
-
-    window["SEBridge"] = main;
 };
 
 var bridge = {

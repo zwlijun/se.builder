@@ -361,7 +361,7 @@ var _App = {
         var size = args.length;
 
         if(size <= 0 || size > 2){
-            return ;
+            return _App._conf;
         }
 
         var key = "";
@@ -426,7 +426,7 @@ var _App = {
     }
 };
 
-module.exports = {
+var _public = {
     "version": "R18B0517",
     "init": _App.init,
     "conf": _App.conf,
@@ -444,6 +444,7 @@ module.exports = {
         "typeof": DataType,
         "toast": Toast
     }
-}
+};
+module.exports = (window["SEApp"] = _public);
 //---------------------------
 });
