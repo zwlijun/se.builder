@@ -12,7 +12,15 @@
     var Session = null;
     var Toast = null;
     
+    /**
+     * 业务处理
+     * @type {Object}
+     */
     var Logic = {
+        /**
+         * 初始化，业务文件加载时会自动调用
+         * @return {[type]} [description]
+         */
         init: function(){
 
         }

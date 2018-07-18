@@ -17,6 +17,10 @@
     var Toast = null;
 
     //-------------------------------------------------
+    /**
+     * 获取验证码时的安全参数生成器
+     * @return {Object}     [description]
+     */
     var SecretSeed = (function(){
         var SECRET_SEED = null;
 
@@ -64,12 +68,24 @@
         SetSecretSeed(GetDefaultSecretSeed());
 
         return {
+            /**
+             * 设置种子串
+             * @param {String} seed [种子字符串]
+             */
             setSeed: function(seed){
                 SetSecretSeed(seed);
             },
+            /**
+             * 获取种子
+             * @return {String} [种子]
+             */
             getSeed: function(){
                 return GetSecretSeed();
             },
+            /**
+             * 获取安全串
+             * @return {Object} [{String secret, String seckey}]
+             */
             getData: function(){
                 return GetSecretData();
             }
@@ -77,9 +93,30 @@
     })();
     //-------------------------------------------------
 
+    /**
+     * [SESchema description]
+     * @type {Object}
+     */
     var SESchema = {
         "schema": "se",
+        /**
+         * 数据表单
+         */
         "dataform": {
+            /**
+             * 获取短信验证码
+             * @param  {String} data [参数]
+             * @param  {Object} node [jQuery/zepto节点对象，或null]
+             * @param  {Event}  e    [事件对象，或null]
+             * @param  {String} type [事件类型]
+             * @return {[type]}      [description]
+             * 示例
+             * se://dataform/smscode#smscodeAPIURL,mobileInputName
+             * DOM设置示例
+             * data-action-tap="se://dataform/smscode#/getcode,mobile" 
+             * data-retry-text="重新获取" 
+             * data-retry-time="60"
+             */
             smscode: function(data, node, e, type){
                 var args = (data || "").split(",");
                 var smscodeAPIURL = args[0] || "/service/smscode/get";
@@ -190,6 +227,29 @@
                     }
                 });
             },
+            /**
+             * 表单提交校验
+             * @param  {String} data [参数]
+             * @param  {Object} node [jQuery/zepto节点对象，或null]
+             * @param  {Event}  e    [事件对象，或null]
+             * @param  {String} type [事件类型]
+             * @return {[type]}      [description]
+             * 示例
+             * se://dataform/submit#formName
+             * @forms配置
+             * "forms": {
+             *     "formName": {
+             *         "actionType"  : [Required]action触发方式，submit|request|exteranl
+             *         "actionURL"   : [Required]action地址，当为actionType的值为external时为自定义的虚拟schema的地址
+             *         "method"      : [Optional]表单提交时的HTTP方法() 
+             *         "enctype"     : [Optional]表单提交编码方式
+             *         "external"    : [Optional]自定义的虚拟schema回调
+             *         "showLoading" : [Optional]是否显示loading
+             *         "loadingText" : [Optional]loading的提示文案
+             *         "actionName"  : [AutoFix]表单名
+             *     }
+             * }
+             */
             submit: function(data, node, e, type){
                 e.preventDefault();
 
@@ -306,7 +366,28 @@
         }
     };
     
+    /**
+     * 业务处理
+     * @type {Object}
+     */
     var Logic = {
+        /**
+         * 提交表单时发送数据时调用的方法
+         * @param  {Object} result     [表单验证成功返回的结果数据集]
+         * @param  {Object} formAction [表单配置项]
+         * @return {[type]}            [description]
+         * 处理成功后重定向配置示例
+         * @redirectTo
+         * "redirectTo": {
+         *     //业务名称，默认：default
+         *     "default": { 
+         *         "success": //对应的跳转URL
+         *     },
+         *     "dataform.submit.formName": {
+         *         "success": //对应的跳转URL
+         *     }
+         * }
+         */
         sendRequest: function(result, formAction){
             var _command = {
                 "dataform": {
@@ -378,6 +459,10 @@
                 }
             })
         },
+        /**
+         * 初始化，业务文件加载时会自动调用
+         * @return {[type]} [description]
+         */
         init: function(){
             Util.source(SESchema);
         }
