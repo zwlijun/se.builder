@@ -16,12 +16,22 @@
     var Style         = require("mod/se/css");
     var HandleStack   = Listener.HandleStack;
 
+    /**
+     * css3 keyframe动态生成类
+     * @param  {String} name [唯一标识]
+     * @return {[type]}      [description]
+     */
     var _KeyFrame = function(name){
         this.name = name;
         this.frames = [];
     };
     
     _KeyFrame.prototype = {
+        /**
+         * 添加动画帧
+         * @param  {String} frame      [帧名]
+         * @param  {Object} properties [属性集]
+         */
         push : function(frame, properties){
             if(this.frames.indexOf(frame) == -1){
                 var list = [];
@@ -49,6 +59,9 @@
                 this.frames.push(frame + " {" + list.join("; ") + "}");
             }
         },
+        /**
+         * 输出到页面
+         */
         print : function(){
             if(this.existed()){
                 return 0;
@@ -70,11 +83,18 @@
 
             $("head").append('<style type="text/css" id="' + name + '">\n'+ keyframes.join("\n") +'\n</style>');
         },
+        /**
+         * 检测是否存在
+         * @return {Boolean} [是否存在]
+         */
         existed: function(){
             var styleNode = $("#" + this.name);
 
             return (styleNode.length > 0);
         },
+        /**
+         * 销毁
+         */
         destroy: function(){
             var styleNode = $("#" + this.name);
 
@@ -82,14 +102,24 @@
         }
     };
 
+    //缓存器
     _KeyFrame.CachePool = {};
 
+    /**
+     * 获取KeyFrame实例
+     * @param  {String} name [名称]
+     * @return {KeyFrame}      [description]
+     */
     _KeyFrame.getInstance = function(name){
         var kf = _KeyFrame.CachePool[name] || (_KeyFrame.CachePool[name] = new _KeyFrame(name));
 
         return kf;
     }
 
+    /**
+     * 队列对象
+     * @param  {Array} list [列表]
+     */
     var _Sequence = function(list){
         this.list = list || [];
         this.size = this.list.length;
@@ -97,9 +127,18 @@
     };
 
     _Sequence.prototype = {
+        /**
+         * 队列是否为空
+         * @return {Boolean} [description]
+         */
         isEmpty: function(){
             return this.size === 0;
         },
+        /**
+         * 从队列中查找数据
+         * @param  {Number} index [索引]
+         * @return {Object}       [匹配的数据，如果不存在返回null]
+         */
         find: function(index){
             if(index >= 0 && index < this.size){
                 return this.list[index];
@@ -107,6 +146,10 @@
 
             return null;
         },
+        /**
+         * 从顶部开始自动弹出数据
+         * @return {Object} [数据]
+         */
         pop: function(){
             var item = null;
 
@@ -120,11 +163,19 @@
 
             return item;
         },
+        /**
+         * 重置索引
+         * @return {Number} [index]
+         */
         reset: function(){
             this.index = 0;
         }
     };
 
+    /**
+     * 触发类型
+     * @type {Object}
+     */
     var TriggerTypes = {
         "DEFAULT": "default",
         "FIXED": "fixed",
@@ -219,9 +270,18 @@
         clear : function(){
             this.listener.clear();
         },
+        /**
+         * 获取回调栈
+         * @return {Object} [description]
+         */
         getHandleStack : function(){
             return this.handleStack;
         },
+        /**
+         * 监听事件
+         * @param  {String} selector [目标selector]
+         * @return {_Animate}          [description]
+         */
         listen: function(selector){
             var target = $(selector || "body");
             var plugins = target.find('[data-plugin-animate="1"]');
@@ -279,6 +339,11 @@
 
             return this;
         },
+        /**
+         * 动画开始事件
+         * @param  {Event}  e    [事件]
+         * @param  {[type]} type [事件类型]
+         */
         animationstart: function(e, type){
             var target = e.currentTarget;
             var animationName = e.animationName;
@@ -291,6 +356,11 @@
 
             this.exec("start", [e, type, target, animationName, elapsedTime]);
         },
+        /**
+         * 动画结束事件
+         * @param  {Event}  e    [事件]
+         * @param  {[type]} type [事件类型]
+         */
         animationend: function(e, type){
             var target = e.currentTarget;
             var animationName = e.animationName;
@@ -352,6 +422,11 @@
                 }
             }
         },
+        /**
+         * 动画执行事件
+         * @param  {Event}  e    [事件]
+         * @param  {[type]} type [事件类型]
+         */
         animationiteration: function(e, type){
             var target = e.currentTarget;
             var animationName = e.animationName;
@@ -381,6 +456,10 @@
 
             this.exec("iteration", [e, type, target, animationName, elapsedTime]);
         },
+        /**
+         * 创建动画帧
+         * @param  {Node} node   [节点]
+         */
         createAnimationFrames: function(node){
             var identity = node.identity;
             var animate = node.animate;
@@ -404,6 +483,13 @@
 
             keyFrame.print();
         },
+        /**
+         * 播放动画
+         * @param  {String}  triggerType [触发类型]
+         * @param  {Node}    node        [节点]
+         * @param  {Boolean} force       [强制执行]
+         * @return {_Animate}            [description]
+         */
         play: function(triggerType, node, force){
             var targetKey = node.key;
             var target = node.target;
@@ -525,12 +611,22 @@
 
             return this;
         },
+        /**
+         * 获取动画节点
+         * @param  {Node}   target [目标节点]
+         * @return {[type]}        [description]
+         */
         getAnimateNode: function(target){
             var identity = target.attr("data-animate-identity") || "";
             var node = this.getCacheData(identity) || null;
 
             return node;
         },
+        /**
+         * 触发
+         * @param  {Node}   target [node节点]
+         * @param  {String} state  [动画播放状态]
+         */
         fire: function(target, state){
             if(node){
                 this.playState(node.key, state);
@@ -553,18 +649,31 @@
                 });
             }
         },
+        /**
+         * 恢复
+         * @param  {Node}   target [目标node节点]
+         */
         resume: function(target){
             var node = this.getAnimateNode(target);
 
             this.exec("resume", [node]);
             this.fire(node, "running");
         },
+        /**
+         * 暂停
+         * @param  {Node}   target [目标node节点]
+         */
         pause: function(target){
             var node = this.getAnimateNode(target);
 
             this.exec("pause", [node]);
             this.fire(node, "paused");
         },
+        /**
+         * 清除动画
+         * @param  {Node}   animateNode [动画节点]
+         * @return {_Animate}           [description]
+         */
         clean: function(animateNode){
             if(animateNode){
                 this.rollback(animateNode);
@@ -579,6 +688,13 @@
 
             return this;
         },
+        /**
+         * 查找同级并播放
+         * @param  {String}  triggerType [触发类型]
+         * @param  {Object}  node        [节点]
+         * @param  {Boolean} force       [是否强制执行]
+         * @return {Number}              [队列长度]
+         */
         findSameAndPlay: function(triggerType, node, force){
             var sameList = node.same;
             var size = sameList.length;
@@ -607,6 +723,12 @@
 
             return size;
         },
+        /**
+         * 播放下一个
+         * @param  {Array}    list     [队列]
+         * @param  {String}   identity [唯一标识]
+         * @return {Array}             [next队列]
+         */
         next: function(list, identity){
             var size = list.length;
             var item = null;
@@ -656,11 +778,23 @@
 
             return ret;
         },
+        /**
+         * 查找下一个
+         * @param  {String} triggerType [触发类型]
+         * @param  {String} key         [key]
+         * @param  {String} identity    [唯一标识]
+         * @return {Array}              [next list]
+         */
         findNext: function(triggerType, key, identity){
             var group = this.group(this.getCacheList(triggerType, key));
 
             return this.next(group, identity);
         },
+        /**
+         * 重组动画列表
+         * @param  {Array} list  [动画列表]
+         * @return {Array}       [重组后的列表]
+         */
         group: function(list){
             var item = null;
             var prevType = undefined;
@@ -807,6 +941,11 @@
 
             return newList;
         },
+        /**
+         * 获取缓存数据
+         * @param  {String} identity [唯一标识]
+         * @return {Object}          [数据]
+         */
         getCacheData: function(identity){
             if(identity){
                 if(identity in this.cacheData){
@@ -818,6 +957,12 @@
                 return $.extend({}, this.cacheData);
             }
         },
+        /**
+         * 获取缓存列表
+         * @param  {String} type [触发类型]
+         * @param  {String} key  [数据key]
+         * @return {Array}       [数据列表]
+         */
         getCacheList: function(type, key){
             var list = [];
 
@@ -839,6 +984,13 @@
 
             return [].concat(list);
         },
+        /**
+         * 应用动画
+         * @param  {String}  triggerType [触发类型]
+         * @param  {String}  key         [数据KEY]
+         * @param  {Boolean} force       [是否强制执行]
+         * @return {_Animate}            [description]
+         */
         apply: function(triggerType, key, force){
             // var list = this.group(this.getCacheList(triggerType, key));
             // var size = list.length;
@@ -865,6 +1017,10 @@
 
             return this;
         },
+        /**
+         * 备份
+         * @param  {DOM} dom [dom节点]
+         */
         backup: function(dom){
             if(dom.hasAttribute("data-source-class")){
                 dom.className = dom.getAttribute("data-source-class");
@@ -878,6 +1034,10 @@
                 dom.setAttribute("data-source-css", dom.style.cssText);
             }
         },
+        /**
+         * 回滚
+         * @param  {DOM} dom [dom节点]
+         */
         rollback: function(dom){
             if(dom.hasAttribute("data-source-class")){
                 dom.className = dom.getAttribute("data-source-class");
@@ -902,6 +1062,11 @@
         // left: X轴位移
         // top: Y轴位移
         // extra: 外部参数
+        /**
+         * 解析动画
+         * @param  {Array}   animations [动画列表]
+         * @return {_Animate}             [description]
+         */
         parse: function(animations){
             var size = animations.length;
             var animate = null;
@@ -1074,9 +1239,19 @@
 
             return this;
         },
+        /**
+         * 查找
+         * @param  {String} targetKey [目标KEY]
+         * @return {Node}           [description]
+         */
         find: function(targetKey){
             return this.box.find('[data-animate-key="' + targetKey + '"]');
         },
+        /**
+         * 设置和获取播放状态
+         * @param  {String} targetKey [目标key]
+         * @param  {String} state     [状态]
+         */
         playState: function(targetKey, state){
             var target = this.find(targetKey);
 
@@ -1088,14 +1263,28 @@
                 }
             }
         },
+        /**
+         * 设置播放节点
+         * @param {Object} options [description]
+         */
         setPlayNode: function(options){
             this.playNode = options || null
         },
+        /**
+         * 更新动画设置
+         * @param  {String} animateDataSet [动画设置]
+         */
         update: function(animateDataSet){
             var animations = animateDataSet ? animateDataSet.split("|") : [];
 
             this.parse(animations);
         },
+        /**
+         * 查找并监听
+         * @param  {String} container [容器]
+         * @param  {Object} playNode  [description]
+         * @return {_Animate}         [description]
+         */
         lookup: function(container, playNode){
             this.box = $(container || "body");
 
@@ -1116,40 +1305,90 @@
             var ani = _Animate.CachePool[name] || (_Animate.CachePool[name] = new _Animate());
 
             return {
+                /**
+                 * 设置回调
+                 * @param String type 类型
+                 * @param Object option 配置 {Function callback, Array args, Object context, Boolean returnValue}
+                 * @return {Animate} [description]
+                 */
                 "set": function(type, option){
                     ani.set(type, option);
 
                     return this;
                 },
+                /**
+                 * 获取回调栈
+                 * @return {Object} [description]
+                 */
                 "getHandleStack": function(){
                     return ani.getHandleStack();
                 },
+                /**
+                 * 获取动画节点
+                 * @param  {Node}   target [目标节点]
+                 * @return {[type]}        [description]
+                 */
                 "getAnimateNode": function(target){
                     return ani.getAnimateNode(target);
                 },
+                /**
+                 * 获取缓存列表
+                 * @param  {String} type [触发类型]
+                 * @param  {String} key  [数据key]
+                 * @return {Array}       [数据列表]
+                 */
                 "getCacheList": function(type, key){
                     return ani.getCacheList(type, key);
                 },
+                /**
+                 * cache list 是否为空
+                 * @param  {String} type [类型]
+                 * @param  {String} key  [key]
+                 * @return {Boolean}      [description]
+                 */
                 "isEmpty": function(type, key){
                     var list = ani.getCacheList(type, key) || [];
 
                     return 0 === list.length;
                 },
+                /**
+                 * 查找并监听
+                 * @param  {String} container [容器]
+                 * @param  {Object} playNode  [description]
+                 * @return {Animate} [description]
+                 */
                 "lookup": function(container, playNode){
                     ani.lookup(container, playNode);
 
                     return this;
                 },
+                /**
+                 * 更新动画设置
+                 * @param  {String} animateDataSet [动画设置]
+                 * @return {Animate} [description]
+                 */
                 "update": function(animateDataSet){
                     ani.update(animateDataSet);
 
                     return this;
                 },
+                /**
+                 * 解析动画
+                 * @param  {Array}   animations [动画列表]
+                 * @return {Animate} [description]
+                 */
                 "parse": function(animations){
                     ani.parse(animations);
 
                     return this;
                 },
+                /**
+                 * 应用动画
+                 * @param  {String}  triggerType [触发类型]
+                 * @param  {String}  key         [数据KEY]
+                 * @param  {Boolean} force       [是否强制执行]
+                 * @return {Animate} [description]
+                 */
                 "apply": function(triggerType, key){
                     ani.beginTime = Util.getTime();
                     ani.forced = false;
@@ -1158,6 +1397,13 @@
 
                     return this;
                 },
+                /**
+                 * 强制应用动画
+                 * @param  {String}  triggerType [触发类型]
+                 * @param  {String}  key         [数据KEY]
+                 * @param  {Boolean} force       [是否强制执行]
+                 * @return {Animate} [description]
+                 */
                 "enforcedApply": function(triggerType, key){
                     ani.beginTime = Util.getTime();
                     ani.forced = true;
@@ -1166,21 +1412,44 @@
 
                     return this;
                 },
+                /**
+                 * 清除动画
+                 * @param  {Node} animateNode [description]
+                 * @return {[type]}             [description]
+                 * @return {Animate} [description]
+                 */
                 "clean": function(animateNode){
                     ani.clean(animateNode);
 
                     return this;
                 },
+                /**
+                 * 恢复
+                 * @param  {Node}   target [目标node节点]
+                 * @return {Animate} [description]
+                 */
                 "resume": function(target){
                     ani.resume(target);
 
                     return this;
                 },
+                /**
+                 * 暂停
+                 * @param  {Node}   target [目标node节点]
+                 * @return {Animate} [description]
+                 */
                 "pause": function(target){
                     ani.pause(target);
 
                     return this;
                 },
+                /**
+                 * 播放动画
+                 * @param  {String}  triggerType [触发类型]
+                 * @param  {Node}    node        [节点]
+                 * @param  {Boolean} force       [强制执行]
+                 * @return {Animate} [description]
+                 */
                 "play": function(node, triggerType){
                     ani.beginTime = Util.getTime();
                     ani.forced = false;
@@ -1189,6 +1458,13 @@
 
                     return this;
                 },
+                /**
+                 * 强制播放动画
+                 * @param  {String}  triggerType [触发类型]
+                 * @param  {Node}    node        [节点]
+                 * @param  {Boolean} force       [强制执行]
+                 * @return {Animate} [description]
+                 */
                 "enforcedPlay": function(node, triggerType){
                     ani.beginTime = Util.getTime();
                     ani.forced = true;

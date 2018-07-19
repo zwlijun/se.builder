@@ -16,6 +16,11 @@
 
     var HandleStack   = Listener.HandleStack;
 
+    /**
+     * 图片处理
+     * @param  {Canvas} canvas [description]
+     * @return {[type]}        [description]
+     */
     var _Image = function(canvas){
         this.version = "R17B0817";
         this.stage = canvas;
@@ -75,9 +80,22 @@
         clear : function(){
             this.listener.clear();
         },
+        /**
+         * 获取事件回调栈
+         * @return {Object} [description]
+         */
         getHandleStack : function(){
             return this.handleStack;
         },
+        /**
+         * 将图片画到canvas上
+         * @param  {String} source      [图片的源地址]
+         * @param  {Number} x           [x坐标]
+         * @param  {Number} y           [y坐标]
+         * @param  {Number} width       [宽度]
+         * @param  {Number} height      [高度]
+         * @param  {String} crossorigin [跨域设置]
+         */
         drawImage : function(source, x, y, width, height, crossorigin){
             var stage = this.stage;
             var ctx = this.context;
@@ -108,6 +126,11 @@
 
             img.src = src;
         },
+        /**
+         * 创建图像数据
+         * @param  {Object} options [数据选项]
+         * @return {Object}         [图片数据]
+         */
         createImageData : function(options){
             var ctx = this.context;
             var imageData = null;
@@ -126,6 +149,14 @@
              */
             return imageData;
         },
+        /**
+         * 读取图像数据
+         * @param  {Number} x      [x坐标]
+         * @param  {Number} y      [y坐标]
+         * @param  {Number} width  [宽度]
+         * @param  {Number} height [高度]
+         * @return {Object}        [图像数据]
+         */
         readImageData : function(x, y, width, height){
             var stage = this.stage;
             var ctx = this.context;
@@ -143,6 +174,13 @@
              */
             return ctx.getImageData(_x, _y, _w, _h); 
         },
+        /**
+         * 写图像数据
+         * @param  {Object} imageData [图像数据]
+         * @param  {Number} x         [x坐标]
+         * @param  {Number} y         [y坐标]
+         * @param  {Object} dirty     [其他数据属性]
+         */
         writeImageData : function(imageData, x, y, dirty){
             var stage = this.stage;
             var ctx = this.context;
@@ -156,6 +194,10 @@
                 ctx.putImageData(imageData, _x, _y);
             }
         },
+        /**
+         * 将canvas转换成image
+         * @return {Image} [description]
+         */
         stage2image : function(){
             var img = new Image();
 
@@ -163,9 +205,22 @@
 
             return img;
         },
+        /**
+         * 颜色值限制，将值控制在 0~255
+         * @param  {Number} value [值]
+         * @return {Number}       [值]
+         */
         clamp : function(value){
             return value > 255 ? 255 : value < 0 ? 0 : value;
         },
+        /**
+         * 灰度
+         * @param  {[type]} imageData [description]
+         * @param  {[type]} x         [description]
+         * @param  {[type]} y         [description]
+         * @param  {[type]} dirty     [description]
+         * @return {[type]}           [description]
+         */
         grayscale : function(imageData, x, y, dirty){
             var data = imageData.data;
             var r = 0;
@@ -184,6 +239,14 @@
 
             return imageData;
         },
+        /**
+         * 怀旧
+         * @param  {[type]} imageData [description]
+         * @param  {[type]} x         [description]
+         * @param  {[type]} y         [description]
+         * @param  {[type]} dirty     [description]
+         * @return {[type]}           [description]
+         */
         sepia : function(imageData, x, y, dirty){
             var data = imageData.data;
             var r = 0;
@@ -204,6 +267,14 @@
 
             return imageData;
         },
+        /**
+         * 红
+         * @param  {[type]} imageData [description]
+         * @param  {[type]} x         [description]
+         * @param  {[type]} y         [description]
+         * @param  {[type]} dirty     [description]
+         * @return {[type]}           [description]
+         */
         red : function(imageData, x, y, dirty){
             var data = imageData.data;
             var r = 0;
@@ -223,6 +294,14 @@
 
             return imageData;
         },
+        /**
+         * 绿
+         * @param  {[type]} imageData [description]
+         * @param  {[type]} x         [description]
+         * @param  {[type]} y         [description]
+         * @param  {[type]} dirty     [description]
+         * @return {[type]}           [description]
+         */
         green : function(imageData, x, y, dirty){
             var data = imageData.data;
             var r = 0;
@@ -242,6 +321,14 @@
 
             return imageData;
         },
+        /**
+         * 蓝
+         * @param  {[type]} imageData [description]
+         * @param  {[type]} x         [description]
+         * @param  {[type]} y         [description]
+         * @param  {[type]} dirty     [description]
+         * @return {[type]}           [description]
+         */
         blue : function(imageData, x, y, dirty){
             var data = imageData.data;
             var r = 0;
@@ -261,6 +348,18 @@
 
             return imageData;
         },
+        /**
+         * RGBA
+         * @param  {[type]} imageData [description]
+         * @param  {[type]} x         [description]
+         * @param  {[type]} y         [description]
+         * @param  {[type]} rd        [description]
+         * @param  {[type]} gd        [description]
+         * @param  {[type]} bd        [description]
+         * @param  {[type]} ad        [description]
+         * @param  {[type]} dirty     [description]
+         * @return {[type]}           [description]
+         */
         rgba : function(imageData, x, y, rd, gd, bd, ad, dirty){
             var data = imageData.data;
             var r = 0;
@@ -284,12 +383,40 @@
 
             return imageData;
         },
+        /**
+         * rgb
+         * @param  {[type]} imageData [description]
+         * @param  {[type]} x         [description]
+         * @param  {[type]} y         [description]
+         * @param  {[type]} rd        [description]
+         * @param  {[type]} gd        [description]
+         * @param  {[type]} bd        [description]
+         * @param  {[type]} dirty     [description]
+         * @return {[type]}           [description]
+         */
         rgb : function(imageData, x, y, rd, gd, bd, dirty){
             return this.rgba(imageData, x, y, rd, gd, bd, 0, dirty);
         },
+        /**
+         * 亮度
+         * @param  {[type]} imageData [description]
+         * @param  {[type]} x         [description]
+         * @param  {[type]} y         [description]
+         * @param  {[type]} delta     [description]
+         * @param  {[type]} dirty     [description]
+         * @return {[type]}           [description]
+         */
         brightness : function(imageData, x, y, delta, dirty){
             return this.rgb(imageData, x, y, delta, delta, delta, dirty);
         },
+        /**
+         * 取反
+         * @param  {[type]} imageData [description]
+         * @param  {[type]} x         [description]
+         * @param  {[type]} y         [description]
+         * @param  {[type]} dirty     [description]
+         * @return {[type]}           [description]
+         */
         invert : function(imageData, x, y, dirty){
             var data = imageData.data;
             var r = 0;
@@ -310,6 +437,18 @@
 
             return imageData;
         },
+        /**
+         * 模糊
+         * @param  {[type]} imageData [description]
+         * @param  {[type]} x         [description]
+         * @param  {[type]} y         [description]
+         * @param  {[type]} width     [description]
+         * @param  {[type]} height    [description]
+         * @param  {[type]} radius    [description]
+         * @param  {[type]} alpha     [description]
+         * @param  {[type]} dirty     [description]
+         * @return {[type]}           [description]
+         */
         blur : function(imageData, x, y, width, height, radius, alpha, dirty){
             if(radius > 0){
                 if(true === alpha){

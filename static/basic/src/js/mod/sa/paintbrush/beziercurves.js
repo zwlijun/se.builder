@@ -137,6 +137,11 @@
     };
 
     var _pub = {
+        /**
+         * 创建笔刷
+         * @param  {Canvas} canvas [html canvas]
+         * @return {Brush}         [笔刷]
+         */
         createPaintBrush : function(canvas){
             var ins = new _BezierCurves(canvas);
 
