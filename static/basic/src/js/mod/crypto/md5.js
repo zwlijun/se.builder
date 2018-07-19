@@ -3,11 +3,14 @@
  **********************************************************/
 
 /**
- * MD5
+ * MD5 加密
  * @charset utf-8
  * @author lijun
  * @git: https://github.com/zwlijun/se.builder
  * @date 2016.6
+ * 示例
+ * MD5.encode(str, true)
+ * MD5.encode(str, false)
  */
 ;define(function(require, exports, module){
     var MD5 = (function(){ 

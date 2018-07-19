@@ -32,6 +32,12 @@
     <meta itemprop="pageId" content="" itemfor="share" desc="分享页面标识">
     */
     
+    /**
+     * meta标签配置Set
+     *
+     * @class      MetaSet (name)
+     * @param      {Object}  options  配置项
+     */
     var MetaSet = function(options){
         this.opts = $.extend({
             title: "",
@@ -53,6 +59,12 @@
     };
 
     MetaSet.prototype = {
+        /**
+         * 设置或获取配置选项
+         *
+         * param      {Any} <parameter_name> { parameter_description }
+         * @return {Any}
+         */
         options: function(){
             var args = arguments;
             var size = args.length;
@@ -71,17 +83,37 @@
                 this.opts[args[0]] = args[1];
             }
         },
+        /**
+         * 设置配置项
+         * @param {String} key
+         * @param {String} value
+         */
         set: function(key, value){
             this.options(key, value);
         },
+        /**
+         * 获取配置项的值
+         * @param  {String} key
+         * @return {String} value
+         */
         get: function(key){
             return this.options(key);
         }
     };
 
+    /**
+     * meta数据处理
+     * @type {Object}
+     */
     var MetaData = {
-        Sets: null,
-        index: -1,
+        Sets: null, //数据集
+        index: -1,  //索引
+
+        /**
+         * 解析meta数据
+         *
+         * @return     {Object}  数据集
+         */
         parse: function(){
             var metaList = $('meta[itemfor]');
             var size = metaList.length;
@@ -168,6 +200,11 @@
 
             return sets;
         },
+        /**
+         * 匹配数据
+         * @param  {String} key 数据KEY
+         * @return {Array} 匹配到的数据列表
+         */
         find: function(key){
             var tmp = [];
             var ds = MetaData.Sets;
@@ -186,6 +223,12 @@
 
             return tmp;
         },
+        /**
+         * 随机获取匹配到的数据集中的某一个
+         * @param  {String} key    key
+         * @param  {Number} index  索引，不指定为随机获取
+         * @return {Object}        匹配到的数据对象
+         */
         random: function(key, index){
             var list = MetaData.find(key);
             var size = list.length;
@@ -206,9 +249,18 @@
 
             return null;
         },
+        /**
+         * @return {Number} 获取索引
+         */
         getIndex: function(){
             return MetaData.index;
         },
+        /**
+         * 更新meta数据集数据
+         * @param  {String}  key 
+         * @param  {Any}     metaSetOptions  配置项
+         * @return {[type]}
+         */
         update: function(key, metaSetOptions){
             var metaSet = MetaData.getMetaSet(key);
 
@@ -216,6 +268,11 @@
                 metaSet.options(metaSetOptions);
             }
         },
+        /**
+         * 获取指定的meta数据集
+         * @param  {String} key 
+         * @return {Object} 数据集
+         */
         getMetaSet: function(key){
             if(MetaData.Sets && (key in MetaData.Sets)){
                 return MetaData.Sets[key];
@@ -225,6 +282,10 @@
         }
     };
 
+    /**
+     * 微信API二次封装
+     * @type {Object}
+     */
     var WeiXinAPI = {
         "version": "R17B0817",
         MetaData : MetaData,
@@ -232,11 +293,21 @@
         _readyList: [],
         _errorList: [],
         _signErrorList: [],
+        /**
+         * 配置
+         * @param  {Object} options  配置项，参考微信JSSDK的config方法
+         * @return {WeiXinAPI}
+         */
         configure: function(options){
             WeiXinJSSDK.config(options);
 
             return WeiXinAPI;
         },
+        /**
+         * 发生错误时的回调处理
+         * @param  {Handler} handler 回调处理方法 {Function callback, Array args, Object context}
+         * @return {WeiXinAPI}
+         */
         error: function(handler){
             WeiXinJSSDK.error(function(res){
                 WeiXinAPI.readyState = -1;
@@ -271,11 +342,20 @@
 
             return WeiXinAPI;
         },
+        /**
+         * 添加错误回调句柄
+         * @param {Handler} handler 回调处理方法 {Function callback, Array args, Object context}
+         * @return {WeiXinAPI}
+         */
         addErrorHandler: function(handler){
             WeiXinAPI._errorList.push(handler);
 
             return WeiXinAPI;
         },
+        /**
+         * 执行错误回调
+         * @return {WeiXinAPI}
+         */
         execErrorHandler: function(){
             var handler = WeiXinAPI._errorList.shift();
 
@@ -287,11 +367,20 @@
 
             return WeiXinAPI;
         },
+        /**
+         * 添加微信签名时的错误处理方法
+         * @param {Handler} handler 回调处理方法 {Function callback, Array args, Object context}
+         * @return {WeiXinAPI}
+         */
         addSignErrorHandler: function(handler){
             WeiXinAPI._signErrorList.push(handler);
 
             return WeiXinAPI;
         },
+        /**
+         * 执行微信签名错误处理回调
+         * @return {WeiXinAPI}
+         */
         execSignErrorHandler: function(){
             var handler = WeiXinAPI._signErrorList.shift();
 
@@ -303,11 +392,20 @@
 
             return WeiXinAPI;
         },
+        /**
+         * 添加Ready处理方法
+         * @param {Handler} handler 回调处理方法 {Function callback, Array args, Object context}
+         * @return {WeiXinAPI}
+         */
         addReadyHandler: function(handler){
             WeiXinAPI._readyList.push(handler);
 
             return WeiXinAPI;
         },
+        /**
+         * 执行Ready处理回调
+         * @return {WeiXinAPI}
+         */
         execReadyHandler: function(){
             var handler = WeiXinAPI._readyList.shift();
 
@@ -319,6 +417,11 @@
 
             return WeiXinAPI;
         },
+        /**
+         * 注册微信API
+         * @param  {Object} api 
+         * @return {WeiXinAPI}
+         */
         register: function(api){
             for(var key in api){
                 if(api.hasOwnProperty(key) && (key in WeiXinJSSDK)){
@@ -328,6 +431,12 @@
 
             return WeiXinAPI;
         },
+        /**
+         * 调用微信API
+         * @param  {String} name       微信API的名字
+         * @param  {Object} options    选项
+         * @return {WeiXinAPI}
+         */
         invoke: function(name, options){
             if(name in WeiXinJSSDK){
                 if(1 === WeiXinAPI.readyState){
