@@ -21,6 +21,7 @@
     var G = window;
     var D = document;
 
+    //环境变量
     var Env = (function(ua){
         var wx = /MicroMessenger\/(\d+\.\d+)/gi;
         var ret = wx.exec(ua);
@@ -42,6 +43,12 @@
     };
 
     //---------------------------
+    /**
+     * 获取微信JSAPI模板数据
+     * @param  {String} name       [数据名称]
+     * @param  {Number} forceIndex [指定index，如果不指定用随机]
+     * @return {Object}            [配置项和meta数据]
+     */
     G["GetJSAPITemplateData"] = function(name, forceIndex){
         var index = MetaData.getIndex();
         var meta = MetaData.random(name || "wechat", (undefined !== forceIndex ? forceIndex : (index < 0 ? undefined : index)));
@@ -79,6 +86,12 @@
         };
     };
 
+    /**
+     * 克隆
+     * @param  {[type]} obj  [description]
+     * @param  {[type]} nobj [description]
+     * @return {[type]}      [description]
+     */
     var clone = function(obj, nobj){
         var o = {};
 
@@ -97,14 +110,34 @@
         return o;
     };
 
+    /**
+     * API Map对象
+     * @type {Object}
+     */
     var APIMap = {
         api: {},
+        /**
+         * 添加或更新API的回调
+         * @param  {String}  name   [API的名称]
+         * @param  {Handler} handle [API执行的回调]
+         * @return {[type]}         [description]
+         */
         put: function(name, handle){
             APIMap.api[name] = handle;
         },
+        /**
+         * 获取API的回调
+         * @param  {String} name  [api的名称]
+         * @return {Handler}      [回调句柄]
+         */
         get: function(name){
             return (name in APIMap.api ? APIMap.api[name] : null);
         },
+        /**
+         * 移除API及回调
+         * @param  {String} name [api的回调]
+         * @return {[type]}      [description]
+         */
         remove: function(name){
             if(name in APIMap.api){
                 APIMap.api[name] = null;
@@ -112,12 +145,26 @@
                 delete APIMap.api[name];
             }
         },
+        /**
+         * 清除所有API
+         * @return {[type]} [description]
+         */
         clear: function(){
             APIMap.api = {};
         },
+        /**
+         * 获取所有API
+         * @return {[type]} [description]
+         */
         getItems: function(){
             return APIMap.api;
         },
+        /**
+         * 更新API回调
+         * @param  {String}  name   [API的名称]
+         * @param  {Handler} handle [API执行的回调]
+         * @return {[type]}         [description]
+         */
         update: function(name, handle){
             var _handle = APIMap.get(name);
 
@@ -127,6 +174,7 @@
         }
     };
 
+    //默认api设置
     var set_default = function(){
         APIMap.put("getNetworkType", {
             callback: function(name){
@@ -248,6 +296,13 @@
             context: WeiXinAPI
         });
     };
+    /**
+     * 注册微信签名
+     * @param  {String} signAPI [微信签名API]
+     * @param  {String} data    [微信签名API的参数，默认为当前URL]
+     * @param  {String} _url    [签名URL，不传时取当前的URL]
+     * @return {[type]}         [description]
+     */
     var register = function(signAPI, data, _url){
         var url = _url || document.URL;
         var signURL = encodeURIComponent(url.replace(/(#[\w\W]*)/, ""));
@@ -265,6 +320,12 @@
 
         CMD.injectCommands(command);
     };
+    /**
+     * 配置，参考微信的JSSDK
+     * @param  {Object}  data  [微信签名所需的参数]
+     * @param  {Boolean} debug [是否为debug模式]
+     * @return {WeiXinAPI}     [description]
+     */
     var configure = function(data, debug){
         WeiXinAPI.configure({
             "debug": (debug || false),
@@ -322,6 +383,13 @@
         return WeiXinAPI;
     };
 
+    /**
+     * 微信签名
+     * @param  {String}  code       [服务器接口返回错误码]
+     * @param  {Boolean} debug      [是否为debug模式]
+     * @param  {Handler} onresponse [签名接口响应句柄]
+     * @return {Boolean}            [是否支持微信API]
+     */
     var sign = function(code, debug, onresponse){
         if(Env.support){
             MetaData.parse();
@@ -385,41 +453,89 @@
         "WeiXinAPI": WeiXinAPI,
         "MetaData": MetaData,
         "api": {
+            /**
+             * 添加或更新API的回调
+             * @param  {String}  name   [API的名称]
+             * @param  {Handler} handle [API执行的回调]
+             * @return {[type]}         [description]
+             */
             "put": function(name, handle){
                 APIMap.put(name, handle);
 
                 return this;
             },
+            /**
+             * 获取API的回调
+             * @param  {String} name  [api的名称]
+             * @return {Handler}      [回调句柄]
+             */
             "get": function(name){
                 return APIMap.get(name);
             },
+            /**
+             * 移除API及回调
+             * @param  {String} name [api的回调]
+             * @return {[type]}      [description]
+             */
             "remove": function(name){
                 APIMap.remove(name);
 
                 return this;
             },
+            /**
+             * 清除所有API
+             * @return {[type]} [description]
+             */
             "clear": function(){
                 APIMap.clear();
 
                 return this;
             },
+            /**
+             * 获取所有API
+             * @return {[type]} [description]
+             */
             "getItems": function(){
                 return APIMap.getItems();
             },
+            /**
+             * 更新API回调
+             * @param  {String}  name   [API的名称]
+             * @param  {Handler} handle [API执行的回调]
+             * @return {[type]}         [description]
+             */
             "update": function(name, handle){
                 APIMap.update(name, handle);
 
                 return this;
             }
         },
+        /**
+         * 是否支持微信api
+         * @return {Boolean} true/false
+         */
         available: function(){
             return (true === Env.support);
         },
+        /**
+         * 注册微信签名
+         * @param  {String} signAPI [微信签名API]
+         * @param  {String} data    [微信签名API的参数，默认为当前URL]
+         * @param  {String} _url    [签名URL，不传时取当前的URL]
+         * @return {[type]}         [description]
+         */
         register: function(signAPI, data, _url){
             register(signAPI, data, _url);
 
             return this;
         },
+        /**
+         * 微信签名
+         * @param  {String}  code       [服务器接口返回错误码]
+         * @param  {Boolean} debug      [是否为debug模式]
+         * @param  {Handler} onresponse [签名接口响应句柄]
+         * @return {Boolean}            [是否支持微信API]
+         */
         sign: function(code, debug, onresponse){
             sign(code, debug, onresponse);
             return this;
