@@ -81,6 +81,78 @@ var PreventDefaultLink = function(){
 };
 
 /**
+ * 本地访问时对路径的转换
+ * @type {Object}
+ */
+var LocalPath = {
+    prefix: "file:///",
+    /**
+     * 判断是否为本地访问
+     * @return {String} [如果是file:///开头，则返回地址，否则返回null]
+     */
+    localFile: function(){
+        var path = document.URL;
+
+        if(path.substring(0, LocalPath.prefix.length) === LocalPath.prefix){
+            return path.replace(LocalPath.prefix, "");
+        }
+
+        return null;
+    },
+    /**
+     * 将路径转换为相对路径，只对file:///有效
+     * @param  {[type]} path [description]
+     * @return {[type]}      [description]
+     */
+    relative: function(path){
+        var localPath = null;
+
+        if(null == (localPath = LocalPath.localFile())){
+            return path;
+        }
+
+        path = path.replace("/html/", "/app/")
+                   .replace(".shtml", ".html");
+
+        if(path.charAt(0) !== "/"){
+            return path;
+        }
+
+        localPath = localPath.replace(/\\/g, "/");
+
+        var localPathItems = localPath.split("/");
+        var pathItems = (path.substring(1)).split("/");
+
+        for(var i = 0; i < localPathItems.length; i++){
+            if(pathItems[0] === localPathItems[i]){
+                localPathItems = localPathItems.slice(i);
+                break;
+            }
+        }
+
+        for(var i = 0; i < pathItems.length; i++){
+            if(pathItems[i] !== localPathItems[i]){
+                localPathItems = localPathItems.slice(i);
+                pathItems = pathItems.slice(i);
+
+                break;
+            }
+        }
+
+        var relativePathFlags = [];
+        var diff = localPathItems.length - pathItems.length;
+
+        for(var i = 0; i < diff; i++){
+            relativePathFlags.push("../");
+        }
+
+        path = relativePathFlags.join("") + pathItems.join("/");
+        
+        return path;
+    }
+};
+
+/**
  * 安全URL处理
  * @type {Object}
  */
@@ -92,6 +164,9 @@ var SecurityURL = {
      * @return {String}            [合法的URL]
      */
     verify: function(url, defaultURL){
+        if(LocalPath.localFile()){
+            return url;
+        }
         var info = Request.parseURL(url);
         var host = info.host;
 
@@ -124,6 +199,7 @@ var SecurityURL = {
         var key = null;
 
         if(!mergeKeys || mergeKeys.length == 0){
+            url = LocalPath.relative(url);
             return url;
         }
 
@@ -136,6 +212,7 @@ var SecurityURL = {
         }
 
         url = Request.append(url, Request.stringify(data));
+        url = LocalPath.relative(url);
 
         return url;
     }
@@ -602,6 +679,7 @@ var _public = {
     "version": "R18B0517",
     "init": _App.init,
     "conf": _App.conf,
+    "path": LocalPath,
     "expando": {
         "util": Util,
         "cmd": CMD,
