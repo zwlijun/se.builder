@@ -14,6 +14,7 @@ SE前端构建工具及静态资源基础版本库
     + extra  第三方引用文件
     + fonts  iconfont存放目录
     + html   静态页面目录
+    + app    保留目录，用于将html目录中的.shtml文件转换成.html文件的存放目录
     + inc    全局公共引用文件，如：样式，脚本，HTML片断
     + media  媒体文件，如：视频，音频，Flash等
       + audio   音频文件
@@ -67,5 +68,7 @@ http://static.seshenghuo.com/${STATIC_PATH}
 <a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/basefont/demo_unicode.html" target="_blank">demo_unicode</a>
 </pre>
 
-
+#shtml转换成html
+npm install shtml2html-fix -g
+shtml2html-fix -s static/v1.0/html/ -d static/v1.0/app/ -w /data/wwwroot/sehome/htdocs/
 
