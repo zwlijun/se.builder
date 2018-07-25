@@ -61,14 +61,16 @@ http://static.seshenghuo.com/${STATIC_PATH}
 <a href="http://static.seshenghuo.com/static/basic/test/org.shtml" target="_blank">CSS3组织架构生成DEMO</a>
 </pre>
 
-#ICON Font Demo
+# ICON Font Demo
 <pre>
 <a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/basefont/demo_fontclass.html" target="_blank">demo_fontclass</a>
 <a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/basefont/demo_symbol.html" target="_blank">demo_symbol</a>
 <a href="http://static.seshenghuo.com/static/basic/fonts/iconfont/basefont/demo_unicode.html" target="_blank">demo_unicode</a>
 </pre>
 
-#shtml转换成html
+# shtml转换成html
+<pre>
 npm install shtml2html-fix -g
 shtml2html-fix -s static/v1.0/html/ -d static/v1.0/app/ -w /data/wwwroot/sehome/htdocs/
+</pre>
 
