@@ -20,7 +20,7 @@
     }); 
 
     var _HTML_STRUCT = ''
-                     + '<div class="mod-imageviewer-mask flexbox middle center hide" id="imageviewer_<%=viewer.name%>">'
+                     + '<div class="mod-imageviewer-mask<%=viewer.opts.inner ? " static" : ""%> flexbox middle center hide" id="imageviewer_<%=viewer.name%>">'
                      + '  <div class="mod-imageviewer-box">'
                      + '    <div class="mod-imageviewer-master">'
                      + '      <div class="mod-imageviewer-slider">'
@@ -96,7 +96,9 @@
             "delay": 0,
             "unit": "px",
             "current": 0,
-            "thumbnailWidth": 172
+            "thumbnailWidth": 172,
+            "inner": false,
+            "target": "body"
         };
         this.dst = [
             // {
@@ -201,10 +203,17 @@
 
                 ImageViewerTemplate.render(true, _HTML_STRUCT, metaData, {
                     callback: function(ret){
-                        $("body").append(ret.result);
+                        var opts = ret.metaData.opts;
+                        var target = $(opts.target || "body");
+
+                        if(true === opts.inner){
+                            target.html(ret.result);
+                        }else{
+                            target.append(ret.result);
+                        }
                         var viewer = this.getImageViewerMask();
 
-                        this.swiper = Swiper.createSwiper(this.name, ret.metaData.opts);
+                        this.swiper = Swiper.createSwiper(this.name, opts);
                         this.swiper.set("end", {
                             callback: function(target){
                                 var _index = this.swiper.getIndex();

@@ -13,6 +13,10 @@
 	z-index: 59800;
 	background-color: rgba(0, 0, 0, .75);
 }
+.mod-imageviewer-mask.static{
+  position: static;
+  background-color: transparent;
+}
 .mod-imageviewer-box{
 	background-color: #fff;
 	width: 6.40rem;
