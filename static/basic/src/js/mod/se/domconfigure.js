@@ -20,12 +20,11 @@
         this.prefix = this.key ? this.main + this.key + "-" : this.main;
 
         this.struct = [
-            //{
-            //  "property": "",
-            //  "dataType": "string|number|boolean|datetime|array|json",
-            //  "format": "",
-            //  "pattern": "",
-            //  "defaultValue": ""
+            //{"property": "",
+            //     "dataType": "string|number|boolean|datetime|array|json",
+            //     "format": "",
+            //     "pattern": "",
+            //     "defaultValue": ""
             //}
         ];
     };
@@ -203,12 +202,58 @@
 
             node.attr(attributeName, this.trim(value));
         },
+        createObject: function createObject(originObject, properties, value){
+            //填充数据
+            var __fixed = function(originObject, namespace, property, value){
+                var funcBody = "if(!(\"" + property + "\" in originObject." + namespace + ")){" + 
+                    "    originObject." + namespace + " = {}" + 
+                    "}" + 
+                    "originObject." + namespace + "." + property + " = value;" + 
+                    "return originObject;";
+
+                var originObject = new Function(
+                    "originObject",
+                    "value",
+                    funcBody
+                )(originObject, value);
+
+                return originObject;
+            };
+            //创建对象
+            var __createObject = function(originObject, properties, keys, value){
+                var items = [].concat(properties);
+                var property = items.shift();
+
+                if(items.length === 0){
+                    if(keys.length === 0){
+                        originObject[property] = value;
+                    }else{
+                        originObject = __fixed(originObject, keys.join("."), property, value);
+                    }
+
+                    return originObject;
+                }else{
+                    if(keys.length === 0){
+                        originObject[property] = {}
+                    }else{
+                        originObject = __fixed(originObject, keys.join("."), property, {});
+                    }
+                }
+
+                keys.push(property);
+
+                return __createObject(originObject, items, keys, value);                
+            };
+            
+            return __createObject(originObject, properties, [], value)
+        },
         parse: function(){
             var struct = [].concat(this.struct || []);
             var size = struct.length;
             var item = null;
             var dataType = null;
             var property = null;
+            var properties = null;
             var conf = {};
 
             for(var i = 0; i < size; i++){
@@ -222,7 +267,9 @@
                 dataType = item.dataType;
 
                 if(dataType in this.parser){
-                    conf[property] = this.parser[dataType].apply(this, [item]);
+                    properties = property.split("-");
+
+                    conf = this.createObject(conf, properties, this.parser[dataType].apply(this, [item]));
                 }else{
                     console.warn("无法解析的数据类型(" + dataType + ")");
                 }
@@ -232,11 +279,9 @@
         }
     };
 
-    DOMConfigure.Cache = {};
-
     DOMConfigure.initDOMConfigure = function(node, key){
         var _key = key || "domconf";
-        var dc = DOMConfigure.Cache[_key] || (DOMConfigure.Cache[_key] = new DOMConfigure(node, key));
+        var dc = new DOMConfigure(node, key);
 
         return {
             define: function(struct){

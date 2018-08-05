@@ -825,7 +825,7 @@ input[type="reset"],
 
 /**
  * ActionSheet模块
- * loading(60000) > toast(59990) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
+ * loading(60000) > toast(59990) > tooltips(59980) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
  * @file actionsheet.css
  */
 .mod-actionsheet{
@@ -1269,7 +1269,7 @@ input[type="reset"],
 
 /**
  * 日期控件弹层
- * loading(60000) > toast(59990) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
+ * loading(60000) > toast(59990) > tooltips(59980) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
  * @file datetimepicker.css
  */
 .mod-dtpicker-frame{
@@ -1553,7 +1553,7 @@ input[type="reset"],
 
 /**
  * 窗口弹层
- * loading(60000) > toast(59990) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
+ * loading(60000) > toast(59990) > tooltips(59980) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
  * @file framebox.css
  */
 .mod-framebox-mask{
@@ -1630,7 +1630,7 @@ input[type="reset"],
 
 /**
  * 图片查看器模块
- * loading(60000) > toast(59990) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
+ * loading(60000) > toast(59990) > tooltips(59980) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
  * @file imageviewer.css
  */
 
@@ -1642,6 +1642,10 @@ input[type="reset"],
 	height: 100%;
 	z-index: 59800;
 	background-color: rgba(0, 0, 0, .75);
+}
+.mod-imageviewer-mask.static{
+  position: static;
+  background-color: transparent;
 }
 .mod-imageviewer-box{
 	background-color: #fff;
@@ -1769,7 +1773,7 @@ input[type="reset"],
 
 /**
  * 信息弹层
- * loading(60000) > toast(59990) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
+ * loading(60000) > toast(59990) > tooltips(59980) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
  * @file layerbox.css
  */
 
@@ -2230,7 +2234,7 @@ input[type="reset"],
 
 /**
  * Loading模块
- * loading(60000) > toast(59990) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
+ * loading(60000) > toast(59990) > tooltips(59980) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
  * @file loading.css
  */
 
@@ -2284,7 +2288,7 @@ input[type="reset"],
 
 /**
  * 逻辑弹层
- * loading(60000) > toast(59990) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
+ * loading(60000) > toast(59990) > tooltips(59980) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
  * @file logicbox.css
  */
 .mod-logicbox-mask{
@@ -3863,7 +3867,7 @@ input[type="reset"],
 }
 /**
  * Toast模块
- * loading(60000) > toast(59990) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
+ * loading(60000) > toast(59990) > tooltips(59980) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
  * @file toast.css
  */
 .toast{
@@ -3949,6 +3953,68 @@ input[type="reset"],
     -webkit-transform: translate(0%, -50%) translateZ(0);
             transform: translate(0%, -50%) translateZ(0);
 }
+/**
+ * Tooltips模块
+ * loading(60000) > toast(59990) > tooltips(59980) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
+ * @file tooltips.css
+ */
+.mod-tooltips{
+	position: fixed;
+	z-index: 59980;
+}
+
+.mod-tooltips-triangle{
+	position: absolute;
+	z-index: 10;
+	width: 10px;
+	height: 10px;
+	-webkit-transform: rotate(45deg);
+	background-color: #fff;
+}
+
+.mod-tooltips.set-shadow,
+.mod-tooltips.set-shadow .mod-tooltips-triangle{
+	box-shadow: 0 0 4px rgba(0, 0, 0, .3);
+}
+
+.mod-tooltips.stick-top .mod-tooltips-triangle{
+	top: -5px;
+	margin-left: -5px;
+	left: 50%;
+}
+
+.mod-tooltips.stick-right .mod-tooltips-triangle{
+	right: -5px;
+	margin-top: -5px;
+	top: 50%;
+}
+
+.mod-tooltips.stick-bottom .mod-tooltips-triangle{
+	bottom: -5px;
+	margin-left: -5px;
+	left: 50%;
+}
+
+.mod-tooltips.stick-left .mod-tooltips-triangle{
+	left: -5px;
+	margin-top: -5px;
+	top: 50%;
+}
+.mod-tooltips-body{
+	position: relative;
+	left: 0;
+	top: 0;
+	z-index: 20;
+	background-color: #fff;
+	width: 100%;
+	height: 100%;
+	min-height: 40px;
+}
+
+
+
+
+
 /**
  * 触摸选择
  * @file touchselect.css

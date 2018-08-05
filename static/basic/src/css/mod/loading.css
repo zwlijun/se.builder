@@ -1,6 +1,6 @@
 /**
  * Loading模块
- * loading(60000) > toast(59990) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
+ * loading(60000) > toast(59990) > tooltips(59980) > datetimepicker(59900) >  imageviewer(59800) > layerbox(59700) > actionsheet(59500/59600) > logicbox(59400) > framebox(59300)
  * @file loading.css
  */
 

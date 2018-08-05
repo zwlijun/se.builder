@@ -7,7 +7,7 @@
 <!--#include virtual="/static/basic/inc/css_common_gm.html" -->
 <!--#include virtual="/static/basic/inc/css_common_dm.html" -->
 <!--#include virtual="/static/basic/inc/static_version.html" -->
-<!--#include virtual="/static/v1.0/inc/global_config.html" -->
+<!--#include virtual="/static/basic/inc/global_config.html" -->
 <!--#include virtual="/static/basic/inc/ie.html" -->
 <!--#include virtual="/static/basic/inc/stat_code_header.html" -->
 </head>

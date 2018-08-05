@@ -3,16 +3,31 @@
 <head>
 <!--#include virtual="/static/basic/inc/meta.html" -->
 <!--#include virtual="/static/basic/inc/rem.html" -->
-<title>移动终端页面框架DEMO</title>
+<title>Module::Tooltips</title>
 <!--#include virtual="/static/basic/inc/css_common_gm.html" -->
 <!--#include virtual="/static/basic/inc/css_common_mm.html" -->
 <!--#include virtual="/static/basic/inc/static_version.html" -->
 <!--#include virtual="/static/basic/inc/global_config.html" -->
 <!--#include virtual="/static/basic/inc/stat_code_header.html" -->
+<link rel="stylesheet" type="text/css" href="/static/basic/src/css/mod/tooltips.css">
 </head>
 <body>
 <header class="app-header"></header> 
-<article class="app-body"></article>
+<article class="app-body">
+<!--   <div class="mod-tooltips stick-right set-shadow">
+    <div class="mod-tooltips-triangle"></div>
+    <div class="mod-tooltips-body">
+      <span>我是一条内容</span>
+    </div>
+  </div> -->
+
+  <div class="flexbox middle justify wrap" style="width: 400px; position: absolute; left: 400px; top: 400px;">
+    <div data-plugin="tooltips_left" data-domconf-stick="stick-left" style="width: 200px; line-height: 30px; background-color: red; height: 30px;">Tooltips#Left</div>
+    <div data-plugin="tooltips_top" data-domconf-stick="stick-top" style="width: 200px; line-height: 30px; background-color: blue; height: 30px;">Tooltips#Top</div>
+    <div data-plugin="tooltips_bottom" data-domconf-stick="stick-bottom" style="width: 200px; line-height: 30px; background-color: green; height: 30px;">Tooltips#Bottom</div>
+    <div data-plugin="tooltips_right" data-domconf-stick="stick-right" style="width: 200px; line-height: 30px; background-color: yellow; height: 30px;">Tooltips#Right</div>
+  </div>
+</article>
 <footer class="app-footer"></footer>
 <script>
 window.__CONFIG = (function(){
@@ -62,6 +77,9 @@ window.__CONFIG = (function(){
 </script>
 <!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
 <!--#include virtual="/static/basic/inc/js_logic_tpl.html" --> 
+<script>
+seajs.use(["logic/test/test_tooltips"]);
+</script>
 <!--#include virtual="/static/basic/inc/stat_code_footer.html" -->
 </body>
 </html>
