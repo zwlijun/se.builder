@@ -18,6 +18,95 @@
 
     //-------------------------------------------------
     /**
+     * 数据表单工具类
+     * @type {Object}
+     */
+    var DataFormUtil = {
+        "dataforms": {
+            "__def__": {
+                callback: function(formName){
+                    var checker = DataForm.getInstance(formName);
+
+                    checker.set("before", {
+                        callback: function(form, spv){
+                            if(true !== spv){
+                                var retmsg = $(form).find(".retmsg");
+                                var size = retmsg.length;
+                                var ins = null;
+
+                                for(var i = 0; i < size; i++){
+                                    ins = $(retmsg[i]);
+
+                                    ins[0].className = "icofont retmsg hide";
+
+                                    if(ins[0].hasAttribute("data-defmsg")){
+                                        var msg = ins.attr("data-defmsg") || "";
+                                        var a = msg.split("::");
+                                        var type = a.length === 1 ? "" : a[0];
+                                        var text = a.length === 1 ? msg : a.slice(1).join("::");
+
+                                        ins.html(text).addClass(type).removeClass("hide");
+                                    }else{
+                                        ins.addClass("hide").html("");
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    checker.set("tips", {
+                        callback: function(el, tips, type){
+                            // var p = $(el).parents("dd");
+                            // var ins = p.find("ins");
+
+                            // ins.html(tips).removeClass("hidden");
+                            
+                            Toast.text(tips, Toast.MIDDLE_CENTER, 3000);
+                        }
+                    });
+                    checker.set("mpv", {
+                        callback: function(result){
+                            var checkResultCRS = result.crs;
+                            var checkResultItems = result.cri;
+                            var item = null;
+
+                            if(checkResultCRS["failure"] > 0){
+                                for(var key in checkResultItems){
+                                    if(checkResultItems.hasOwnProperty(key)){
+                                        item = checkResultItems[key];
+
+                                        var field = item.element.parents(".dataform-item");
+                                        var tips = field.find(".retmsg");
+
+                                        if(!item.verified){
+                                            tips.html(item.message).addClass("warn").removeClass("hide");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    return checker;
+                }
+            }
+        },
+        define: function(){
+            DataForm.rt(800, {
+                "open": false,
+                "interval": 5000
+            });
+
+            var forms = SEApp.conf("forms") || {};
+
+            for(var f in forms){
+                if(forms.hasOwnProperty(f)){
+                    Util.execHandler(DataFormUtil.dataforms[f] || DataFormUtil.dataforms["__def__"], [f]);
+                }
+            }
+        }
+    };
+    //-------------------------------------------------
+    /**
      * 获取验证码时的安全参数生成器
      * @return {Object}     [description]
      */
@@ -256,66 +345,9 @@
                 var args = (data || "").split(",");
                 var formName = args[0];
 
+                DataForm.DataFormUtil.build(formName)
                 var checker = DataForm.getInstance(formName);
 
-                checker.set("before", {
-                    callback: function(form, spv){
-                        if(true !== spv){
-                            var retmsg = $(form).find(".retmsg");
-                            var size = retmsg.length;
-                            var ins = null;
-
-                            for(var i = 0; i < size; i++){
-                                ins = $(retmsg[i]);
-
-                                ins[0].className = "icofont retmsg hide";
-
-                                if(ins[0].hasAttribute("data-defmsg")){
-                                    var msg = ins.attr("data-defmsg") || "";
-                                    var a = msg.split("::");
-                                    var type = a.length === 1 ? "" : a[0];
-                                    var text = a.length === 1 ? msg : a.slice(1).join("::");
-
-                                    ins.html(text).addClass(type).removeClass("hide");
-                                }else{
-                                    ins.addClass("hide").html("");
-                                }
-                            }
-                        }
-                    }
-                });
-                checker.set("tips", {
-                    callback: function(el, tips, type){
-                        // var p = $(el).parents("dd");
-                        // var ins = p.find("ins");
-
-                        // ins.html(tips).removeClass("hidden");
-                        
-                        Toast.text(tips, Toast.MIDDLE_CENTER, 3000);
-                    }
-                });
-                checker.set("mpv", {
-                    callback: function(result){
-                        var checkResultCRS = result.crs;
-                        var checkResultItems = result.cri;
-                        var item = null;
-
-                        if(checkResultCRS["failure"] > 0){
-                            for(var key in checkResultItems){
-                                if(checkResultItems.hasOwnProperty(key)){
-                                    item = checkResultItems[key];
-
-                                    var field = item.element.parents(".dataform-item");
-                                    var tips = field.find(".retmsg");
-
-                                    if(!item.verified){
-                                        tips.html(item.message).addClass("warn").removeClass("hide");
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
                 checker.set("submit", {
                     callback: function(submitEvent, _data, _node, _e, _type){
                         submitEvent.preventDefault();
@@ -328,13 +360,15 @@
                 });
                 checker.set("done", {
                     callback: function(result){
-                        // result.form.submit();
+                        if(true === result.onlyCheck){
+                            return;
+                        }
+
                         var _result = result || {};
                         var form = _result.form || {};
                         var name = form.name || "seDefaultForm";
 
-                        var plugin = Bridge.plugin;
-                        var forms = plugin.conf("forms") || {};
+                        var forms = SEApp.conf("forms") || {};
                         var cur = $.extend({}, {
                             "actionType": "submit",
                             "actionURL": null,
@@ -465,6 +499,7 @@
          */
         init: function(){
             Util.source(SESchema);
+            DataFormUtil.define();
         }
     };
 

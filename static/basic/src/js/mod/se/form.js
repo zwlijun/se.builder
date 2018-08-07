@@ -15,7 +15,70 @@
     var Request         = require("mod/se/request");
     var Util            = require("mod/se/util");
     var DateUtil        = require("mod/se/dateutil");
+    var Timer           = require("mod/se/timer");
     var HandleStack     = Listener.HandleStack;
+
+    var RealTimeCheckTimerPool = {
+        timers: {},
+        put: function(name, timerId){
+            this.timers[name] = timerId;
+        },
+        get: function(name){
+            return this.timers[name] || null;
+        },
+        clear: function(name){
+            var t = null;
+            if(name){
+                t = this.get(name);
+
+                if(t){
+                    clearTimeout(t);
+                    RealTimeCheckTimerPool.timers[t] = null;
+
+                    delete RealTimeCheckTimerPool.timers[t];
+                }
+            }else{
+                for(var key in RealTimeCheckTimerPool.timers){
+                    if(RealTimeCheckTimerPool.timers.hasOwnProperty(key)){
+                        this.clear(key);
+                    }
+                }
+            }
+        }
+    };
+
+    /**
+     * 定义伪协议
+     */
+    var DataFormSchema = {
+        "schema": "dataform",
+        match: function(data, node, e, type){
+            var args = (data || "").split(",");
+            var inputName = args[0];
+            var delay = Number(args[1]);
+
+            var dataForm = node.parents("form");
+            var formName = dataForm.attr("name");
+            
+            var external = node.attr("data-realtime-external");
+
+            if(isNaN(delay)){
+                delay = 800;
+            }
+
+            RealTimeCheckTimerPool.clear(inputName);
+            RealTimeCheckTimerPool.put(inputName, setTimeout(function(){
+                if(external){
+                    Util.requestExternal(external, [formName, dataForm, inputName]);
+                }else{
+                    var checker = _Form.createDataForm(formName);
+
+                    checker.check(false, inputName.split("|"));
+                }
+            }, delay));
+            
+        }
+     };
 
     /**
      * 校驗方法
@@ -37,7 +100,7 @@
                 var ai = [];
                 var tmp = null;
                 if(v.length != 15 && v.length != 18){
-                    return "请输入15或18位的身份证号码(中国大陆)";
+                    return false;
                 }
                 function getVerify(id){ //獲取末尾示識
                     var remain = 0;
@@ -67,7 +130,7 @@
                 var ret = (getVerify(v) == v.substring(17, 18));
 
                 if(!ret){
-                    return "请输入有效的身份证号码(中国大陆)";
+                    return false;
                 }
 
                 return true;
@@ -95,7 +158,7 @@
                 var ret =  (vi == verify);
 
                 if(!ret){
-                    return "请输入有效的身份证号码(中国香港)";
+                    return false;
                 }
 
                 return true;
@@ -220,6 +283,10 @@
         }
     };
 
+    /**
+     * 返回类型
+     * @type {Object}
+     */
     var Types = {
         "OK": "ok",
         "MATCH": "match",
@@ -228,7 +295,7 @@
         "LBOUND": "lbound",
         "UBOUND": "ubound",
         "SAME": "same",
-        "CUSTOM": "custom",
+        "DIFFERENT": "different",
         "EMPTY": "empty",
         "FORMAT": "format"
     };
@@ -236,17 +303,12 @@
     /**
      * 表單校驗
      * @param String name
-     * @param String prefix
      */
-    var _Form = function(name, prefix){
+    var _Form = function(name){
         this.name = name;
-        this.prefix = prefix || "";
-        this.form = $(this.prefix + 'form[name="' + this.name + '"]');
-        this.optionsMerge = (
-                                this.form[0].hasAttribute("data-options-merge") 
-                                    && this.form.attr("data-options-merge")
-                            ) ? this.form.attr("data-options-merge") : false;
-        this.spv = ("0" !== this.form.attr("data-spv")); //single point verification
+        this.selector = 'form[name="' + this.name + '"]';
+        this.isInit = false;
+
         this.checkResults = {
             crs: {
                 success: 0,
@@ -271,15 +333,29 @@
             onbeforecheck : null,  //开始前校验的回调{Function callback, Array args, Object context}
             onsubmit : null        //提交时的回调{Function callback, Array args, Object context}
         }, this.handleStack);
-        
-        this.bindSubmit();
     };
     _Form.prototype = {
+        init: function(){
+            this.updateForm();
+
+            if(this.isInit && this.form.length > 0){
+                return ;
+            }
+
+            this.form = $(this.selector);
+            this.optionsMerge = (
+                                    this.form[0].hasAttribute("data-options-merge") 
+                                        && this.form.attr("data-options-merge")
+                                ) ? this.form.attr("data-options-merge") : false;
+            this.spv = ("0" !== this.form.attr("data-spv")); //single point verification
+
+            this.bindSubmit();
+        },
         /**
          * 更新form表单实例
          */
         updateForm : function(){
-            this.form = $(this.prefix + 'form[name="' + this.name + '"]');
+            this.form = $(this.selector);
         },
         /**
          * 执行回调函数
@@ -376,11 +452,12 @@
          *            data-encode="0|1"               //是否进行encodeURIComponent编码
          *            data-xss="0|1"                  //是否进行XSS过滤
          *            data-compare="name"             //确认输入比较的元素的name值
+         *            data-comparetype="0|1"          //比较类型，1:两个值需要一致，0:两个值不能一样
          *            data-different="string"         //两次输入比较不一致时的提示内容
+         *            data-same="string"              //两次输入比较一样时的提示内容，data-comparetype="0"时触发
          *            data-lbound="number"            //最小限定值
          *            data-ubound="number"            //最大限定值
          *            data-refer="selector"           //当前元素的值为data-refer所指向节点的值，data-refer为目标元素的selector
-         *            data-checkfilter="external"     //用户自定义校验方法的名称，如：CheckFilter://Internal/CNID, CheckFilter://Internal/HKID
          *            data-placeholder="string"       //自定义placeholder的值
          *            data-required="0|1"             //是否为必须项
          *            required                        //必填项，与data-required二选一
@@ -398,7 +475,7 @@
          * </form> 
          * </script>        
          */
-        doCheck : function(){
+        doCheck : function(execCheckDone, specifiedCheckItems){
             var f = this.form;
             var spv = this.spv;
             var els = f.prop("elements");
@@ -425,6 +502,8 @@
             var trimSpaces = true;
             var clearSpaces = false;
             var compare = null;
+            var compareType = 1;
+            var same = null;
             var lbound = 0;
             var ubound = 0;
             var min = undefined;
@@ -434,7 +513,6 @@
             var minTips = null;
             var maxTips = null;
             var refer = null;
-            var checkfilter = null;
             var holder = null;
             var use = null;
             var data = {};
@@ -454,6 +532,19 @@
                 }
                 
                 if(!name){ continue; }
+
+                if(specifiedCheckItems.length > 0){
+                    var tmp = specifiedCheckItems.join("|");
+                    var tp = new RegExp("^(" + tmp + ")$");
+
+                    tp.lastIndex = 0;
+                    if(!tp.test(name)){
+                        tp = null;
+                        continue;
+                    }
+
+                    tp = null;
+                }
 
                 trimSpaces = ("1" == (el.attr("data-trimspaces") || "1"));
                 clearSpaces = ("1" == el.attr("data-clearspaces"));
@@ -490,6 +581,7 @@
                 format = el.attr("data-format") || null;
                 invalid = el.attr("data-invalid") || "";
                 different = el.attr("data-different") || "";
+                same = el.attr("data-same") || "";
                 encode = ("1" == el.attr("data-encode"));
                 xss = ("1" == el.attr("data-xss"));
                 lbound = Number(el.attr("data-lbound") || 0);
@@ -501,8 +593,8 @@
                 minTips = el.attr("data-mintips") || "";
                 maxTips = el.attr("data-maxtips") || "";
                 compare = el.attr("data-compare");
+                compareType = Number(el.attr("data-comparetype") || 1);
                 refer = el.attr("data-refer");
-                checkfilter = el.attr("data-checkfilter"); 
 
                 settings[name] = {
                     "form": f[0],
@@ -527,17 +619,18 @@
                     "ubound": ubound,
                     "min": min,
                     "max": max,
-                    "lboundTips": lboundTips,
-                    "uboundTips": uboundTips,
-                    "minTips": minTips,
-                    "maxTips": maxTips,
                     "compare": compare,
+                    "compareType": compareType,
                     "refer": refer,
-                    "checkfilter": checkfilter,
                     "tips": {
                         "empty": empty,
                         "invalid": invalid,
-                        "different": different
+                        "different": different,
+                        "same": same,
+                        "lboundTips": lboundTips,
+                        "uboundTips": uboundTips,
+                        "minTips": minTips,
+                        "maxTips": maxTips
                     }
                 }; 
 
@@ -568,7 +661,7 @@
                 if(required && value == ""){
                     if(spv){
                         this.exec("tips", [el, empty, Types["EMPTY"]]);
-                        return null;
+                        return false;
                     }else{
                         this.setCheckResults(name, false, el, empty, Types["EMPTY"]);
                         continue;
@@ -581,7 +674,7 @@
                     if(!regExp.test(value)){
                         if(spv){
                             this.exec("tips", [el, invalid, Types["MATCH"]]);
-                            return null;
+                            return false;
                         }else{
                             this.setCheckResults(name, false, el, invalid, Types["MATCH"]);
                             continue;
@@ -591,31 +684,15 @@
                     pattern = null; regExp = null;
                 }
 
-                if(value != "" && checkfilter){
-                    var ret = Util.requestExternal(checkfilter, [value, el]);
-
-                    custom_tips = ret.result;
-
-                    if(true !== custom_tips){ // body
-                        if(spv){
-                            this.exec("tips", [el, custom_tips || invalid || empty, Types["CUSTOM"]]);
-                            return null;
-                        }else{
-                            this.setCheckResults(name, false, el, custom_tips || invalid || empty, Types["CUSTOM"]);
-                            continue;
-                        }
-                    }
-                }
-
                 if(value != "" && format && (format in $.CheckFilter.Internal)){
                     var ret = $.CheckFilter.Internal[format].apply(null, [null, value, el]);
 
                     if(true !== ret){
                         if(spv){
-                            this.exec("tips", [el, ret || invalid || empty, Types["FORMAT"]]);
-                            return null;
+                            this.exec("tips", [el, invalid || empty, Types["FORMAT"]]);
+                            return false;
                         }else{
-                            this.setCheckResults(name, false, el, ret || invalid || empty, Types["FORMAT"]);
+                            this.setCheckResults(name, false, el, invalid || empty, Types["FORMAT"]);
                             continue;
                         }
                     }
@@ -626,13 +703,25 @@
                     useValue = ((use && els[compare].hasAttribute("data-" + use)) ? $(els[compare]).attr("data-" + use) : undefined);
                     var compareValue = StringUtil.trim(undefined !== useValue ? useValue : els[compare].value);
                     
-                    if(value != compareValue){
-                        if(spv){
-                            this.exec("tips", [el, different, Types["SAME"]]);
-                            return null;
-                        }else{
-                            this.setCheckResults(name, false, el, different, Types["SAME"]);
-                            continue;
+                    if(0 !== compareType){
+                        if(value != compareValue){
+                            if(spv){
+                                this.exec("tips", [el, different || invalid, Types["DIFFERENT"]]);
+                                return false;
+                            }else{
+                                this.setCheckResults(name, false, el, different || invalid, Types["DIFFERENT"]);
+                                continue;
+                            }
+                        }
+                    }else{
+                        if(value == compareValue){
+                            if(spv){
+                                this.exec("tips", [el, same || invalid,, Types["SAME"]]);
+                                return false;
+                            }else{
+                                this.setCheckResults(name, false, el, same || invalid, Types["SAME"]);
+                                continue;
+                            }
                         }
                     }
                 }
@@ -641,7 +730,7 @@
                     if(lbound > 0 && length < lbound){
                         if(spv){
                             this.exec("tips", [el, lboundTips || invalid, Types["LBOUND"]]);
-                            return null;
+                            return false;
                         }else{
                             this.setCheckResults(name, false, el, lboundTips || invalid, Types["LBOUND"]);
                             continue;
@@ -651,7 +740,7 @@
                     if(ubound > 0 && length > ubound){
                         if(spv){
                             this.exec("tips", [el, uboundTips || invalid, Types["UBOUND"]]);
-                            return null;
+                            return false;
                         }else{
                             this.setCheckResults(name, false, el, uboundTips || invalid, Types["UBOUND"]);
                             continue;
@@ -663,7 +752,7 @@
                     if(!isNaN(min) && Number(value) < min){
                         if(spv){
                             this.exec("tips", [el, minTips || invalid, Types["MIN"]]);
-                            return null;
+                            return false;
                         }else{
                             this.setCheckResults(name, false, el, minTips || invalid, Types["MIN"]);
                             continue;
@@ -673,7 +762,7 @@
                     if(!isNaN(max) && Number(value) > max){
                         if(spv){
                             this.exec("tips", [el, maxTips || invalid, Types["MAX"]]);
-                            return null;
+                            return false;
                         }else{
                             this.setCheckResults(name, false, el, maxTips || invalid, Types["MAX"]);
                             continue;
@@ -728,7 +817,7 @@
                     if(!data[setting.name]){
                         if(spv){
                             this.exec("tips", [$(setting.node), setting.tips.empty, Types["EMPTY"]]);
-                            return null;
+                            return false;
                         }else{
                             this.setCheckResults(setting.name, false, $(setting.node), setting.tips.empty, Types["EMPTY"]);
                             continue;
@@ -755,7 +844,7 @@
                     if(0 === flag){
                         if(spv){
                             this.exec("tips", [$(setting.node), setting.tips.empty, Types["EMPTY"]]);
-                            return null;
+                            return false;
                         }else{
                             this.setCheckResults(setting.name, false, $(setting.node), setting.tips.empty, Types["EMPTY"]);
                             continue;
@@ -776,13 +865,14 @@
                 "settings": settings,
                 "spv": spv,
                 "crs": this.getCheckResultCRS(),
-                "cri": this.getCheckResultItems()
+                "cri": this.getCheckResultItems(),
+                "onlyCheck": (false === execCheckDone)
             };
 
             if(!spv){
                 if(this.getCheckResultCRS("failure") > 0){
                     this.exec("mpv", [___a]);
-                    return ;
+                    return false;
                 }
             }
 
@@ -793,17 +883,22 @@
         /**
          * 校驗
          */
-        check : function(){
+        check : function(execCheckDone, specifiedCheckItems){
+            this.init();
+
             var chk = this.get("beforecheck");
+            var beforeCheckResult = true;
             
             this.exec("before", [this.form, this.spv]);
             
             if((null == chk) ||                                                     //没有设置beforecheck
                (null != chk && true !== chk.returnValue) ||                         //没有设置returnValue属性或returnValue属性不为true
-               (null != chk && this.exec("beforecheck", [this.form, this.spv]))      //有设置beforecheck并且条件为真
+               (null != chk && (beforeCheckResult = this.exec("beforecheck", [this.form, this.spv])))      //有设置beforecheck并且条件为真
             ){
-                this.doCheck();
+               return this.doCheck(false !== execCheckDone, specifiedCheckItems || []);
             }
+
+            return !!beforeCheckResult;
         },
         /**
          * 提交表单处理句柄
@@ -827,41 +922,57 @@
                 form.attr("data-form", this.name);
                 form.on("submit", "", this, this.submitHandler);
             }
-        } 
+        }
     };
 
-    var _Cache = {};
+    _Form.Cache = {};
+
+    _Form.createDataForm = function(name){
+        var ins = _Form.Cache[name] || (_Form.Cache[name] = new _Form(name));
+
+        ins.init();
+
+        var _pub = {
+            "name" : ins.name,
+            "form" : ins.form,
+            //-----------------------------------------------------------------
+            "set" : function(type, option){
+                ins.set(type, option);
+            },
+            "remove" : function(type){
+                ins.remove(type);
+            },
+            "get" : function(type){
+                return ins.get(type);
+            },
+            "exec" : function(type, args){
+                return ins.exec(type, args);
+            },
+            "clear" : function(){
+                ins.clear();
+            },
+            "check" : function(execCheckDone, specifiedCheckItems){
+                return ins.check(execCheckDone, specifiedCheckItems || []);
+            },
+            "getHandleStack": function(){
+                return ins.handleStack;
+            }
+        };
+
+        return _pub;
+    };
+
+    (function(){
+        Util.source(DataFormSchema);
+    })()
 
     module.exports = {
-        "version": "R17B0817",
+        "version": "R18B0807",
         "CheckTypes": Types,
-        "getInstance" : function(name, prefix){
-            var ins = (_Cache[name] || new _Form(name, prefix)); 
-            
-            ins.updateForm();
-
-            var cfg = {
-                "name" : ins.name,
-                "prefix" : ins.prefix,
-                "form" : ins.form,
-                //-----------------------------------------------------------------
-                "set" : function(type, option){ins.set(type, option);},
-                "remove" : function(type){ins.remove(type);},
-                "get" : function(type){return ins.get(type);},
-                "exec" : function(type, args){return ins.exec(type, args);},
-                "clear" : function(){ins.clear();},
-                "check" : function(){ins.check();},
-                "getHandleStack": function(){return ins.handleStack;}
-            };
-
-            _Cache[name] = ins;
-
-            return cfg;
-        },
-        "injectCheckFilter": function(filter){
-            $.extend(true, $.CheckFilter, filter);
-
-            return this;
+        "RTCheckTimers": RealTimeCheckTimerPool,
+        "watchTimer": Timer.getTimer("rt_bind_timer", Timer.toFPS(5000), null),
+        "getInstance" : function(name){
+            return _Form.createDataForm(name);
         },
         "register": function(type, callback){
             $.CheckFilter.Internal[type] = callback;
@@ -877,6 +988,55 @@
             }
 
             return ret;
+        },
+        /**
+         * 绑定实时检测
+         * @return {[type]} [description]
+         */
+        "rt": function(delay, watch){
+            var find = function(_delay){
+                var items = $('[data-realtime="1"]');
+                var size = items.length;
+                var item = null;
+                var name = null;
+
+                _delay = Number(_delay);
+
+                if(isNaN(_delay)){
+                    _delay = 800;
+                }
+
+                for(var i = 0; i < size; i++){
+                    item = $(items[i]);
+
+                    name = item.attr("name");
+
+                    if(!name){
+                        continue;
+                    }
+
+                    item.attr("data-action-input", "dataform://match#" + name + "," + _delay)
+                        .removeAttr("data-realtime");
+                }
+            };
+
+            find(delay);
+
+            watch = watch || {};
+            if(true === watch.open){
+                if("interval" in watch){
+                    this.watchTimer.setTimerFPS(watch.interval || 5000);
+                }
+
+                this.watchTimer.setTimerHandler({
+                    callback: function(_timer, _callback, _delay){
+                        _callback.apply(null, [_delay]);
+                    },
+                    args: [find, delay]
+                });
+            }
+
+            return this;
         }
     };
 });

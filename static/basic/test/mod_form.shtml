@@ -22,10 +22,10 @@ input{
 </style>
 </head>
 <body>
-<form name="testForm" method="get" action="mod_form.shtml" data-action-submit="form://submit#test,testForm,request">
+<form name="testForm" method="get" action="mod_form.shtml" data-action-submit="form://submit#testForm">
   <div>
     <label>大陆身份证</label>
-    <input type="text" name="cnid" data-required="0" data-empty="请输入大陆身份证" data-format="cnid" data-invalid="大陆身份证输入不正确">
+    <input type="text" name="cnid" data-required="0" data-realtime="1" data-empty="请输入大陆身份证" data-format="cnid" data-invalid="大陆身份证输入不正确">
   </div>
   <div>
     <label>香港身份证</label>
