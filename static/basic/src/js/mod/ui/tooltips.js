@@ -425,10 +425,11 @@
 
             if(true === autohide){
                 Util.delay(delay, {
-                    callback: function(){
-                        this.hide(handlers.hide || {});
+                    callback: function(elapsedTime, _h){
+                        this.hide(_h.hide || {});
                     },
-                    context: this
+                    context: this,
+                    args: [handlers]
                 })
             }
         },
@@ -439,7 +440,7 @@
             var delay = Util.execHandler(handlers.before, [this]) || 0;
 
             Util.delay(delay, {
-                callback: function(_node, _h){
+                callback: function(elapsedTime, _node, _h){
                     _node.removeClass("visible").addClass("hide");
                     Util.execHandler(_h.hide, [this]);
                 },
