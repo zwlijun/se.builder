@@ -448,26 +448,7 @@
             };
         },
         getStorageValue: function(type, conf){
-            var items = conf.split("@");
-            var key = items[0];
-            var path = items[1];
-
-            var storage = (2 === type ? Cookie : (1 === type ? Persistent : Session));
-            var value = storage.get(key) || "";
-
-            if(!path){
-                return value;
-            }
-
-            if(!value){
-                return value;
-            }
-            
-            if(DataType.isObject(value)){
-                value = OPaths.find(value, path);
-            }
-
-            return value
+            return _Form.getStorageValue(type, conf);
         },
         /**
          * 校驗
@@ -1015,10 +996,36 @@
             },
             "getHandleStack": function(){
                 return ins.handleStack;
+            },
+            getStorageValue: function(type, conf){
+                return ins.getStorageValue(type, conf);
             }
         };
 
         return _pub;
+    };
+
+    _Form.getStorageValue = function(type, conf){
+        var items = conf.split("@");
+        var key = items[0];
+        var path = items[1];
+
+        var storage = (2 === type ? Cookie : (1 === type ? Persistent : Session));
+        var value = storage.get(key) || "";
+
+        if(!path){
+            return value;
+        }
+
+        if(!value){
+            return value;
+        }
+        
+        if(DataType.isObject(value)){
+            value = OPaths.find(value, path);
+        }
+
+        return value
     };
 
     (function(){
@@ -1047,6 +1054,9 @@
             }
 
             return ret;
+        },
+        "getStorageValue": function(type, conf){
+            return _Form.getStorageValue(type, conf);
         },
         /**
          * 绑定实时检测
