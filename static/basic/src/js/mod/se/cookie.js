@@ -50,7 +50,7 @@
             var str = Cookie.encode(name) + '=' + Cookie.encode("" + value);
 
             if(null === value || undefined === value){
-                opts.maxage = -1;
+                opts.maxage = -10000;
             }
 
             if(opts.maxage){
