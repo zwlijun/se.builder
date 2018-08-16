@@ -933,14 +933,14 @@
             width = width <= 0 ? rect.width : width;
             height = height <= 0 ? rect.height : height;
             
-            if(false !== _set){
-                var obj = {
-                    "width": width + widthUnit,
-                    "height": height + heightUnit
-                };
-                body.css(obj);
-                viewport.css(obj);
-            }
+            // if(false !== _set){
+            //     var obj = {
+            //         "width": width + widthUnit,
+            //         "height": height + heightUnit
+            //     };
+            //     body.css(obj);
+            //     viewport.css(obj);
+            // }
 
             return {
                 "width": width,

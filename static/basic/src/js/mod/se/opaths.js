@@ -3,7 +3,7 @@
  **********************************************************/
 
 /**
- * 对象跳径查找
+ * 对象路径查找
  * @charset utf-8
  * @author lijun
  * @git: https://github.com/zwlijun/se.builder

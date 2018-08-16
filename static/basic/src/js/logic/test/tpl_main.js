@@ -264,6 +264,29 @@ var GoSchema = {
     schema: "go",
     //--------------------------
     /**
+     * 登录校验重定向
+     * @param  {String} data [参数]
+     * @param  {Object} node [jQuery/zepto节点对象，或null]
+     * @param  {Event}  e    [事件对象，或null]
+     * @param  {String} type [事件类型]
+     * @return {[type]}      [description]
+     * 示例
+     * go://url#/index
+     */
+    auth: function(data, node, e, type){
+        e && e.stopPropagation();
+
+        if(SEApp.UserSign){
+            if(SEApp.UserSign.isLogin()){
+                Util.requestExternal("go://url#" + data, [node, e, type]);
+            }else{
+                SEApp.UserSign.login(data, false);
+            }
+        }else{
+            Util.requestExternal("go://url#" + data, [node, e, type]);
+        }
+    },
+    /**
      * URL重定向
      * @param  {String} data [参数]
      * @param  {Object} node [jQuery/zepto节点对象，或null]
@@ -599,6 +622,60 @@ var InputSchema = {
     } 
 };
 
+/**
+ * 数据处理工具类
+ */
+var DataSetUtil = {
+    getRequestConf: function(requestName, def){
+        var requests = SEApp.conf("requests") || {};
+
+        var request = $.extend({}, {
+            "names": [],
+            "pageKey": "page",
+            "params": {},
+            "url": "/datalist",
+            "paths": "dataList",
+            /* 以下是可选项 */
+            "external": null,
+            "startPage": 1,
+            "pageSize": 10,
+            "name": name,
+            "showLoading": false,
+            "loadingText": "Loading...",
+            "dataRendering": "append",
+            "pageStyle": "loadmore",
+            "page": 1
+        }, def || {}, requests[requestName] || {});
+
+        return request;
+    },
+    getRequestMoreConf: function(requestName, data){
+        return $.extend(DataSetUtil.getRequestConf(requestName, {
+            "showLoading": false,
+            "dataRendering": "append",
+            "pageStyle": "loadmore",
+            "page": 1
+        }), data || {});
+    },
+    getRequestPageConf: function(requestName, data){
+        return $.extend(DataSetUtil.getRequestConf(requestName, {
+            "showLoading": true,
+            "dataRendering": "replace",
+            "pageStyle": "pagebar",
+            "page": 1
+        }), data || {});
+    },
+    dataTransform: function(resp){
+        // resp.code = resp.errorCode;
+        // resp.message = resp.replyText;
+        // resp.recordSize = resp.count || 0;
+        // resp.pageSize = resp.pageSize || 20;
+        // resp.pageIndex = resp.pageNum || 0;
+
+        return resp;
+    }
+};
+
 var _App = {
     _conf: {},
     /**
@@ -656,6 +733,11 @@ var _App = {
         Util.source(GoSchema);
         Util.source(InputSchema);
 
+        //重置CMD模块中的公共提示信息
+        if(_App.conf("RequestStatus")){
+            $.extend(CMD.RequestStatus, _App.conf("RequestStatus") || null);
+        }
+
         CMD.injectErrorInfo(ErrorInfo);
 
         //---------------------------------------------------
@@ -680,6 +762,8 @@ var _public = {
     "init": _App.init,
     "conf": _App.conf,
     "path": LocalPath,
+    "SecurityURL": SecurityURL,
+    "DataSetUtil": DataSetUtil,
     "expando": {
         "util": Util,
         "cmd": CMD,

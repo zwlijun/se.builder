@@ -27,10 +27,7 @@
     };
 
     var Bridge = {
-        plugin: null,
         connect: function(target){
-            Bridge.plugin = target;
-
             var expando = target.expando;
 
             ErrorTypes      = expando["errors"];

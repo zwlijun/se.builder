@@ -28,6 +28,7 @@
             var xhr = us.service = new XMLHttpRequest();
             var conf = us.conf;
             var heads = conf.heads || [];
+            var fields = conf.fields || [];
             var fileInfo = us.fileInfo;
 
             xhr.open("POST", conf.url, true);
@@ -88,15 +89,25 @@
                 }
             }
 
-            var formData = null;
+            fields.push({
+                "name": (conf.specified || "file_" + fileInfo.key),
+                "value": fileInfo.source
+            });
 
-            if(fileInfo.sourceType == "text"){
-                formData = "file_" + fileInfo.key + "=" + fileInfo.source;
-            }else{
-                formData = new FormData();
-
-                formData.append("file_" + fileInfo.key, fileInfo.source);
+            var formData = new FormData();
+            var field = null;
+            for(var k = 0; k < fields.length; k++){
+                field = fields[k];
+                
+                formData.append(field.name, field.value);
             }
+            // if(fileInfo.sourceType == "text"){
+            //     formData = "file_" + fileInfo.key + "=" + fileInfo.source;
+            // }else{
+            //     formData = new FormData();
+
+            //     formData.append("file_" + fileInfo.key, fileInfo.source);
+            // }
 
             xhr.send(formData);
         },
@@ -118,11 +129,13 @@
         }
     };
 
-    // options.maxsize     单个文件最大尺寸
-    // options.filter      文件类型过滤
-    // options.url         上传接口
-    // options.maxupload   最大上传文件个数 
-    // options.heads       HTTP头设置
+    // options.maxsize       单个文件最大尺寸
+    // options.filter        文件类型过滤
+    // options.url           上传接口
+    // options.maxupload     最大上传文件个数 
+    // options.heads         HTTP头设置
+    // options.fields        FormData列表{String name, String value}
+    // options.specified     指定的文件字段名称
     var _Upload = function(options){
         this.options = options;
 
@@ -618,11 +631,13 @@
     module.exports = {
         "version": "R17B0817",
         "getUploadService": function(name, options){
-            // options.maxsize     单个文件最大尺寸
-            // options.filter      文件类型过滤
-            // options.url         上传接口
-            // options.maxupload   最大上传文件个数 
-            // options.heads       HTTP头设置
+            // options.maxsize       单个文件最大尺寸
+            // options.filter        文件类型过滤
+            // options.url           上传接口
+            // options.maxupload     最大上传文件个数 
+            // options.heads         HTTP头设置
+            // options.fields        FormData列表{String name, String value}
+            // options.specified     指定的文件字段名称
             var s = _Upload.cacheData[name] || (_Upload.cacheData[name] = new _Upload(options));
 
             s.CounterTimer = Timer.getTimer("us_counter_timer_" + name, 60, null);
@@ -653,6 +668,11 @@
                 },
                 "setMaxUpload": function(max){
                     s.options.maxupload = max;
+
+                    return this;
+                },
+                "setUploadSpecified": function(name){
+                    s.options.specified = name;
 
                     return this;
                 },
@@ -691,6 +711,48 @@
                         for(var i = 0; i < size; i++){
                             if(heads[i].name == head.name){
                                 s.options.heads.splice(i, 1);
+                                return this;
+                            }
+                        }
+                    }
+
+                    return this;
+                },
+                "setUploadFields": function(fields){
+                    s.options.fields = fields;
+
+                    return this;
+                },
+                "pushUploadField": function(field){
+                    var fields = s.options.fields || [];
+                    var size = fields.length;
+
+                    if(size === 0){
+                        s.options.fields = [field];
+                        return this;
+                    }else{
+                        for(var i = 0; i < size; i++){
+                            if(fields[i].name == field.name){
+                                s.options.fields[i] = field;
+                                return this;
+                            }
+                        }
+
+                        s.options.fields.push(field);
+                    }
+
+                    return this;
+                },
+                "removeUploadField": function(field){
+                    var fields = s.options.fields || [];
+                    var size = fields.length;
+
+                    if(size === 0){
+                        return this;
+                    }else{
+                        for(var i = 0; i < size; i++){
+                            if(fields[i].name == field.name){
+                                s.options.fields.splice(i, 1);
                                 return this;
                             }
                         }

@@ -15,8 +15,14 @@
     var Request         = require("mod/se/request");
     var Util            = require("mod/se/util");
     var DateUtil        = require("mod/se/dateutil");
+    var DataType        = require("mod/se/datatype");
     var Timer           = require("mod/se/timer");
+    var Storage         = require("mod/se/storage");
+    var Cookie          = require("mod/se/cookie");
+    var OPaths          = require("mod/se/opaths");
     var HandleStack     = Listener.HandleStack;
+    var Persistent      = Storage.Persistent;
+    var Session         = Storage.Session;
 
     var RealTimeCheckTimerPool = {
         timers: {},
@@ -441,6 +447,28 @@
                 }
             };
         },
+        getStorageValue: function(type, conf){
+            var items = conf.split("@");
+            var key = items[0];
+            var path = items[1];
+
+            var storage = (2 === type ? Cookie : (1 === type ? Persistent : Session));
+            var value = storage.get(key) || "";
+
+            if(!path){
+                return value;
+            }
+
+            if(!value){
+                return value;
+            }
+            
+            if(DataType.isObject(value)){
+                value = OPaths.find(value, path);
+            }
+
+            return value
+        },
         /**
          * 校驗
          ************************************************************************************
@@ -471,6 +499,10 @@
          *            data-nullvalue=""               //除了""之外的空值
          *            data-trimspaces="0|1"           //首尾去空
          *            data-clearspaces="0|1"          //清除所有空格
+         *            data-uncheck="string"           //未选择时的值
+         *            data-use-session="key@path"     //从sessionStorage中取值
+         *            data-use-persistent="key@path"  //从localStorage中取值
+         *            data-use-cookie="key@path"      //从cookie中取值
          * />               
          * </form> 
          * </script>        
@@ -489,6 +521,10 @@
             var useValue = null;
             var defaultValue = null;
             var nullvalue = null;
+            var uncheckValue = null;
+            var useSession = null;
+            var usePersistent = null;
+            var useCookie = null;
             var length = 0;
             var pattern = null;            
             var empty = null;
@@ -554,6 +590,23 @@
                 use = el.attr("data-use");
                 useValue = ((use && el[0].hasAttribute("data-" + use)) ? el.attr("data-" + use) : undefined);
                 value = StringUtil.trim(undefined !== useValue ? useValue : el.val());
+
+                useSession = el.attr("data-use-session");
+                usePersistent = el.attr("data-use-persistent");
+                useCookie = el.attr("data-use-cookie");
+
+                if(useSession){
+                    value = this.getStorageValue(0, useSession);
+                }
+
+                if(usePersistent){
+                    value = this.getStorageValue(1, usePersistent);
+                }
+
+                if(useCookie){
+                    value = this.getStorageValue(2, useCookie);
+                }
+
                 
                 if(true === trimSpaces){
                     value = StringUtil.trim(value);
@@ -571,6 +624,7 @@
                 defaultValue = el[0].hasAttribute("data-default") ? el.attr("data-default") : undefined;
 
                 nullvalue = el.attr("data-nullvalue") || "";
+                uncheckValue = StringUtil.trim(el.attr("data-uncheck") || "");
                 filter = (el.prop("disabled") || ("1" == el.attr("data-filter")));
                 holder = (el.attr("placeholder") || el.attr("data-placeholder") || "");
 
@@ -607,6 +661,10 @@
                     "defaultValue": defaultValue,
                     "use": use,
                     "userValue": useValue,
+                    "uncheckValue": uncheckValue,
+                    "useSession": useSession,
+                    "usePersistent": usePersistent,
+                    "useCookie": useCookie,
                     "filter": filter,
                     "format": format,
                     "holder": holder,
@@ -642,6 +700,7 @@
                     }
                     
                     if(true !== el[0].checked){
+                        options[name].push(uncheckValue);
                         continue;
                     }
                 }

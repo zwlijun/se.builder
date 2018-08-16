@@ -1,4 +1,8 @@
 ;define(function(require, exports, module){
+    var CryptoBase      = require("mod/crypto/base");
+    var HMAC            = require("mod/crypto/hmac");
+    var SHA1            = require("mod/crypto/sha1");
+    var Base64          = require("mod/crypto/base64");
     var UploadService   = require("mod/se/uploadservice");
 
     var ErrorTypes = null;
@@ -69,7 +73,9 @@
                 "filter": conf.filter,
                 "url": conf.url,
                 "maxupload": conf.maxupload,
-                "heads": conf.heads
+                "heads": conf.heads,
+                "specified": conf.specified || "",
+                "fields": conf.fields || []
             });
 
             this.service = service;
@@ -149,9 +155,7 @@
                     this.uploader.progress.update(0);
 
                     var conf = this.conf;
-
-                    var plugin = Bridge.plugin;
-                    var uploaderSettings = plugin.conf("uploader") || {};
+                    var uploaderSettings = SEApp.conf("uploader") || {};
 
                     if(uploaderSettings.responseDataConverter){
                         response = uploaderSettings.responseDataConverter(response);
@@ -194,6 +198,14 @@
             }).set("file", {
                 callback: function(files){
                     this.service.readFiles(files);
+
+                    var conf = this.conf;
+                    var serviceKey = conf.key;
+                    var fileInput = document.querySelector('[data-uploader="' + serviceKey + '_file"]');
+
+                    if(fileInput){
+                        fileInput.value = ""; //重置INPUT=>FILE
+                    }
                 },
                 context: _ctx
             }).set("read", {
@@ -201,6 +213,22 @@
                     var firstFileInfo = fileInfoList[0];
                     var thumb = firstFileInfo.thumb;
                     var conf = this.conf;
+
+                    var nowDate = new Date();
+                    var serviceKey = conf.key;
+                    var fileKey = firstFileInfo.key;
+                    var fileName = firstFileInfo.name;
+                    var ossFilePath = serviceKey + "/" + nowDate.getFullYear() + "/" + (nowDate.getMonth() + 1) + "/" + fileKey.substring(fileKey.length - 2) + "/";
+                    var ossFileKey = ossFilePath + fileName.replace(/.+(\..+)$/, fileKey+ "$1");
+
+                    this.service.pushUploadField({
+                        "name": "name",
+                        "value": fileName
+                    });
+                    this.service.pushUploadField({
+                        "name": "key",
+                        "value": ossFileKey
+                    });
 
                     this.uploader.disabled(true);
                     this.uploader.updateBackgroundImage(thumb);
@@ -277,8 +305,7 @@
         return null;
     };
     Uploader.fireErrorMessage = function(errorCode, errorMessage, errorType){
-        var plugin = Bridge.plugin;
-        var uploaderSettings = plugin.conf("uploader") || {};
+        var uploaderSettings = SEApp.conf("uploader") || {};
         var uploaderToast = uploaderSettings.toast;
 
         if(uploaderToast){
@@ -405,10 +432,7 @@
     };
 
     var Bridge = {
-        plugin: null,
         connect: function(target){
-            Bridge.plugin = target;
-
             var expando = target.expando;
 
             ErrorTypes      = expando["errors"];

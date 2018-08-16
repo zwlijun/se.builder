@@ -35,40 +35,27 @@
              * @requests配置项示例
              * "requests": {
              *     "requestName": {
-             *         "names"      : [Required] Array 请求参数列表
-             *         "pageKey"    : [Required] String 页码参数名
-             *         "url"        : [Required] String 数据请求接口
-             *         "paths"      : [Required] String 基于返回对象时的数据列表对象的路径
-             *         "params"     : [AutoFix] Object 会根据 names 和 data-request-* 填充，不需要传
-             *         "external"   : [Optional] String 虚拟schema回调地址
-             *         "startPage"  : [Optional] Number 启始页面码
-             *         "pageSize"   : [Optional] Number 每页加载的数据数
-             *         "name"       : [AutoFix] String requestName
-             *         "showLoading": [Optional] Boolean 是否显示loading
-             *         "loadingText": [Optional] String loading显示的文案
+             *         "names"          : [Required] Array 请求参数列表
+             *         "pageKey"        : [Required] String 页码参数名
+             *         "url"            : [Required] String 数据请求接口
+             *         "paths"          : [Required] String 基于返回对象时的数据列表对象的路径
+             *         "params"         : [AutoFix] Object 会根据 names 和 data-request-* 填充，不需要传
+             *         "external"       : [Optional] String 虚拟schema回调地址
+             *         "startPage"      : [Optional] Number 启始页面码
+             *         "pageSize"       : [Optional] Number 每页加载的数据数
+             *         "name"           : [AutoFix] String requestName
+             *         "showLoading"    : [Optional] Boolean 是否显示loading
+             *         "loadingText"    : [Optional] String loading显示的文案
+             *         "dataRendering"  : [Optional] String 数据渲染方式，[append|replace]，默认为append
+             *         "pageStyle"      : [Optional] String 翻页方式，[loadmore|pagebar|pulldown]，默认为pagebar,
+             *         "page"           : [Optional] Number 初始页面
              *     }
              * }
              */
             more: function(data, node, e, type){
                 var args = (data || "").split(",");
                 var name = args[0];
-
-                var plugin = Bridge.plugin;
-                var requests = plugin.conf("requests") || {};
-                var request = $.extend({}, {
-                    "names": [],
-                    "pageKey": "page",
-                    "params": {},
-                    "url": "/datalist",
-                    "paths": "dataList",
-                    /* 以下是可选项 */
-                    "external": null,
-                    "startPage": 1,
-                    "pageSize": 10,
-                    "name": name,
-                    "showLoading": false,
-                    "loadingText": "处理中，请稍候..."
-                }, requests[name]);
+                var request = SEApp.DataSetUtil.getRequestMoreConf(name);
 
                 var requestName = null;
                 for(var i = 0; i < request.names.length; i++){
@@ -78,7 +65,58 @@
                         continue;
                     }
 
-                    request.params[requestName] = node.attr("data-request-" + requestName);
+                    request.params = Util.createObject(request.params, requestName.split("-"), node.attr("data-request-" + requestName));
+                }
+                node.addClass("loading");
+
+                Logic.requestMore(request, node);
+            },
+            /**
+             * 加载更多数据(数据分页)
+             * @param  {String} data [参数]
+             * @param  {Object} node [jQuery/zepto节点对象，或null]
+             * @param  {Event}  e    [事件对象，或null]
+             * @param  {String} type [事件类型]
+             * @return {[type]}      [description]
+             * 示例
+             * se://dataset/page#requestName
+             * DOM配置示例
+             * data-action-tap="se://dataset/page#newslist"
+             * data-request-* 请求参数
+             * @requests配置项示例
+             * "requests": {
+             *     "requestName": {
+             *         "names"          : [Required] Array 请求参数列表
+             *         "pageKey"        : [Required] String 页码参数名
+             *         "url"            : [Required] String 数据请求接口
+             *         "paths"          : [Required] String 基于返回对象时的数据列表对象的路径
+             *         "params"         : [AutoFix] Object 会根据 names 和 data-request-* 填充，不需要传
+             *         "external"       : [Optional] String 虚拟schema回调地址
+             *         "startPage"      : [Optional] Number 启始页面码
+             *         "pageSize"       : [Optional] Number 每页加载的数据数
+             *         "name"           : [AutoFix] String requestName
+             *         "showLoading"    : [Optional] Boolean 是否显示loading
+             *         "loadingText"    : [Optional] String loading显示的文案
+             *         "dataRendering"  : [Optional] String 数据渲染方式，[append|replace]，默认为append
+             *         "pageStyle"      : [Optional] String 翻页方式，[loadmore|pagebar|pulldown]，默认为pagebar,
+             *         "page"           : [Optional] Number 初始页面
+             *     }
+             * }
+             */
+            page: function(data, node, e, type){
+                var args = (data || "").split(",");
+                var name = args[0];
+                var request = SEApp.DataSetUtil.getRequestPageConf(name);
+
+                var requestName = null;
+                for(var i = 0; i < request.names.length; i++){
+                    requestName = request.names[i];
+
+                    if(!requestName){
+                        continue;
+                    }
+
+                    request.params = Util.createObject(request.params, requestName.split("-"), node.attr("data-request-" + requestName));
                 }
                 node.addClass("loading");
 
@@ -90,6 +128,23 @@
     //数据模板引擎
     var DatasetTemplateEngine = null;
 
+    var RequestExtraData = {
+        Data: {
+            "test": {
+                callback: function(name, page){
+                    return null;
+                }
+            }
+        },
+        exec: function(name, page){
+            if(name in RequestExtraData.Data){
+                return Util.execHandler(RequestExtraData.Data[name], [name, page]);
+            }
+
+            return null;
+        }
+    };
+
     /**
      * 业务处理
      * @type {Object}
@@ -98,10 +153,10 @@
         /**
          * 请求数据
          * @param  {Object} request  [请求配置]
-         * @param  {Node}   moreNode [触发的节点]
+         * @param  {Node}   triggerNode [触发的节点]
          * @return {[type]}          [description]
          */
-        requestMore: function(request, moreNode){
+        requestMore: function(request, triggerNode){
             var _command = {
                 "request": {
                     "dataset": {}
@@ -124,37 +179,29 @@
                     "showLoading": request.showLoading === true,
                     "loadingText": request.loadingText || "处理中，请稍候...",
                     "request": request,
-                    "moreNode": moreNode
+                    "triggerNode": triggerNode
                 },
                 "complete": function(xhr, status){
-                    var moreNode = this.moreNode;
+                    var req = this.request;
+                    var triggerNode = this.triggerNode;
 
-                    moreNode.removeClass("loading");
+                    if(triggerNode){
+                        if("loadmore" === req.pageStyle){
+                            triggerNode.removeClass("loading");
+                        }
+                    }
                 },
                 "success": function(data, status, xhr){
-                    ResponseProxy.json(this, data, {
+                    ResponseProxy.json(this, SEApp.DataSetUtil.dataTransform(data), {
                         "callback": function(ctx, resp, msg){
                             var extra = ctx.request;
-                            // {
-                            //     "names": [],
-                            //     "params": {},
-                            //     "pageKey": "page",
-                            //     "startPage": 1,
-                            //     "pageSize": 10,
-                            //     "url": "/datalist",
-                            //     "name": name,
-                            //     "paths": "dataList",
-                            //     "showLoading": false,
-                            //     "loadingText": "处理中，请稍候..."
-                            // }
-
                             var paths = extra.paths;
                             // var dataList = resp.dataList || [];
                             var dataList = oPaths.find(resp, paths) || [];
                             var size = dataList.length;
 
                             var render = $("#render_" + extra.name);
-                            var moreNode = ctx.moreNode;
+                            var triggerNode = ctx.triggerNode;
 
                             var reqParams = extra.params;
 
@@ -162,22 +209,55 @@
                             var currenPage = Number(reqParams[extra.pageKey]);
                             var pageSize = Number(respParams.pageSize || extra.pageSize || "10");
 
-                            if(size == 0){
-                                moreNode.addClass("hide");
-                                return;
+                            if("loadmore" === extra.pageStyle){
+                                if(size == 0){
+                                    triggerNode.addClass("hide");
+                                    return;
+                                }
+
+                                if(size < pageSize){
+                                    triggerNode.addClass("hide");
+                                }else{
+                                    triggerNode.removeClass("hide");
+                                }
+
+                                triggerNode.attr("data-request-" + extra.pageKey, currenPage + 1);
                             }
 
-                            if(size < pageSize){
-                                moreNode.addClass("hide");
-                            }else{
-                                moreNode.removeClass("hide");
-                            }
+                            if("pagebar" === extra.pageStyle){
+                                var pb = PageBar.createPageBar(extra.name);
 
-                            moreNode.attr("data-request-" + extra.pageKey, currenPage + 1);
+                                pb.options({
+                                    "className": "flexbox middle center"
+                                });
+                                pb.setGotoHandler({
+                                    callback: function(name, oo, rs, ps){
+                                        var _this = this;
+                                        oo.parents(".dataset").find(".dataset-pagebar").replaceWith(_this.output(rs, ps));
+
+                                        Logic.requestMore(SEApp.DataSetUtil.getRequestPageConf(
+                                            extra.name, 
+                                            RequestExtraData.exec(extra.name, _this.getPage()), null)
+                                        );
+                                    },
+                                    context: pb,
+                                    args: [render, resp.recordSize, resp.pageSize]
+                                });
+                                pb.setFirstPage(1);
+
+                                var str = pb.output(resp.recordSize, resp.pageSize);
+
+                                render.parents(".dataset").find(".dataset-pagebar").replaceWith(str);
+                            }
 
                             DatasetTemplateEngine.render(false, "tpl_" + extra.name, dataList, {
-                                callback: function(ret, page, start, external){
-                                    if(page === start){
+                                callback: function(ret, page, req, _node){
+                                    var start = req.start;
+                                    var external = req.external;
+                                    var dataRendering = req.dataRendering;
+                                    var pageStyle = req.pageStyle;
+
+                                    if(page === start || "replace" === dataRendering){
                                         this.html(ret.result);
                                     }else{
                                         this.append(ret.result);
@@ -187,7 +267,7 @@
                                         Util.requestExternal(external, [page]);
                                     }
                                 },
-                                "args": [currenPage, extra.startPage, extra.external],
+                                "args": [currenPage, extra, triggerNode],
                                 "context": render
                             });
                         }
@@ -201,10 +281,7 @@
                     });
                 },
                 error: function(xhr, errorType, error){
-                    var plugin = Bridge.plugin;
-                    var requestStatus = plugin.conf("requestStatus") || {};
-
-                    var err = requestStatus[errorType] || CMD.RequestStatus[errorType];
+                    var err = CMD.RequestStatus[errorType];
 
                     Toast.text(err.text, Toast.MIDDLE_CENTER, 3000);
                 }
@@ -227,10 +304,7 @@
     };
 
     var Bridge = {
-        plugin: null,
         connect: function(target){
-            Bridge.plugin = target;
-
             var expando = target.expando;
 
             ErrorTypes      = expando["errors"];

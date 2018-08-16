@@ -2,6 +2,12 @@
 <script>
 //NOTE:页面上的window._CONFIG中相同的配置会覆盖全局配置的值
 window["SEGlobalConf"] = {
-    
+    "RequestStatus": {
+        "timeout"     : {status: 0xFF01, text: "亲，请求超时了~"},
+        "error"       : {status: 0xFF02, text: "亲，系统出了点小问题，请稍候片刻再试"},
+        "abort"       : {status: 0xFF03, text: "抱歉，您的请求被中断，请重新发起"},
+        "parsererror" : {status: 0xFF04, text: "数据处理异常"},
+        "success"     : {status: 0x0000, text: "OK"}
+    }
 };
 </script>

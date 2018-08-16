@@ -193,6 +193,38 @@
          */
         "dataform": {
             /**
+             * 错误提示处理
+             */
+            "err": {
+                /**
+                 * 清除错误提示信息
+                 * @param  {String} data [参数]
+                 * @param  {Object} node [jQuery/zepto节点对象，或null]
+                 * @param  {Event}  e    [事件对象，或null]
+                 * @param  {String} type [事件类型]
+                 * @return {[type]}      [description]
+                 */
+                r: function(data, node, e, type){
+                    var args = (data || "").split(",");
+
+                    var p = node.parents(".dataform-item");
+                    var ins = p.find(".retmsg");
+
+                    if(ins[0].hasAttribute("data-defmsg")){
+                        var msg = ins.attr("data-defmsg") || "";
+                        var a = msg.split("::");
+                        var type = a.length === 1 ? "" : a[0];
+                        var text = a.length === 1 ? msg : a.slice(1).join("::");
+
+                        ins.html(text).addClass(type).removeClass("hide");
+                    }else{
+                        ins.addClass("hide").html("");
+                    }
+
+                    p.removeClass("err");
+                }
+            },
+            /**
              * 获取短信验证码
              * @param  {String} data [参数]
              * @param  {Object} node [jQuery/zepto节点对象，或null]
@@ -264,7 +296,7 @@
                         "node": node
                     },
                     success: function(data, status, xhr){
-                        ResponseProxy.json(this, data, {
+                        ResponseProxy.json(this, SEApp.DataSetUtil.dataTransform(data), {
                             "callback": function(ctx, resp, msg){
                                 var node = ctx.node;
                                 var retryText = node.attr("data-retry-text");
@@ -448,7 +480,7 @@
                     "formAction": formAction
                 },
                 "success": function(data, status, xhr){
-                    ResponseProxy.json(this, data, {
+                    ResponseProxy.json(this, SEApp.DataSetUtil.dataTransform(data), {
                         "callback": function(ctx, resp, msg){
                             var formAction = ctx.formAction;
                             var external = formAction.external;
@@ -468,8 +500,7 @@
                                         // 业务重定向逻辑 ========= [[
                                         var oc = ctx.OriginCommand;
                                         var jumpURL = Request.getParameter("url");
-                                        var plugin = Bridge.plugin;
-                                        var redirectTo = plugin.conf("redirectTo") || {};
+                                        var redirectTo = SEApp.conf("redirectTo") || {};
                                         var redirectConfig = redirectTo[oc.namespace] || redirectTo["default"] || {};
                                         var url = redirectConfig.success;
 
@@ -504,10 +535,7 @@
     };
 
     var Bridge = {
-        plugin: null,
         connect: function(target){
-            Bridge.plugin = target;
-
             var expando = target.expando;
 
             ErrorTypes      = expando["errors"];

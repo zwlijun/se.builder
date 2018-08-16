@@ -12,6 +12,9 @@
  */
 ;define(function(require, exports, module){
     var DateUtil = require("mod/se/dateutil");
+    var Util     = require("mod/se/util");
+
+
     //element::data-domconf-[key-]property
     var DOMConfigure = function(node, key){
         this.node = $(node);
@@ -202,51 +205,6 @@
 
             node.attr(attributeName, this.trim(value));
         },
-        createObject: function createObject(originObject, properties, value){
-            //填充数据
-            var __fixed = function(originObject, namespace, property, value){
-                var funcBody = "if(!(\"" + property + "\" in originObject." + namespace + ")){" + 
-                    "    originObject." + namespace + " = {}" + 
-                    "}" + 
-                    "originObject." + namespace + "." + property + " = value;" + 
-                    "return originObject;";
-
-                var originObject = new Function(
-                    "originObject",
-                    "value",
-                    funcBody
-                )(originObject, value);
-
-                return originObject;
-            };
-            //创建对象
-            var __createObject = function(originObject, properties, keys, value){
-                var items = [].concat(properties);
-                var property = items.shift();
-
-                if(items.length === 0){
-                    if(keys.length === 0){
-                        originObject[property] = value;
-                    }else{
-                        originObject = __fixed(originObject, keys.join("."), property, value);
-                    }
-
-                    return originObject;
-                }else{
-                    if(keys.length === 0){
-                        originObject[property] = {}
-                    }else{
-                        originObject = __fixed(originObject, keys.join("."), property, {});
-                    }
-                }
-
-                keys.push(property);
-
-                return __createObject(originObject, items, keys, value);                
-            };
-            
-            return __createObject(originObject, properties, [], value)
-        },
         parse: function(){
             var struct = [].concat(this.struct || []);
             var size = struct.length;
@@ -269,7 +227,7 @@
                 if(dataType in this.parser){
                     properties = property.split("-");
 
-                    conf = this.createObject(conf, properties, this.parser[dataType].apply(this, [item]));
+                    conf = Util.createObject(conf, properties, this.parser[dataType].apply(this, [item]));
                 }else{
                     console.warn("无法解析的数据类型(" + dataType + ")");
                 }
