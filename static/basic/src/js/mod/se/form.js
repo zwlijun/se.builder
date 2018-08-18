@@ -484,6 +484,7 @@
          *            data-use-session="key@path"     //从sessionStorage中取值
          *            data-use-persistent="key@path"  //从localStorage中取值
          *            data-use-cookie="key@path"      //从cookie中取值
+         *            data-selectuse="value|text"     //select提交时使用的值
          * />               
          * </form> 
          * </script>        
@@ -532,6 +533,7 @@
             var refer = null;
             var holder = null;
             var use = null;
+            var selectUse = null;
             var data = {};
             var options = {};
             var settings = {};
@@ -630,6 +632,7 @@
                 compare = el.attr("data-compare");
                 compareType = Number(el.attr("data-comparetype") || 1);
                 refer = el.attr("data-refer");
+                selectUse = el.attr("data-selectuse");
 
                 settings[name] = {
                     "form": f[0],
@@ -661,6 +664,7 @@
                     "compare": compare,
                     "compareType": compareType,
                     "refer": refer,
+                    "selectUse": selectUse,
                     "tips": {
                         "empty": empty,
                         "invalid": invalid,
@@ -827,6 +831,10 @@
 
                 if(refer && (el = $(refer)).length > 0){
                     data[name] = StringUtil.trim(el.val());
+                }
+
+                if(tagName == "select" && "text" === selectUse){
+                    data[name] = el[0].options[el[0].options.selectedIndex].text;
                 }
             }//end check for
             
