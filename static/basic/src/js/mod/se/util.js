@@ -486,6 +486,21 @@
 
             return sn;
         },
+        GUID32: function(){
+            var seed = "0123456789abcdefghijklm9876543210nopqrstuvwxyz0123456789";
+            var tmp = [];
+            var size = seed.length;
+            var n = 0;
+
+            while(tmp.length < 32){
+                n = _util.random(0, size).intValue;
+                tmp.push(seed.charAt(n));
+            }
+
+            var str = tmp.join("");
+
+            return str;
+        },
         random: function(min, max){
             var n = (Math.random() * (max - min)) + min;
 

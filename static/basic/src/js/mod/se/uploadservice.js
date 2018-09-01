@@ -16,6 +16,19 @@
     var Listener            = $.Listener        = require("mod/se/listener");
     var HandleStack                             = Listener.HandleStack;
 
+    var JSFormData = function(){
+        this.entries = {};
+    };
+
+    JSFormData.prototype = {
+        append: function(name, value){
+            this.entries[name] = value;
+        },
+        get: function(name){
+            return this.entries[name] || "";
+        }
+    };
+
     var _UploadService = function(upload, fileInfo){
         this.upload = upload;
         this.conf = upload.options;
@@ -27,8 +40,8 @@
             var us = this;
             var xhr = us.service = new XMLHttpRequest();
             var conf = us.conf;
-            var heads = conf.heads || [];
-            var fields = conf.fields || [];
+            var heads = [].concat(conf.heads || []);
+            var fields = [].concat(conf.fields || []);
             var fileInfo = us.fileInfo;
 
             xhr.open("POST", conf.url, true);
@@ -41,9 +54,33 @@
             xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
             xhr.setRequestHeader("X-Upload-SerialCode", fileInfo.key);
 
+            // 创建FormData
+            fields.push({
+                "name": (conf.specified || "file_" + fileInfo.key),
+                "value": fileInfo.source
+            });
+
+            var formData = new FormData();
+            var jfd = new JSFormData();
+            var field = null;
+            for(var k = 0; k < fields.length; k++){
+                field = fields[k];
+                
+                formData.append(field.name, field.value);
+                jfd.append(field.name, field.value);
+            }
+            // if(fileInfo.sourceType == "text"){
+            //     formData = "file_" + fileInfo.key + "=" + fileInfo.source;
+            // }else{
+            //     formData = new FormData();
+
+            //     formData.append("file_" + fileInfo.key, fileInfo.source);
+            // }
+
+
             xhr.onload = function(){
                 us.uploading = false;
-                us.upload.exec("load", [fileInfo]);
+                us.upload.exec("load", [fileInfo, jfd]);
             };
 
             xhr.onreadystatechange = function(){
@@ -59,10 +96,10 @@
                         var resp = JSON.parse(xhr.responseText||"{}");
                         
                         us.upload.counter("success", fileInfo);
-                        us.upload.exec("complete", [fileInfo, resp]);
+                        us.upload.exec("complete", [fileInfo, resp, jfd]);
                     }else{
                         us.upload.counter("failed", fileInfo);
-                        us.upload.exec("servererror", [fileInfo, status]);
+                        us.upload.exec("servererror", [fileInfo, status, jfd]);
                     }
                 }
             };
@@ -88,27 +125,7 @@
                     us.upload.exec("progress", [fileInfo, ((e.loaded / e.total) * 100).toFixed(0), e.loaded, e.total]);
                 }
             }
-
-            fields.push({
-                "name": (conf.specified || "file_" + fileInfo.key),
-                "value": fileInfo.source
-            });
-
-            var formData = new FormData();
-            var field = null;
-            for(var k = 0; k < fields.length; k++){
-                field = fields[k];
-                
-                formData.append(field.name, field.value);
-            }
-            // if(fileInfo.sourceType == "text"){
-            //     formData = "file_" + fileInfo.key + "=" + fileInfo.source;
-            // }else{
-            //     formData = new FormData();
-
-            //     formData.append("file_" + fileInfo.key, fileInfo.source);
-            // }
-
+            
             xhr.send(formData);
         },
         cancel : function(){
@@ -346,6 +363,23 @@
             }
 
             return null;
+        },
+        updateFileInfo: function(key, newFileInfo){
+            var fileInfoList = this.getFileInfoList();
+            var size = fileInfoList.length;
+            var fileInfo = null;
+
+            for(var i = 0; i < size; i++){
+                fileInfo = fileInfoList[i];
+
+                if(key === fileInfo.key){
+                    for(var n in newFileInfo){
+                        if(newFileInfo.hasOwnProperty(n) && (n in fileInfo)){
+                            fileInfo[n] = newFileInfo[n];
+                        }
+                    }
+                }
+            }
         },
         getUploadService: function(key){
             if(key){
@@ -708,7 +742,7 @@
                     if(size === 0){
                         return this;
                     }else{
-                        for(var i = 0; i < size; i++){
+                        for(var i = heads.length - 1; i >= 0; i--){
                             if(heads[i].name == head.name){
                                 s.options.heads.splice(i, 1);
                                 return this;
@@ -750,7 +784,7 @@
                     if(size === 0){
                         return this;
                     }else{
-                        for(var i = 0; i < size; i++){
+                        for(var i = fields.length - 1; i >= 0; i--){
                             if(fields[i].name == field.name){
                                 s.options.fields.splice(i, 1);
                                 return this;
@@ -780,6 +814,11 @@
                 },
                 "getFileInfo": function(key){
                     return s.getFileInfo(key);
+                },
+                "updateFileInfo": function(key, newFileInfo){
+                    s.updateFileInfo(key, newFileInfo);
+
+                    return this;
                 },
                 "getServiceCollection": function(key){
                     return s.getUploadService(key);

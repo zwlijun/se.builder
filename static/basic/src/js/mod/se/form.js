@@ -75,7 +75,11 @@
             RealTimeCheckTimerPool.clear(inputName);
             RealTimeCheckTimerPool.put(inputName, setTimeout(function(){
                 if(external){
-                    Util.requestExternal(external, [formName, dataForm, inputName]);
+                    Util.requestExternal(external, [{
+                        "formName": formName, 
+                        "dataForm": dataForm, 
+                        "inputName": inputName
+                    }, node, e, type]);
                 }else{
                     var checker = _Form.createDataForm(formName);
 

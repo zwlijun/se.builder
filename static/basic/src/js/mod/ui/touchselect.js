@@ -31,7 +31,7 @@
 
     var _HTML_STRING = ''
                      + '<div class="mod-actionsheet mod-actionsheet-mask exit" data-actionsheet="<%=ts.name%>"></div>'
-                     + '<div class="mod-actionsheet mod-actionsheet-panel exit touchselect <%=ts.type%>" data-actionsheet="<%=ts.name%>">'
+                     + '<div class="mod-actionsheet mod-actionsheet-panel exit touchselect <%=ts.type%> <%=ts.skin%>" data-actionsheet="<%=ts.name%>">'
                      + '  <h1 class="flexbox middle justify touchselect-header">'
                      + '    <var class="touchselect-cancel" data-action-<%=ts.action%>="ts://cancel#<%=ts.name%>">取消</var>'
                      + '    <span class="touchselect-title ellipsis"><%=ts.title%></span>'
@@ -129,6 +129,7 @@
             "callout": "body",
             "action": "tap",
             "title": "",
+            "skin": "",
             "data": {
                 "linked": false,
                 "list": [
@@ -482,6 +483,7 @@
                     "type": this.options("type"),
                     "action": this.options("action"),
                     "title": this.options("title"),
+                    "skin": this.options("skin") || "",
                     "columns": this.renderColumns()
                 };
                 TouchSelectTemplate.render(true, _HTML_STRING, metaData, {
