@@ -2,11 +2,11 @@ define(function(require, exports, module){
 	var SwiperFactory = require("mod/se/swiper");
 
 	var _Swiper = SwiperFactory.createSwiper("test", {
-		"type": "random",
-		"dots": "none",
+		"type": "fade",
+		"dots": "bottom",
 		"loop": true,
 		"autoplay": true,
-		"interval": 5000,
+		"interval": 3000,
 		"width": 400,
 		"height": 200
 	});
@@ -53,7 +53,7 @@ define(function(require, exports, module){
 		}
 	});
 
-	_Swiper.create();
+	_Swiper.create().bindHoverPause();
 
 	window.Swiper = _Swiper;
 });

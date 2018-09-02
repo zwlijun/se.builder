@@ -127,7 +127,7 @@
     };
 
     //DOM Options
-    //data-swiper-type          :: 类型 [slider | scale | fade | draw | cube]
+    //data-swiper-type          :: 类型 [slider | fade]
     //data-swiper-mode          :: 模式 [x | y | free]
     //data-swiper-distance      :: 滑屏距离（手指滑动多少个PX后触发切换）[number]
     //data-swiper-dots          :: 滑屏定位点或缩略图 [none | static | bottom | right]

@@ -103,7 +103,6 @@
 
     var _TYPE_CLASSNAME = [
         "slider", 
-        "cube", 
         "draw", 
         "fade", 
         "scale"
@@ -131,7 +130,7 @@
     };
 
     //DOM Options
-    //data-swiper-type          :: 类型 [slider | scale | fade | draw | cube]
+    //data-swiper-type          :: 类型 [slider | scale | fade | draw]
     //data-swiper-mode          :: 模式 [x | y | free]
     //data-swiper-distance      :: 滑屏距离（手指滑动多少个PX后触发切换）[number]
     //data-swiper-dots          :: 滑屏定位点或缩略图 [none | static | bottom | right]
@@ -198,7 +197,6 @@
             attr = attrs[i];
 
             value = node.attr("data-swiper-" + attr.name);
-
             if(!value){
                 if(true !== useDefault){
                     continue;
@@ -537,6 +535,68 @@
                 this.isbind = true;
             }
         },
+        initScopedStyle: function(){
+            var name = this.name;
+            var items = this.items;
+            var size = items.length;
+
+            var scopedId = "swiper_scoped_" + name;
+
+            var rules = [];
+
+            rules.push('<style id="' + scopedId + '" type="text/css">');
+            for(var i = 0; i < size; i++){
+                rules.push(this.createScopedStyle(i, $(items[i])));
+            }
+            rules.push('</style>');
+
+            var scopedStyle = $("#" + scopedId);
+
+            if(scopedStyle.length > 0){
+                scopedStyle.remove();
+            }
+
+            $("head").append(rules.join("\n"));
+        },
+        createScopedStyle: function(index, item){
+            var swiper = this;
+            var name = swiper.name;
+
+            var _duration = item.attr("data-swiper-duration") || swiper.options("duration");
+            var _timing = item.attr("data-swiper-timing") || swiper.options("timing");
+            var _delay = item.attr("data-swiper-delay") || swiper.options("delay");
+
+            var vendors = ["-webkit-", "-moz-", "-ms-", "-o-", ""];
+            var vsize = vendors.length;
+            var aniamtions = {
+                "animation-duration": _duration + "s",
+                "animation-timing-function": _timing,
+                "animation-delay": _delay + "s"
+            };
+
+            var value = null;
+            var vendor = null;
+            var arr = [];
+            var cssName = "scoped-" + name + "-" + index;
+
+            arr.push("." + cssName + " {");
+            for(var key in aniamtions){
+                if(aniamtions.hasOwnProperty(key)){
+                    value = aniamtions[key];
+
+                    for(var i = 0; i < vsize; i++){
+                        vendor = vendors[i];
+
+                        arr.push(vendor + key + ": " + value + ";");
+                    }
+                }
+            }
+            arr.push("}");
+
+            item.addClass(cssName);
+
+            return arr.join("\n");
+        },
         listen: function(){
             var items = this.getItems();
             var size = this.getSize();
@@ -770,18 +830,18 @@
 
             var className = [];
             var viewport = swiper.viewport;
-            var aniamtions = {
-                "animationDuration": realtime.duration + "s",
-                "animationTimingFunction": realtime.timing,
-                "animationDelay": realtime.delay + "s"
-            };
+            // var aniamtions = {
+            //     "animationDuration": realtime.duration + "s",
+            //     "animationTimingFunction": realtime.timing,
+            //     "animationDelay": realtime.delay + "s"
+            // };
 
             className.push(realtime.type);
             className.push(_dynamicMode);
             className.push(_dir == 1 ? "goto-after" : "goto-before");
 
-            Style.map(swiper.body, aniamtions);
-            Style.map(swiper.getItems(), aniamtions);
+            // Style.map(swiper.body, aniamtions);
+            // Style.map(swiper.getItems(), aniamtions);
 
             _Swiper.Settings.invoke(realtime.type, "render", [swiper, _dynamicMode]);
 
@@ -798,27 +858,25 @@
 
             this.setForceLocked(true);
 
-            if("cube" == realtime.type){
+            this._enterend = false;
+            this._exitend = false;
+
+            if(!this._enterstart && !this._exitstart){
                 this.exec("start", [target]);
-            }else{
-                this._enterend = false;
-                this._exitend = false;
+            }
 
-                if(!this._enterstart && !this._exitstart){
-                    this.exec("start", [target]);
-                }
-
-                if($node.hasClass("current")){
-                    this._enterstart = true;
-                    this.exec("exitstart", [target]);
-                }
-                if($node.hasClass("maybe")){
-                    this._exitstart = true;
-                    this.exec("enterstart", [target]);
-                }
+            if($node.hasClass("current")){
+                this._enterstart = true;
+                this.exec("exitstart", [target]);
+            }
+            if($node.hasClass("maybe")){
+                this._exitstart = true;
+                this.exec("enterstart", [target]);
             }
 
             this.setNextIndex(this.getIndex() + this._dir);
+
+            this.updateDots(this.getNextIndex());
         },
         animationend: function(e, type){
             var target = e.currentTarget;
@@ -827,20 +885,16 @@
 
             _Swiper.Settings.invoke(realtime.type, "restore", [this])
 
-            if("cube" == realtime.type){
-                this.setForceLocked(false);
-            }else{
-                if($node.hasClass("current")){
-                    this._exitend = true;
-                    this.exec("exitend", [target]);
-                }
-                if($node.hasClass("maybe")){
-                    this._enterend = true;
-                    this.exec("enterend", [target]);
-                }
-
-                this.setForceLocked(!(this._exitend && this._enterend));
+            if($node.hasClass("current")){
+                this._exitend = true;
+                this.exec("exitend", [target]);
             }
+            if($node.hasClass("maybe")){
+                this._enterend = true;
+                this.exec("enterend", [target]);
+            }
+
+            this.setForceLocked(!(this._exitend && this._enterend));
 
             if(!this.isForceLocked()){
                 this.setIndex(this.getNextIndex());
@@ -867,7 +921,7 @@
                 this.footer.removeClass("hide");
             }
         },
-        updateDots: function(){
+        updateDots: function(index){
             if("none" == this.options("dots")){
                 return ;
             }
@@ -876,7 +930,9 @@
 
             if(dotItems.length > 1){
                 dotItems.removeClass("on");
-                $(dotItems.get(this.getIndex())).addClass("on");
+                index = undefined !== index ? index : this.getIndex();
+
+                $(dotItems[index]).addClass("on");
             }
         },
         initControl: function(){
@@ -1015,11 +1071,11 @@
 
             var className = [];
             var viewport = swiper.viewport;
-            var aniamtions = {
-                "animationDuration": _duration + "s",
-                "animationTimingFunction": _timing,
-                "animationDelay": _delay + "s"
-            };
+            // var aniamtions = {
+            //     "animationDuration": _duration + "s",
+            //     "animationTimingFunction": _timing,
+            //     "animationDelay": _delay + "s"
+            // };
 
             swiper.realtime = {
                 "type": _type,
@@ -1038,8 +1094,8 @@
             className.push(_dynamicMode);
             className.push(_dir == 1 ? "goto-after" : "goto-before");
 
-            Style.map(swiper.body, aniamtions);
-            Style.map(swiper.getItems(), aniamtions);
+            // Style.map(swiper.body, aniamtions);
+            // Style.map(swiper.getItems(), aniamtions);
 
             _Swiper.Settings.invoke(_type, "render", [swiper, _dynamicMode]);
 
@@ -1240,10 +1296,8 @@
             }
 
             this.createViewport();
+            this.initScopedStyle();
             this.exec("create", []);
-
-            // for test
-            // _Swiper.Settings.invoke("cube", "render", [this, "x"])
 
             if(true === this.options("autoplay")){
                 this.play();
@@ -1267,55 +1321,26 @@
         pause: function(){
             var timer = this._timer;
             timer.stop();
+        },
+        bindHoverPause: function(){
+            var name = this.name;
+            var swiperNode = document.querySelector('[data-swiper="' + name + '"].mod-swiper');
+
+            if(!swiperNode){
+                return ;
+            }
+
+            swiperNode.addEventListener("mouseover", function(e){
+                Util.requestExternal("swiper://navigator/pause#" + name, [e.target, e, e.type]);
+            }, true);
+
+            swiperNode.addEventListener("mouseout", function(e){
+                Util.requestExternal("swiper://navigator/play#" + name, [e.target, e, e.type]);
+            }, true);
         }
     };
 
     _Swiper.Settings = {
-        cube: {
-            render: function(swiper, mode){
-                var body = swiper.body;
-                var selector = _SwiperItemSelector.selector;
-                var current = body.find(selector.current);
-                var after = body.find(selector.after);
-                var before = body.find(selector.before);
-                var sizeof = swiper.sizeof();
-
-                var unit = sizeof.unit;
-                var width = sizeof.width;
-                var height = sizeof.height;
-
-                if("y" == mode){
-                    //front
-                    Style.css(current, "transform", "translateZ(" + (height / 2) + unit.height + ")");
-                    //bottom
-                    Style.css(after, "transform", "rotateX(-90deg) translateZ(" + (height / 2) + unit.height + ")");
-                    //top
-                    Style.css(before, "transform", "rotateX(90deg) translateZ(" + (height / 2) + unit.height + ")");
-                }else{
-                    //front
-                    Style.css(current, "transform", "translateZ(" + (width / 2) + unit.width + ")");
-                    //right
-                    Style.css(after, "transform", "rotateY(90deg) translateZ(" + (width / 2) + unit.width + ")");
-                    //left
-                    Style.css(before, "transform", "rotateY(-90deg) translateZ(" + (width / 2) + unit.width + ")");
-                }
-            },
-            restore: function(swiper){
-                var body = swiper.body;
-                var selector = _SwiperItemSelector.selector;
-                var current = body.find(selector.current);
-                var after = body.find(selector.after);
-                var before = body.find(selector.before);
-
-                var obj = {
-                    "transform": "initial"
-                };
-
-                Style.map(current, obj);
-                Style.map(after, obj);
-                Style.map(before, obj);
-            }
-        },
         invoke: function(type, methodName, args){
             if(type in _Swiper.Settings){
                 if(methodName in _Swiper.Settings[type]){
@@ -1414,11 +1439,11 @@
 
                     return this;
                 },
-                // "setForceLocked": function(locked){
-                //     swiper.setForceLocked(locked);
+                "setForceLocked": function(locked){
+                    swiper.setForceLocked(locked);
 
-                //     return this;
-                // },
+                    return this;
+                },
                 "setForwardLocked": function(locked){
                     swiper.setForwardLocked(locked);
 
@@ -1466,6 +1491,9 @@
                     swiper.pause()
 
                     return this;
+                },
+                "bindHoverPause": function(){
+                    swiper.bindHoverPause();
                 },
                 "destroy": function(){
                     _Swiper.Cache[name] = null;
