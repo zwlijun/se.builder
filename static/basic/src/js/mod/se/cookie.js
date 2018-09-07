@@ -45,6 +45,45 @@
                 return items;
             }
         },
+        ipv4: function(domain){
+            var pattern = /^[\d]+(\.[\d]+){3}$/;
+            pattern.lastIndex = 0;
+
+            return pattern.test(domain);
+        },
+        ipv6: function(domain){
+            var pattern = /^[\da-f]{1,4}(\:[\da-f]{1,4}){7}$/i;
+            pattern.lastIndex = 0;
+
+            return pattern.test(domain);
+        },
+        domain: function(isFullDomain){
+            var domain = document.domain;
+
+            if(true === isFullDomain){
+                return domain;
+            }
+
+            var items = domain.split(".");
+            var size = items.length;
+
+            if(size > 2 && !Cookie.ipv4(domain) && !Cookie.ipv6(domain)){
+                domain = items.slice(size - 2).join(".");
+            }
+
+            return domain;
+        },
+        path: function(isFullPath){
+            if(true === isFullPath){
+                var path = location.pathname || "/";
+
+                path = path.replace(/\/[^\/]+$/g, "/");
+            }else{
+                path = "/";
+            }
+
+            return path;
+        },
         set: function(name, value, options){
             var opts = options || {};
             var str = Cookie.encode(name) + '=' + Cookie.encode("" + value);
@@ -57,18 +96,22 @@
                 opts.expires = new Date(+new Date + opts.maxage);
             }
 
-            if(opts.path){
-                str += '; path=' + opts.path;
-            }
-            if(opts.domain){
-                str += '; domain=' + opts.domain;
-            }
             if(opts.expires){
                 str += '; expires=' + opts.expires.toUTCString();
             }
             if(opts.secure){
                 str += '; secure';
             }
+
+            if(!opts.path){
+                opts.path = Cookie.path();
+            }
+            str += '; path=' + opts.path;
+
+            if(!opts.domain){
+                opts.domain = Cookie.domain();
+            }
+            str += '; domain=' + opts.domain;
 
             document.cookie = str;
         },
@@ -78,7 +121,13 @@
             return cookies[name] || "";
         },
         remove: function(name){
-            Cookie.set(name, null);
+            var value = Cookie.get(name);
+
+            if(!!value){
+                Cookie.set(name, value, {
+                    "maxage": -10000
+                });
+            }
         }
     };
 

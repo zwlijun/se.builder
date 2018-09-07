@@ -3,11 +3,22 @@
 //NOTE:页面上的window._CONFIG中相同的配置会覆盖全局配置的值
 window["SEGlobalConf"] = {
     "RequestStatus": {
-        "timeout"     : {status: 0xFF01, text: "亲，请求超时了~"},
-        "error"       : {status: 0xFF02, text: "亲，系统出了点小问题，请稍候片刻再试"},
-        "abort"       : {status: 0xFF03, text: "抱歉，您的请求被中断，请重新发起"},
-        "parsererror" : {status: 0xFF04, text: "数据处理异常"},
-        "success"     : {status: 0x0000, text: "OK"}
-    }
+        "timeout"     : {"status": 0xFF01, "text": "亲，请求超时了~"},
+        "error"       : {"status": 0xFF02, "text": "亲，系统出了点小问题，请稍候片刻再试"},
+        "abort"       : {"status": 0xFF03, "text": "抱歉，您的请求被中断，请重新发起"},
+        "parsererror" : {"status": 0xFF04, "text": "数据处理异常"},
+        "success"     : {"status": 0x0000, "text": "OK"}
+    },
+    "uploadServiceMessage": {
+        "notsupport": "对不起，您当前所在的浏览器或APP不支持",
+        "maxsize": "文件“(0)”超过最大上传大小，单个文件允许上传大小为：(1)",
+        "maxupload": "选择的文件个数超过最大允许数，最多允许上传（(0)/(1)）个文件",
+        "filter": "文件“(0)”的文件类型不允许上传，请重新选择。",
+        "servererror": "文件“(0)”上传失败，服务器返回：(1)",
+        "success": "上传成功",
+        "failure": "上传失败"
+    },
+    "prevPage": "上一页",
+    "nextPage": "下一页",
 };
 </script>

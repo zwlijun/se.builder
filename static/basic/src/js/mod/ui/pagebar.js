@@ -35,7 +35,9 @@
             "className": "",
             "prefixSummary": "",
             "suffixSummary": "",
-            "onlyPage": false
+            "onlyPage": false,
+            "nextPage": "下一页",
+            "prevPage": "上一页"
         }
     };
 
@@ -206,7 +208,7 @@
             if(!onlyPage){
                 var prevPage = Math.max(page - 1, 1);
                 
-                buf.push("<li class=\"pre-page\" data-action-click=\"pagebar://goto#" + this.name + "," + prevPage + "\">上一页</li>");
+                buf.push("<li class=\"pre-page\" data-action-click=\"pagebar://goto#" + this.name + "," + prevPage + "\">" + opts.prevPage + "</li>");
             }
             
             if (totalPage <= defSize + 1) {
@@ -245,7 +247,6 @@
                     }
                     buf.push("<li class=\"ellipsis\">...</li>");
 
-                    console.log(totalPage)
                     for (var i = totalPage; i <= totalPage; i++) {
                         buf.push(this.getPageItem(page, i));
                     }
@@ -255,7 +256,7 @@
             if(!onlyPage){
                 var nextPage = Math.min(page + 1, totalPage);
                 
-                buf.push("<li class=\"next-page\" data-action-click=\"pagebar://goto#" + this.name + "," + nextPage + "\">下一页</li>");
+                buf.push("<li class=\"next-page\" data-action-click=\"pagebar://goto#" + this.name + "," + nextPage + "\">" + opts.nextPage + "</li>");
             }
 
             buf.push("</ul>");

@@ -228,7 +228,9 @@
                                 var pb = PageBar.createPageBar(extra.name);
 
                                 pb.options({
-                                    "className": "flexbox middle center"
+                                    "className": "flexbox middle center",
+                                    "nextPage": SEApp.conf("nextPage"),
+                                    "prevPage": SEApp.conf("prevPage")
                                 });
                                 pb.setGotoHandler({
                                     callback: function(name, oo, rs, ps){

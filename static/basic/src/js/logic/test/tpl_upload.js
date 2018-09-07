@@ -64,6 +64,18 @@
                 $(hiddenInputSelector).val(val || "");
             }
         },
+        message: function(){
+            var args = Array.prototype.slice.call(arguments);
+            var type = args.shift();
+            var conf = SEApp.conf("uploadServiceMessage") || {};
+            var msg = conf[type] || "";
+
+            for(var i = 0; i < args.length; i++){
+                msg = msg.replace(new RegExp("\\(" + i + "\\)", "g"), args[i]);
+            }
+
+            return msg
+        },
         listen: function(){
             this.destroy();
 
@@ -90,7 +102,7 @@
                 callback: function(){
                     Uploader.fireErrorMessage(
                         "0x100229", 
-                        "对不起，您当前所在的浏览器或APP不支持", 
+                        this.uploader.message("notsupport"), 
                         ErrorTypes.ALARM
                     );
 
@@ -102,7 +114,7 @@
                 callback: function(fileInfo, maxsize){
                     Uploader.fireErrorMessage(
                         "0x100231", 
-                        "文件“" + fileInfo.name + "”超过最大上传大小，单个文件允许上传大小为：" + this.service.getFileSize(maxsize), 
+                        this.uploader.message("maxsize", fileInfo.name, this.service.getFileSize(maxsize)), 
                         ErrorTypes.INFO
                     );
 
@@ -113,7 +125,7 @@
                 callback: function(size, maxupload){
                     Uploader.fireErrorMessage(
                         "0x100230", 
-                        "选择的文件个数超过最大允许数，最多允许上传（" + size + "/" + maxupload + "）个文件", 
+                        this.uploader.message("maxupload", size, maxupload), 
                         ErrorTypes.INFO
                     );
 
@@ -124,7 +136,7 @@
                 callback: function(fileInfo){
                     Uploader.fireErrorMessage(
                         "0x100230", 
-                        "文件“" + fileInfo.name + "”的文件类型不允许上传，请重新选择。", 
+                        this.uploader.message("filter", fileInfo.name), 
                         ErrorTypes.INFO
                     );
 
@@ -135,7 +147,7 @@
                 callback: function(fileInfo, status){
                     Uploader.fireErrorMessage(
                         "0x100232", 
-                        "文件“" + fileInfo.name + "”上传失败，服务器返回：" + status, 
+                        this.uploader.message("servererror", fileInfo.name, status), 
                         ErrorTypes.ERROR
                     );
 
@@ -175,13 +187,13 @@
 
                         Uploader.fireErrorMessage(
                             response.code, 
-                            response.message || "上传成功",
+                            response.message || this.uploader.message("success"),
                             ErrorTypes.SUCCESS
                         );
                     }else{
                         Uploader.fireErrorMessage(
                             response.code, 
-                            response.message || "上传失败",
+                            response.message || this.uploader.message("failure"),
                             ErrorTypes.ERROR
                         );
                     }

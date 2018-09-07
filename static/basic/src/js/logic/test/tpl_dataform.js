@@ -305,7 +305,7 @@
 
                                 var timer = Timer.getTimer("smscode_timer", Timer.toFPS(1000), null);
 
-                                Toast.text(msg || "验证码已发送", Toast.MIDDLE_CENTER, 3000);
+                                Toast.text(msg || "Success", Toast.MIDDLE_CENTER, 3000);
 
                                 timer.setTimerHandler({
                                     callback: function(_timer){
@@ -335,7 +335,7 @@
                                     var node = ctx.node;
 
                                     node.attr("data-smscode-flag", "0");
-                                    Toast.text(msg || "获取验证码失败", Toast.MIDDLE_CENTER, 3000);
+                                    Toast.text(msg || "Error", Toast.MIDDLE_CENTER, 3000);
                                 }
                             }
                         });
@@ -344,7 +344,9 @@
                         var node = this.node;
                                     
                         node.attr("data-smscode-flag", "0");
-                        Toast.text("服务异常，获取验证码失败", Toast.MIDDLE_CENTER, 3000);
+                        
+                        var err = CMD.RequestStatus[errorType];
+                        Toast.text(err.text, Toast.MIDDLE_CENTER, 3000);
                     }
                 });
             },
