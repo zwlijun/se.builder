@@ -6,6 +6,21 @@
   else
     factory(global)
 }(this, function(window) {
+  //----event option check-------
+  var PASSIVE_SUPPORTED = false;
+  (function(){
+    try {
+      var options = Object.defineProperty({}, "passive", {
+        get: function() {
+          PASSIVE_SUPPORTED = true;
+        }
+      });
+
+      window.addEventListener("test", null, options);
+    } catch(err) {}
+  })();
+  //----event option check-------
+
   var Zepto = (function() {
   var undefined, key, $, classList, emptyArray = [], concat = emptyArray.concat, filter = emptyArray.filter, slice = emptyArray.slice,
     document = window.document,
@@ -978,9 +993,20 @@ window.$ === undefined && (window.$ = Zepto)
   }
 
   function eventCapture(handler, captureSetting) {
-    return handler.del &&
-      (!focusinSupported && (handler.e in focus)) ||
-      !!captureSetting
+    if(true === PASSIVE_SUPPORTED){
+      captureSetting = captureSetting || {};
+      var options = {
+        "capture": handler.del && (!focusinSupported && (handler.e in focus)) || !!captureSetting.capture,
+        "passive": !!captureSetting.passive,
+        "once": !!captureSetting.once
+      };
+
+      return options;
+    }else{
+      return handler.del &&
+        (!focusinSupported && (handler.e in focus)) ||
+        !!captureSetting
+    }
   }
 
   function realEvent(type) {
@@ -1113,11 +1139,11 @@ window.$ === undefined && (window.$ = Zepto)
     return this
   }
 
-  $.fn.on = function(event, selector, data, callback, one){
+  $.fn.on = function(event, selector, data, callback, options){
     var autoRemove, delegator, $this = this
     if (event && !isString(event)) {
       $.each(event, function(type, fn){
-        $this.on(type, selector, data, fn, one)
+        $this.on(type, selector, data, fn, options)
       })
       return $this
     }
@@ -1130,6 +1156,12 @@ window.$ === undefined && (window.$ = Zepto)
     if (callback === false) callback = returnFalse
 
     return $this.each(function(_, element){
+      var one = undefined;
+      if(typeof(options) == "boolean"){
+        one = options;
+      }else if(options && isObject(options)){
+        one = !!options.once;
+      }
       if (one) autoRemove = function(e){
         remove(element, e.type, callback)
         return callback.apply(this, arguments)
@@ -1143,7 +1175,7 @@ window.$ === undefined && (window.$ = Zepto)
         }
       }
 
-      add(element, event, callback, data, selector, delegator || autoRemove)
+      add(element, event, callback, data, selector, delegator || autoRemove, options)
     })
   }
   $.fn.off = function(event, selector, callback){

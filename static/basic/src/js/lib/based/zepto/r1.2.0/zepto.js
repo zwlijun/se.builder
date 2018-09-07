@@ -993,6 +993,7 @@ window.$ === undefined && (window.$ = Zepto)
 
   function eventCapture(handler, captureSetting) {
     if(true === PASSIVE_SUPPORTED){
+      captureSetting = captureSetting || {};
       var options = {
         "capture": handler.del && (!focusinSupported && (handler.e in focus)) || !!captureSetting.capture,
         "passive": !!captureSetting.passive,
