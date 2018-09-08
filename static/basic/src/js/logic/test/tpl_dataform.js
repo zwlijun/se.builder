@@ -257,15 +257,36 @@
                 };
 
                 if(name){
-                    var input = $('input[name="' + name + '"]');
+                    var pattern = /^(cookie|session|persistent)\:\/\/([^\s\/]+)\/([^\s]+)$/gi;
+                    pattern.lastIndex = 0;
 
-                    mobile = input.val() || "";
-                    mobile = mobile.replace(/^([\s]+)|([\s]+)$/g, "");
+                    var matcher = pattern.exec(name);
 
-                    if(mobile.length == 0 || !DataForm.match("mobile", mobile, input)){
-                        Toast.text("请输入有效的手机号码", Toast.MIDDLE_CENTER, 3000);
+                    if(null != matcher){
+                        var type = matcher[1];
+                        var key = matcher[2];
+                        var inputName = matcher[3];
+                        var maps = {
+                            "cookie": 2,
+                            "session": 0,
+                            "persistent": 1
+                        };
 
-                        return ;
+                        name = inputName;
+                        mobile = DataForm.getStorageValue(maps[type], key);
+                    }else{
+                        var parent = node.parents("form");
+                        var input = parent.find('input[name="' + name + '"]');
+
+                        mobile = input.val() || "";
+
+                        mobile = mobile.replace(/^([\s]+)|([\s]+)$/g, "");
+
+                        if(mobile.length == 0 || !DataForm.match("mobile", mobile, input)){
+                            Toast.text(input.attr("data-invalid"), Toast.MIDDLE_CENTER, 3000);
+
+                            return ;
+                        }
                     }
 
                     param["mobile"] = mobile;
@@ -402,18 +423,7 @@
                         var form = _result.form || {};
                         var name = form.name || "seDefaultForm";
 
-                        var forms = SEApp.conf("forms") || {};
-                        var cur = $.extend({}, {
-                            "actionType": "submit",
-                            "actionURL": null,
-                            /* 以下是可选项 */
-                            "method": null,
-                            "enctype": null,
-                            "actionName": name,
-                            "external": null,
-                            "showLoading": true,
-                            "loadingText": "处理中，请稍候..."
-                        }, forms[name]);
+                        var cur = SEApp.DataSetUtil.getDataFormConf(name);
 
                         form.setAttribute("action", cur.actionURL || form.getAttribute("action"));
                         form.setAttribute("method", cur.method    || form.getAttribute("method")  || "post");
@@ -487,6 +497,18 @@
                             var formAction = ctx.formAction;
                             var external = formAction.external;
 
+                            // 业务重定向逻辑地址 ========= [[
+                            var oc = ctx.OriginCommand;
+                            var jumpURL = Request.getParameter("url");
+                            var redirectTo = SEApp.conf("redirectTo") || {};
+                            var redirectConfig = redirectTo[oc.namespace] || redirectTo["default"] || {};
+                            var url = redirectConfig.success;
+                            // 业务重定向逻辑地址 ========= ]]
+
+                            if(jumpURL){
+                                url = decodeURIComponent(jumpURL);
+                            }
+
                             if(external){
                                 Util.requestExternal(external, [{
                                     "ctx": ctx, 
@@ -495,28 +517,26 @@
                                 }]);
                             }
 
-                            Toast.text(msg || "处理成功", Toast.MIDDLE_CENTER, 1500, {
-                                hide: {
-                                    callback: function(id){
-                                        //TODO
-                                        // 业务重定向逻辑 ========= [[
-                                        var oc = ctx.OriginCommand;
-                                        var jumpURL = Request.getParameter("url");
-                                        var redirectTo = SEApp.conf("redirectTo") || {};
-                                        var redirectConfig = redirectTo[oc.namespace] || redirectTo["default"] || {};
-                                        var url = redirectConfig.success;
-
-                                        if(jumpURL){
-                                            url = decodeURIComponent(jumpURL);
-                                        }
-
-                                        if(url){
-                                            Util.requestExternal("go://url#" + url, []);
-                                        }
-                                        // 业务重定向逻辑 ========= ]]
-                                    }
+                            if(true === formAction.redirectNow){
+                                // 业务重定向逻辑 ========= [[
+                                if(url){
+                                    Util.requestExternal("go://url#" + url, []);
                                 }
-                            });
+                                // 业务重定向逻辑 ========= ]]
+                            }else{
+                                Toast.text(msg || "处理成功", Toast.MIDDLE_CENTER, 1500, {
+                                    hide: {
+                                        callback: function(id){
+                                            //TODO
+                                            // 业务重定向逻辑 ========= [[
+                                            if(url){
+                                                Util.requestExternal("go://url#" + url, []);
+                                            }
+                                            // 业务重定向逻辑 ========= ]]
+                                        }
+                                    }
+                                });
+                            }
 
                             try{
                                 ctx.dataForm.form.reset();

@@ -665,6 +665,24 @@ var DataSetUtil = {
             "page": 1
         }), data || {});
     },
+    getDataFormConf: function(formName, data){
+        var forms = SEApp.conf("forms") || {};
+
+        var formConf = $.extend({}, {
+            "actionType": "submit",
+            "actionURL": null,
+            /* 以下是可选项 */
+            "method": null,
+            "enctype": null,
+            "actionName": formName,
+            "redirectNow": false,
+            "external": null,
+            "showLoading": true,
+            "loadingText": "Loading..."
+        }, forms[formName] || {});
+
+        return formConf;
+    },
     dataTransform: function(resp){
         // resp.code = resp.errorCode;
         // resp.message = resp.replyText;
