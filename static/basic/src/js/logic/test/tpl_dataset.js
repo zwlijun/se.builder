@@ -1,19 +1,4 @@
 ;define(function(require, exports, module){
-    var oPaths           = require("mod/se/opaths");
-
-    var ErrorTypes = null;
-    var RespTypes = null;
-    var ResponseProxy = null;
-    var DataCache =  null;
-    var CMD = null;
-    var Util = null;
-    var DataType = null;
-    var TemplateEngine = null;
-    var Request = null;
-    var Persistent = null;
-    var Session = null;
-    var Toast = null;
-    
     var SESchema = {
         "schema": "se",
         /**
@@ -65,7 +50,7 @@
                         continue;
                     }
 
-                    request.params = Util.createObject(request.params, requestName.split("-"), node.attr("data-request-" + requestName));
+                    request.params = SEApp.Util.createObject(request.params, requestName.split("-"), node.attr("data-request-" + requestName));
                 }
                 node.addClass("loading");
 
@@ -116,7 +101,7 @@
                         continue;
                     }
 
-                    request.params = Util.createObject(request.params, requestName.split("-"), node.attr("data-request-" + requestName));
+                    request.params = SEApp.Util.createObject(request.params, requestName.split("-"), node.attr("data-request-" + requestName));
                 }
                 node.addClass("loading");
 
@@ -138,7 +123,7 @@
         },
         exec: function(name, page){
             if(name in RequestExtraData.Data){
-                return Util.execHandler(RequestExtraData.Data[name], [name, page]);
+                return SEApp.Util.execHandler(RequestExtraData.Data[name], [name, page]);
             }
 
             return null;
@@ -169,12 +154,12 @@
             };
 
             var param = {
-                "data": Request.stringify(request.params)
+                "data": SEApp.Request.stringify(request.params)
             };
 
-            CMD.injectCommands(_command);
+            SEApp.CMD.injectCommands(_command);
 
-            CMD.exec("request.dataset." + request.name, param, {
+            SEApp.CMD.exec("request.dataset." + request.name, param, {
                 "context": {
                     "showLoading": request.showLoading === true,
                     "loadingText": request.loadingText || "处理中，请稍候...",
@@ -192,12 +177,12 @@
                     }
                 },
                 "success": function(data, status, xhr){
-                    ResponseProxy.json(this, SEApp.DataSetUtil.dataTransform(data), {
+                    SEApp.ResponseProxy.json(this, SEApp.DataSetUtil.dataTransform(data), {
                         "callback": function(ctx, resp, msg){
                             var extra = ctx.request;
                             var paths = extra.paths;
                             // var dataList = resp.dataList || [];
-                            var dataList = oPaths.find(resp, paths) || [];
+                            var dataList = SEApp.ObjectPath.find(resp, paths) || [];
                             var size = dataList.length;
 
                             var render = $("#render_" + extra.name);
@@ -266,7 +251,7 @@
                                     }
 
                                     if(external){
-                                        Util.requestExternal(external, [page]);
+                                        SEApp.Util.requestExternal(external, [page]);
                                     }
                                 },
                                 "args": [currenPage, extra, triggerNode],
@@ -277,15 +262,15 @@
                         tips: false,
                         handle: {
                             callback: function(ctx, code, msg, resp){
-                                Toast.text(msg || "加载失败", Toast.MIDDLE_CENTER, 3000);
+                                SEApp.Toast.text(msg || "加载失败", SEApp.Toast.MIDDLE_CENTER, 3000);
                             }
                         }
                     });
                 },
                 error: function(xhr, errorType, error){
-                    var err = CMD.RequestStatus[errorType];
+                    var err = SEApp.CMD.RequestStatus[errorType];
 
-                    Toast.text(err.text, Toast.MIDDLE_CENTER, 3000);
+                    SEApp.Toast.text(err.text, SEApp.Toast.MIDDLE_CENTER, 3000);
                 }
             });
         },
@@ -294,10 +279,10 @@
          * @return {[type]} [description]
          */
         init: function(){
-            Util.source(SESchema);
+            SEApp.Util.source(SESchema);
 
             //初始化数据模板引擎
-            DatasetTemplateEngine = TemplateEngine.getTemplate("tpl_dataset", {
+            DatasetTemplateEngine = SEApp.TemplateEngine.getTemplate("tpl_dataset", {
                 start: "<~",
                 close: "~>",
                 root: "ds"
@@ -307,21 +292,6 @@
 
     var Bridge = {
         connect: function(target){
-            var expando = target.expando;
-
-            ErrorTypes      = expando["errors"];
-            RespTypes       = expando["types"];
-            Request         = expando["request"];
-            ResponseProxy   = expando["response"];
-            DataCache       = expando["cache"];
-            CMD             = expando["cmd"];
-            Util            = expando["util"];
-            DataType        = expando["typeof"];
-            TemplateEngine  = expando["template"];
-            Persistent      = expando["persistent"];
-            Session         = expando["session"];
-            Toast           = expando["toast"];
-
             //业务初始化入口
             Logic.init();
         }

@@ -5,18 +5,6 @@
     var Base64          = require("mod/crypto/base64");
     var UploadService   = require("mod/se/uploadservice");
 
-    var ErrorTypes = null;
-    var RespTypes = null;
-    var ResponseProxy = null;
-    var DataCache =  null;
-    var CMD = null;
-    var Util = null;
-    var DataType = null;
-    var TemplateEngine = null;
-    var Request = null;
-    var Persistent = null;
-    var Session = null;
-    var Toast = null;
 
     //===Uploader Service Logic Start===
     var Uploader = function(conf){
@@ -103,7 +91,7 @@
                     Uploader.fireErrorMessage(
                         "0x100229", 
                         this.uploader.message("notsupport"), 
-                        ErrorTypes.ALARM
+                        SEApp.ErrorTypes.ALARM
                     );
 
                     
@@ -115,7 +103,7 @@
                     Uploader.fireErrorMessage(
                         "0x100231", 
                         this.uploader.message("maxsize", fileInfo.name, this.service.getFileSize(maxsize)), 
-                        ErrorTypes.INFO
+                        SEApp.ErrorTypes.INFO
                     );
 
                     this.uploader.disabled(false);
@@ -126,7 +114,7 @@
                     Uploader.fireErrorMessage(
                         "0x100230", 
                         this.uploader.message("maxupload", size, maxupload), 
-                        ErrorTypes.INFO
+                        SEApp.ErrorTypes.INFO
                     );
 
                     this.uploader.disabled(false);
@@ -137,7 +125,7 @@
                     Uploader.fireErrorMessage(
                         "0x100230", 
                         this.uploader.message("filter", fileInfo.name), 
-                        ErrorTypes.INFO
+                        SEApp.ErrorTypes.INFO
                     );
 
                     this.uploader.disabled(false);
@@ -148,7 +136,7 @@
                     Uploader.fireErrorMessage(
                         "0x100232", 
                         this.uploader.message("servererror", fileInfo.name, status), 
-                        ErrorTypes.ERROR
+                        SEApp.ErrorTypes.ERROR
                     );
 
                     //todo
@@ -182,19 +170,19 @@
                         this.uploader.updateBackgroundImage(source);
 
                         if(conf.complete){
-                            Util.execHandler(conf.complete, [source]);
+                            SEApp.Util.execHandler(conf.complete, [source]);
                         }
 
                         Uploader.fireErrorMessage(
                             response.code, 
                             response.message || this.uploader.message("success"),
-                            ErrorTypes.SUCCESS
+                            SEApp.ErrorTypes.SUCCESS
                         );
                     }else{
                         Uploader.fireErrorMessage(
                             response.code, 
                             response.message || this.uploader.message("failure"),
-                            ErrorTypes.ERROR
+                            SEApp.ErrorTypes.ERROR
                         );
                     }
 
@@ -321,9 +309,9 @@
         var uploaderToast = uploaderSettings.toast;
 
         if(uploaderToast){
-            Toast.text(errorMessage, uploaderToast.align || Toast.MIDDLE_CENTER, uploaderToast.delay || 3000, uploaderToast.callbacks || {});
+            SEApp.Toast.text(errorMessage, uploaderToast.align || SEApp.Toast.MIDDLE_CENTER, uploaderToast.delay || 3000, uploaderToast.callbacks || {});
         }else{
-            CMD.fireError(errorCode, errorMessage, errorType);
+            SEApp.CMD.fireError(errorCode, errorMessage, errorType);
         }
     };
 
@@ -445,21 +433,6 @@
 
     var Bridge = {
         connect: function(target){
-            var expando = target.expando;
-
-            ErrorTypes      = expando["errors"];
-            RespTypes       = expando["types"];
-            Request         = expando["request"];
-            ResponseProxy   = expando["response"];
-            DataCache       = expando["cache"];
-            CMD             = expando["cmd"];
-            Util            = expando["util"];
-            DataType        = expando["typeof"];
-            TemplateEngine  = expando["template"];
-            Persistent      = expando["persistent"];
-            Session         = expando["session"];
-            Toast           = expando["toast"];
-
             //业务初始化入口
             Logic.init();
         }

@@ -33,9 +33,9 @@
                      + '<div class="mod-actionsheet mod-actionsheet-mask exit" data-actionsheet="<%=ts.name%>"></div>'
                      + '<div class="mod-actionsheet mod-actionsheet-panel exit touchselect <%=ts.type%> <%=ts.skin%>" data-actionsheet="<%=ts.name%>">'
                      + '  <h1 class="flexbox middle justify touchselect-header">'
-                     + '    <var class="touchselect-cancel" data-action-<%=ts.action%>="ts://cancel#<%=ts.name%>">取消</var>'
+                     + '    <var class="touchselect-cancel" data-action-<%=ts.action%>="ts://cancel#<%=ts.name%>"><%=ts.labels.cancel%></var>'
                      + '    <span class="touchselect-title ellipsis"><%=ts.title%></span>'
-                     + '    <var class="touchselect-confirm" data-action-<%=ts.action%>="ts://confirm#<%=ts.name%>">确定</var>'
+                     + '    <var class="touchselect-confirm" data-action-<%=ts.action%>="ts://confirm#<%=ts.name%>"><%=ts.labels.confirm%></var>'
                      + '  </h1>'
                      + '  <div class="touchselect-box flexbox top center">'
                      + '    <%=ts.columns%>'
@@ -130,6 +130,10 @@
             "action": "tap",
             "title": "",
             "skin": "",
+            "labels": {
+                "cancel": "取消",
+                "confirm": "确定"
+            },
             "data": {
                 "linked": false,
                 "list": [
@@ -361,6 +365,9 @@
                 "defaultOption": defaultOption,
                 "options": options,
                 "setSelectedOption": function(name, index, selectedIndex, option){
+                    if(!option){
+                        return ;
+                    }
                     var ts = TouchSelect.getTouchSelect(name);
                     ts.setSelectedOption(index, selectedIndex, option);
                 }
@@ -484,6 +491,7 @@
                     "action": this.options("action"),
                     "title": this.options("title"),
                     "skin": this.options("skin") || "",
+                    "labels": this.options("labels"),
                     "columns": this.renderColumns()
                 };
                 TouchSelectTemplate.render(true, _HTML_STRING, metaData, {
@@ -518,6 +526,9 @@
             }
         },
         scrollTo: function(option, isChanged){
+            if(!option){
+                return ;
+            }
             // columnIndex
             // selectedIndex
             // value

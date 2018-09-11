@@ -3,19 +3,6 @@
     var MD5                 = require("mod/crypto/md5");
     var Timer               = require("mod/se/timer");
 
-    var ErrorTypes = null;
-    var RespTypes = null;
-    var ResponseProxy = null;
-    var DataCache =  null;
-    var CMD = null;
-    var Util = null;
-    var DataType = null;
-    var TemplateEngine = null;
-    var Request = null;
-    var Persistent = null;
-    var Session = null;
-    var Toast = null;
-
     //-------------------------------------------------
     /**
      * 数据表单工具类
@@ -60,7 +47,7 @@
 
                             // ins.html(tips).removeClass("hidden");
                             
-                            Toast.text(tips, Toast.MIDDLE_CENTER, 3000);
+                            SEApp.Toast.text(tips, SEApp.Toast.MIDDLE_CENTER, 3000);
                         }
                     });
                     checker.set("mpv", {
@@ -100,7 +87,7 @@
 
             for(var f in forms){
                 if(forms.hasOwnProperty(f)){
-                    Util.execHandler(DataFormUtil.dataforms[f] || DataFormUtil.dataforms["__def__"], [f]);
+                    SEApp.Util.execHandler(DataFormUtil.dataforms[f] || DataFormUtil.dataforms["__def__"], [f]);
                 }
             }
         }
@@ -140,8 +127,8 @@
             var SECRET_SEED = GetSecretSeed();
 
             var SECRET = "" 
-                       + Util.getTime()
-                       + Util.GUID();
+                       + SEApp.Util.getTime()
+                       + SEApp.Util.GUID();
 
             var SECRET_KEY =  MD5.encode(SECRET + SECRET_SEED, false);
 
@@ -283,7 +270,7 @@
                         mobile = mobile.replace(/^([\s]+)|([\s]+)$/g, "");
 
                         if(mobile.length == 0 || !DataForm.match("mobile", mobile, input)){
-                            Toast.text(input.attr("data-invalid"), Toast.MIDDLE_CENTER, 3000);
+                            SEApp.Toast.text(input.attr("data-invalid"), SEApp.Toast.MIDDLE_CENTER, 3000);
 
                             return ;
                         }
@@ -293,7 +280,7 @@
                 }
 
                 var paramData = {
-                    "data": Request.stringify(param)
+                    "data": SEApp.Request.stringify(param)
                 };
 
                 var _command = {
@@ -310,14 +297,14 @@
 
                 node.attr("data-smscode-flag", "1");
 
-                CMD.injectCommands(_command);
-                CMD.exec("service.smscode.get", paramData, {
+                SEApp.CMD.injectCommands(_command);
+                SEApp.CMD.exec("service.smscode.get", paramData, {
                     "context": {
                         "showLoading": false,
                         "node": node
                     },
                     success: function(data, status, xhr){
-                        ResponseProxy.json(this, SEApp.DataSetUtil.dataTransform(data), {
+                        SEApp.ResponseProxy.json(this, SEApp.DataSetUtil.dataTransform(data), {
                             "callback": function(ctx, resp, msg){
                                 var node = ctx.node;
                                 var retryText = node.attr("data-retry-text");
@@ -326,7 +313,7 @@
 
                                 var timer = Timer.getTimer("smscode_timer", Timer.toFPS(1000), null);
 
-                                Toast.text(msg || "Success", Toast.MIDDLE_CENTER, 3000);
+                                SEApp.Toast.text(msg || "Success", SEApp.Toast.MIDDLE_CENTER, 3000);
 
                                 timer.setTimerHandler({
                                     callback: function(_timer){
@@ -356,7 +343,7 @@
                                     var node = ctx.node;
 
                                     node.attr("data-smscode-flag", "0");
-                                    Toast.text(msg || "Error", Toast.MIDDLE_CENTER, 3000);
+                                    SEApp.Toast.text(msg || "Error", SEApp.Toast.MIDDLE_CENTER, 3000);
                                 }
                             }
                         });
@@ -366,8 +353,8 @@
                                     
                         node.attr("data-smscode-flag", "0");
                         
-                        var err = CMD.RequestStatus[errorType];
-                        Toast.text(err.text, Toast.MIDDLE_CENTER, 3000);
+                        var err = SEApp.CMD.RequestStatus[errorType];
+                        SEApp.Toast.text(err.text, SEApp.Toast.MIDDLE_CENTER, 3000);
                     }
                 });
             },
@@ -408,7 +395,7 @@
                         submitEvent.preventDefault();
 
                         if("submit" != (_type || "").toLowerCase()){
-                            Util.fireAction(_node, _type, _e);
+                            SEApp.Util.fireAction(_node, _type, _e);
                         }
                     },
                     args: [data, node, e, type]
@@ -434,7 +421,7 @@
                         }else if(cur.actionType == "request"){
                             Logic.sendRequest(result, cur);
                         }else if(cur.actionType == "external"){
-                            Util.requestExternal(cur.actionURL, [result]);
+                            SEApp.Util.requestExternal(cur.actionURL, [result]);
                         }
                     }
                 });
@@ -479,12 +466,12 @@
             }
 
             var param = {
-                "data": Request.stringify(result.data)
+                "data": SEApp.Request.stringify(result.data)
             };
 
-            CMD.injectCommands(_command);
+            SEApp.CMD.injectCommands(_command);
 
-            CMD.exec("dataform.submit." + formAction.actionName, param, {
+            SEApp.CMD.exec("dataform.submit." + formAction.actionName, param, {
                 "context": {
                     "showLoading": (("showLoading" in formAction) ? (formAction.showLoading === true) : true),
                     "loadingText": (formAction.loadingText || "处理中，请稍候..."),
@@ -492,25 +479,25 @@
                     "formAction": formAction
                 },
                 "success": function(data, status, xhr){
-                    ResponseProxy.json(this, SEApp.DataSetUtil.dataTransform(data), {
+                    SEApp.ResponseProxy.json(this, SEApp.DataSetUtil.dataTransform(data), {
                         "callback": function(ctx, resp, msg){
                             var formAction = ctx.formAction;
                             var external = formAction.external;
 
                             // 业务重定向逻辑地址 ========= [[
                             var oc = ctx.OriginCommand;
-                            var jumpURL = Request.getParameter("url");
+                            var jumpURL = SEApp.Request.getParameter("url");
                             var redirectTo = SEApp.conf("redirectTo") || {};
                             var redirectConfig = redirectTo[oc.namespace] || redirectTo["default"] || {};
                             var url = redirectConfig.success;
-                            // 业务重定向逻辑地址 ========= ]]
 
                             if(jumpURL){
                                 url = decodeURIComponent(jumpURL);
                             }
+                            // 业务重定向逻辑地址 ========= ]]
 
                             if(external){
-                                Util.requestExternal(external, [{
+                                SEApp.Util.requestExternal(external, [{
                                     "ctx": ctx, 
                                     "resp": resp, 
                                     "msg": msg
@@ -520,17 +507,17 @@
                             if(true === formAction.redirectNow){
                                 // 业务重定向逻辑 ========= [[
                                 if(url){
-                                    Util.requestExternal("go://url#" + url, []);
+                                    SEApp.Util.requestExternal("go://url#" + url, []);
                                 }
                                 // 业务重定向逻辑 ========= ]]
                             }else{
-                                Toast.text(msg || "处理成功", Toast.MIDDLE_CENTER, 1500, {
+                                SEApp.Toast.text(msg || "处理成功", SEApp.Toast.MIDDLE_CENTER, 1500, {
                                     hide: {
                                         callback: function(id){
                                             //TODO
                                             // 业务重定向逻辑 ========= [[
                                             if(url){
-                                                Util.requestExternal("go://url#" + url, []);
+                                                SEApp.Util.requestExternal("go://url#" + url, []);
                                             }
                                             // 业务重定向逻辑 ========= ]]
                                         }
@@ -551,28 +538,13 @@
          * @return {[type]} [description]
          */
         init: function(){
-            Util.source(SESchema);
+            SEApp.Util.source(SESchema);
             DataFormUtil.define();
         }
     };
 
     var Bridge = {
         connect: function(target){
-            var expando = target.expando;
-
-            ErrorTypes      = expando["errors"];
-            RespTypes       = expando["types"];
-            Request         = expando["request"];
-            ResponseProxy   = expando["response"];
-            DataCache       = expando["cache"];
-            CMD             = expando["cmd"];
-            Util            = expando["util"];
-            DataType        = expando["typeof"];
-            TemplateEngine  = expando["template"];
-            Persistent      = expando["persistent"];
-            Session         = expando["session"];
-            Toast           = expando["toast"];
-
             //业务初始化入口
             Logic.init();
         }

@@ -8,6 +8,7 @@ var Request         = require("mod/se/request");
 var Storage         = require("mod/se/storage");
 var TemplateEngine  = require("mod/se/template");
 var Toast           = require("mod/ui/toast");
+var ObjectPath      = require("mod/se/opaths");
 
 var ErrorTypes      = CMD.ErrorTypes;
 var RespTypes       = CMD.ResponseTypes;
@@ -153,6 +154,67 @@ var LocalPath = {
 };
 
 /**
+ * URL配置上下文解析类
+ */
+var URLContext = {
+    parse: function(url){
+        var context = _App.conf("URLContext") || {};
+        var pattern = /\{([^\{\}]+)\}/g;
+        var matcher = null;
+        pattern.lastIndex = 0;
+
+        var key = null;
+        var regexp = null;
+        while(null != (matcher = pattern.exec(url))){
+            key = matcher[1];
+
+            regexp = new RegExp("\\{" + key.replace(/([\.\/])/, "\\$1") + "\\}", "g");
+            url = url.replace(regexp, ObjectPath.find(context, key, ".") || "")
+        }
+
+        return url;
+    },
+    transform: function(url){
+        var context = _App.conf("URLContext") || {};
+        var rules = context.URLRules || [];
+
+        if(rules.length == 0){
+            return URLContext.parse(url);
+        }
+
+        var rule = null;
+        var pattern = null;
+        var replacement = null;
+
+        for(var i = 0; i < rules.length; i++){
+            rule = rules[i] || {};
+            pattern = rule.pattern;
+            replacement = rule.replacement || "";
+
+            if(pattern){
+                if(pattern.test(url)){
+                    pattern.lastIndex = 0;
+
+                    url = url.replace(pattern, replacement);
+
+                    if(true === rule.break){
+                        return URLContext.parse(url);
+                    }
+                }
+            }
+        }
+
+        return URLContext.parse(url);
+    },
+    URL: function(key){
+        var context = _App.conf("URLContext") || {};
+        var url = context[key] || "";
+
+        return URLContext.parse(url);
+    }
+};
+
+/**
  * 安全URL处理
  * @type {Object}
  */
@@ -167,6 +229,8 @@ var SecurityURL = {
         if(LocalPath.localFile()){
             return url;
         }
+        url = URLContext.transform(url);
+
         var info = Request.parseURL(url);
         var host = info.host;
 
@@ -188,6 +252,8 @@ var SecurityURL = {
      * @return {String}     [处理后的URL]
      */
     fixed: function(url){
+        url = URLContext.transform(url);
+
         var URLInfo = Request.parseURL(url);
         //--------------------------------------------------------
         var mergeKeys = [//需要合并的URL参数，根据实际情况设置
@@ -782,20 +848,19 @@ var _public = {
     "path": LocalPath,
     "SecurityURL": SecurityURL,
     "DataSetUtil": DataSetUtil,
-    "expando": {
-        "util": Util,
-        "cmd": CMD,
-        "errors": ErrorTypes,
-        "types": RespTypes,
-        "request": Request,
-        "response": ResponseProxy,
-        "cache": DataCache,
-        "template": TemplateEngine,
-        "persistent": Persistent,
-        "session": Session,
-        "typeof": DataType,
-        "toast": Toast
-    }
+    "URLContext": URLContext,
+    "Util": Util,
+    "CMD": CMD,
+    "ErrorTypes": ErrorTypes,
+    "Request": Request,
+    "ResponseProxy": ResponseProxy,
+    "DataCache": DataCache,
+    "TemplateEngine": TemplateEngine,
+    "Persistent": Persistent,
+    "Session": Session,
+    "DataType": DataType,
+    "Toast": Toast,
+    "ObjectPath": ObjectPath
 };
 module.exports = (window["SEApp"] = _public);
 //---------------------------

@@ -12,8 +12,8 @@
 ;define(function(require, exports, module){
     var oPaths = {
         "version": "R18B0516",
-        find: function(obj, paths){
-            var items = paths.split("/");
+        find: function(obj, paths, separator){
+            var items = paths.split(separator || "/");
             var size = items.length;
             var o = undefined;
             var key = null;

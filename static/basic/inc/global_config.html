@@ -2,6 +2,18 @@
 <script>
 //NOTE:页面上的window._CONFIG中相同的配置会覆盖全局配置的值
 window["SEGlobalConf"] = {
+    "URLContext": {
+        "URLRules": [
+            // {
+            //     "pattern": null,      //正则表达示
+            //     "replacement": null,  //替换字符串
+            //     "break": true
+            // }
+        ],
+        "Host": {},
+        "login": "/login",
+        "homepage": "/"
+    },
     "RequestStatus": {
         "timeout"     : {"status": 0xFF01, "text": "亲，请求超时了~"},
         "error"       : {"status": 0xFF02, "text": "亲，系统出了点小问题，请稍候片刻再试"},
