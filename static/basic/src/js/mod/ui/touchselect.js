@@ -250,13 +250,13 @@
 
             return $('[data-actionsheet="' + name + '"].mod-actionsheet-mask');
         },
-        getTuochSelectPanel: function(){
+        getTouchSelectPanel: function(){
             var name = this.getTouchSelectName();
 
             return $('[data-actionsheet="' + name + '"].mod-actionsheet-panel');
         },
         getTouchSelectBox: function(){
-            var panel = this.getTuochSelectPanel();
+            var panel = this.getTouchSelectPanel();
 
             return panel.find(".touchselect-box");
         },
@@ -293,7 +293,7 @@
             return box.find(".touchselect-selected-line");
         },
         existed: function(){
-            var panel = this.getTuochSelectPanel();
+            var panel = this.getTouchSelectPanel();
 
             return panel.length > 0;
         },
@@ -689,7 +689,7 @@
         },
         destory: function(){
             var mask = this.getTouchSelectMask();
-            var panel = this.getTuochSelectPanel();
+            var panel = this.getTouchSelectPanel();
 
             this.removeEvents();
 
@@ -743,8 +743,8 @@
             getTouchSelectMask: function(){
                 return ts.getTouchSelectMask();
             },
-            getTuochSelectPanel: function(){
-                return ts.getTuochSelectPanel();
+            getTouchSelectPanel: function(){
+                return ts.getTouchSelectPanel();
             },
             getTouchSelectBox: function(){
                 return ts.getTouchSelectBox();
