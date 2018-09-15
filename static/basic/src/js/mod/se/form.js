@@ -468,6 +468,7 @@
          *   <element data-empty="string"             //为空时的提示内容
          *            data-invalid="string"           //校验不符合规范时的提示内容
          *            data-filter="0|1"               //是否过滤/忽略当前字段 
+         *            data-forcesend="0|1"            //当为1时，将会略disabled属性和data-filter属性
          *            data-format="string"            //验证类型        
          *            data-encode="0|1"               //是否进行encodeURIComponent编码
          *            data-xss="0|1"                  //是否进行XSS过滤
@@ -529,6 +530,7 @@
             var different = null;
             var custom_tips = null;
             var filter = false;
+            var forceSend = false;
             var format = null;
             var encoder = false;
             var xss = true;
@@ -662,7 +664,8 @@
 
                 nullvalue = el.attr("data-nullvalue") || "";
                 uncheckValue = StringUtil.trim(el.attr("data-uncheck") || "");
-                filter = (el.prop("disabled") || ("1" == el.attr("data-filter")));
+                forceSend = ("1" == el.attr("data-forcesend"));
+                filter = true !== forceSend ? (el.prop("disabled") || ("1" == el.attr("data-filter"))) : false;
                 holder = (el.attr("placeholder") || el.attr("data-placeholder") || "");
 
                 length = StringUtil.length(value);
@@ -706,6 +709,7 @@
                     "useRequest": useRequest,
                     "useVariable": useVariable,
                     "filter": filter,
+                    "forceSend": forceSend,
                     "format": format,
                     "holder": holder,
                     "length": length,
