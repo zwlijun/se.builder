@@ -702,10 +702,11 @@ var DataSetUtil = {
             "url": "/datalist",
             "paths": "dataList",
             /* 以下是可选项 */
+            "rootRender": false,
             "external": null,
             "startPage": 1,
             "pageSize": 10,
-            "name": name,
+            "name": requestName,
             "showLoading": false,
             "loadingText": "Loading...",
             "dataRendering": "append",

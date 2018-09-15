@@ -86,9 +86,16 @@
                     checker.check(false, inputName.split("|"));
                 }
             }, delay));
-            
         }
-     };
+    };
+
+    /**
+     * 变量缓存器
+     * @type {Object}
+     */
+    var VariableSchema = {
+        "schema": "variable"
+    };
 
     /**
      * 校驗方法
@@ -451,8 +458,8 @@
                 }
             };
         },
-        getStorageValue: function(type, conf){
-            return _Form.getStorageValue(type, conf);
+        getStorageValue: function(type, conf, separator){
+            return _Form.getStorageValue(type, conf, separator || this.optionsMerge);
         },
         /**
          * 校驗
@@ -488,6 +495,8 @@
          *            data-use-session="key@path"     //从sessionStorage中取值
          *            data-use-persistent="key@path"  //从localStorage中取值
          *            data-use-cookie="key@path"      //从cookie中取值
+         *            data-use-request="key"          //从url参数中取值
+         *            data-use-variable="key@path"    //从js变量中取值
          *            data-selectuse="value|text"     //select提交时使用的值
          * />               
          * </form> 
@@ -511,6 +520,8 @@
             var useSession = null;
             var usePersistent = null;
             var useCookie = null;
+            var useRequest = null;
+            var useVariable = null;
             var length = 0;
             var pattern = null;            
             var empty = null;
@@ -581,17 +592,56 @@
                 useSession = el.attr("data-use-session");
                 usePersistent = el.attr("data-use-persistent");
                 useCookie = el.attr("data-use-cookie");
+                useRequest = el.attr("data-use-request");
+                useVariable = el.attr("data-use-variable");
 
                 if(useSession){
-                    value = this.getStorageValue(0, useSession);
+                    value = this.getStorageValue(0, useSession, this.optionsMerge || ",");
                 }
 
                 if(usePersistent){
-                    value = this.getStorageValue(1, usePersistent);
+                    value = this.getStorageValue(1, usePersistent, this.optionsMerge || ",");
                 }
 
                 if(useCookie){
-                    value = this.getStorageValue(2, useCookie);
+                    value = this.getStorageValue(2, useCookie, this.optionsMerge || ",");
+                }
+
+                if(useRequest){
+                    value = Request.getParameter(useRequest);
+                }
+
+                if(useVariable){
+                    var __items = useVariable.split("@");
+                    var __key = items[0];
+                    var __path = items[1];
+                    var __value = $.variable[__key] || "";
+
+                    if(!__path || !__value){
+                        value = __value;
+
+                        if(DataType.isArray(value)){
+                            value = value.join(this.optionsMerge || ",");
+                        }
+                    }else{
+                        if(DataType.isArray(__value)){
+                            var idxs = __path.split(",");
+                            var tmpArr = [];
+                            var idx = 0;
+                            for(var i = 0; i < idxs.length; i++){
+                                idx = Number(idxs[i]);
+
+                                if(!isNaN(idx)){
+                                    tmpArr.push(__value[idx]);
+                                }
+                            }
+                            value = tmpArr.join(this.optionsMerge || ",");
+                        }else if(DataType.isObject(__value)){
+                            value = OPaths.find(__value, __path);
+                        }else{
+                            value = __value;
+                        }
+                    }
                 }
 
                 
@@ -653,6 +703,8 @@
                     "useSession": useSession,
                     "usePersistent": usePersistent,
                     "useCookie": useCookie,
+                    "useRequest": useRequest,
+                    "useVariable": useVariable,
                     "filter": filter,
                     "format": format,
                     "holder": holder,
@@ -1017,7 +1069,7 @@
         return _pub;
     };
 
-    _Form.getStorageValue = function(type, conf){
+    _Form.getStorageValue = function(type, conf, separator){
         var items = conf.split("@");
         var key = items[0];
         var path = items[1];
@@ -1026,6 +1078,9 @@
         var value = storage.get(key) || "";
 
         if(!path){
+            if(DataType.isArray(value)){
+                value = value.join(separator || ",");
+            }
             return value;
         }
 
@@ -1033,15 +1088,28 @@
             return value;
         }
         
-        if(DataType.isObject(value)){
+        if(DataType.isArray(value)){
+            var idxs = path.split(",");
+            var tmpArr = [];
+            var idx = 0;
+            for(var i = 0; i < idxs.length; i++){
+                idx = Number(idxs[i]);
+
+                if(!isNaN(idx)){
+                    tmpArr.push(value[idx]);
+                }
+            }
+            value = tmpArr.join(separator || ",");
+        }else if(DataType.isObject(value)){
             value = OPaths.find(value, path);
         }
 
-        return value
+        return value;
     };
 
     (function(){
         Util.source(DataFormSchema);
+        Util.source(VariableSchema);
     })()
 
     module.exports = {
@@ -1067,8 +1135,8 @@
 
             return ret;
         },
-        "getStorageValue": function(type, conf){
-            return _Form.getStorageValue(type, conf);
+        "getStorageValue": function(type, conf, separator){
+            return _Form.getStorageValue(type, conf, separator);
         },
         /**
          * 绑定实时检测

@@ -179,20 +179,30 @@
                 "success": function(data, status, xhr){
                     SEApp.ResponseProxy.json(this, SEApp.DataSetUtil.dataTransform(data), {
                         "callback": function(ctx, resp, msg){
+                            var _data = resp || {};
                             var extra = ctx.request;
                             var paths = extra.paths;
                             // var dataList = resp.dataList || [];
-                            var dataList = SEApp.ObjectPath.find(resp, paths) || [];
+                            var dataList = SEApp.ObjectPath.find(_data, paths) || [];
                             var size = dataList.length;
 
                             var render = $("#render_" + extra.name);
                             var triggerNode = ctx.triggerNode;
+                            var nodataNode = render.siblings(".dataset-nodata");
 
                             var reqParams = extra.params;
 
                             var respParams = resp.param || {};
-                            var currenPage = Number(reqParams[extra.pageKey]);
+                            var currenPage = Number(SEApp.ObjectPath.find(reqParams, extra.pageKey, "-") || 1);
                             var pageSize = Number(respParams.pageSize || extra.pageSize || "10");
+
+                            if(nodataNode.length > 0){
+                                if(currenPage === extra.startPage && size == 0){
+                                    nodataNode.removeClass("hide");
+                                }else{
+                                    nodataNode.addClass("hide");
+                                }
+                            }
 
                             if("loadmore" === extra.pageStyle){
                                 if(size == 0){
@@ -220,7 +230,13 @@
                                 pb.setGotoHandler({
                                     callback: function(name, oo, rs, ps){
                                         var _this = this;
-                                        oo.parents(".dataset").find(".dataset-pagebar").replaceWith(_this.output(rs, ps));
+                                        var str = _this.output(rs, ps);
+
+                                        if(oo.parents(".dataset").find(".dataset-pagebar").length > 0){
+                                            oo.parents(".dataset").find(".dataset-pagebar").replaceWith(str);
+                                        }else{
+                                            oo.parents(".dataset").append(str);
+                                        }
 
                                         Logic.requestMore(SEApp.DataSetUtil.getRequestPageConf(
                                             extra.name, 
@@ -234,12 +250,16 @@
 
                                 var str = pb.output(resp.recordSize, resp.pageSize);
 
-                                render.parents(".dataset").find(".dataset-pagebar").replaceWith(str);
+                                if(render.parents(".dataset").find(".dataset-pagebar").length > 0){
+                                    render.parents(".dataset").find(".dataset-pagebar").replaceWith(str);
+                                }else{
+                                    render.parents(".dataset").append(str);
+                                }
                             }
 
-                            DatasetTemplateEngine.render(false, "tpl_" + extra.name, dataList, {
+                            DatasetTemplateEngine.render(false, "tpl_" + extra.name, true === extra.rootRender ? _data : dataList, {
                                 callback: function(ret, page, req, _node){
-                                    var start = req.start;
+                                    var start = req.startPage;
                                     var external = req.external;
                                     var dataRendering = req.dataRendering;
                                     var pageStyle = req.pageStyle;
