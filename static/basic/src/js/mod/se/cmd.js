@@ -127,6 +127,36 @@
         // }       
     };
 
+    function MatchErrorHandler(code){
+        var CONST_UNIVERSAL_MATCH = "*";
+        //先匹配code，如果有就直接返回
+        if(code in ErrorMap){
+            return ErrorMap[code] || null;
+        }
+        //糊模匹配
+        for(var key in ErrorMap){
+            if(ErrorMap.hasOwnProperty(key)){
+                if(key.charAt(0) === "~"){
+                    key = key.substring(1);
+                    key = key.replace(/%/g, "[a-z0-9]+");
+
+                    var pattern = new RegExp(key, "gi");
+                    pattern.lastIndex = 0;
+
+                    if(pattern.test(code)){
+                        return ErrorMap[key] || null;
+                    }
+                }
+            }
+        }
+        //通用匹配
+        if(CONST_UNIVERSAL_MATCH in ErrorMap){
+            return ErrorMap[CONST_UNIVERSAL_MATCH] || null;
+        }
+        
+        return null;
+    };
+
     /**
      * 触发一个错误处理
      * @param String code 错误码
@@ -142,24 +172,24 @@
 
         var fireHandle = $.extend({}, handler);
         var args = handler.args || [];
-        var err = (code in ErrorMap) ? ErrorMap[code] || null : null;
+        var err = MatchErrorHandler(code); //(code in ErrorMap) ? ErrorMap[code] || null : null;
 
         fireHandle.args = [code, msg, type].concat(args);
 
         if(true === onlyCheckErrorMap){
             if(err){
                 if(err.apply){
-                    return err.apply(null, [fireHandle]);
+                    return err.apply(null, [fireHandle, code, msg, type]);
                 }else{
-                    return Util.execHandler(err, [fireHandle]);
+                    return Util.execHandler(err, [fireHandle, code, msg, type]);
                 }
             }
         }else{
             if(err){
                 if(err.apply){
-                    return err.apply(null, [fireHandle]);
+                    return err.apply(null, [fireHandle, code, msg, type]);
                 }else{
-                    return Util.execHandler(err, [fireHandle]);
+                    return Util.execHandler(err, [fireHandle, code, msg, type]);
                 }
             }else{
                 return Util.execHandler(fireHandle);
@@ -339,7 +369,7 @@
             //ajaxSetting.loadingText
             //loading...
             if(false !== this.showLoading){
-                Loading.show(this.loadingText || "加载中...");
+                Loading.show(this.loadingText || "Loading...");
             }
 
             if(fnBeforeSend){

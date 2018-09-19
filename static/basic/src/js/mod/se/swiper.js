@@ -494,6 +494,8 @@
 
             if(true !== this.isbind){
                 viewport.on(this.start_event, data, function(e){
+                    e && e.stopPropagation();
+
                     var data = e.data;
                     var swiper = data.swiper;
 
@@ -670,6 +672,8 @@
             }
         },
         move: function(e){
+            e && e.stopPropagation();
+            
             var data = e.data;
             var swiper = data.swiper;
 
@@ -790,6 +794,8 @@
             swiper.playing(true);
         },
         end: function(e){
+            e && e.stopPropagation();
+
             var data = e.data;
             var swiper = data.swiper;
 

@@ -81,10 +81,20 @@
                 "url": 'http://www.diandian.com/share',
                 "data": 'lo=<%=sharebox.link%>&ti=<%=sharebox.description%>&type=link'
             },
+            "xing": {
+                "type": "redirect",
+                "url": 'http://widget.renren.com/dialog/share',
+                "data": 'resourceUrl=<%=sharebox.link%>&srcUrl=<%=sharebox.link%>&title=<%=sharebox.title%>&description=<%=sharebox.description%>'
+            },
+            "renren": {
+                "type": "redirect",
+                "url": 'https://www.xing.com/app/user',
+                "data": 'op=share&url=<%=sharebox.link%>'
+            },
             "linkedin": {
                 "type": "redirect",
                 "url": 'http://www.linkedin.com/shareArticle',
-                "data": 'mini=true&ro=true&title=<%=sharebox.title%>&url=<%=sharebox.link%>&summary=<%=sharebox.summary%>&source=<%=sharebox.source%>&armin=armin'
+                "data": 'mini=true&title=<%=sharebox.title%>&url=<%=sharebox.link%>&summary=<%=sharebox.summary%>&source=<%=sharebox.source%>'
             },
             "facebook": {
                 "type": "redirect",
@@ -94,12 +104,162 @@
             "twitter": {
                 "type": "redirect",
                 "url": 'https://twitter.com/intent/tweet',
-                "data": 'text=<%=sharebox.description%>&url=<%=sharebox.link%>&via=<%=sharebox.source%>'
+                "data": 'text=<%=sharebox.description%>&url=<%=sharebox.link%>&via=<%=sharebox.usrid || sharebox.source%>&hashtags=<%=sharebox.hash%>'
             },
             "google": {
                 "type": "redirect",
                 "url": 'https://plus.google.com/share',
-                "data": 'url=<%=sharebox.link%>'
+                "data": 'url=<%=sharebox.link%>&text=<%=sharebox.description%>&hl=<%=sharebox.lang%>'
+            },
+            "googlebookmarks": {
+                "type": "redirect",
+                "url": 'https://www.google.com/bookmarks/mark',
+                "data": 'op=edit&bkmk<%=sharebox.link%>&title=<%=sharebox.title%>&annotation=<%=sharebox.description%>&labels=<%=sharebox.hash%>'
+            },
+            "reddit": {
+                "type": "redirect",
+                "url": "https://reddit.com/submit",
+                "data": "url=<%=sharebox.link%>&title=<%=sharebox.title%>"
+            },
+            "tumblr": {
+                "type": "redirect",
+                "url": "https://www.tumblr.com/widgets/share/tool",
+                "data": "canonicalUrl=<%=sharebox.link%>&title=<%=sharebox.title%>&caption=<%=sharebox.description%>&tags=<%=sharebox.hash%>"
+            },
+            "pinterest": {
+                "type": "redirect",
+                "url": "http://pinterest.com/pin/create/link/",
+                "data": "url=<%=sharebox.link%>"
+            },
+            "pinterestbutton": {
+                "type": "redirect",
+                "url": "http://pinterest.com/pin/create/button/",
+                "data": "url=<%=sharebox.link%>"
+            },
+            "blogger": {
+                "type": "redirect",
+                "url": "https://www.blogger.com/blog-this.g",
+                "data": "u=<%=sharebox.link%>&n=<%=sharebox.title%>&t=<%=sharebox.description%>"
+            },
+            "livejournal": {
+                "type": "redirect",
+                "url": "http://www.livejournal.com/update.bml",
+                "data": "event=<%=sharebox.link%>&subject=<%=sharebox.title%>"
+            },
+            "evernote": {
+                "type": "redirect",
+                "url": "http://www.evernote.com/clip.action",
+                "data": "url=<%=sharebox.link%>&title=<%=sharebox.title%>"
+            },
+            "addthis": {
+                "type": "redirect",
+                "url": "http://www.addthis.com/bookmark.php",
+                "data": "url=<%=sharebox.link%>"
+            },
+            "getpocket": {
+                "type": "redirect",
+                "url": "https://getpocket.com/edit",
+                "data": "url=<%=sharebox.link%>"
+            },
+            "hackernews": {
+                "type": "redirect",
+                "url": "https://news.ycombinator.com/submitlink",
+                "data": "u=<%=sharebox.link%>&t=<%=sharebox.title%>"
+            },
+            "stumbleupon": {
+                "type": "redirect",
+                "url": "http://www.stumbleupon.com/submit",
+                "data": "url=<%=sharebox.link%>"
+            },
+            "digg": {
+                "type": "redirect",
+                "url": "http://digg.com/submit",
+                "data": "url=<%=sharebox.link%>"
+            },
+            "buffer": {
+                "type": "redirect",
+                "url": "https://buffer.com/add",
+                "data": "url=<%=sharebox.link%>&text=<%=sharebox.title%>"
+            },
+            "flipboard": {
+                "type": "redirect",
+                "url": "https://share.flipboard.com/bookmarklet/popout",
+                "data": "v=2&title=<%=sharebox.title%>&url=<%=sharebox.link%>"
+            },
+            "instapaper": {
+                "type": "redirect",
+                "url": "http://www.instapaper.com/edit",
+                "data": "description=<%=sharebox.description%>&title=<%=sharebox.title%>&url=<%=sharebox.link%>"
+            },
+            "surfingbird": {
+                "type": "redirect",
+                "url": "http://surfingbird.ru/share",
+                "data": "description=<%=sharebox.description%>&title=<%=sharebox.title%>&url=<%=sharebox.link%>&screenshot=<%=sharebox.image%>"
+            },
+            "flattr": {
+                "type": "redirect",
+                "url": "https://flattr.com/submit/auto",
+                "data": "hidden=HIDDEN&description=<%=sharebox.description%>&title=<%=sharebox.title%>&url=<%=sharebox.link%>&language=<%=sharebox.lang%>&tags=<%=sharebox.hash%>&category=<%=sharebox.category%>&user_id=<%=sharebox.usrid || sharebox.source%>"
+            },
+            "diaspora": {
+                "type": "redirect",
+                "url": "https://share.diasporafoundation.org/",
+                "data": "title=<%=sharebox.title%>&url=<%=sharebox.link%>"
+            },
+            "vk": {
+                "type": "redirect",
+                "url": "http://vk.com/share.php",
+                "data": "title=<%=sharebox.title%>&url=<%=sharebox.link%>&comment=<%=sharebox.description%>"
+            },
+            "okru": {
+                "type": "redirect",
+                "url": "https://connect.ok.ru/dk",
+                "data": "st.cmd=WidgetSharePreview&st.shareUrl=<%=sharebox.link%>"
+            },
+            "threema": {
+                "type": "redirect",
+                "url": "threema://compose",
+                "data": "text=<%=sharebox.link%>&id=<%=sharebox.usrid%>"
+            },
+            "sms": {
+                "type": "redirect",
+                "url": "sms:<%=sharebox.phone%>",
+                "data": "body=<%=sharebox.description%>"
+            },
+            "line": {
+                "type": "redirect",
+                "url": "https://lineit.line.me/share/ui",
+                "data": "url=<%=sharebox.link%>&text=<%=sharebox.description%>"
+            },
+            "skype": {
+                "type": "redirect",
+                "url": "https://web.skype.com/share",
+                "data": "url=<%=sharebox.link%>&text=<%=sharebox.description%>"
+            },
+            "telegram": {
+                "type": "redirect",
+                "url": "https://telegram.me/share/url",
+                "data": "url=<%=sharebox.link%>&text=<%=sharebox.title%>&to=<%=sharebox.phone%>"
+            },
+            "tgschema": {
+                "type": "redirect",
+                "url": "tg://msg",
+                "data": "url=<%=sharebox.link%>&text=<%=sharebox.title%>&to=<%=sharebox.phone%>"
+            },
+            "email": {
+                "type": "redirect",
+                "url": "mailto:<%=sharebox.email%>",
+                "data": "subject=<%=sharebox.title%>&body=<%=sharebox.description%>"
+            },
+            "gmail": {
+                "type": "redirect",
+                "url": "https://mail.google.com/mail/",
+                "data": "view=cm&to=<%=sharebox.email%>&su=<%=sharebox.title%>&body=<%=sharebox.description%>&bcc=<%=sharebox.email%>&cc=<%=sharebox.email%>"
+            },
+            "yahoo": {
+                "type": "redirect",
+                "url": "http://compose.mail.yahoo.com/",
+                "data": "to=<%=sharebox.email%>&subject=<%=sharebox.title%>&body=<%=sharebox.description%>"
             },
             "wechat": {
                 "type": "native",
@@ -158,27 +318,32 @@
                 }else if(apiType == "redirect"){
                     var apiUrl = api.url;
                     var apiData = api.data;
+                    var shareFullURL = "";
+
+                    apiUrl = ShareTemplate.render(true, apiUrl, conf, {
+                        callback: function(ret){
+                            return ret.result;
+                        }
+                    }).local;
+
+                    apiData = ShareTemplate.render(true, apiData, conf, {
+                        callback: function(ret){
+                            return ret.result;
+                        }
+                    }).local;
+
+                    shareFullURL = apiUrl + (apiUrl.indexOf("?") == -1 ? "?" : "&") + apiData;
 
                     if(conf.external){
                         Util.requestExternal(conf.external, [ins, conf, {
-                            callback: function(_apiUrl, _apiData, _conf){
-                                this.render(true, _apiData, _conf, {
-                                    callback: function(ret, _url){
-                                        window.open(_url + "?" + ret.result, _conf.target);
-                                    },
-                                    args: [_apiUrl]
-                                });
+                            callback: function(_shareUrl, _conf){
+                                window.open(_shareUrl, _conf.target);
                             },
-                            args: [apiUrl, apiData, conf],
+                            args: [shareFullURL, conf],
                             context: ShareTemplate
                         }, node]);
                     }else{
-                        ShareTemplate.render(true, apiData, conf, {
-                            callback: function(ret, _url, _conf){
-                                window.open(_url + "?" + ret.result, _conf.target);
-                            },
-                            args: [apiUrl, conf]
-                        });
+                        window.open(shareFullURL, conf.target);
                     }
                 }
             }
@@ -199,6 +364,13 @@
      *            share -> source 来源
      *            share -> summary 摘要
      *            share -> external  callback URI 
+     *            share -> target 
+     *            share -> lang  语言代码
+     *            share -> hash  hash tags
+     *            share -> category 分类
+     *            share -> usrid 用户ID
+     *            share -> email 电子邮箱
+     *            share -> phone 手机号码
      * options -> platforms  平台配置
      *            platform -> type   类型，如: wx, timeline, weibo, qq, qzone等
      *            platform -> text   文本标签，如：微信好友，朋友圈，微博，QQ好友，QZone等
@@ -212,6 +384,13 @@
      *            platform -> aid  应用ID
      *            platform -> akey 应用KEY
      *            platform -> external  callback URI 
+     *            platform -> target
+     *            platform -> lang  语言代码
+     *            platform -> hash  hash tags
+     *            platform -> category 分类
+     *            platform -> usrid 用户ID
+     *            platform -> email 电子邮箱
+     *            platform -> phone 手机号码
      * options -> apis 分享API
      *            api -> type API类型，[redirect | native]
      *            api -> url 接口地址
@@ -229,7 +408,13 @@
                 "source": "",
                 "summary": "",
                 "external": "",
-                "target": ""
+                "target": "",
+                "lang": "",
+                "hash": "",
+                "category": "",
+                "usrid": "",
+                "email": "",
+                "phone": ""
             };
         },
         platform: function(){
@@ -247,7 +432,13 @@
                 "source": "",
                 "summary": "",
                 "external": "",
-                "target": ""
+                "target": "",
+                "lang": "",
+                "hash": "",
+                "category": "",
+                "usrid": "",
+                "email": "",
+                "phone": ""
             };
         },
         api: function(){
@@ -272,7 +463,13 @@
                 "source": "",
                 "summary": "",
                 "external": "",
-                "target": "_blank"
+                "target": "_blank",
+                "lang": "",
+                "hash": "",
+                "category": "",
+                "usrid": "",
+                "email": "",
+                "phone": ""
             },
             "platforms": [
                 {"type": "wechat",
@@ -287,7 +484,13 @@
                     "source": "",
                     "summary": "",
                     "external": "",
-                    "target": "_blank"
+                    "target": "_blank",
+                    "lang": "",
+                    "hash": "",
+                    "category": "",
+                    "usrid": "",
+                    "email": "",
+                    "phone": ""
                 },
                 {"type": "timeline",
                     "text": "朋友圈",
@@ -301,7 +504,13 @@
                     "source": "",
                     "summary": "",
                     "external": "",
-                    "target": "_blank"
+                    "target": "_blank",
+                    "lang": "",
+                    "hash": "",
+                    "category": "",
+                    "usrid": "",
+                    "email": "",
+                    "phone": ""
                 },
                 {"type": "weibo",
                     "text": "微博",
@@ -315,7 +524,13 @@
                     "source": "",
                     "summary": "",
                     "external": "",
-                    "target": "_blank"
+                    "target": "_blank",
+                    "lang": "",
+                    "hash": "",
+                    "category": "",
+                    "usrid": "",
+                    "email": "",
+                    "phone": ""
                 },
                 {"type": "mqq",
                     "text": "QQ好友",
@@ -329,7 +544,13 @@
                     "source": "",
                     "summary": "",
                     "external": "",
-                    "target": "_blank"
+                    "target": "_blank",
+                    "lang": "",
+                    "hash": "",
+                    "category": "",
+                    "usrid": "",
+                    "email": "",
+                    "phone": ""
                 }
             ],
             "apis": {}
