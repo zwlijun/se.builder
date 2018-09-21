@@ -592,7 +592,12 @@
             columns.on(__START_EVENT_PREFIX + "_" + name, "", data, this.touchStart);
         },
         touchStart: function(e){
-            var pointer = (("changedTouches" in e) ? e.changedTouches[0] : e);
+            var pointer = (function(e){
+                if(window.jQuery && (e instanceof jQuery.Event)){
+                    e = e.originalEvent;
+                }
+                return ("changedTouches" in e) ? e.changedTouches[0] : e
+            })(e);
             var now = Util.getTime();
             var data = e.data;
             var ts = data.touchselect;
@@ -612,7 +617,12 @@
                        .on(__END_EVENT_PREFIX + "_" + name, "", _data, ts.touchEnd);
         },
         touchMove: function(e){
-            var pointer = (("changedTouches" in e) ? e.changedTouches[0] : e);
+            var pointer = (function(e){
+                if(window.jQuery && (e instanceof jQuery.Event)){
+                    e = e.originalEvent;
+                }
+                return ("changedTouches" in e) ? e.changedTouches[0] : e
+            })(e);
 
             var data = e.data;
             var ts = data.touchselect;
@@ -632,7 +642,12 @@
             Style.css(wrapper, "transform", matrix);
         },
         touchEnd: function(e){
-            var pointer = (("changedTouches" in e) ? e.changedTouches[0] : e);
+            var pointer = (function(e){
+                if(window.jQuery && (e instanceof jQuery.Event)){
+                    e = e.originalEvent;
+                }
+                return ("changedTouches" in e) ? e.changedTouches[0] : e
+            })(e);
 
             var data = e.data;
             var ts = data.touchselect;
