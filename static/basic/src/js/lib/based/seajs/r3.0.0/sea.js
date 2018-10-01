@@ -904,7 +904,15 @@ Module.prototype.fetch = function(requestCache) {
   }
 
   function onRequest(error) {
-    delete fetchingList[requestUri]
+    delete fetchingList[requestUri];
+
+    // 如果接口返回错误时，删除缓存信息
+    if(true === error){
+      delete cachedMods[requestUri];
+      delete callbackList[requestUri];
+      return ;
+    }
+
     fetchedList[requestUri] = true
 
     // Save meta data of anonymous module

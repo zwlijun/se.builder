@@ -32,7 +32,7 @@ exports.run = function (sock, project, deploy, win32) {
             console.log("shell://" + script + "\\timestamp.cmd");
             childProcess.exec(script + "\\timestamp.cmd", {
                 encoding: 'utf8',
-                timeout: 0,
+                timeout: 24 * 60 * 60 * 1000,
                 maxBuffer: 100000 * 1024, // 默认 200 * 1024
                 killSignal: 'SIGTERM'
             }, function(error, stdout, stderr){
@@ -47,7 +47,7 @@ exports.run = function (sock, project, deploy, win32) {
             console.log("shell://" + script + "/timestamp.sh");
             childProcess.execFile(script + "/timestamp.sh", [], {
                 encoding: 'utf8',
-                timeout: 0,
+                timeout: 24 * 60 * 60 * 1000,
                 maxBuffer: 100000 * 1024, // 默认 200 * 1024
                 killSignal: 'SIGTERM'
             }, function(error, stdout, stderr){

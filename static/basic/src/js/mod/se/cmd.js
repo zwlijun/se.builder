@@ -177,6 +177,8 @@
         fireHandle.args = [code, msg, type].concat(args);
 
         if(true === onlyCheckErrorMap){
+            fireHandle = null;
+            
             if(err){
                 if(err.apply){
                     return err.apply(null, [fireHandle, code, msg, type]);

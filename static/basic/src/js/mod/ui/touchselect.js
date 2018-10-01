@@ -71,7 +71,8 @@
                    + '    <div class="touchselect-item ellipsis" '
                    + '         data-index="<%=i + offset%>" '
                    + '         data-value="<%=option.value%>" '
-                   + '         data-linkedvalue="<%=option.linkedvalue%>"><%=option.text%></div>'
+                   + '         data-linkedvalue="<%=option.linkedvalue%>" '
+                   + '         data-external="<%=option.external%>"><%=option.text%></div>'
                    + '    <%}%>'
                    + '    <%'
                    + '    if(!ts.label && "" == cls){'
@@ -104,7 +105,6 @@
 
             var ts = TouchSelect.getTouchSelect(name);
             if(ts){
-                ts.exec("exit", [name]);
                 ts.exec("cancel", [name]);
             }
         },
@@ -116,7 +116,6 @@
 
             var ts = TouchSelect.getTouchSelect(name);
             if(ts){
-                ts.exec("exit", [name]);
                 ts.exec("confirm", [name]);
             }
         }
@@ -136,11 +135,12 @@
             },
             "data": {
                 "linked": false,
+                "dynamic": false,
                 "list": [
                     // {
                     //     "label": {"value": "", "text": "请选择"},
                     //     "options": [
-                    //         {"value": "", "text": "", "linkedvalue": ""}
+                    //         {"value": "", "text": "", "linkedvalue": "", "external": ""}
                     //     ]
                     // }
                 ]
@@ -320,7 +320,10 @@
                 "hasLabel": !!label,
                 "value": option.value,
                 "text": option.text,
-                "linkedvalue": option.linkedvalue
+                "linkedvalue": option.linkedvalue,
+                "external": option.external,
+                "linked": data.linked,
+                "dynamic": data.dynamic
             };
         },
         getSelectedOption: function(columnIndex){
@@ -339,7 +342,11 @@
             var newOptions = [];
             var size = options.length;
             var option = null;
-            var selectedValue = selectedOption.value;
+            var selectedValue = selectedOption ? selectedOption.value : "";
+
+            if(!selectedOption){
+                return newOptions;
+            }
 
             for(var i = 0; i < size; i++){
                 option = options[i];
@@ -468,10 +475,29 @@
             var dataList = data.list;
 
             this.replaceColumns(onlySelf, startColumnIndex, linked, dataList, defaultOptions);
-            this.scrollToSelected();
+            this.scrollToSelected(startColumnIndex);
             this.bindEvents();
         },
-        render: function(){
+        callout: function(){
+            var name = this.getTouchSelectName();
+
+            ActionSheet.show(name);
+            this.exec("callout", [name]);
+        },
+        cancel: function(){
+            var name = this.getTouchSelectName();
+
+            ActionSheet.hide();
+            ts.exec("cancel", [name]);
+            
+        },
+        confirm: function(){
+            var name = this.getTouchSelectName();
+
+            ActionSheet.hide();
+            ts.exec("confirm", [name]);
+        },
+        render: function(visible){
             var data = this.options("data");
             var dataList = data.list;
 
@@ -484,6 +510,10 @@
 
                 this.scrollToSelected();
                 this.bindEvents();
+
+                if(true === visible){
+                    this.callout();
+                }
             }else{
                 var metaData = {
                     "name": this.getTouchSelectName(),
@@ -505,6 +535,10 @@
 
                         this.scrollToSelected();
                         this.bindEvents();
+
+                        if(true === visible){
+                            this.callout();
+                        }
                     },
                     context: this
                 });
@@ -517,11 +551,19 @@
 
             this.options("data", data);
         },
-        scrollToSelected: function(){
+        updateColumnDataOptions: function(columnIndex, newDataList){
+            var data = this.options("data");
+
+            data.list[columnIndex].options = newDataList;
+
+            this.options("data", data);
+        },
+        scrollToSelected: function(startColumnIndex){
+            var startIndex = startColumnIndex || 0;
             var selectedOptions = this.getSelectedOptions();
             var size = selectedOptions.length;
 
-            for(var i = 0; i < size; i++){
+            for(var i = startIndex; i < size; i++){
                 this.scrollTo(selectedOptions[i], true);
             }
         },
@@ -561,9 +603,14 @@
                    .attr("data-selectedIndex", option.selectedIndex);
             Style.css(wrapper, "transform", matrix);
 
-            if(isChanged){
-                this.exec("change", [this.getTouchSelectName(), option.columnIndex]);
+            // console.warn("isChanged", isChanged, option.external, option)
 
+            if(isChanged){
+                if(option.external){
+                    Util.requestExternal(option.external, [option])
+                }
+
+                this.exec("change", [this.getTouchSelectName(), option.columnIndex]);
             }
         },
         removeEvents: function(){
@@ -676,7 +723,8 @@
                 "index": Number(target.attr("data-index")),
                 "value": target.attr("data-value"),
                 "linkedvalue": target.attr("data-linkedvalue") || "",
-                "text": target.html()
+                "text": target.html(),
+                "external": target.attr("data-external") || ""
             };
 
             var prevSelectedOption = ts.getSelectedOption(columnIndex);
@@ -788,8 +836,23 @@
             getSelectedOption: function(columnIndex){
                 return ts.getSelectedOption(columnIndex);
             },
-            render: function(){
-                ts.render();
+            render: function(visible){
+                ts.render(visible);
+
+                return this;
+            },
+            callout: function(){
+                ts.callout();
+
+                return this;
+            },
+            cancel: function(){
+                ts.cancel();
+
+                return this;
+            },
+            confirm: function(){
+                ts.confirm();
 
                 return this;
             },
@@ -800,6 +863,11 @@
             },
             updateColumnData: function(columnIndex, data){
                 ts.updateColumnData(columnIndex, data);
+
+                return this;
+            },
+            updateColumnDataOptions: function(columnIndex, dataList){
+                ts.updateColumnDataOptions(columnIndex, dataList);
 
                 return this;
             },

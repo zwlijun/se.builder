@@ -42,21 +42,12 @@
 	height: 4.32rem;
 	width: 100%;
 	-webkit-mask-box-image: -webkit-linear-gradient(
-		bottom, 
-		transparent, 
-		transparent 5%, 
-		white 20%, 
-		white 80%, 
-		transparent 95%, 
-		transparent
-	);
-    -webkit-mask-box-image: linear-gradient(
-    	to top, 
-    	transparent, 
-    	transparent 5%, 
-    	white 20%, 
-    	white 80%, 
-    	transparent 95%, 
+    	bottom,
+    	transparent,
+    	transparent 5%,
+    	#fff 20%,
+    	#fff 80%,
+    	transparent 95%,
     	transparent
     );
     padding: 0;

@@ -226,9 +226,10 @@
                 "url": "sms:<%=sharebox.phone%>",
                 "data": "body=<%=sharebox.description%>"
             },
+            // 原先的地址 https://lineit.line.me/share/ui
             "line": {
                 "type": "redirect",
-                "url": "https://lineit.line.me/share/ui",
+                "url": "https://social-plugins.line.me/lineit/share",
                 "data": "url=<%=sharebox.link%>&text=<%=sharebox.description%>"
             },
             "skype": {

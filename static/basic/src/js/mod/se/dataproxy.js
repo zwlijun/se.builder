@@ -22,6 +22,43 @@
         "errorHandler": CMD.errorHandler    //错误提示处理回调
     };
 
+    function MatchErrorHandler(code, errorMap){
+        var CONST_UNIVERSAL_MATCH = "*";
+
+        code = code + "";
+        errorMap = errorMap || null;
+
+        if(!errorMap){
+            return null;
+        }
+        //先匹配code，如果有就直接返回
+        if(code in errorMap){
+            return errorMap[code] || null;
+        }
+        //糊模匹配
+        for(var key in errorMap){
+            if(errorMap.hasOwnProperty(key)){
+                if(key.charAt(0) === "~"){
+                    key = key.substring(1);
+                    key = key.replace(/%/g, "[a-z0-9]+");
+
+                    var pattern = new RegExp(key, "gi");
+                    pattern.lastIndex = 0;
+
+                    if(pattern.test(code)){
+                        return errorMap[key] || null;
+                    }
+                }
+            }
+        }
+        //通用匹配
+        if(CONST_UNIVERSAL_MATCH in errorMap){
+            return errorMap[CONST_UNIVERSAL_MATCH] || null;
+        }
+        
+        return null;
+    };
+
     var ResponseProxy = {
         /**
          * JSON数据响应
@@ -50,7 +87,13 @@
          *                                          },
          *                                          args: [],
          *                                          context: null
-         *                                      }
+         *                                      },
+         *                                      "*": {
+         *                                          callback: function(ctx, code, msg, resp){
+         *                                              //@TODO
+         *                                          }
+         *                                      },
+         *                                      "~"
          *                                  }      
          *         }
          * @param  Object conf       数据判断条件配置 @see _config
@@ -76,8 +119,10 @@
 
                     Util.execHandler(handler, [context, data, msg]);
                 }else{
-                    if(exception.errorMap && (String(code) in exception.errorMap)){
-                        Util.execHandler(exception.errorMap[String(code)], [context, code, msg, data]);
+                    var errHandler = MatchErrorHandler(code, exception.errorMap);
+
+                    if(errHandler){
+                        Util.execHandler(errHandler, [context, code, msg, data]);
                     }else{
                         CMD.fireError(code || "0x02", msg || "系统繁忙，请稍候再试", ErrorTypes.ERROR, errorHandler, false === exception.tips);
                     }
@@ -87,8 +132,10 @@
                     }
                 }
             }else{
-                if(exception.errorMap && ("noresponse" in exception.errorMap)){
-                    Util.execHandler(exception.errorMap["noresponse"], [context, -1, "服务器返回数据失败", null]);
+                var errHandler = MatchErrorHandler("noresponse", exception.errorMap);
+                
+                if(errHandler){
+                    Util.execHandler(errHandler, [context, -1, "服务器返回数据失败", null]);
                 }else{
                     CMD.fireError("0x01", "服务器返回数据失败", ErrorTypes.ERROR, errorHandler, false === exception.tips);
                 }
