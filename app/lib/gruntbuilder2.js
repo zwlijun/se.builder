@@ -16,8 +16,10 @@ var _Project = null;
 var _Files = null;
 
 var signCount = 0;
+var errorCount = 0;
 var gruntEnded = 0;
 var buildFileCount = 0;
+var deployFileCount = 0;
 
 var npmTask = [];
 var gruntTask = [];
@@ -381,6 +383,16 @@ var writeGruntFile = function(){
     });
 };
 
+var CopyTransportFile = function(sourcePath, transportFile){
+    fse.copy(sourcePath, transportFile, function(err){
+        if(err){
+            emit("error", "复制源文件(" + sourcePath + ")到__transport__目录失败");
+        }else{
+            console.log("Copy source file: " + sourcePath + " -> " + transportFile);
+        }
+    });
+};
+
 var readyBuildFiles = function(){
     var env = GetEnvInfo();
     var buildInfo = GetBuildInfo();
@@ -415,13 +427,9 @@ var readyBuildFiles = function(){
 
         transportFile = sourcePath.replace(doc + src, doc + src + transportTempDir + "/"); //从__transport__目录获取源文件
 
-        fse.copy(sourcePath, transportFile, function(err){
-            if(err){
-                emit("error", "复制源文件(" + sourcePath + ")到__transport__目录失败");
-            }else{
-                console.log("Copy source file: " + sourcePath + " -> " + transportFile);
-            }
-        });
+        console.log(i + ": " + sourcePath);
+
+        CopyTransportFile(sourcePath, transportFile);
     }
 
     startGruntApp();
@@ -481,12 +489,18 @@ var parseRelativeName = function(relativeName, sign, alias){
 
     return result;
 };
-
+// var _TEMP_COUNT1 = 0;
+// var _TEMP_COUNT2 = 0;
+// var _TEMP_COUNT3 = 0;
 var writeChecksum = function(file, isDest){
     //setTimeout(function(){
+        // console.warn("count1: " + (++_TEMP_COUNT1))
         if(fs.existsSync(file)){
+            // console.warn("count2: " + (++_TEMP_COUNT2))
             cs.FileSHA1CheckSum(file, function(filename, checksum, isSame){
                 cs.WriteSHA1CheckSum(filename, checksum);
+
+                // console.warn("count3: " + (++_TEMP_COUNT3))
 
                 var _project = GetProjectInfo();
                 var _env = GetEnvInfo();
@@ -519,15 +533,19 @@ var writeChecksum = function(file, isDest){
                     var nonEscapeFindName = null;
 
                     var rsopts = {
-                        flags: 'r',
-                        mode: "0644",
+                        flags: "r",
+                        encoding: 'utf8',
+                        mode: 0o666,
                         encoding: nodeCharset,
                         autoClose: true
                     };
 
                     var wsopts = {
-                        mode : "0644",
-                        defaultEncoding: nodeCharset
+                        flags: "w",
+                        encoding: 'utf8',
+                        mode : 0o666,
+                        defaultEncoding: nodeCharset,
+                        autoClose: true
                     };
 
                     if("img" == _deploy.alias){
@@ -538,43 +556,78 @@ var writeChecksum = function(file, isDest){
                     var irs = fs.createReadStream(filename, rsopts);
                     var ows = fs.createWriteStream(filename.replace(ext, signExt), wsopts);
 
-                    irs.pipe(ows);
-
-                    sedName = relativeData.signSource;
-                    findName = escapeData.path + escapeData.shortName + signReg + escapeData.ext;
-                    nonEscapeFindName = escapeData.path + escapeData.shortName + nonEscapeSignReg + escapeData.ext;
-
-                    //  grep -Ei "%string%" somefile.txt | sed "s/^/  /"
-
-                    for(var i = 0, len = sedSubPaths.length; i < len; i++){
-                        if(!findName || !sedName){
-                            continue;
-                        }
+                    ows.on("finish", function(){
+                        signCount++;
+                        emit("encoding", "[" + errorCount + "/" + signCount + "/" + deployFileCount + "]finish " + filename + " -> " + filename.replace(ext, signExt));
                         
-                        if(win32){
-                            sedList.push("@call sed.cmd " + sedName + " " + _sedRoot + sedSubPaths[i] + " " + _project.charset);
-                        }else{
-                            sedList.push("sed -i \"\" 's#" + findName + "#" + sedName + "#g' `grep -E " + findName + " -rl " + _sedRoot + sedSubPaths[i] + "`");
-                        }
-                    }
 
-                    if("js" == _deploy.alias){
-                        sedName = "\\\"" + relativeData.requireSignUri + "\\\"";
-                        findName = "\\\"" + escapeData.aliasPath + escapeData.shortName + signReg + "\\\"";
-                        nonEscapeFindName = "\\\"" + escapeData.aliasPath + escapeData.shortName + nonEscapeSignReg + "\\\"";
+                        if("js" == _deploy.alias){
+                            signReg += '\\\(\\\"\\\|\\\.js\\\)';
+                            nonEscapeSignReg += '(\\\"|\\\.js)';
+
+                            sedName = relativeData.requireSignUri + "\\2";
+                            findName = escapeData.aliasPath + escapeData.shortName + signReg;
+                            nonEscapeFindName = escapeData.aliasPath + escapeData.shortName + nonEscapeSignReg; 
+                        }else{
+                            sedName = relativeData.signSource;
+                            findName = escapeData.path + escapeData.shortName + signReg + escapeData.ext;
+                            nonEscapeFindName = escapeData.path + escapeData.shortName + nonEscapeSignReg + escapeData.ext;
+                        }
+
+                        //  grep -Ei "%string%" somefile.txt | sed "s/^/  /"
 
                         for(var i = 0, len = sedSubPaths.length; i < len; i++){
                             if(!findName || !sedName){
                                 continue;
                             }
-                            
+
                             if(win32){
-                                sedList.push("@call sed.cmd " + sedName + " " + _sedRoot + sedSubPaths[i]);
+                                sedList.push("@call sed.cmd " + sedName + " " + _sedRoot + sedSubPaths[i] + " " + _project.charset);
                             }else{
-                                sedList.push("sed -i \"\" 's#" + findName + "#" + sedName + "#g' `grep -E " + findName + " -rl " + _sedRoot + sedSubPaths[i] + "`");
+                                sedList.push("sed -Ei '' 's#" + nonEscapeFindName + "#" + sedName + "#g' `grep -E " + findName + " -rl " + _sedRoot + sedSubPaths[i] + "`");
                             }
                         }
-                    }
+
+                        // if("js" == _deploy.alias){
+                        //     sedName = "\\\"" + relativeData.requireSignUri + "\\\"";
+                        //     findName = "\\\"" + escapeData.aliasPath + escapeData.shortName + signReg + "\\\"";
+                        //     nonEscapeFindName = "\\\"" + escapeData.aliasPath + escapeData.shortName + nonEscapeSignReg + "\\\"";
+
+                        //     for(var i = 0, len = sedSubPaths.length; i < len; i++){
+                        //         if(!findName || !sedName){
+                        //             continue;
+                        //         }
+                                
+                        //         if(win32){
+                        //             sedList.push("@call sed.cmd " + sedName + " " + _sedRoot + sedSubPaths[i]);
+                        //         }else{
+                        //             sedList.push("sed -i \"\" 's#" + findName + "#" + sedName + "#g' `grep -E " + findName + " -rl " + _sedRoot + sedSubPaths[i] + "`");
+                        //         }
+                        //     }
+                        // }
+                        
+                        if((signCount + errorCount) >= deployFileCount){
+                            if(errorCount > 0){
+                                emit("error", "文件HASH计算出错[" + errorCount + "/" + signCount + "/" + deployFileCount + "]");
+                            }else{
+                                emit("encoding", "文件HASH计算完成，开始进行部署...");
+                                deploy();
+                            }
+                        }
+                    });
+
+                    ows.on("error", function(message){
+                        errorCount++;
+
+                        emit("encoding", "=====文件HASH计算出错=====");
+                        emit("encoding", "message: " + message);
+                        emit("encoding", "[" + errorCount + "/" + signCount + "/" + deployFileCount + "]finish " + filename + " -> " + filename.replace(ext, signExt));
+                        if((signCount + errorCount) >= deployFileCount){
+                            emit("error", "文件HASH计算出错[" + errorCount + "/" + signCount + "]");
+                        }
+                    });
+
+                    irs.pipe(ows);                   
                 }
 
                 emit("encoding", "storage file sign: " + checksum);
@@ -589,7 +642,6 @@ var writeDestChecksum = function(file){
     // setTimeout(function(){
         emit("encoding", "create dest file(" + file + ") sign...");
         writeChecksum(file, true);
-        signCount++;
 
     //     if(signCount >= buildFileCount && true === gruntEnded){
     //         emit("encoding", "grunt & sign completed.");
@@ -602,7 +654,6 @@ var writeSourceChecksum = function(file){
     // setTimeout(function(){
         emit("encoding", "create source file(" + file + ") sign...");
         writeChecksum(file, false);
-        signCount++;
 
     //     if(signCount >= buildFileCount && true === gruntEnded){
     //         emit("encoding", "grunt & sign completed.");
@@ -618,8 +669,12 @@ var parseGruntData = function(str){
     var min = str.substring(startIndex, endIndex);
     var source = min.replace("/" + buildTempDir + "/", "/");
 
-    writeSourceChecksum(source);
-    writeDestChecksum(min);
+    if(endIndex > startIndex){
+        writeSourceChecksum(source);
+        writeDestChecksum(min);
+    }else{
+        emit("encoding", "file path parse error >>> " + str);
+    }
 }
 
 var parseGruntImageData = function(str){
@@ -637,8 +692,12 @@ var parseGruntImageData = function(str){
 
     source = source.replace("/" + transportTempDir + "/", "/");
 
-    writeSourceChecksum(source);
-    writeDestChecksum(min);
+    if(endIndex > startIndex){
+        writeSourceChecksum(source);
+        writeDestChecksum(min);
+    }else{
+        emit("encoding", "file path parse error >>> " + str);
+    }
 }
 
 var startGruntApp = function(){
@@ -651,22 +710,14 @@ var startGruntApp = function(){
     var gruntFile = process.cwd() + "/Gruntfile.js";
     var grunt = spawn(win32 ? "grunt.cmd" : "grunt", ['-gruntfile', gruntFile, "-stack", "true", "-verbose", "true"]);
 
+    var gruntRunLog = "";
+
     grunt.stdout.on('data', function (data) {
         // console.log(data)
         var str = data.toString("UTF-8");
-        var inputs = str.split(/[\r\n]/);
-
-        for(var i = 0; i < inputs.length; i++){
-            str = inputs[i];
-
-            if(str.indexOf("File ") != -1){
-                parseGruntData(str);
-            }else if(str.indexOf("✔ ") != -1){
-                parseGruntImageData(str);
-            }
-
-            emit("encoding", 'grunt stdout[' + signCount + '/' + buildFileCount + ']: ' + str);
-        }
+        console.log(str);
+        
+        gruntRunLog += str;
     });
 
     grunt.stderr.on('data', function (data) {
@@ -677,14 +728,22 @@ var startGruntApp = function(){
         if(code === 0){
             gruntEnded = true;
 
-            emit("encoding", "grunt exited with code " + code);
+            var inputs = gruntRunLog.split(/[\r\n]/);
+            var str = "";
+            
+            for(var i = 0; i < inputs.length; i++){
+                str = inputs[i];
 
-            if(signCount >= buildFileCount){
-                emit("encoding", "Grunt编绎完成，开始进行部署[" + signCount + '/' + buildFileCount + "].");
-                deploy();
-            }else{
-                emit("error", "文件签名数与编绎的文件数不一致 [" + signCount + '/' + buildFileCount + "].");
+                if(str.indexOf("File ") != -1){
+                    parseGruntData(str);
+                }else if(str.indexOf("✔ ") != -1){
+                    parseGruntImageData(str);
+                }
+
+                emit("encoding", 'grunt stdout[' + signCount + '/' + buildFileCount + ']: ' + str);
             }
+
+            emit("encoding", "Grunt编绎完成，等待文件HASH部署...");
         }else{
             emit("error", "grunt exited with code " + code);
         }
@@ -821,7 +880,9 @@ exports.builder = {
         _Files = files;
 
         signCount = 0;
+        errorCount = 0;
         gruntEnded = false;
+        deployFileCount = files.length;
         buildFileCount = files.length * 2;
 
         LoadGruntfileTemplate();

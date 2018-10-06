@@ -33,7 +33,7 @@ exports.run = function (sock, project, deploy, win32) {
             childProcess.exec(script + "\\timestamp.cmd", {
                 encoding: 'utf8',
                 timeout: 24 * 60 * 60 * 1000,
-                maxBuffer: 100000 * 1024, // 默认 200 * 1024
+                maxBuffer: 10 * 1024 * 1024 * 1024, // 默认 200 * 1024 (bytes)
                 killSignal: 'SIGTERM'
             }, function(error, stdout, stderr){
                 console.log("==========执行完成::错误信息 START==========");
@@ -48,7 +48,7 @@ exports.run = function (sock, project, deploy, win32) {
             childProcess.execFile(script + "/timestamp.sh", [], {
                 encoding: 'utf8',
                 timeout: 24 * 60 * 60 * 1000,
-                maxBuffer: 100000 * 1024, // 默认 200 * 1024
+                maxBuffer: 10 * 1024 * 1024 * 1024, // 默认 200 * 1024
                 killSignal: 'SIGTERM'
             }, function(error, stdout, stderr){
                 console.log("==========执行完成::错误信息 START==========");
