@@ -1159,7 +1159,7 @@ window.$ === undefined && (window.$ = Zepto)
       var one = undefined;
       if(typeof(options) == "boolean"){
         one = options;
-      }else if(options && isObject(options)){
+      }else if(options && $.isPlainObject(options)){
         one = !!options.once;
       }
       if (one) autoRemove = function(e){

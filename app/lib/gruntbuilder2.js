@@ -21,6 +21,8 @@ var gruntEnded = 0;
 var buildFileCount = 0;
 var deployFileCount = 0;
 
+var copyTransportFileCount = 0;
+
 var npmTask = [];
 var gruntTask = [];
 var gruntTaskString = "";
@@ -383,12 +385,19 @@ var writeGruntFile = function(){
     });
 };
 
-var CopyTransportFile = function(sourcePath, transportFile){
+var CopyTransportFile = function(total, sourcePath, transportFile){
     fse.copy(sourcePath, transportFile, function(err){
+        copyTransportFileCount++;
+
         if(err){
             emit("error", "复制源文件(" + sourcePath + ")到__transport__目录失败");
         }else{
             console.log("Copy source file: " + sourcePath + " -> " + transportFile);
+
+            if(copyTransportFileCount >= total){
+                emit("encoding", "copy files: " + copyTransportFileCount + "/" + total);
+                startGruntApp();
+            }
         }
     });
 };
@@ -407,6 +416,8 @@ var readyBuildFiles = function(){
 
     var transportFile = null;
     var sourcePath = null;
+
+    copyTransportFileCount = 0;
 
     for(var i = 0; i < size; i++){
         // map.files.push({
@@ -427,12 +438,8 @@ var readyBuildFiles = function(){
 
         transportFile = sourcePath.replace(doc + src, doc + src + transportTempDir + "/"); //从__transport__目录获取源文件
 
-        console.log(i + ": " + sourcePath);
-
-        CopyTransportFile(sourcePath, transportFile);
+        CopyTransportFile(size, sourcePath, transportFile);
     }
-
-    startGruntApp();
 };
 
 var addEscape = function(str){
@@ -715,7 +722,9 @@ var startGruntApp = function(){
     grunt.stdout.on('data', function (data) {
         // console.log(data)
         var str = data.toString("UTF-8");
+
         console.log(str);
+        emit("encoding", "..................................................");
         
         gruntRunLog += str;
     });
