@@ -1,5 +1,5 @@
 define(function(require, exports, module){
-    var LazyLoader = require("mod/se/lazyload");
+    var LazyLoader = require("mod/se/lazyloader");
 
     var lazy = LazyLoader.newInstance("test")
     lazy.options({
