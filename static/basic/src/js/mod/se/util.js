@@ -520,17 +520,17 @@
 
             return blob;
         },
-        getImageInfoByURL: function(src, callback){
-            var img = new Image();
+        getImageInfoByURL: function(src, callback, image){
+            var img = image ? image : new Image();
 
             img.onload = function(e){
-                _util.execHandler(callback, [img, img.naturalWidth, img.naturalHeight]);
+                _util.execHandler(callback, [img, img.naturalWidth || img.width, img.naturalHeight || img.height]);
 
                 img = null;
             }
 
             img.onerror = function(e){
-                _util.execHandler(callback, [null, 0, 0]);
+                _util.execHandler(callback, [img, 0, 0]);
 
                 img = null;
             }

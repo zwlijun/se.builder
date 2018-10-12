@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html data-page-alias="platform.app.project.module.feature.page"<!--#include virtual="/static/basic/inc/rem_attr.html" -->>
+<head>
+<!--#include virtual="/static/basic/inc/meta.html" -->
+<!--#include virtual="/static/basic/inc/rem.html" -->
+<title>Module::LazyLoader</title>
+<!--#include virtual="/static/basic/inc/css_common_gm.html" -->
+<!--#include virtual="/static/basic/inc/css_common_mm.html" -->
+<!--#include virtual="/static/basic/inc/static_version.html" -->
+<!--#include virtual="/static/basic/inc/global_config.html" -->
+<!--#include virtual="/static/basic/inc/stat_code_header.html" -->
+<style type="text/css">
+  img{
+    width: 50%;
+    height: 3.20rem;
+  }
+  p{
+    line-height: 3;
+  }
+</style>
+</head>
+<body>
+<header class="app-header"></header> 
+<article class="app-body">
+  <div style="height: 300px; overflow: hidden; overflow-y: auto;">
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <div class="flexbox top left wrap">
+    <img data-lazysrc="img@http://c.hiphotos.baidu.com/image/pic/item/0eb30f2442a7d933b29eb303a04bd11373f0018f.jpg">
+    <img data-lazysrc="img@http://g.hiphotos.baidu.com/image/pic/item/d50735fae6cd7b8960afd68e022442a7d8330ef8.jpg">
+  </div>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <div class="flexbox top left wrap">
+    <img data-lazysrc="img@http://c.hiphotos.baidu.com/image/pic/item/8b82b9014a90f603094fd7343412b31bb151edc2.jpg">
+    <img data-lazysrc="img@http://b.hiphotos.baidu.com/image/pic/item/c9fcc3cec3fdfc03d3f8a8cbd93f8794a5c226c4.jpg">
+  </div>
+  </div>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <div class="flexbox top left wrap">
+    <img data-lazysrc="img@http://c.hiphotos.baidu.com/image/pic/item/8b13632762d0f703336edeaf05fa513d2797c5e1.jpg">
+  </div>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+  <p>*******************************************</p>
+</article>
+<footer class="app-footer"></footer>
+<script>
+window.__CONFIG = (function(){
+    var conf = {
+        "code": "",
+        "message": "",
+        "toast": {
+            "align": "toast-bottom-center",
+            "delay": 3000,
+            "callbacks": {
+                "before": {
+                    callback: function(toastId){
+                        //@TODO
+                    },
+                    "args": [],
+                    "context": conf
+                },
+                "show": {
+                    callback: function(toastId){
+                        //@TODO
+                    },
+                    "args": [],
+                    "context": conf
+                },
+                "hide": {
+                    callback: function(toastId){
+                        //@TODO
+                    },
+                    "args": [],
+                    "context": conf
+                }
+            }
+        },
+        //BEGIN 重定向配置
+        "redirectTo": {  
+            //业务名称，默认：default
+            "default": {   
+                //业务状态(自定义key或错误码)对应的跳转URL
+                "success": "" 
+            }
+        } 
+        //END 重定向配置
+    };
+
+    return conf;
+})();
+</script>
+<!--#include virtual="/static/basic/inc/js_common_z.120.html" -->  
+<!--#include virtual="/static/basic/inc/js_logic_tpl.html" --> 
+<!--#include virtual="/static/basic/inc/stat_code_footer.html" -->
+<script>
+seajs.use(["logic/test/test_lazyload"]);
+</script>
+</body>
+</html>
