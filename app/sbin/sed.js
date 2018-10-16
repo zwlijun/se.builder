@@ -6,21 +6,28 @@ var TRISTATE_USE_DEFAULT = -2,
     TRISTATE_TRUE = -1, 
     TRISTATE_FALSE = 0;
 var _sed = {
-    parse: function(name){
+    parse: function(name, flag){
         var pattern = /^(.*)(\.[0-9a-fA-F]{40})(\.[a-zA-Z0-9]+)?$/g;
         var matcher = null;
 
         pattern.lastIndex = 0;
 
+        WScript.echo("sed::parse => " + name);
+
         if(null != (matcher = pattern.exec(name))){
+            WScript.echo("sed::parse => matcher: " + matcher);
+
             return {
                 "source": matcher[0],
                 "prefix": matcher[1],
                 "sign": matcher[2],
                 "ext": matcher[3],
+                "flag": flag,
                 "target": matcher[1] + matcher[2]
             }
         }
+
+        WScript.echo("sed::parse => matcher: " + matcher);
 
         return null;
     },
@@ -88,15 +95,15 @@ var _sed = {
         // WScript.echo(content)
 
         if(data.ext){
-            regexp = new RegExp(_sed.escape(data.prefix) + "(\\.[0-9a-fA-F]{40}){0,1}", "g");
+            regexp = new RegExp(_sed.escape(data.prefix) + "(\\.[0-9a-fA-F]{40}){0,1}" + (data.ext).replace(".", "\\."), "g");
             // WScript.echo("pattern a: " + regexp);
             // WScript.echo("regexp a: " + regexp.test(content) + ", source: " + data.source);
-            content = content.replace(regexp, data.target);
-        }else{
-            regexp = new RegExp("\"" + _sed.escape(data.prefix) + "(\\.[0-9a-fA-F]{40}){0,1}" + "\"", "g");
+            content = content.replace(regexp, data.target + data.ext);
+        }else if(data.flag){
+            regexp = new RegExp(_sed.escape(data.prefix) + "(\\.[0-9a-fA-F]{40}){0,1}" + "(\\\"|\\.js)", "g");
             // WScript.echo("pattern b: " + regexp);
             // WScript.echo("regexp b: " + regexp.test(content) + ", source: " + data.source);
-            content = content.replace(regexp, "\"" + data.target + "\"");
+            content = content.replace(regexp, data.target + "$2");
         }
 
         // WScript.echo("regexp: " + regexp);
@@ -143,12 +150,29 @@ var _sed = {
         fso = null;
     },
     replace: function(replaceName, findPath, charset){
+        var pattern = /(.+)([a-fA-F0-9]{40})(\\[0-9]{1})?/g;
+        var matcher = null;
+        var flag = null;
+
+        pattern.lastIndex = 0;
+
+        matcher = pattern.exec(replaceName);
+
+        if(null !== matcher){
+            flag = matcher[2] || null;
+            if(null !== flag){
+                replaceName = replaceName.replace(pattern, "$1$2");
+            }
+        }
+
         replaceName = replaceName.replace(/[\\"]/g, "");
         charset = (charset || "utf-8").toLowerCase();
 
-        var data = _sed.parse(replaceName);
+        WScript.echo("sed::replace => " + replaceName);
+        WScript.echo("sed::replace => " + flag);
+        WScript.echo(replaceName + " => " + findPath);
 
-        WScript.echo(replaceName + "; " + findPath);
+        var data = _sed.parse(replaceName, flag);
 
         if(data){
             _sed.find(data, findPath, charset);
