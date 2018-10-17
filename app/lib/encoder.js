@@ -17,7 +17,7 @@ var emit = function(state, message){
             "message": message
         }
     });
-    console.log(message);
+    console.log('\x1B[34m', message, '\x1B[39m');
 };
 
 var init = function(socket, size, project, files){

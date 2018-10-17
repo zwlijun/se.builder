@@ -18,7 +18,8 @@ var emit = function(state, message){
             "message": message
         }
     });
-    console.log(message);
+
+    console.log("\x1B[32m", message, "\x1B[39m");
 };
 
 exports.run = function (sock, project, deploy, win32) {

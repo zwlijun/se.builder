@@ -44,7 +44,11 @@ var emit = function(state, message){
             "message": message
         }
     });
-    console.log(message);
+    if("error" == state){
+        console.log("\x1B[31m", message, "\x1B[39m")
+    }else{
+        console.log("\x1B[32m", message, "\x1B[39m");
+    }
 };
 
 var GetProjectInfo = function(){

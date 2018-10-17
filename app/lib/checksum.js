@@ -33,28 +33,32 @@ var CheckSum = {
         var digest = null;
 
         //针对非图片统一文件的换行符
-        if(!/\.(jpg|png|jpeg)$/i.test(filename) && stream.indexOf(0x0d) != -1){
-            var b = null;
-            var buf = new Array();
+        // if(!/\.(jpg|png|jpeg)$/i.test(filename) && stream.indexOf(0x0d) != -1){
+        //     var b = null;
+        //     var buf = new Array();
 
-            for(var i = 0; i < stream.length; i++){
-                b = stream[i];
+        //     for(var i = 0; i < stream.length; i++){
+        //         b = stream[i];
 
-                if(b === 0x0d){
-                    continue;
-                }
-                buf.push(b);
-            }
+        //         if(b === 0x0d){
+        //             continue;
+        //         }
+        //         buf.push(b);
+        //     }
 
-            stream = Buffer.from(buf);
-        }
+        //     stream = Buffer.from(buf);
+        // }
 
         sum.update(stream);
         digest = sum.digest("hex");
 
         var target = CheckSum._read_(filename + "." + algorithm);
 
-        console.log("digest", digest, target, filename);
+        if(digest != target){
+            console.log("\x1B[33m", "digest", digest, target, filename, "\x1B[39m");
+        }else{
+            console.log("\x1B[32m", "digest", digest, target, filename, "\x1B[39m");
+        }
 
         if(callback && callback.apply){
             callback.apply(context || null, [filename, digest, (null == target || digest != target)].concat(args||[]));
