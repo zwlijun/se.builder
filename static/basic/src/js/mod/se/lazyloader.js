@@ -180,28 +180,24 @@
          * [setBackgroundImage description]
          * @param {[type]} node [description]
          * @param {[type]} src  [description]
+         * @param {[type]} defaultURL  [description]
          */
-        setBackgroundImage: function(node, src){
+        setBackgroundImage: function(node, src, defaultURL){
             var _this = this;
             var opts = _this.options();
 
             _this.exec("before", ["bg", node]);
 
             if(true === opts.validity){
-                var defaultURL = node.attr("data-default-image") || $('meta[name="default_image"]').attr("content") || "";
-
+                node.css("background-image", "url(" + defaultURL + ")");
                 Util.getImageInfoByURL(src, {
-                    callback: function(img, width, height, def){
-                        if(width <= 0 || height <= 0){
-                            url = def;
+                    callback: function(img, width, height, url, def){
+                        if(!img){
+                            this.node.css("background-image", "url(" + def + ")");
                             this.lazy.exec("error", ["bg", this.node]);
                         }else{
-                            url = img.src;
+                            this.node.css("background-image", "url(" + url + ")");
                             this.lazy.exec("success", ["bg", this.node]);
-                        }
-
-                        if(url){
-                            this.node.css("background-image", "url(" + img.src + ")");
                         }
 
                         this.lazy.exec("complete", ["bg", this.node]);
@@ -210,7 +206,7 @@
                         "node": node,
                         "lazy": _this
                     },
-                    args: [defaultURL]
+                    args: [src, defaultURL]
                 });
             }else{
                 node.css("background-image", "url(" + src + ")");
@@ -242,8 +238,9 @@
          * [setImageSource description]
          * @param {[type]} node [description]
          * @param {[type]} src  [description]
+         * @param {[type]} defaultURL  [description]
          */
-        setImageSource: function(node, src){
+        setImageSource: function(node, src, defaultURL){
             var _this = this;
             var opts = _this.options();
             
@@ -252,27 +249,32 @@
             if(!node){
                 return ;
             }
-            
-            var defaultURL = node.attr("data-default-image") || $('meta[name="default_image"]').attr("content") || "";
 
             _this.exec("before", ["img", node]);
 
-            Util.getImageInfoByURL(src, {
-                callback: function(img, width, height, def, tag){
-                    if(width <= 0 || height <= 0){
-                        this.node.attr("src", def);
-                        this.lazy.exec("error", ["img", img]);
-                    }else{
-                        this.lazy.exec("success", ["img", img]);
-                    }
-                    this.lazy.exec("complete", ["img", img]);
-                },
-                context: {
-                    "node": node,
-                    "lazy": _this
-                },
-                args: [defaultURL]
-            }, node[0]);
+            if(true === opts.validity){
+                node.attr("src", defaultURL);
+                Util.getImageInfoByURL(src, {
+                    callback: function(img, width, height, url, def){
+                        if(!img){
+                            this.node.attr("src", def);
+                            this.lazy.exec("error", ["img", this.node]);
+                        }else{
+                            this.node.attr("src", url);
+                            this.lazy.exec("success", ["img", this.node]);
+                        }
+                        this.lazy.exec("complete", ["img", this.node]);
+                    },
+                    context: {
+                        "node": node,
+                        "lazy": _this
+                    },
+                    args: [src, defaultURL]
+                });
+            }else{
+                node.attr("src", src);
+                _this.exec("complete", ["bg", node]);
+            }
         },
         /**
          * [process description]
@@ -288,25 +290,26 @@
 
             node.removeAttr("data-lazysrc");
 
+            var defaultURL = node.attr("data-default-image") || $('meta[name="default_image"]').attr("content") || "";
+
             var pattern = /^((bg|img)@)?([^\s]+)$/gi;
             var matcher = null;
 
             var type = null;
             var src = null;
 
+            var _this = this;
+            var opts = _this.options();
+
             pattern.lastIndex = 0;
             if(null !== (matcher = pattern.exec(lazy))){
-                type = matcher[2] || null;
-                src = matcher[3] || null;
+                type = matcher[2] || "img";
+                src = matcher[3] || defaultURL;
 
-                if(null !== type){
-                    if("bg" === type.toLowerCase()){
-                        this.setBackgroundImage(node, src)
-                    }else{
-                        this.setImageSource(node, src);
-                    }
+                if("bg" === type.toLowerCase()){
+                    this.setBackgroundImage(node, src, defaultURL);
                 }else{
-                    this.setImageSource(node, src);
+                    this.setImageSource(node, src, defaultURL);
                 }
             }
         },
@@ -367,11 +370,14 @@
             if("IntersectionObserver" in window){
                 _this.observer = new IntersectionObserver(function(entries, observer){
                     entries.forEach(function(entry) {
-                        var target = entry.target;
+                        // console.log(entry)
                         
-                        _this.process($(target));
+                        if(true === entry.isIntersecting || entry.intersectionRatio > 0){
+                            var target = entry.target;
 
-                        observer.unobserve(target);
+                            _this.process($(target));
+                            observer.unobserve(target); 
+                        }
                     });
                 }, {
                     "root": root || null,
