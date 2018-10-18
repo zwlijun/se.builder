@@ -8,7 +8,7 @@
    win32: 在cmd窗口下切换到 se.builder/app  目录
    linux/osx: 在终端窗口下切换到 se.builder/app 目录
    运行 npm install
-5. 执行  se.builder/app 下的 startup.cmd(win32) | startup.sh(linux/osx)
+5. 执行 npm run start
 6. 打开chrome，访问 http://localhost:8000 ，如果能正常访问说明启动成功
 7. 配置需要编绎的项目，配置文件位于 se.builder/app/conf/project.js
 
@@ -17,23 +17,21 @@
 ---
 <pre>
 //项目/工程配置示例
-{
-    "name": "SE Static Base Project",
+{"name": "SE Static Base Project",
     "alias": "se_static_base",
     "vctrl": "none",
     "rsync": "none",
     "lock": true,
     "charset": "utf-8",
     "sign": "sha1",
-    "banner": "/*! Copyright (c) SESHENGHUO.COM - Author: LIJUN - Email: zwlijun@gmail.com */\n",
+    "banner": "/*! Copyright (c) SESHENGHUO.COM - Author: LIJUN(CARLLI) - Email: zwlijun@gmail.com */\n",
     "env": [
-        {
-            "name": "正式发布环境",
+        {"name": "正式发布环境",
             "alias": "online_v1",
             "root": {
                 "doc": "/data/wwwroot/htdocs/",
-                "src": "/static/v1/src/",
-                "bin": "/static/v1/res/",
+                "src": "/static/v1.0/src/",
+                "bin": "/static/v1.0/res/",
                 "sed": "/"
             },
             "build": [
@@ -45,8 +43,8 @@
                     "sed": {
                         "turn": true,
                         "paths": [
-                            "static/v1/res/js",
-                            "static/v1/inc"
+                            "static/v1.0/res/js",
+                            "static/v1.0/inc"
                         ]
                     },
                     "files": {
@@ -87,7 +85,7 @@
                     "sed": {
                         "turn": true,
                         "paths": [
-                            "static/v1/inc"
+                            "static/v1.0/inc"
                         ]
                     },
                     "files": {
@@ -128,9 +126,9 @@
                     "sed": {
                         "turn": true,
                         "paths": [
-                            "static/v1/res/css",
-                            "static/v1/res/js",
-                            "static/v1/html"
+                            "static/v1.0/res/css",
+                            "static/v1.0/res/js",
+                            "static/v1.0/html"
                         ]
                     },
                     "files": {

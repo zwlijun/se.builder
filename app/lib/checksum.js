@@ -32,23 +32,6 @@ var CheckSum = {
         var stream = fs.readFileSync(filename);
         var digest = null;
 
-        //针对非图片统一文件的换行符
-        // if(!/\.(jpg|png|jpeg)$/i.test(filename) && stream.indexOf(0x0d) != -1){
-        //     var b = null;
-        //     var buf = new Array();
-
-        //     for(var i = 0; i < stream.length; i++){
-        //         b = stream[i];
-
-        //         if(b === 0x0d){
-        //             continue;
-        //         }
-        //         buf.push(b);
-        //     }
-
-        //     stream = Buffer.from(buf);
-        // }
-
         sum.update(stream);
         digest = sum.digest("hex");
 

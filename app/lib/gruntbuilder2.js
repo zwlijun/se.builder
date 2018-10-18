@@ -32,7 +32,7 @@ var transportTempDir = "__transport__";
 
 var gruntfileTemplate = "";
 
-var sedList = [];
+var replaceHashItems = {};
 
 var emit = function(state, message){
     _Socket.emit("encode", {
@@ -104,8 +104,8 @@ var LoadGruntfileTemplate = function(){
                             if(err){
                                 emit("error", "创建构建__transport__目录失败");
                             }else{
-                                sedList.length = 0;
-                                sedList = [];
+                                replaceHashItems = null;
+                                replaceHashItems = {};
                                 createTask();
                                 buildGruntFile();
                             }
@@ -504,173 +504,118 @@ var parseRelativeName = function(relativeName, sign, alias){
 // var _TEMP_COUNT2 = 0;
 // var _TEMP_COUNT3 = 0;
 var writeChecksum = function(file, isDest){
-    //setTimeout(function(){
-        // console.warn("count1: " + (++_TEMP_COUNT1))
-        if(fs.existsSync(file)){
-            // console.warn("count2: " + (++_TEMP_COUNT2))
-            cs.FileSHA1CheckSum(file, function(filename, checksum, isSame){
-                cs.WriteSHA1CheckSum(filename, checksum);
+    // console.warn("count1: " + (++_TEMP_COUNT1))
+    if(fs.existsSync(file)){
+        // console.warn("count2: " + (++_TEMP_COUNT2))
+        cs.FileSHA1CheckSum(file, function(filename, checksum, isSame){
+            cs.WriteSHA1CheckSum(filename, checksum);
 
-                // console.warn("count3: " + (++_TEMP_COUNT3))
+            // console.warn("count3: " + (++_TEMP_COUNT3))
 
-                var _project = GetProjectInfo();
-                var _env = GetEnvInfo();
-                var _deploy = GetBuildInfo();
-                var _sed = _deploy.sed;
-                var _root = _env.root;
-                var _docDir = _root.doc;
-                var _srcDir = _root.src;
-                var _binDir = _root.bin;
-                var _sedDir = _root.sed;
-                var _sedRoot = _docDir + _sedDir;
-                var checksumLength = checksum.length;
-                var nodeCharset = (_project.charset).replace(/\-/g, "");
-                
-                if(isDest && _sed && true === _sed.turn){ //create sed command
-                    //sed "" 's#logic/www/app1/index#logic/www/app1/index.22222#g' `grep logic/www/app1/index -rl ./app1`
-                    var relativeName = filename.substring(filename.indexOf(buildTempDir) + buildTempDir.length);
-                    var relativeData = parseRelativeName(relativeName, checksum, _deploy.alias);
-                    var escapeData = relativeData.escape;
+            var _project = GetProjectInfo();
+            var _env = GetEnvInfo();
+            var _deploy = GetBuildInfo();
+            var _sed = _deploy.sed;
+            var _root = _env.root;
+            var _docDir = _root.doc;
+            var _srcDir = _root.src;
+            var _binDir = _root.bin;
+            var _sedDir = _root.sed;
+            var _sedRoot = _docDir + _sedDir;
+            var checksumLength = checksum.length;
+            var nodeCharset = (_project.charset).replace(/\-/g, "");
+            
+            if(isDest && _sed && true === _sed.turn){ //create sed command
+                var relativeName = filename.substring(filename.indexOf(buildTempDir) + buildTempDir.length);
+                var relativeData = parseRelativeName(relativeName, checksum, _deploy.alias);
 
-                    var sedSubPaths = _sed.paths || [""];
+                var sedSubPaths = _sed.paths || [""];
 
-                    var ext = relativeData.ext;
-                    var signExt = relativeData.signExt;
-                    var signReg = '\\\(\\\.[0-9a-fA-F]\\\{' + checksumLength + '\\\}\\\)\\\{0,1\\\}';
-                    var nonEscapeSignReg = '(\\\.[0-9a-fA-F]{' + checksumLength + '}){0,1}';
+                var ext = relativeData.ext;
+                var signExt = relativeData.signExt;
 
-                    var sedName = null;
-                    var findName = null;
-                    var nonEscapeFindName = null;
+                var rsopts = {
+                    flags: "r",
+                    encoding: 'utf8',
+                    mode: 0o666,
+                    encoding: nodeCharset,
+                    autoClose: true
+                };
 
-                    var rsopts = {
-                        flags: "r",
-                        encoding: 'utf8',
-                        mode: 0o666,
-                        encoding: nodeCharset,
-                        autoClose: true
-                    };
+                var wsopts = {
+                    flags: "w",
+                    encoding: 'utf8',
+                    mode : 0o666,
+                    defaultEncoding: nodeCharset,
+                    autoClose: true
+                };
 
-                    var wsopts = {
-                        flags: "w",
-                        encoding: 'utf8',
-                        mode : 0o666,
-                        defaultEncoding: nodeCharset,
-                        autoClose: true
-                    };
-
-                    if("img" == _deploy.alias){
-                        delete rsopts.encoding;
-                        delete wsopts.defaultEncoding;
-                    }
-
-                    var irs = fs.createReadStream(filename, rsopts);
-                    var ows = fs.createWriteStream(filename.replace(ext, signExt), wsopts);
-
-                    ows.on("finish", function(){
-                        signCount++;
-                        emit("encoding", "[" + errorCount + "/" + signCount + "/" + deployFileCount + "]finish " + filename + " -> " + filename.replace(ext, signExt));
-                        
-
-                        if("js" == _deploy.alias){
-                            signReg += '\\\(\\\"\\\|\\\.js\\\)';
-                            nonEscapeSignReg += '(\\\"|\\\.js)';
-
-                            sedName = relativeData.requireSignUri + "\\2";
-                            findName = escapeData.aliasPath + escapeData.shortName + signReg;
-                            nonEscapeFindName = escapeData.aliasPath + escapeData.shortName + nonEscapeSignReg; 
-                        }else{
-                            sedName = relativeData.signSource;
-                            findName = escapeData.path + escapeData.shortName + signReg + escapeData.ext;
-                            nonEscapeFindName = escapeData.path + escapeData.shortName + nonEscapeSignReg + escapeData.ext;
-                        }
-
-                        //  grep -Ei "%string%" somefile.txt | sed "s/^/  /"
-
-                        for(var i = 0, len = sedSubPaths.length; i < len; i++){
-                            if(!findName || !sedName){
-                                continue;
-                            }
-
-                            if(win32){
-                                sedList.push("@call sed.cmd " + sedName + " " + _sedRoot + sedSubPaths[i] + " " + _project.charset);
-                            }else{
-                                sedList.push("sed -Ei '' 's#" + nonEscapeFindName + "#" + sedName + "#g' `grep -E " + findName + " -rl " + _sedRoot + sedSubPaths[i] + "`");
-                            }
-                        }
-
-                        // if("js" == _deploy.alias){
-                        //     sedName = "\\\"" + relativeData.requireSignUri + "\\\"";
-                        //     findName = "\\\"" + escapeData.aliasPath + escapeData.shortName + signReg + "\\\"";
-                        //     nonEscapeFindName = "\\\"" + escapeData.aliasPath + escapeData.shortName + nonEscapeSignReg + "\\\"";
-
-                        //     for(var i = 0, len = sedSubPaths.length; i < len; i++){
-                        //         if(!findName || !sedName){
-                        //             continue;
-                        //         }
-                                
-                        //         if(win32){
-                        //             sedList.push("@call sed.cmd " + sedName + " " + _sedRoot + sedSubPaths[i]);
-                        //         }else{
-                        //             sedList.push("sed -i \"\" 's#" + findName + "#" + sedName + "#g' `grep -E " + findName + " -rl " + _sedRoot + sedSubPaths[i] + "`");
-                        //         }
-                        //     }
-                        // }
-                        
-                        if((signCount + errorCount) >= deployFileCount){
-                            if(errorCount > 0){
-                                emit("error", "文件HASH计算出错[" + errorCount + "/" + signCount + "/" + deployFileCount + "]");
-                            }else{
-                                emit("encoding", "文件HASH计算完成，开始进行部署...");
-                                deploy();
-                            }
-                        }
-                    });
-
-                    ows.on("error", function(message){
-                        errorCount++;
-
-                        emit("encoding", "=====文件HASH计算出错=====");
-                        emit("encoding", "message: " + message);
-                        emit("encoding", "[" + errorCount + "/" + signCount + "/" + deployFileCount + "]finish " + filename + " -> " + filename.replace(ext, signExt));
-                        if((signCount + errorCount) >= deployFileCount){
-                            emit("error", "文件HASH计算出错[" + errorCount + "/" + signCount + "]");
-                        }
-                    });
-
-                    irs.pipe(ows);                   
+                if("img" == _deploy.alias){
+                    delete rsopts.encoding;
+                    delete wsopts.defaultEncoding;
                 }
 
-                emit("encoding", "storage file sign: " + checksum);
-            });
-        }else{
-            emit("encoding", "file not found(" + file + ")");
-        }
-    //}, 0);
+                var irs = fs.createReadStream(filename, rsopts);
+                var ows = fs.createWriteStream(filename.replace(ext, signExt), wsopts);
+
+                ows.on("finish", function(){
+                    signCount++;
+                    emit("encoding", "[" + errorCount + "/" + signCount + "/" + deployFileCount + "]finish " + filename + " -> " + filename.replace(ext, signExt));
+
+                    var sedPath = null;
+
+                    for(var i = 0, len = sedSubPaths.length; i < len; i++){
+                        sedPath = _sedRoot + sedSubPaths[i];
+
+                        if(!(sedPath in replaceHashItems)){
+                            replaceHashItems[sedPath] = [];
+                        }
+
+                        replaceHashItems[sedPath].push({
+                            "alias": _deploy.alias,
+                            "relative": relativeData
+                        });
+                    }
+                    
+                    if((signCount + errorCount) >= deployFileCount){
+                        if(errorCount > 0){
+                            emit("error", "文件HASH计算出错[" + errorCount + "/" + signCount + "/" + deployFileCount + "]");
+                        }else{
+                            emit("encoding", "文件HASH计算完成，开始进行部署...");
+                            deploy();
+                        }
+                    }
+                });
+
+                ows.on("error", function(message){
+                    errorCount++;
+
+                    emit("encoding", "=====文件HASH计算出错=====");
+                    emit("encoding", "message: " + message);
+                    emit("encoding", "[" + errorCount + "/" + signCount + "/" + deployFileCount + "]finish " + filename + " -> " + filename.replace(ext, signExt));
+                    if((signCount + errorCount) >= deployFileCount){
+                        emit("error", "文件HASH计算出错[" + errorCount + "/" + signCount + "]");
+                    }
+                });
+
+                irs.pipe(ows);                   
+            }
+
+            emit("encoding", "storage file sign: " + checksum);
+        });
+    }else{
+        emit("encoding", "file not found(" + file + ")");
+    }
 }
 
 var writeDestChecksum = function(file){
-    // setTimeout(function(){
-        emit("encoding", "create dest file(" + file + ") sign...");
-        writeChecksum(file, true);
-
-    //     if(signCount >= buildFileCount && true === gruntEnded){
-    //         emit("encoding", "grunt & sign completed.");
-    //         // deploy();
-    //     }
-    // }, 50)
+    emit("encoding", "create dest file(" + file + ") sign...");
+    writeChecksum(file, true);
 }
 
 var writeSourceChecksum = function(file){
-    // setTimeout(function(){
-        emit("encoding", "create source file(" + file + ") sign...");
-        writeChecksum(file, false);
-
-    //     if(signCount >= buildFileCount && true === gruntEnded){
-    //         emit("encoding", "grunt & sign completed.");
-    //         // deploy();
-    //     }
-    // }, 50)
+    emit("encoding", "create source file(" + file + ") sign...");
+    writeChecksum(file, false);
 }
 
 var parseGruntData = function(str){
@@ -838,53 +783,16 @@ var cleanTempData = function(){
                     emit("error", "清除临时构建目录(" + doc + src + transportTempDir + ")失败");
                 }else{
                     emit("encoding", "清除临时构建目录(" + doc + src + transportTempDir + ")成功");
-                    execShellScript();
+                    replaceFileHash();
                 }
             })
         }
     });
 };
 
-var execShellScript = function(){
-    console.log("sedList: \n" + sedList.join("\n"));
-
-    emit("encoding", "准备执行Shell脚本");
-
-    var line = [];
-
-    if(win32){
-        var script = process.cwd();
-        var sbin = script + "\\sbin";
-
-        line.push("@echo on");
-        line.push("\r\n");
-        line.push("set SBIN_PATH=" + sbin);
-        line.push("\r\n");
-        line.push("set path=%path%;%SBIN_PATH%");
-        line.push("\r\n");
-        line.push(sedList.join("\r\n"));
-        line.push("\r\n");
-
-        fs.writeFile("./timestamp.cmd", line.join("\r\n"), "utf8", function(err){
-            emit("encoding", "Shell脚本创建完成，开始执行...");
-            sedShell.run(_Socket, _Project, GetBuildInfo(), win32);
-        });
-        // emit("deploy", "Windows下暂不支持文件替换");
-        // emit("end", "构建完成");
-    }else{
-        line.push("#!/bin/bash");
-        line.push("\n");
-        line.push(sedList.join("\n"));
-        line.push("\n");
-
-        fs.writeFile("./timestamp.sh", line.join("\n"), "utf8", function(err){
-            spawn("chmod", ["744", "./timestamp.sh"]);
-
-            emit("encoding", "Shell脚本创建完成，开始执行...");
-            sedShell.run(_Socket, _Project, GetBuildInfo(), win32);
-        });
-    }
-}
+var replaceFileHash = function(){
+    sedShell.hash(_Socket, _Project, GetBuildInfo(), replaceHashItems);
+};
 
 exports.builder = {
     create: function(sock, proj, files) {

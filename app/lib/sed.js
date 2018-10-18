@@ -1,5 +1,4 @@
 //replace files and set timestamp
-//sed -i "" 's#logic/www/app1/index#logic/www/app1/index.22222#g' `grep -E logic/www/app1/index -rl ./app1`
 
 "use strict"
 
@@ -19,49 +18,162 @@ var emit = function(state, message){
         }
     });
 
-    console.log("\x1B[32m", message, "\x1B[39m");
+    if("error" == state){
+        console.log("\x1B[31m", message, "\x1B[39m")
+    }else if("deploy" == state){
+        console.log("\x1B[34m", message, "\x1B[39m");
+    }else if("encoding" == state){
+        console.log("\x1B[35m", message, "\x1B[39m");
+    }else{
+        console.log("\x1B[36m", message, "\x1B[39m");
+    }
 };
 
-exports.run = function (sock, project, deploy, win32) {
-    // body...
-    $sock = sock;
+var isHash = function(str){
+    var pattern = /\.[a-fA-F0-9]{40}/;
+    pattern.lastIndex = 0;
 
-    if(deploy.sed && true === deploy.sed.turn){
-        var script = process.cwd();
+    return pattern.test(str);
+};
 
-        if(win32){
-            console.log("shell://" + script + "\\timestamp.cmd");
-            childProcess.exec(script + "\\timestamp.cmd", {
-                encoding: 'utf8',
-                timeout: 24 * 60 * 60 * 1000,
-                maxBuffer: 10 * 1024 * 1024 * 1024, // 默认 200 * 1024 (bytes)
-                killSignal: 'SIGTERM'
-            }, function(error, stdout, stderr){
-                console.log("==========执行完成::错误信息 START==========");
-                console.log(error);
-                console.log("==========执行完成::错误信息 END==========");
+var isFileExt = function(str){
+    var pattern = /\.(js|css|png|jpg|jpeg)/;
+    pattern.lastIndex = 0;
 
-                emit("deploy", "SED脚本执行完成");
-                emit("end", "构建完成");
+    return pattern.test(str);
+};
+
+var replace = function(content, replacement){
+    var patterns = [
+        /^(.*)(\.[a-fA-F0-9]{40})(\.(js|css|png|jpg|jpeg))$/g,
+        /^(.*)(\.(js|css|png|jpg|jpeg))$/g,
+        /^(.*)(\.[a-fA-F0-9]{40})$/g,
+        /^(.*)$/g
+    ];
+    var pattern = null;
+    var matcher = null;
+
+    var prefix = null;
+    var hash = null;
+    var ext = null;
+
+    var regexp = null;
+    var buf = [];
+
+    for(var i = 0; i < patterns.length; i++){
+        pattern = patterns[i];
+        pattern.lastIndex = 0;
+
+        matcher = pattern.exec(replacement);
+
+        if(null !== matcher){
+            break;
+        }
+    }
+
+    if(null !== matcher){
+        prefix = matcher[1];
+
+        if(matcher[2]){
+            hash = isHash(matcher[2]) ? matcher[2] : null;
+            ext = isFileExt(matcher[2]) ? matcher[2] : null;
+        }
+
+        if(matcher[3]){
+            ext = matcher[3];
+        }
+
+        regexp = new RegExp((prefix.replace(/([\.\-])/g, "\\$1")) + '(\\.[0-9a-fA-F]{40})?("|\\.js|\\.css|\\.png|\\.jpg|\\.jpeg)', "gmi");
+
+        return content.replace(regexp, replacement + "$2");
+    }
+
+    return content;
+};
+
+var readCount = 0;
+var writeCount = 0;
+var startTime = 0;
+var find = function(path, replacementItems){
+    fs.stat(path, function(error, stats){
+        emit("encoding", "sed::find path: " + path);
+        if(error){
+            emit("error", "sed::find path error, path: " + path);
+
+            throw error;
+        }
+
+        if(stats.isDirectory()){
+            fs.readdir(path, "utf8", function(error, files){
+                if(error){
+                    emit("error", "sed::read file error, path(0): " + path);
+
+                    throw error;
+                }
+
+                files.forEach(function(file){
+                    find(path + "/" + file, replacementItems);
+                });
             });
-        }else{
-            console.log("shell://" + script + "/timestamp.sh");
-            childProcess.execFile(script + "/timestamp.sh", [], {
-                encoding: 'utf8',
-                timeout: 24 * 60 * 60 * 1000,
-                maxBuffer: 10 * 1024 * 1024 * 1024, // 默认 200 * 1024
-                killSignal: 'SIGTERM'
-            }, function(error, stdout, stderr){
-                console.log("==========执行完成::错误信息 START==========");
-                console.log(error);
-                console.log("==========执行完成::错误信息 END==========");
+        }else if(stats.isFile()){
+            fs.readFile(path, "utf8", function(error, files){
+                if(error){
+                    emit("error", "sed::read file error, path(1): " + path);
 
-                emit("deploy", "SED脚本执行完成");
-                emit("end", "构建完成");
+                    throw error;
+                }
+
+                readCount++;
+
+                var content = files;
+
+                for(var i = 0; i < replacementItems.length; i++){
+                    var item = replacementItems[i];
+
+                    if("js" == item.alias){
+                        content = replace(content, item.relative.requireSignUri);
+                    }else{
+                        content = replace(content, item.relative.signSource);
+                    }
+                }
+
+                fs.writeFile(path, content, 'utf8', function(error){
+                    if(error){
+                        emit("error", "sed::write file error, path: " + path);
+
+                        throw error;
+                    }
+                    writeCount++;
+                    emit("encoding", "sed::[" + writeCount + "/" + readCount + "] " + path);
+
+                    if(writeCount == readCount){
+                        var endTime = Date.now();
+                        var cost = endTime - startTime;
+                        emit("deploy", "SED执行完成, 花费 " + cost + " ms");
+                        emit("end", "构建完成");
+                    }
+                });
             });
         }
+    });
+};
+
+exports.hash = function(sock, project, deploy, replaceItems){
+    $sock = sock;
+
+    readCount = 0;
+    writeCount = 0;
+    startTime = Date.now();
+
+    if(deploy.sed && true === deploy.sed.turn){
+        for(var path in replaceItems){
+            if(replaceItems.hasOwnProperty(path)){
+                find(path, replaceItems[path]);
+            }
+        } 
     }else{
         emit("deploy", "没有设置SED或者SED功能已关闭");
         emit("end", "构建完成");
-    } 
+    }
 }
+
