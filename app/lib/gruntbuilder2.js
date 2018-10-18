@@ -536,23 +536,21 @@ var writeChecksum = function(file, isDest){
 
                 var rsopts = {
                     flags: "r",
-                    encoding: 'utf8',
-                    mode: 0o666,
                     encoding: nodeCharset,
+                    mode: 0o666,
                     autoClose: true
                 };
 
                 var wsopts = {
                     flags: "w",
-                    encoding: 'utf8',
+                    encoding: nodeCharset,
                     mode : 0o666,
-                    defaultEncoding: nodeCharset,
                     autoClose: true
                 };
 
                 if("img" == _deploy.alias){
                     delete rsopts.encoding;
-                    delete wsopts.defaultEncoding;
+                    delete wsopts.encoding;
                 }
 
                 var irs = fs.createReadStream(filename, rsopts);
@@ -805,6 +803,8 @@ exports.builder = {
         gruntEnded = false;
         deployFileCount = files.length;
         buildFileCount = files.length * 2;
+
+        cs.setCharset(_Project.charset);
 
         LoadGruntfileTemplate();
     }

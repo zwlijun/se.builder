@@ -46,6 +46,8 @@ Workspace.prototype = {
             "env": null
         };
 
+        cs.setCharset(o.charset);
+
         for(var i = 0; i < envSize; i++){
             env = envList[i];
 

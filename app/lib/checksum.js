@@ -12,10 +12,17 @@ var CheckSum = {
         "SHA256": "sha256",
         "SHA512": "sha512"
     },
+    charset: "utf8",
+    setCharset: function(charset){
+        CheckSum.charset = (charset || CheckSum.charset).replace(/\-/g, "");
+    },
+    getCharset: function(){
+        return CheckSum.charset;
+    },
     _read_ : function(filename){
         if(fs.existsSync(filename)){
             return fs.readFileSync(filename, {
-                "encoding": "utf8"
+                "encoding": CheckSum.getCharset()
             });
         }
 
@@ -23,13 +30,15 @@ var CheckSum = {
     },
     _write_ : function(filename, sum){
         fs.writeFileSync(filename, sum, {
-            "encoding": "utf8"
+            "encoding": CheckSum.getCharset()
         });
     },
     _filehash_ : function(algorithm, filename, callback, args, context) {
         var sum = crypto.createHash(algorithm);
-
-        var stream = fs.readFileSync(filename);
+        var opts = /\.(jpg|png|jpeg)$/i.test(filename) ? null : {
+            "encoding": CheckSum.getCharset()
+        };
+        var stream = fs.readFileSync(filename, opts);
         var digest = null;
 
         sum.update(stream);
@@ -58,6 +67,10 @@ var CheckSum = {
         return digest;
     }
 };
+
+exports.setCharset = function(charset){
+    CheckSum.setCharset(charset);
+}
 
 exports.FileMD5CheckSum = function(filename, callback, args, context){
     CheckSum._filehash_(CheckSum.Algorithm.MD5, filename, callback, args, context);

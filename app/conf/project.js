@@ -22,8 +22,8 @@
                root {Object} 根路径设置
                     {Object} => {
                         doc {String} 站点文档根路径，如：/data/wwwroot/htdocs
-                        src {String} 资源源文件存放相对{root.doc}目录，如：/static/v1/src
-                        bin {String} 资源构建后存放相对{root.doc}目录，如：/static/v1/res
+                        src {String} 资源源文件存放相对{root.doc}目录，如：/static/v1.0/src
+                        bin {String} 资源构建后存放相对{root.doc}目录，如：/static/v1.0/res
                         sed {String} 资源版本查换替换相对{root.doc}目录，如：/
                     }
                build {Array} 构建配置
@@ -60,6 +60,158 @@
            }
        ]
  */
+
+//示例项目配置
+var ex = [
+    {"name": "SE Static Base Project",
+        "alias": "se_static_base",
+        "vctrl": "none",
+        "rsync": "none",
+        "lock": true,
+        "charset": "utf-8",
+        "sign": "sha1",
+        "banner": "/*! Copyright (c) SESHENGHUO.COM - Author: LIJUN(CARLLI) - Email: zwlijun@gmail.com */\n",
+        "env": [
+            {"name": "正式发布环境",
+                "alias": "online_v1",
+                "root": {
+                    "doc": "/data/wwwroot/htdocs/",
+                    "src": "/static/v1.0/src/",
+                    "bin": "/static/v1.0/res/",
+                    "sed": "/"
+                },
+                "build": [
+                    {
+                        "name": "JavaScript",
+                        "alias": "js",
+                        "filter": /(\.(js))$/mi,
+                        "transport": true,
+                        "sed": {
+                            "turn": true,
+                            "paths": [
+                                "static/v1.0/res/js",
+                                "static/v1.0/inc"
+                            ]
+                        },
+                        "files": {
+                            "lib": {
+                                "name": "lib",
+                                "folder": "js/lib",
+                                "includeFolders": null,
+                                "includeFiles": null,
+                                "excludeFolders": null,
+                                "excludeFiles": null,
+                                "concat": null
+                            },
+                            "mod": {
+                                "name": "mod",
+                                "folder": "js/mod",
+                                "includeFolders": null,
+                                "includeFiles": null,
+                                "excludeFolders": null,
+                                "excludeFiles": null,
+                                "concat": null
+                            },
+                            "logic": {
+                                "name": "logic",
+                                "folder": "js/logic",
+                                "includeFolders": null,
+                                "includeFiles": null,
+                                "excludeFolders": null,
+                                "excludeFiles": null,
+                                "concat": null
+                            }
+                        }
+                    },
+                    {
+                        "name": "CSS",
+                        "alias": "css",
+                        "filter": /(\.(css))$/mi,
+                        "transport": false,
+                        "sed": {
+                            "turn": true,
+                            "paths": [
+                                "static/v1.0/inc"
+                            ]
+                        },
+                        "files": {
+                            "lib": {
+                                "name": "lib",
+                                "folder": "css/lib",
+                                "includeFolders": null,
+                                "includeFiles": null,
+                                "excludeFolders": null,
+                                "excludeFiles": null,
+                                "concat": null
+                            },
+                            "mod": {
+                                "name": "mod",
+                                "folder": "css/mod",
+                                "includeFolders": null,
+                                "includeFiles": null,
+                                "excludeFolders": null,
+                                "excludeFiles": null,
+                                "concat": null
+                            },
+                            "logic": {
+                                "name": "logic",
+                                "folder": "css/logic",
+                                "includeFolders": null,
+                                "includeFiles": null,
+                                "excludeFolders": null,
+                                "excludeFiles": null,
+                                "concat": null
+                            }
+                        }
+                    },
+                    {
+                        "name": "Image",
+                        "alias": "img",
+                        "filter": /(\.(jpg|jpeg|png))$/mi,
+                        "transport": false,
+                        "sed": {
+                            "turn": true,
+                            "paths": [
+                                "static/v1.0/res/css",
+                                "static/v1.0/res/js",
+                                "static/v1.0/html"
+                            ]
+                        },
+                        "files": {
+                            "lib": {
+                                "name": "lib",
+                                "folder": "img/lib",
+                                "includeFolders": null,
+                                "includeFiles": null,
+                                "excludeFolders": null,
+                                "excludeFiles": null,
+                                "concat": null
+                            },
+                            "mod": {
+                                "name": "mod",
+                                "folder": "img/mod",
+                                "includeFolders": null,
+                                "includeFiles": null,
+                                "excludeFolders": null,
+                                "excludeFiles": null,
+                                "concat": null
+                            },
+                            "logic": {
+                                "name": "logic",
+                                "folder": "img/logic",
+                                "includeFolders": null,
+                                "includeFiles": null,
+                                "excludeFolders": null,
+                                "excludeFiles": null,
+                                "concat": null
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+];
 
 exports.projects = [
     //project{}

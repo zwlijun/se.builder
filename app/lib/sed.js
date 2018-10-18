@@ -94,7 +94,7 @@ var replace = function(content, replacement){
 var readCount = 0;
 var writeCount = 0;
 var startTime = 0;
-var find = function(path, replacementItems){
+var find = function(path, replacementItems, charset){
     fs.stat(path, function(error, stats){
         emit("encoding", "sed::find path: " + path);
         if(error){
@@ -104,7 +104,7 @@ var find = function(path, replacementItems){
         }
 
         if(stats.isDirectory()){
-            fs.readdir(path, "utf8", function(error, files){
+            fs.readdir(path, charset, function(error, files){
                 if(error){
                     emit("error", "sed::read file error, path(0): " + path);
 
@@ -112,11 +112,11 @@ var find = function(path, replacementItems){
                 }
 
                 files.forEach(function(file){
-                    find(path + "/" + file, replacementItems);
+                    find(path + "/" + file, replacementItems, charset);
                 });
             });
         }else if(stats.isFile()){
-            fs.readFile(path, "utf8", function(error, files){
+            fs.readFile(path, charset, function(error, files){
                 if(error){
                     emit("error", "sed::read file error, path(1): " + path);
 
@@ -137,7 +137,7 @@ var find = function(path, replacementItems){
                     }
                 }
 
-                fs.writeFile(path, content, 'utf8', function(error){
+                fs.writeFile(path, content, charset, function(error){
                     if(error){
                         emit("error", "sed::write file error, path: " + path);
 
@@ -165,10 +165,12 @@ exports.hash = function(sock, project, deploy, replaceItems){
     writeCount = 0;
     startTime = Date.now();
 
+    var charset = (project.charset).replace(/\-/g, "");
+
     if(deploy.sed && true === deploy.sed.turn){
         for(var path in replaceItems){
             if(replaceItems.hasOwnProperty(path)){
-                find(path, replaceItems[path]);
+                find(path, replaceItems[path], charset);
             }
         } 
     }else{
