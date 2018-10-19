@@ -43,7 +43,7 @@ var isFileExt = function(str){
     return pattern.test(str);
 };
 
-var replace = function(content, replacement){
+var replace = function(content, replacement, isRequire){
     var patterns = [
         /^(.*)(\.[a-fA-F0-9]{40})(\.(js|css|png|jpg|jpeg))$/g,
         /^(.*)(\.(js|css|png|jpg|jpeg))$/g,
@@ -83,9 +83,15 @@ var replace = function(content, replacement){
             ext = matcher[3];
         }
 
-        regexp = new RegExp((prefix.replace(/([\.\-])/g, "\\$1")) + '(\\.[0-9a-fA-F]{40})?("|\\.js|\\.css|\\.png|\\.jpg|\\.jpeg)', "gmi");
-
-        return content.replace(regexp, replacement + "$2");
+        if(true === isRequire){
+            regexp = new RegExp((prefix.replace(/([\.\-])/g, "\\$1")) + '(\\.[0-9a-fA-F]{40})?("|\\.js)', "gmi");
+            content = content.replace(regexp, replacement + "$2");
+        }else{
+            regexp = new RegExp((prefix.replace(/([\.\-])/g, "\\$1")) + '(\\.[0-9a-fA-F]{40})?(\\.css|\\.png|\\.jpg|\\.jpeg)', "gmi");
+            content = content.replace(regexp, replacement);
+        }
+        
+        return content;
     }
 
     return content;
@@ -131,9 +137,9 @@ var find = function(path, replacementItems, charset){
                     var item = replacementItems[i];
 
                     if("js" == item.alias){
-                        content = replace(content, item.relative.requireSignUri);
+                        content = replace(content, item.relative.requireSignUri, true);
                     }else{
-                        content = replace(content, item.relative.signSource);
+                        content = replace(content, item.relative.signSource, false);
                     }
                 }
 

@@ -6,10 +6,13 @@
     "start": "node startup.js"
   },
   "dependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
     "fs-extra": "^6.0.1",
     "grunt": "^1.0.3",
+    "grunt-babel": "^8.0.0",
     "grunt-cmd-concat": "^0.2.8",
     "grunt-cmd-transport": "^0.5.1",
     "grunt-contrib-clean": "^1.1.0",
