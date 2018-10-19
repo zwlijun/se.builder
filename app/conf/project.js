@@ -11,6 +11,7 @@
          {String} => none 无远程同步设置
          {String} => script 脚本
    lock {Boolean} 是否锁定lib和mod目录，如果为false，lib和mod目录的文件可自行勾选编绎。为true时禁用自行勾选
+   fullbuild {Boolean} 是否全量构建，如果为true, logic目录会自动全选
    charset {String} 编码，默认utf-8
    sign {String} 文件签名串，默认为sha1，目前只支持sha1
    banner {String} 文件编绎后的公共头文件
@@ -68,6 +69,7 @@ var ex = [
         "vctrl": "none",
         "rsync": "none",
         "lock": true,
+        "fullbuild": true,
         "charset": "utf-8",
         "sign": "sha1",
         "banner": "/*! Copyright (c) SESHENGHUO.COM - Author: LIJUN(CARLLI) - Email: zwlijun@gmail.com */\n",

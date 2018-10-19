@@ -22,6 +22,7 @@
     "vctrl": "none",
     "rsync": "none",
     "lock": true,
+    "fullbuild": true,
     "charset": "utf-8",
     "sign": "sha1",
     "banner": "/*! Copyright (c) SESHENGHUO.COM - Author: LIJUN(CARLLI) - Email: zwlijun@gmail.com */\n",

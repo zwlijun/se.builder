@@ -40,6 +40,7 @@ Workspace.prototype = {
             "vctrl": project.vctrl,
             "rsync": project.rsync,
             "lock": project.lock,
+            "fullbuild": project.fullbuild,
             "charset": project.charset || "utf-8",
             "sign": project.sign || "sha1",
             "banner": project.banner,

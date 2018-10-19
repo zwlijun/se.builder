@@ -58,6 +58,7 @@ var GetProjectInfo = function(){
         "vctrl": _Project.vctrl,
         "rsync": _Project.rsync,
         "lock": _Project.lock,
+        "fullbuild": _Project.fullbuild,
         "charset": _Project.charset || "utf-8",
         "sign": _Project.sign || "sha1",
         "banner": _Project.banner

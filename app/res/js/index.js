@@ -241,6 +241,7 @@
             var file = null;
             var size = 0;
             var lock = project.lock;
+            var fullbuild = project.fullbuild;
             var sed = project.env.build.sed.turn;
 
             for(var key in data){
@@ -278,9 +279,13 @@
                                 buf.push(' disabled="disabled"');
                                 buf.push(' checked="checked"');
                             }else{
-                                if(true === sed){
+                                if(true === sed || true === fullbuild){
                                     buf.push(' checked="checked"');
                                 }
+                            }
+                        }else if("logic" == type){
+                            if(true === fullbuild){
+                                buf.push(' checked="checked"');
                             }
                         }
 
