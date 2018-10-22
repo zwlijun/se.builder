@@ -230,6 +230,7 @@ buildGruntFile.js = function(files){
         "options": {
             "sourceMap": false,
             "compact": false,
+            "sourceType": "unambiguous",
             "presets": ["@babel/preset-env"]
         },
         "dist": {
