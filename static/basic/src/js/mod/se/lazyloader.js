@@ -376,7 +376,7 @@
                             var target = entry.target;
 
                             _this.process($(target));
-                            observer.unobserve(target); 
+                            observer.unobserve(target);
                         }
                     });
                 }, {

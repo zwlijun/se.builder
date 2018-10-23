@@ -14,13 +14,14 @@
     var Style               = require("mod/se/css");
     var Util                = require("mod/se/util");
 
-    var Marquee = function(name, duration, dir){
+    var Marquee = function(name, duration, dir, delay){
         this.timer = null;
         this.shift = 0;
         this.distance = 0;
         this.element = null;
         this.name = name;
         this.duration = duration || 50,
+        this.delay = delay || 0,
         this.dir = dir || Marquee.Direction.SCROLL_TO_UP;
     };
 
@@ -106,6 +107,17 @@
                         _this.shift = 0;
                         _this.distance = 0;
                         _this.element = null;
+
+                        if(_this.delay > 0){
+                            _timer.stop();
+
+                            Util.delay(_this.delay, {
+                                callback: function(et){
+                                    this.start();
+                                },
+                                context: _timer
+                            });
+                        }
                     }
                 },
                 context: container

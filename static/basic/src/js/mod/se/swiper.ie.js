@@ -814,13 +814,13 @@
         },
         findViewport: function(swiper){
             this.viewport = swiper;
-            this.body = swiper.children(".mod-swiper-body");
-            this.items = this.body.children(".mod-swiper-item");
-            this.controller = swiper.children(".mod-swiper-control");
-            this.leftControler = swiper.children(".mod-swiper-control.prev");
-            this.rightControler = swiper.children(".mod-swiper-control.next");
-            this.footer = swiper.children(".mod-swiper-footer");
-            this.dots = this.footer.children(".mod-swiper-dots");
+            this.body = swiper.find(".mod-swiper-body");
+            this.items = this.body.find(".mod-swiper-item");
+            this.controller = swiper.find(".mod-swiper-control");
+            this.leftControler = swiper.find(".mod-swiper-control.prev");
+            this.rightControler = swiper.find(".mod-swiper-control.next");
+            this.footer = swiper.find(".mod-swiper-footer");
+            this.dots = this.footer.find(".mod-swiper-dots");
 
             this.size = this.items.length;
             this.lastIndex = Math.max(this.size - 1, 0);
@@ -1090,7 +1090,7 @@
             this.leftControler.attr("data-action-tap", "swiper://navigator/prev#" + this.name);
             this.rightControler.attr("data-action-tap", "swiper://navigator/next#" + this.name);
 
-            if(true === control && "hover" != controlVisible){
+            if(this.getSize() > 1 && true === control && "hover" != controlVisible){
                 this.controller.removeClass("hide");
             }else{
                 this.controller.addClass("hide");
