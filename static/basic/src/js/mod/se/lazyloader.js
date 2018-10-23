@@ -277,6 +277,16 @@
             }
         },
         /**
+         * [execExternalSchema description]
+         * @param {[type]} node         [description]
+         * @param {[type]} externalURL  [description]
+         */
+        execExternalSchema: function(node, externalURL){
+            var _this = this;
+
+            Util.requestExternal(externalURL, [_this.name, node]);
+        },
+        /**
          * [process description]
          * @param  {[type]} node [description]
          * @return {[type]}      [description]
@@ -292,7 +302,7 @@
 
             var defaultURL = node.attr("data-default-image") || $('meta[name="default_image"]').attr("content") || "";
 
-            var pattern = /^((bg|img)@)?([^\s]+)$/gi;
+            var pattern = /^((bg|img|schema)@)?([^\s]+)$/gi;
             var matcher = null;
 
             var type = null;
@@ -303,13 +313,15 @@
 
             pattern.lastIndex = 0;
             if(null !== (matcher = pattern.exec(lazy))){
-                type = matcher[2] || "img";
-                src = matcher[3] || defaultURL;
+                type = (matcher[2] || "img").toLowerCase();
+                src = matcher[3];
 
-                if("bg" === type.toLowerCase()){
-                    this.setBackgroundImage(node, src, defaultURL);
-                }else{
-                    this.setImageSource(node, src, defaultURL);
+                if("bg" === type){
+                    this.setBackgroundImage(node, src || defaultURL, defaultURL);
+                }else if("schema" === type){
+                    this.execExternalSchema(node, src || "lazy://exec");
+                }else if("img" === type){
+                    this.setImageSource(node, src || defaultURL, defaultURL);
                 }
             }
         },
