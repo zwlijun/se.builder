@@ -340,6 +340,8 @@
                     newObj[key] = this.ogv(obj[key] || "");
                 }
             }
+
+            return newObj;
         },
         /**
          * 添加分享API，如果存在将会覆盖
