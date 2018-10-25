@@ -254,26 +254,26 @@
 
     var DefineShareDataStruct = function(){
         var struct = {
-            "type": "",             //类型，如: wx, timeline, weibo, qq, qzone等
-            "text": "",             //文本标签，如：微信好友，朋友圈，微博，QQ好友，QZone等
-            "name": "",             //应用名称，如：微信，手机QQ，微博
-            "sign": "",             //应用签名串
-            "appid": "",            //应用ID
-            "appkey": "",           //应用key
-            "title": "",            //分享标题
-            "description": "",      //分享描述
-            "link": "",             //分享跳转链接
-            "image": "",            //分享图片
-            "source": "",           //分享来源
-            "summary": "",          //分享摘要
-            "lang": "",             //分享语言环境
-            "hash": "",             //分享hash，类似标签
-            "category": "",         //分享到哪个分类下
-            "usrid": "",            //分享用户ID
-            "email": "",            //email地址
-            "phone": "",            //手机号码
-            "external": "",         //分享的callback 虚拟schema回调
-            "target": ""            //分享触发目标窗口，如：_blank, _self
+            "type": "",                              //类型，如: wx, timeline, weibo, qq, qzone等
+            "text": "",                              //文本标签，如：微信好友，朋友圈，微博，QQ好友，QZone等
+            "name": "",                              //应用名称，如：微信，手机QQ，微博
+            "sign": "",                              //应用签名串
+            "appid": "",                             //应用ID
+            "appkey": "",                            //应用key
+            "title": "ogp::og:title",                //分享标题
+            "description": "ogp::og:description",    //分享描述
+            "link": "ogp::og:url",                   //分享跳转链接
+            "image": "ogp::og:image",                //分享图片
+            "source": "ogp::og:site_name",           //分享来源
+            "summary": "ogp::og:description",        //分享摘要
+            "lang": "ogp::og:locale",                //分享语言环境
+            "hash": "",                              //分享hash，类似标签
+            "category": "",                          //分享到哪个分类下
+            "usrid": "",                             //分享用户ID
+            "email": "",                             //email地址
+            "phone": "",                             //手机号码
+            "external": "",                          //分享的callback 虚拟schema回调
+            "target": ""                             //分享触发目标窗口，如：_blank, _self
         };
 
         return struct;
@@ -300,12 +300,47 @@
     var OpenShare = function(name){
         this.name = name;
         this.apis = GetShareAPI();
-        this.basicShareData = DefineShareDataStruct();
+        this.basicShareData = this.og(DefineShareDataStruct());
         this.shareData = {};
         this.namespace = "openshare";
     };
 
     OpenShare.prototype = {
+        /**
+         * 解析值
+         * @param  {[type]} value [description]
+         * @param  {[type]} type  [description]
+         * @return {[type]}       [description]
+         */
+        ogv: function ogv(value, type){
+            var prefix = "ogp::";
+            var cut = value.substring(0, prefix.length);
+
+            if(prefix !== cut){
+                return value;
+            }
+
+            var property = value.substring(prefix.length);
+            var meta = $('meta' + (type ? '[name="' + type + '"]' : '') + '[property="' + property + '"]');
+            var content = meta.attr("content") || "";
+
+            return content;
+        },
+        /**
+         * Open Graph Protocol 标签解析
+         * @param  {[type]} obj  [description]
+         * @param  {[type]} type [description]
+         * @return {[type]}      [description]
+         */
+        og: function(obj, type){
+            var newObj = {};
+
+            for(var key in obj){
+                if(obj.hasOwnProperty(key)){
+                    newObj[key] = this.ogv(obj[key] || "");
+                }
+            }
+        },
         /**
          * 添加分享API，如果存在将会覆盖
          * @param {[type]} type [description]
@@ -341,9 +376,11 @@
 
             for(var dataKey in struct){
                 if(struct.hasOwnProperty(dataKey)){
-                    this.basicShareData[dataKey] = data[dataKey] || "";
+                    struct[dataKey] = data[dataKey] || "";
                 }
             }
+
+            this.basicShareData = this.og(struct);
         },
         /**
          * 获取基础分享数据
@@ -367,6 +404,8 @@
                     struct[dataKey] = data[dataKey] || "";
                 }
             }
+
+            struct = this.og(struct, type);
 
             if(!(type in this.shareData)){
                 this.shareData[type] = {};
