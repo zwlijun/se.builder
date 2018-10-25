@@ -312,7 +312,7 @@
          * @param  {[type]} type  [description]
          * @return {[type]}       [description]
          */
-        ogv: function ogv(value, type){
+        ogv: function(value, type){
             var prefix = "ogp::";
             var cut = value.substring(0, prefix.length);
 
@@ -322,9 +322,14 @@
 
             var property = value.substring(prefix.length);
             var meta = $('meta' + (type ? '[name="' + type + '"]' : '') + '[property="' + property + '"]');
+
+            if(meta.length == 0){
+                meta = $('meta[property="' + property + '"]');
+            }
+
             var content = meta.attr("content") || "";
 
-            return content;
+            return content || value;
         },
         /**
          * Open Graph Protocol 标签解析
@@ -337,7 +342,7 @@
 
             for(var key in obj){
                 if(obj.hasOwnProperty(key)){
-                    newObj[key] = this.ogv(obj[key] || "");
+                    newObj[key] = this.ogv(obj[key] || "", type || null);
                 }
             }
 
@@ -389,7 +394,7 @@
          * @return {[type]} [description]
          */
         getBasicShareData: function(){
-            return $.extend({}, this.basicShareData);
+            return this.og($.extend({}, this.basicShareData));
         },
         /**
          * [putShareData description]
@@ -428,7 +433,7 @@
                 data = $.extend({}, this.getBasicShareData(), this.shareData[type][(key || this.namespace)] || null);
             }
 
-            return data;
+            return this.og(data, type);
         },
         /**
          * [share description]
