@@ -204,6 +204,11 @@
                 "url": "https://social-plugins.line.me/lineit/share",
                 "data": "url=<%=encodeURIComponent(openshare.link)%>&text=<%=encodeURIComponent(openshare.description)%>"
             },
+            "linetext": {
+                "type": "redirect",
+                "url": "https://line.me/R/msg/text",
+                "data": "<%=encodeURIComponent(openshare.description + \" \" + openshare.link)%>"
+            },
             "skype": {
                 "type": "redirect",
                 "url": "https://web.skype.com/share",
@@ -221,7 +226,7 @@
             },
             "email": {
                 "type": "redirect",
-                "url": "mailto:<%=encodeURIComponent(openshare.email)%>",
+                "url": "mailto:<%=openshare.email%>",
                 "data": "subject=<%=encodeURIComponent(openshare.title)%>&body=<%=encodeURIComponent(openshare.description)%>"
             },
             "gmail": {
