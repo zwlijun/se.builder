@@ -163,6 +163,8 @@ var URLContext = {
         var matcher = null;
         pattern.lastIndex = 0;
 
+        context["params"] = Request.serialized(location.search);
+
         var key = null;
         var regexp = null;
         while(null != (matcher = pattern.exec(url))){
@@ -726,7 +728,7 @@ var DataSetUtil = {
     },
     getRequestPageConf: function(requestName, data){
         return $.extend(DataSetUtil.getRequestConf(requestName, {
-            "showLoading": true,
+            "showLoading": false,
             "dataRendering": "replace",
             "pageStyle": "pagebar",
             "page": 1
@@ -847,6 +849,7 @@ var _public = {
     "init": _App.init,
     "conf": _App.conf,
     "path": LocalPath,
+    "params": Request.serialized(location.search),
     "SecurityURL": SecurityURL,
     "DataSetUtil": DataSetUtil,
     "URLContext": URLContext,
