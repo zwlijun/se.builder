@@ -441,6 +441,8 @@
         readFiles: function(files){
             var _ins = this;
 
+            _ins.clearFileInfoList();
+
             if(!_ins.checkEnv()){
                 _ins.Service = {};
                 _ins.exec("notsupport", []);
@@ -506,14 +508,14 @@
                     if(!_ins.checkFilter(fileType)){
                         _ins.exec("filter", [fileInfo]);
 
-                        continue;
+                        return 0;
                     }
                 }
 
                 if(file.size > _ins.options.maxsize){
                     _ins.exec("maxsize", [fileInfo, _ins.options.maxsize]);
 
-                    continue;
+                    return 0;
                 }
 
                 reader = new FileReader();
