@@ -186,6 +186,7 @@
             var _this = this;
             var opts = _this.options();
 
+            node.addClass("lazy-beforeload");
             _this.exec("before", ["bg", node]);
 
             if(true === opts.validity){
@@ -193,13 +194,18 @@
                 Util.getImageInfoByURL(src, {
                     callback: function(img, width, height, url, def){
                         if(!img){
-                            this.node.css("background-image", "url(" + def + ")");
+                            this.node.removeClass("lazy-beforeload")
+                                     .addClass("lazy-error")
+                                     .css("background-image", "url(" + def + ")");
                             this.lazy.exec("error", ["bg", this.node]);
                         }else{
-                            this.node.css("background-image", "url(" + url + ")");
+                            this.node.removeClass("lazy-beforeload")
+                                     .addClass("lazy-success")
+                                     .css("background-image", "url(" + url + ")");
                             this.lazy.exec("success", ["bg", this.node]);
                         }
 
+                        this.node.addClass("lazy-complete");
                         this.lazy.exec("complete", ["bg", this.node]);
                     },
                     context: {
@@ -209,7 +215,10 @@
                     args: [src, defaultURL]
                 });
             }else{
-                node.css("background-image", "url(" + src + ")");
+                node.removeClass("lazy-beforeload")
+                    .addClass("lazy-complete")
+                    .addClass("lazy-maybe")
+                    .css("background-image", "url(" + src + ")");
                 _this.exec("complete", ["bg", node]);
             }
         },
@@ -250,6 +259,7 @@
                 return ;
             }
 
+            node.addClass("lazy-beforeload");
             _this.exec("before", ["img", node]);
 
             if(true === opts.validity){
@@ -257,12 +267,19 @@
                 Util.getImageInfoByURL(src, {
                     callback: function(img, width, height, url, def){
                         if(!img){
-                            this.node.attr("src", def);
+                            this.node.removeClass("lazy-beforeload")
+                                     .addClass("lazy-error")
+                                     .attr("src", def);
                             this.lazy.exec("error", ["img", this.node]);
                         }else{
-                            this.node.attr("src", url);
+                            this.node.removeClass("lazy-beforeload")
+                                     .addClass("lazy-success")
+                                     .attr("src", url)
+                                     .removeAttr("data-loaderr");
                             this.lazy.exec("success", ["img", this.node]);
                         }
+                        
+                        this.node.addClass("lazy-complete");
                         this.lazy.exec("complete", ["img", this.node]);
                     },
                     context: {
@@ -272,7 +289,10 @@
                     args: [src, defaultURL]
                 });
             }else{
-                node.attr("src", src);
+                node.removeClass("lazy-beforeload")
+                    .addClass("lazy-complete")
+                    .addClass("lazy-maybe")
+                    .attr("src", src);
                 _this.exec("complete", ["bg", node]);
             }
         },
@@ -285,6 +305,13 @@
             var _this = this;
 
             Util.requestExternal(externalURL, [_this.name, node]);
+        },
+        /**
+         * 获取默认图片
+         * @param {[type]} node         [description]
+         */
+        getDefaultImage: function(node){
+            return LazyImages.getDefaultImage(node[0] || null);
         },
         /**
          * [process description]
@@ -300,7 +327,7 @@
 
             node.removeAttr("data-lazysrc");
 
-            var defaultURL = node.attr("data-default-image") || $('meta[name="default_image"]').attr("content") || "";
+            var defaultURL = this.getDefaultImage(node);
 
             var pattern = /^((bg|img|schema)@)?([^\s]+)$/gi;
             var matcher = null;
@@ -458,7 +485,60 @@
         }
 
         return null;
-    }
+    };
+
+    (function(){
+        if(("LazyImages" in window) && window["LazyImages"]){
+            return ;
+        }
+        var lazyImages = $('meta[property="lazyimage"]');
+        var size = lazyImages.length;
+
+        var tmp = {};
+        var meta = null;
+        var sizeKey = null;
+        for(var i = 0; i < size; i++){
+            meta = $(lazyImages[i]);
+            sizeKey = meta.attr("data-size");
+
+            tmp[sizeKey] = {
+                "size": sizeKey,
+                "source": meta.attr("content"),
+                "isDefault": "1" === meta.attr("data-default")
+            };
+
+            if(tmp[sizeKey].isDefault){
+                tmp["defaultImage"] = tmp[sizeKey];
+            }
+        };
+
+        var GetDefaultImage = function(dom){
+            if(!dom){
+                return (LazyImages["defaultImage"] || {}).source || "";
+            }
+            
+            var cls = dom.className || "";
+            var items = cls.split(/[\s]+/);
+            var size = items.length;
+            var item = null;
+
+            var defaultURL = dom.getAttribute("data-default-image") || (LazyImages["defaultImage"] || {}).source || "";
+            for(var i = 0; i < size; i++){
+                item = items[i];
+
+                if(item in LazyImages){
+                    defaultURL = LazyImages[item].source;
+                }
+            }
+
+            return defaultURL || "";
+        };
+
+        tmp["getDefaultImage"] = GetDefaultImage;
+
+
+        window["LazyImages"] = tmp;
+    })();
 
     module.exports = {
         "version": "R18B1011",

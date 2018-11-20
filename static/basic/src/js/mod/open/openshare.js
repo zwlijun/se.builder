@@ -206,7 +206,7 @@
             },
             "linetext": {
                 "type": "redirect",
-                "url": "https://line.me/R/msg/text",
+                "url": "https://line.me/R/msg/text/",
                 "data": "<%=encodeURIComponent(openshare.description + \" \" + openshare.link)%>"
             },
             "skype": {
