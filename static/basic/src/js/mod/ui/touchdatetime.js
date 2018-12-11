@@ -413,7 +413,7 @@
     };
 
     module.exports = {
-        "version": "R17B0623",
+        "version": "R18B1206",
         "FORMAT": TouchDatetime.FORMAT,
         newTouchDatetime: function(name){
             return TouchDatetime.newTouchDatetime(name);

@@ -162,6 +162,7 @@
             //     "linkedvalue": ""
             // }
         ];
+        this.actionSheet = null;
 
         this.handleStack = new HandleStack();
         this.listener = new Listener({
@@ -502,6 +503,23 @@
             var dataList = data.list;
 
             this.initSelectedOptions(dataList.length);
+            this.actionSheet = ActionSheet.createActionSheet(this.getTouchSelectName());
+
+            this.actionSheet.set("show", {
+                callback: function(name){
+                    $(document).on("touchmove." + name, function(e){
+                        e.preventDefault();
+                    });
+                },
+                args: []
+            });
+
+            this.actionSheet.set("hide", {
+                callback: function(name){
+                    $(document).off("touchmove." + name);
+                },
+                args: []
+            });
 
             if(this.existed()){
                 var box = this.getTouchSelectBox();

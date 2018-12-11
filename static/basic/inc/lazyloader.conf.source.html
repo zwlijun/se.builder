@@ -1,0 +1,212 @@
+<meta property="lazyimage" content="/" data-size="larger" data-default="0">
+<meta property="lazyimage" content="/" data-size="large" data-default="0">
+<meta property="lazyimage" content="/" data-size="middle" data-default="0">
+<meta property="lazyimage" content="/" data-size="small" data-default="1">
+<meta property="lazyimage" content="/" data-size="smaller" data-default="0">
+<meta property="lazyimage" content="/" data-size="tiny" data-default="0">
+<meta property="lazyimage" content="/" data-size="nano" data-default="0">
+<script>
+(function(){
+    var cssRuleTpls = [
+        {"selectors": ["img[data-loaderr]", "img.lazy-beforeload", "img.lazy-error", ".lazy-placeholder"],
+            "defaultSelectors": [],
+            "properties": {
+                "background-color": "#EFEFEF",
+                "width": "100%",
+                "height": "100%"
+            },
+            "type": "fixed"
+        },
+        {"selectors": [".lazy-placeholder"],
+            "defaultSelectors": [],
+            "properties": {
+                "display": "none"
+            },
+            "type": "fixed"
+        },
+        {"selectors": ["img[src=\"\"]", "img[src^=\"#\"]", "img[src=\"about:blank\"]", "img:not([src])"],
+            "defaultSelectors": [],
+            "properties": {
+                "width": 0,
+                "height": 0,
+                "position": "absolute"
+            },
+            "type": "fixed"
+        },
+        {"selectors": ["img[src=\"\"] ~ .lazy-placeholder", "img[src^=\"#\"] ~ .lazy-placeholder", "img[src=\"about:blank\"] ~ .lazy-placeholder", "img:not([src]) ~ .lazy-placeholder"],
+           "defaultSelectors": [],
+            "properties": {
+                "display": "inherit"
+            },
+            "type": "fixed"
+        },
+        {"selectors": [".lazy-beforeload.{size}:not(img)", ".lazy-error.{size}:not(img)", ".lazy-beforeload.{size} ~ .lazy-placeholder", ".lazy-error.{size} ~ .lazy-placeholder"],
+            "defaultSelectors": [".lazy-beforeload:not(img)", ".lazy-error:not(img)", ".lazy-beforeload ~ .lazy-placeholder", ".lazy-error ~ .lazy-placeholder"],
+            "properties": {
+                "background": "#EFEFEF url({source}) no-repeat center center!important",
+                "background-size": "initial!important"
+            },
+            "type": "dynamic"
+        },
+        {"selectors": [".lazy-success"],
+            "defaultSelectors": [],
+            "properties": null,
+            "type": "fixed"
+        },
+        {"selectors": [".lazy-complete"],
+            "defaultSelectors": [],
+            "properties": null,
+            "type": "fixed"
+        },
+        {"selectors": ["img.lazy-maybe", "img.lazy-success"],
+            "defaultSelectors": [],
+            "properties": {
+                "object-fit": "contain"
+            },
+            "type": "fixed"
+        }
+    ];
+    var lazyImages = document.querySelectorAll('meta[property="lazyimage"]');
+    var size = lazyImages.length;
+
+    var tmp = {};
+    var images = {};
+    var meta = null;
+    var sizeKey = null;
+    for(var i = 0; i < size; i++){
+        meta = lazyImages[i];
+        sizeKey = meta.getAttribute("data-size");
+
+        tmp[sizeKey] = {
+            "size": sizeKey,
+            "source": meta.getAttribute("content"),
+            "isDefault": "1" === meta.getAttribute("data-default")
+        };
+
+        images[sizeKey] = tmp[sizeKey];
+
+        if(tmp[sizeKey].isDefault){
+            tmp["defaultImage"] = tmp[sizeKey];
+        }
+    };
+
+    var GetDefaultImage = function(dom){
+        if(!dom){
+            return (LazyImages["defaultImage"] || {}).source || "";
+        }
+
+        var cls = dom.className || "";
+        var items = cls.split(/[\s]+/);
+        var size = items.length;
+        var item = null;
+
+        var defaultURL = dom.getAttribute("data-default-image") || (LazyImages["defaultImage"] || {}).source || "";
+        for(var i = 0; i < size; i++){
+            item = items[i];
+
+            if(item in LazyImages){
+                defaultURL = LazyImages[item].source;
+            }
+        }
+
+        return defaultURL || "";
+    };
+
+    var Formatter = function(str, obj){
+        for(var key in obj){
+            if(obj.hasOwnProperty(key)){
+                var pattern = new RegExp("\\{" + key + "\\}", "g");
+                pattern.lastIndex = 0;
+
+                str = str.replace(pattern, obj[key]);
+            }
+        }
+
+        return str;
+    };
+
+    var ParseRules = function(rule, images){
+        var properties = rule.properties;
+        var selectors = rule.selectors;
+        var defaultSelectors = rule.defaultSelectors;
+
+        var finalSelectors = [].concat(selectors);
+        var finalProperties = [];
+        var rules = [];
+        var image = null;
+
+        if("dynamic" == rule.type){
+            for(var key in images){
+                if(images.hasOwnProperty(key)){
+                    image = images[key];
+
+                    finalSelectors = [].concat(selectors);
+                    finalProperties = [];
+                    if(image.isDefault){
+                        finalSelectors = defaultSelectors.concat(finalSelectors);
+                    }
+
+                    for(var p in properties){
+                        if(properties.hasOwnProperty(p)){
+                            finalProperties.push(p + ": " + properties[p] + ";\n");
+                        }
+                    }
+
+                    rules.push({
+                        "selectors": Formatter(finalSelectors.join(","), image),
+                        "properties": Formatter(finalProperties.join(""), image)
+                    });
+                }
+            }  
+        }else{
+            for(var p in properties){
+                if(properties.hasOwnProperty(p)){
+                    finalProperties.push(p + ": " + properties[p] + ";\n");
+                }
+            }
+
+            rules.push({
+                "selectors": finalSelectors.join(","),
+                "properties": finalProperties.join("")
+            })
+        }
+
+        return rules;
+    };
+
+    var CreateLazyStyle = function(images){
+        var rules = [].concat(cssRuleTpls);
+        var size = rules.length;
+        var rule = null;
+        var ruleItems = [];
+
+        var buf = [];
+        for(var i = 0; i < size; i++){
+            ruleItems = ParseRules(rules[i], images);
+
+            for(var j = 0; j < ruleItems.length; j++){
+                rule = ruleItems[j]
+
+                buf.push(rule.selectors);
+                buf.push("{\n");
+                buf.push(rule.properties);
+                buf.push("\n}\n");
+            }
+        }
+
+        var style = document.createElement("style");
+        style.type="text/css";
+        style.id="layzstyle";
+        style.innerHTML = buf.join("");
+        document.querySelector("head").appendChild(style);
+    };
+
+    setTimeout(function(){
+        CreateLazyStyle(images);
+    }, 0);
+
+    tmp["getDefaultImage"] = GetDefaultImage;
+
+    window["LazyImages"] = tmp;
+})();
+</script>

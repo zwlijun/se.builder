@@ -3721,7 +3721,7 @@
     };
 
     module.exports = {
-        "version": "R17B0623",
+        "version": "R18B1206",
         newTouchCity: function(name){
             return TouchCity.newTouchCity(name);
         },

@@ -1,0 +1,72 @@
+<script>
+(function(){
+    var env = window["RemAdaptor"].env;
+    var os = env.os;
+    var isMobile = (os.android.major > 0 || os.ios.major > 0 || os.windowsphone.major > 0 || os.blackberry.major > 0 || os.symbian.major > 0);
+
+    if(!isMobile){ //判断当前环境，根据引用平台做处理
+        return ;
+    }
+
+    var Host = {
+        "target": {
+            "platform": "domain.com"
+        }
+    };
+    var URIMapping = [
+        //----------------------------------------------------------
+        // {"pattern": /^(\/.*)$/gi,
+        //     "redirect": Host.target.platform + "$1",
+        //     "ignore": false
+        // },
+        // {"pattern": /^(\/.*)$/gi,
+        //     "redirect": function(conf, matcher){
+        //         return null;
+        //     },
+        //     "ignore": false
+        // }
+        //----------------------------------------------------------
+        //----------------------------------------------------------
+    ];
+    var pathname = location.pathname;
+    var search = location.search;
+    var uri = pathname + search;
+
+    var rewrite = function(conf, args){
+        var uri = conf.redirect;
+
+        var typ = typeof(uri);
+        if("string" === typ){
+            for(var i = args.length - 1; i >= 1; i--){
+                uri = uri.replace(new RegExp("\\$" + i, "g"), args[i] || "");
+            }
+        }else if("function" === typ){
+            uri = uri.apply(null, [conf, args]);
+        }
+
+        return uri;
+    };
+
+    var meta = document.querySelector('[name="urlrewrite"]');
+    if(null != meta && (uri = meta.getAttribute("content"))){
+        //todo
+        location.replace(Host.shop.h5 + uri);
+        return ;
+    }
+
+    var mapping = null;
+    var matcher = null;
+    for(var i = 0; i < URIMapping.length; i++){
+        mapping = URIMapping[i];
+
+        mapping.pattern.lastIndex = 0;
+        if(null !== (matcher = mapping.pattern.exec(uri))){
+            if(true === mapping.ignore){
+                return ;
+            }
+            location.replace(rewrite(mapping, matcher));
+            return ;
+        }
+    }
+})();
+</script>
