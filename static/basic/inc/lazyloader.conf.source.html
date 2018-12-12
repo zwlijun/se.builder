@@ -73,13 +73,50 @@
     var images = {};
     var meta = null;
     var sizeKey = null;
+
+    var InRegion = function(){
+        var _in = false;
+        var timezone = undefined;
+
+        try{
+            timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        }catch(e){}finally{
+            if(!timezone){
+                var d = new Date();
+                var dtString = d.toString();
+                var pattern = /GMT\+0800[\s\(]+(China Standard Time|中国标准时间|中國標準時間|เวลามาตรฐานจีน|CST)/i;
+
+                timezone = pattern.test(dtString) ? "Asia/Shanghai" : "Earth/Undefined";
+            }
+        }
+
+        var pattern2 = /Asia\/(Shanghai|Chongqing|Beijing|Harbin|Urumqi)/i;
+        _in = pattern2.test(timezone || "Earth/Undefined");
+
+        return _in;
+    };
+
+    var TransformImageURL = function(imageURL, external){
+        return (external && ("SEApp" in window) && window["SEApp"]) ? (SEApp.Util.requestExternal(external, [imageURL]).result || imageURL) : (function(src){
+            if(InRegion()){
+                var hostPattern = /http[s]?\:\/\/([^\/]+)(.*)/gi;
+
+                hostPattern.lastIndex = 0;
+                src = src.replace(hostPattern, "https://tft-run-public-china.oss-cn-shenzhen.aliyuncs.com$2");
+            }
+
+            return src;
+            
+        })(imageURL || "");
+    };
+
     for(var i = 0; i < size; i++){
         meta = lazyImages[i];
         sizeKey = meta.getAttribute("data-size");
 
         tmp[sizeKey] = {
             "size": sizeKey,
-            "source": meta.getAttribute("content"),
+            "source": TransformImageURL(meta.getAttribute("content")),
             "isDefault": "1" === meta.getAttribute("data-default")
         };
 
@@ -206,6 +243,7 @@
     }, 0);
 
     tmp["getDefaultImage"] = GetDefaultImage;
+    tmp["transformImageURL"] = TransformImageURL;
 
     window["LazyImages"] = tmp;
 })();
