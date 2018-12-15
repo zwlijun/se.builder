@@ -59,6 +59,17 @@ var bridge = {
     // "feature": {
     //     "page": "..."
     // }
+    "platform": {
+        "app": {
+            "project": {
+                "module": {
+                    "feature": {
+                        "page": "",
+                    },
+                },
+            },
+        },
+    }
 };
 
 var nslookup = function(findObj, keys){
@@ -83,7 +94,7 @@ var nslookup = function(findObj, keys){
     return null;
 };
 
-var requireLogicFile = nslookup(bridge, [feature, page]);
+var requireLogicFile = nslookup(bridge, [platform, app, project, module, feature, page]);
 
 if(requireLogicFile){
     requires.push(requireLogicFile);
