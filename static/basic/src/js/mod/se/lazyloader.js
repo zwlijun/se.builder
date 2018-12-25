@@ -11,7 +11,7 @@
  *
  */
 ;define(function(require, exports, module){
-                              require("mod/polyfill/intersection-observer")
+                              require("mod/polyfill/intersection-observer");
     var Util                = require("mod/se/util");
     var Timer               = require("mod/se/timer");
     var DateType            = require("mod/se/datatype");
@@ -185,6 +185,10 @@
         setBackgroundImage: function(node, src, defaultURL){
             var _this = this;
             var opts = _this.options();
+            var external = node.attr("data-lazyexternal") || null;
+
+            src = LazyImages.transformImageURL(src, external);
+            defaultURL = LazyImages.transformImageURL(defaultURL, external);
 
             node.addClass("lazy-beforeload");
             _this.exec("before", ["bg", node]);
@@ -252,12 +256,16 @@
         setImageSource: function(node, src, defaultURL){
             var _this = this;
             var opts = _this.options();
-            
+            var external = node.attr("data-lazyexternal") || null;
+
             node = _this.getRealImageNode(node);
 
             if(!node){
                 return ;
             }
+
+            src = LazyImages.transformImageURL(src, external);
+            defaultURL = LazyImages.transformImageURL(defaultURL, external);
 
             node.addClass("lazy-beforeload");
             _this.exec("before", ["img", node]);
@@ -535,7 +543,9 @@
         };
 
         tmp["getDefaultImage"] = GetDefaultImage;
-
+        tmp["transformImageURL"] = function(imageURL, external){
+            return external ? (Util.requestExternal(external, [imageURL]).result || imageURL) : imageURL;
+        };
 
         window["LazyImages"] = tmp;
     })();

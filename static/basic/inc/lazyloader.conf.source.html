@@ -27,16 +27,20 @@
         {"selectors": ["img[src=\"\"]", "img[src^=\"#\"]", "img[src=\"about:blank\"]", "img:not([src])"],
             "defaultSelectors": [],
             "properties": {
-                "width": 0,
-                "height": 0,
-                "position": "absolute"
+                "width": "1px",
+                "height": "1px",
+                "overflow": "hidden",
+                "position": "absolute",
+                "z-index": 1
             },
             "type": "fixed"
         },
         {"selectors": ["img[src=\"\"] ~ .lazy-placeholder", "img[src^=\"#\"] ~ .lazy-placeholder", "img[src=\"about:blank\"] ~ .lazy-placeholder", "img:not([src]) ~ .lazy-placeholder"],
            "defaultSelectors": [],
             "properties": {
-                "display": "inherit"
+                "display": "inherit",
+                "position": "relative",
+                "z-index": 3
             },
             "type": "fixed"
         },
@@ -96,13 +100,48 @@
         return _in;
     };
 
+    var FilterPoints = function(origin, localSource){
+        var points = ["a.domain.com"];
+        var size = points.length;
+        var point = null;
+
+        for(var i = 0; i < size; i++){
+            point = points[i];
+
+            if(origin.indexOf(point) !== -1){
+                return localSource;
+            }
+        }
+
+        return origin;
+    };
+
     var TransformImageURL = function(imageURL, external){
         return (external && ("SEApp" in window) && window["SEApp"]) ? (SEApp.Util.requestExternal(external, [imageURL]).result || imageURL) : (function(src){
             if(InRegion()){
                 var hostPattern = /http[s]?\:\/\/([^\/]+)(.*)/gi;
 
                 hostPattern.lastIndex = 0;
-                src = src.replace(hostPattern, "https://tft-run-public-china.oss-cn-shenzhen.aliyuncs.com$2");
+                src = FilterPoints(src, src.replace(hostPattern, "https://b.domain.com$2"));
+                document.documentElement.setAttribute("data-locale", "zh-CN");
+            }
+
+            var env = RemAdaptor.env;
+            var os = env.os;
+            var browser = env.browser;
+
+            if(browser.chrome.major > 0 || os.android.major > 0){
+                if(src.indexOf("format,") == -1){
+                    src += "/format,webp";
+                }else{
+                    src = src.replace(/format,([a-z]+)/gi, "format,webp");
+                }
+            }
+
+            if(src.indexOf("quality,") == -1){
+                src += "/quality,q_80";
+            }else{
+                src = src.replace(/quality,([aQ]_[0-9]+)/gi, "quality,q_80");
             }
 
             return src;
@@ -238,9 +277,13 @@
         document.querySelector("head").appendChild(style);
     };
 
-    setTimeout(function(){
+    try{
         CreateLazyStyle(images);
-    }, 0);
+    }catch(e){
+        setTimeout(function(){
+            CreateLazyStyle(images);
+        }, 0);
+    }
 
     tmp["getDefaultImage"] = GetDefaultImage;
     tmp["transformImageURL"] = TransformImageURL;

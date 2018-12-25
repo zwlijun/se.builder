@@ -482,21 +482,26 @@
         callout: function(){
             var name = this.getTouchSelectName();
 
-            ActionSheet.show(name);
-            this.exec("callout", [name]);
+            if(this.actionSheet){
+                this.actionSheet.show();
+                this.exec("callout", [name]);
+            }
         },
         cancel: function(){
             var name = this.getTouchSelectName();
 
-            ActionSheet.hide();
-            ts.exec("cancel", [name]);
-            
+            if(this.actionSheet){
+                this.actionSheet.hide();
+                ts.exec("cancel", [name]);
+            }
         },
         confirm: function(){
             var name = this.getTouchSelectName();
 
-            ActionSheet.hide();
-            ts.exec("confirm", [name]);
+            if(this.actionSheet){
+                this.actionSheet.hide();
+                ts.exec("confirm", [name]);
+            }
         },
         render: function(visible){
             var data = this.options("data");

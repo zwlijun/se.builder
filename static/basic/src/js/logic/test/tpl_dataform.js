@@ -47,6 +47,12 @@
 
                             // ins.html(tips).removeClass("hidden");
                             
+                            try{
+                                if(el && el.length > 0){
+                                    el[0].scrollIntoView();
+                                }
+                            }catch(e){}
+
                             SEApp.Toast.text(tips, SEApp.Toast.MIDDLE_CENTER, 3000);
                         }
                     });
@@ -55,17 +61,25 @@
                             var checkResultCRS = result.crs;
                             var checkResultItems = result.cri;
                             var item = null;
+                            var first = true;
 
                             if(checkResultCRS["failure"] > 0){
                                 for(var key in checkResultItems){
                                     if(checkResultItems.hasOwnProperty(key)){
                                         item = checkResultItems[key];
 
-                                        var field = item.element.parents(".dataform-item");
-                                        var tips = field.find(".retmsg");
+                                        var itemField = item.element.parents(".dataform-item");
+                                        var tips = itemField.find(".retmsg");
 
                                         if(!item.verified){
                                             tips.html(item.message).addClass("warn").removeClass("hide");
+
+                                            try{
+                                                if(first && itemField[0]){
+                                                    itemField[0].scrollIntoView();
+                                                    first = false;
+                                                }
+                                            }catch(e){}
                                         }
                                     }
                                 }

@@ -61,6 +61,18 @@
             "pattern": "",
             "defaultValue": "0"
         },
+        {"property": "x",
+            "dataType": "number",
+            "format": "",
+            "pattern": "",
+            "defaultValue": "0"
+        },
+        {"property": "y",
+            "dataType": "number",
+            "format": "",
+            "pattern": "",
+            "defaultValue": "0"
+        },
         {"property": "shadow-set",
             "dataType": "boolean",
             "format": "",
@@ -86,6 +98,18 @@
             "defaultValue": "px"
         },
         {"property": "triangle-offset",
+            "dataType": "number",
+            "format": "",
+            "pattern": "",
+            "defaultValue": "0"
+        },
+        {"property": "triangle-x",
+            "dataType": "number",
+            "format": "",
+            "pattern": "",
+            "defaultValue": "0"
+        },
+        {"property": "triangle-y",
             "dataType": "number",
             "format": "",
             "pattern": "",
@@ -153,6 +177,8 @@
             "height": "auto",
             "unit": "px",
             "offset": 0,
+            "x": 0,
+            "y": 0,
             "shadow": {
                 "set": true,
                 "value": null
@@ -160,7 +186,9 @@
             "triangle": {
                 "size": 10,
                 "unit": "px",
-                "offset": 0
+                "offset": 0,
+                "x": 0,
+                "y": 0
             },
             "border": {
                 "left": null,
@@ -202,12 +230,13 @@
             }
 
             if(2 === size){
-                var tmp = args[2];
-                if(DateType.isObject(args[1])){
-                    tmp = $.extend(true, {}, this.opts[0], tmp);
+                var key = args[0]
+                var tmp = args[1];
+                if(DateType.isObject(tmp)){
+                    tmp = $.extend(true, {}, this.opts[key], tmp);
                 }
 
-                this.opts[args[0]] = tmp;
+                this.opts[key] = tmp;
             }
 
             return this;
@@ -302,6 +331,8 @@
             var size = triangle.size;
             var unit = triangle.unit || "px";
             var offset = triangle.offset;
+            var offsetX = triangle.x;
+            var offsetY = triangle.y;
 
             var value = size + unit;
             var node = this.getTooltipsTriangle();
@@ -315,20 +346,20 @@
 
             switch(stick){
                 case STICK.TOP:
-                    o.top = "-" + half + unit;
-                    o.marginLeft = "-" + (half + offset) + unit;
+                    o.top = (-(half + offsetY)) + unit;
+                    o.marginLeft = (-(half + offset + offsetX)) + unit;
                 break;
                 case STICK.RIGHT:
-                    o.right = "-" + half + unit;
-                    o.marginTop = "-" + (half + offset) + unit;
+                    o.right = (-(half + offsetX)) + unit;
+                    o.marginTop = (-(half + offset + offsetY)) + unit;
                 break;
                 case STICK.BOTTOM:
-                    o.bottom = "-" + half + unit;
-                    o.marginLeft = "-" + (half + offset) + unit;
+                    o.bottom = (-(half + offsetY)) + unit;
+                    o.marginLeft = (-(half + offset + offsetX)) + unit;
                 break;
                 case STICK.LEFT:
-                    o.left = "-" + half + unit;
-                    o.marginTop = "-" + (half + offset) + unit;
+                    o.left = (-(half + offsetX)) + unit;
+                    o.marginTop = (-(half + offset + offsetY)) + unit;
                 break;
             }
 
@@ -342,15 +373,17 @@
             this.setBorder(opts.border);
             this.setTriangle(opts.triangle, opts.stick);
         },
-        render: function(selector){
+        render: function(selector, handlers){
             var _this = this;
-
+            var _handlers = handlers || {};
             if(this.existed()){
+                Util.execHandler(_handlers.existed, [_this]);
                 return this;
             }
             _this.trigger = $(selector);
             _this.options(DOMConfigure.initDOMConfigure(_this.trigger).define(DOMStruct).parse());
 
+            Util.execHandler(_handlers.beforeRender, [_this]);
 
             ToolTipsTemplateEngine.render(true, _HTML_STRUCT, {
                 "name": this.name,
@@ -360,6 +393,8 @@
                     $("body").append(ret.result);
 
                     this.updateAttributes();
+
+                    Util.execHandler(_handlers.render, [_this]);
                 },
                 context: _this
             });
@@ -378,34 +413,41 @@
             var triangle = this.options("triangle");
             var half = triangle.size / 2;
             var offset = this.options("offset");
+            var offsetX = this.options("x");
+            var offsetY = this.options("y");
 
             var o = {};
 
             switch(stick){
                 case STICK.TOP:
-                    o.top = (triggerRect.bottom + half + offset) + "px";
-                    o.left = (triggerRect.left + (triggerRect.width / 2) - (tooltipsRect.width / 2)) + "px";
+                    o.top = (triggerRect.bottom + half + offset + offsetY) + "px";
+                    o.left = (triggerRect.left + (triggerRect.width / 2) - (tooltipsRect.width / 2) + offsetX) + "px";
                 break;
                 case STICK.RIGHT:
-                    o.top = (triggerRect.top + (triggerRect.height / 2) - (tooltipsRect.height / 2)) + "px";
-                    o.left = (triggerRect.left - half - tooltipsRect.width - offset) + "px";
+                    o.top = (triggerRect.top + (triggerRect.height / 2) - (tooltipsRect.height / 2) + offsetY) + "px";
+                    o.left = (triggerRect.left - half - tooltipsRect.width - offset + offsetX) + "px";
                 break;
                 case STICK.BOTTOM:
-                    o.top = (triggerRect.top - half - tooltipsRect.height - offset) + "px";
-                    o.left = (triggerRect.left + (triggerRect.width / 2) - (tooltipsRect.width / 2)) + "px";
+                    o.top = (triggerRect.top - half - tooltipsRect.height - offset + offsetY) + "px";
+                    o.left = (triggerRect.left + (triggerRect.width / 2) - (tooltipsRect.width / 2) + offsetX) + "px";
                 break;
                 case STICK.LEFT:
-                    o.top = (triggerRect.top + (triggerRect.height / 2) - (tooltipsRect.height / 2)) + "px";
-                    o.left = (triggerRect.right + half + offset) + "px";
+                    o.top = (triggerRect.top + (triggerRect.height / 2) - (tooltipsRect.height / 2) + offsetY) + "px";
+                    o.left = (triggerRect.right + half + offset + offsetX) + "px";
                 break;
             }
 
             node.css(o);
         },
+        visible: function(){
+            var node = this.getTooltipsNode();
+
+            return (node && node.hasClass("visible"));
+        },
         show: function(handlers){
             var node = this.getTooltipsNode();
 
-            if(node.hasClass("visible")){
+            if(this.visible()){
                 return;
             }
 

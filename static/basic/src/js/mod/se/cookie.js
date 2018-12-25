@@ -46,16 +46,35 @@
             }
         },
         ipv4: function(domain){
-            var pattern = /^[\d]+(\.[\d]+){3}$/;
+            var pattern = /^[\d]{1,3}(\.[\d]{1,3}){3}$/; //d.d.d.d
             pattern.lastIndex = 0;
 
             return pattern.test(domain);
         },
         ipv6: function(domain){
-            var pattern = /^[\da-f]{1,4}(\:[\da-f]{1,4}){7}$/i;
-            pattern.lastIndex = 0;
+            var patterns = [
+                /^[\da-f]{1,4}(:[\da-f]{1,4}){7}$/i,  //IPv6全地址 X:X:X:X:X:X:X:X
+                /^::$/,  //X:X:X:X:X:X:X:X
+                /^::[\da-f]{1,4}(:[\da-f]{1,4})*$/i,  //::X:X, ::X
+                /^([\da-f]{1,4}:)*([\da-f]{1,4})::$/i,  //X::, X:X::
+                /^([\da-f]{1,4}:)*([\da-f]{1,4})::([\da-f]{1,4})(:[\da-f]{1,4})*$/i,  //X:X::X:X, X::X, X::X:X, X:X::X
+                /^[\da-f]{1,4}(:[\da-f]{1,4}){5}:[\d]{1,3}(\.[\d]{1,3}){3}$/i, //X:X:X:X:X:X:d.d.d.d
+                /^::[\d]{1,3}(\.[\d]{1,3}){3}$/i, //::d.d.d.d
+                /^::[\da-f]{1,4}(:[\da-f]{1,4})*:[\d]{1,3}(\.[\d]{1,3}){3}$/i, //::X:X:d.d.d.d, ::X:d.d.d.d
+                /^([\da-f]{1,4}:)*([\da-f]{1,4})::[\d]{1,3}(\.[\d]{1,3}){3}$/i,  //X::d.d.d.d, X:X::d.d.d.d
+                /^([\da-f]{1,4}:)*([\da-f]{1,4})::([\da-f]{1,4})(:[\da-f]{1,4})*:[\d]{1,3}(\.[\d]{1,3}){3}$/i  //X:X::X:X:d.d.d.d, X::X:d.d.d.d, X::X:X:d.d.d.d, X:X::X:d.d.d.d
+            ];
 
-            return pattern.test(domain);
+            for(var i = 0; i < patterns.length; i++){
+                pattern = patterns[i];
+                pattern.lastIndex = 0;
+
+                if(pattern.test(domain)){
+                    return true;
+                }
+            }
+
+            return false;
         },
         domain: function(isFullDomain){
             var domain = document.domain;

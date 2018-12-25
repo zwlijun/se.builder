@@ -615,8 +615,8 @@
 
                 if(useVariable){
                     var __items = useVariable.split("@");
-                    var __key = items[0];
-                    var __path = items[1];
+                    var __key = __items[0];
+                    var __path = __items[1];
                     var __value = $.variable[__key] || "";
 
                     if(!__path || !__value){
