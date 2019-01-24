@@ -149,86 +149,108 @@
             return str;
         },
         /**
+         * 千分位格式化
+         * @param String currency 货币金额
+         * @param Boolean trimTailZero 是否过滤小数位后的未尾0
+         * @return String 转换后的货币
+         */
+        formatMaskCurrency: function(currency, trimTailZero){
+            if(null == currency){
+                return "??";
+            }
+            var dotIndex = -1;
+            var hasDot = -1 != (dotIndex = currency.indexOf("."));
+            var prefix = hasDot ? currency.substring(0, dotIndex) : currency;
+            var suffix = hasDot ? currency.substring(dotIndex) : "";
+
+            if(suffix.length > 0 && true == trimTailZero){
+                suffix = suffix.replace(/0+$/g, "");
+                if("." == suffix){
+                    suffix = "";
+                }
+            }
+
+            var formatCurrent = prefix.replace(/([a-zA-Z\d\?\*])(?=(?:[a-zA-Z\d\?\*]{3})+$)/g, "$1,") + suffix;
+
+            return formatCurrent;
+        },
+        /**
          * 转换成货币格式(支持超大金额)
          * @param String amount 输入的字符串
          * @param int digit 小数位数
+         * @param Boolean trimTailZero 是否过滤小数位后的未尾0
          * @return String 转换后的货币
          */
-        toCurrency: function(amount, digit){
-            var str = amount + "";
-            var group = str.split(".");
-            var prefix = group[0];
-            var suffix = group[1] || "";
-            var len = suffix.length;
+        toCurrency: function(amount, digit, trimTailZero){
+            if(!isNaN(Number(amount + ""))){
+                var str = amount + "";
+                var group = str.split(".");
+                var prefix = group[0];
+                var suffix = group[1] || "";
+                var len = suffix.length;
 
-            digit = Number(digit);
-            digit = isNaN(digit) ? 2 : Math.min(digit, 6);
-            
-            if(digit > 0){
-                if(len < digit){
-                    suffix = suffix + new Array(digit - len + 1).join("0")
-                }else if(len == digit){
-                    suffix = suffix;
-                }else{
-                    var tmp = suffix.substring(0, digit);
-                    var last = Number(tmp.substring(digit - 1));
-                    var cut = Number(suffix.substring(digit, digit + 1));
+                digit = Number(digit);
+                digit = isNaN(digit) ? 2 : Math.min(digit, 6);
+                
+                if(digit > 0){
+                    if(len < digit){
+                        suffix = suffix + new Array(digit - len + 1).join("0")
+                    }else if(len == digit){
+                        suffix = suffix;
+                    }else{
+                        var tmp = suffix.substring(0, digit);
+                        var last = Number(tmp.substring(digit - 1));
+                        var cut = Number(suffix.substring(digit, digit + 1));
 
-                    if(cut >= 5){
-                        tmp = Number(tmp) + 1;
-                    }
-                    suffix = tmp + "";
-                }
-            }
-
-            //如果小数位为0或者suffix计算后的长度 > 设置的小数位，测对主体进行进位操作
-            if((digit === 0 && suffix) || (suffix.length - digit === 1)){
-                var tmp = Number(suffix.charAt(0));
-                var arr = prefix.split("");
-                var n = 0;
-                var o = 1;
-                var buf = [];
-
-                //小数溢出
-                if(suffix.length - digit === 1){
-                    tmp = 5;
-                    suffix = suffix.substring(1);
-                }
-
-                if(tmp >= 5){
-                    for(var i = arr.length - 1; i >= 0; i--){
-                        n = Number(arr[i]);
-
-                        n += o;
-
-                        if(n == 10){
-                            buf.unshift(0);
-                            o = 1;
-                        }else{
-                            buf.unshift(n);
-                            o = 0;
-                            break;
+                        if(cut >= 5){
+                            tmp = Number(tmp) + 1;
                         }
+                        suffix = tmp + "";
                     }
-
-                    if(o ===1){
-                        buf.unshift(1);
-                    }
-
-                    prefix = buf.join("");
                 }
+
+                //如果小数位为0或者suffix计算后的长度 > 设置的小数位，测对主体进行进位操作
+                if((digit === 0 && suffix) || (suffix.length - digit === 1)){
+                    var tmp = Number(suffix.charAt(0));
+                    var arr = prefix.split("");
+                    var n = 0;
+                    var o = 1;
+                    var buf = [];
+
+                    //小数溢出
+                    if(suffix.length - digit === 1){
+                        tmp = 5;
+                        suffix = suffix.substring(1);
+                    }
+
+                    if(tmp >= 5){
+                        for(var i = arr.length - 1; i >= 0; i--){
+                            n = Number(arr[i]);
+
+                            n += o;
+
+                            if(n == 10){
+                                buf.unshift(0);
+                                o = 1;
+                            }else{
+                                buf.unshift(n);
+                                o = 0;
+                                break;
+                            }
+                        }
+
+                        if(o ===1){
+                            buf.unshift(1);
+                        }
+
+                        prefix = buf.join("");
+                    }
+                }
+
+                amount = digit > 0 ? prefix + "." + suffix : prefix;
             }
 
-            prefix = prefix.split("")
-                           .reverse()
-                           .join("")
-                           .replace(/([\d]{3})/g, "$1,")
-                           .split("")
-                           .reverse()
-                           .join("")
-                           .replace(/^([\+\-]?)(?=,),([\d,]+)$/, "$1$2");
-
-            return digit > 0 ? prefix + "." + suffix : prefix;
+            return this.formatMaskCurrency(amount, true === trimTailZero);
         },
         /**
          * 将字符串转换成十六进制
