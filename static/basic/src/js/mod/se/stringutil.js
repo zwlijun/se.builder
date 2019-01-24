@@ -190,7 +190,7 @@
                 var len = suffix.length;
 
                 digit = Number(digit);
-                digit = isNaN(digit) ? 2 : Math.min(digit, 6);
+                digit = isNaN(digit) ? Math.min(len, 2) : Math.min(digit, 6);
                 
                 if(digit > 0){
                     if(len < digit){
