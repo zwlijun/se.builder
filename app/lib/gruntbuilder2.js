@@ -627,6 +627,109 @@ var writeChecksum = function(file, isDest){
     }
 }
 
+var updateBuildFileChecksum = function(sourceFile, distFile){
+    // console.warn("count1: " + (++_TEMP_COUNT1))
+    if(fs.existsSync(sourceFile) && fs.existsSync(distFile)){
+        // console.warn("count2: " + (++_TEMP_COUNT2))
+        cs.FileSHA1CheckSum(sourceFile, function(filename, checksum, isSame, _source, _dist){
+            cs.WriteSHA1CheckSum(filename, checksum);
+
+            // console.warn("count3: " + (++_TEMP_COUNT3))
+
+            var _project = GetProjectInfo();
+            var _env = GetEnvInfo();
+            var _deploy = GetBuildInfo();
+            var _sed = _deploy.sed;
+            var _root = _env.root;
+            var _docDir = _root.doc;
+            var _srcDir = _root.src;
+            var _binDir = _root.bin;
+            var _sedDir = _root.sed;
+            var _sedRoot = _docDir + _sedDir;
+            var checksumLength = checksum.length;
+            var nodeCharset = (_project.charset).replace(/\-/g, "");
+            
+            if(_sed && true === _sed.turn){ //create sed command
+                var relativeName = _dist.substring(_dist.indexOf(buildTempDir) + buildTempDir.length);
+                var relativeData = parseRelativeName(relativeName, checksum, _deploy.alias);
+
+                var sedSubPaths = _sed.paths || [""];
+
+                var ext = relativeData.ext;
+                var signExt = relativeData.signExt;
+
+                var rsopts = {
+                    flags: "r",
+                    encoding: nodeCharset,
+                    mode: 0o666,
+                    autoClose: true
+                };
+
+                var wsopts = {
+                    flags: "w",
+                    encoding: nodeCharset,
+                    mode : 0o666,
+                    autoClose: true
+                };
+
+                if("img" == _deploy.alias){
+                    delete rsopts.encoding;
+                    delete wsopts.encoding;
+                }
+
+                var irs = fs.createReadStream(_dist, rsopts);
+                var ows = fs.createWriteStream(_dist.replace(ext, signExt), wsopts);
+
+                ows.on("finish", function(){
+                    signCount++;
+                    emit("encoding", "[" + errorCount + "/" + signCount + "/" + deployFileCount + "]finish " + _dist + " -> " + _dist.replace(ext, signExt));
+
+                    var sedPath = null;
+
+                    for(var i = 0, len = sedSubPaths.length; i < len; i++){
+                        sedPath = _sedRoot + sedSubPaths[i];
+
+                        if(!(sedPath in replaceHashItems)){
+                            replaceHashItems[sedPath] = [];
+                        }
+
+                        replaceHashItems[sedPath].push({
+                            "alias": _deploy.alias,
+                            "relative": relativeData
+                        });
+                    }
+                    
+                    if((signCount + errorCount) >= deployFileCount){
+                        if(errorCount > 0){
+                            emit("error", "文件HASH计算出错[" + errorCount + "/" + signCount + "/" + deployFileCount + "]");
+                        }else{
+                            emit("encoding", "文件HASH计算完成，开始进行部署...");
+                            deploy();
+                        }
+                    }
+                });
+
+                ows.on("error", function(message){
+                    errorCount++;
+
+                    emit("encoding", "=====文件HASH计算出错=====");
+                    emit("encoding", "message: " + message);
+                    emit("encoding", "[" + errorCount + "/" + signCount + "/" + deployFileCount + "]finish " + _dist + " -> " + _dist.replace(ext, signExt));
+                    if((signCount + errorCount) >= deployFileCount){
+                        emit("error", "文件HASH计算出错[" + errorCount + "/" + signCount + "]");
+                    }
+                });
+
+                irs.pipe(ows);                   
+            }
+
+            emit("encoding", "storage file sign: " + checksum);
+        }, [sourceFile, distFile]);
+    }else{
+        emit("encoding", "file not found(" + sourceFile + " -> " + distFile + ")");
+    }
+}
+
 var writeDestChecksum = function(file){
     emit("encoding", "create dest file(" + file + ") sign...");
     writeChecksum(file, true);
@@ -637,6 +740,11 @@ var writeSourceChecksum = function(file){
     writeChecksum(file, false);
 }
 
+var writeBuildFileChecksum = function(sourceFile, distFile){
+    emit("encoding", "create build file(" + sourceFile + " -> " + distFile + ") sign...");
+    updateBuildFileChecksum(sourceFile, distFile);
+}
+
 var parseGruntData = function(str){
     var prefix = "File ";
     var startIndex = str.indexOf(prefix) + prefix.length;
@@ -645,8 +753,9 @@ var parseGruntData = function(str){
     var source = min.replace("/" + buildTempDir + "/", "/");
 
     if(endIndex > startIndex){
-        writeSourceChecksum(source);
-        writeDestChecksum(min);
+        // writeSourceChecksum(source);
+        // writeDestChecksum(min);
+        writeBuildFileChecksum(source, min);
     }else{
         emit("encoding", "file path parse error >>> " + str);
     }
@@ -668,8 +777,9 @@ var parseGruntImageData = function(str){
     source = source.replace("/" + transportTempDir + "/", "/");
 
     if(endIndex > startIndex){
-        writeSourceChecksum(source);
-        writeDestChecksum(min);
+        // writeSourceChecksum(source);
+        // writeDestChecksum(min);
+        writeBuildFileChecksum(source, min);
     }else{
         emit("encoding", "file path parse error >>> " + str);
     }
