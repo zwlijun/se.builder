@@ -168,14 +168,14 @@ var createTask = function(){
 
     switch(alias){
         case "js":
-            registNpmTask("grunt-babel");
+            // registNpmTask("grunt-babel");
             registNpmTask("grunt-contrib-uglify");
 
             if(transport){
                 registNpmTask('grunt-cmd-transport');
             }
 
-            registGruntTask("babel");
+            // registGruntTask("babel");
 
             if(transport){
                 registGruntTask("transport");
@@ -226,22 +226,22 @@ buildGruntFile.js = function(files){
     var bin = root.bin;
     var sed = root.sed;
 
-    conf["babel"] = {
-        "options": {
-            "sourceMap": false,
-            "compact": false,
-            "sourceType": "unambiguous",
-            "presets": ["@babel/preset-env"]
-        },
-        "dist": {
-            "files": [{
-               "expand": true,
-               "cwd": path.relative(".", doc + src + transportTempDir + "/js"),
-               "src": "**/*.js",
-               "dest": path.relative(".", doc + src + transportTempDir + "/js")
-            }] 
-        }
-    };
+    // conf["babel"] = {
+    //     "options": {
+    //         "sourceMap": false,
+    //         "compact": false,
+    //         "sourceType": "script",
+    //         "presets": ["@babel/preset-env"]
+    //     },
+    //     "dist": {
+    //         "files": [{
+    //            "expand": true,
+    //            "cwd": path.relative(".", doc + src + transportTempDir + "/js"),
+    //            "src": "**/*.js",
+    //            "dest": path.relative(".", doc + src + transportTempDir + "/js")
+    //         }] 
+    //     }
+    // };
 
     conf["uglify"] = {
         "options": {

@@ -34,15 +34,65 @@ var CheckSum = {
         });
     },
     _filehash_ : function(algorithm, filename, callback, args, context) {
-        var sum = crypto.createHash(algorithm);
-        var opts = /\.(jpg|png|jpeg)$/i.test(filename) ? null : {
-            "encoding": CheckSum.getCharset()
-        };
-        var stream = fs.readFileSync(filename, opts);
+        // var hash = crypto.createHash(algorithm);
+        
+        // var input = fs.createReadStream(filename);
+        // input.setEncoding(null);
+
+        // input.on('data', (chunk) => {
+        //     hash.update(chunk);
+        // });
+
+        // input.on('end', () => {
+        //     var digest = hash.digest('hex');
+        //     // console.log(filename + ' -> ' + digest);
+
+        //     var target = CheckSum._read_(filename + "." + algorithm);
+
+        //     if(digest != target){
+        //         console.log("\x1B[33m", "digest", digest, target, filename, "\x1B[39m");
+        //     }else{
+        //         console.log("\x1B[32m", "digest", digest, target, filename, "\x1B[39m");
+        //     }
+
+        //     if(callback && callback.apply){
+        //         callback.apply(context || null, [filename, digest, (null == target || digest != target)].concat(args||[]));
+        //     }
+        // });
+
+        var hash = crypto.createHash(algorithm);
+        // var opts = /\.(jpg|png|jpeg)$/i.test(filename) ? null : {
+        //     "encoding": CheckSum.getCharset()
+        // };
+        var stream = fs.readFileSync(filename, {
+             "encoding": null
+        });
+
         var digest = null;
 
-        sum.update(stream);
-        digest = sum.digest("hex");
+        if(!/\.(jpg|png|jpeg)$/i.test(filename)){
+            const startTime = Date.now();
+            console.log("transform line endings before: ", stream.length);
+            const copyBuffer = new Int32Array(stream, 0, stream.length);
+            const newBuffer = new Buffer(copyBuffer.filter((element, index, typedArray) => {
+                if(0x0d === element){
+                    if(0x0a === typedArray[index + 1]){ //Windows -> Unix
+                        return false;
+                    }else{
+                        typedArray[index] = 0x0a; //Mac OS -> Unix
+                    }
+                }
+                return true;
+            }));
+            console.log("transform line endings after: ", newBuffer.length);
+            const costTime = Date.now() - startTime;
+            console.log("transform line endings cost: " + costTime + "ms.");
+            hash.update(newBuffer);
+        }else{
+            hash.update(stream);
+        }
+
+        digest = hash.digest("hex");
 
         var target = CheckSum._read_(filename + "." + algorithm);
 
@@ -55,7 +105,6 @@ var CheckSum = {
         if(callback && callback.apply){
             callback.apply(context || null, [filename, digest, (null == target || digest != target)].concat(args||[]));
         }
-
     },
     _texthash_ : function(algorithm, text) {
         var sum = crypto.createHash(algorithm);
