@@ -9,6 +9,7 @@ var Storage         = require("mod/se/storage");
 var TemplateEngine  = require("mod/se/template");
 var Toast           = require("mod/ui/toast");
 var ObjectPath      = require("mod/se/opaths");
+var ErrorCode       = require("mod/conf/errcode");
 
 var ErrorTypes      = CMD.ErrorTypes;
 var RespTypes       = CMD.ResponseTypes;
@@ -39,6 +40,29 @@ var ErrorHandlers = {
         callback: function(elapsedTime){
             Util.requestExternal("go://url#/login?url=" + encodeURIComponent(Util.removeURLHash()), [null, null, null]);
         }
+    },
+    CreateErrorHandler: function(errorCode, errorMessage){
+        var ctx = {
+            "code": errorCode,
+            "message": errorMessage
+        };
+        if("20100001000" == errorCode){
+            return {
+                callback: function(handler, code, msg, type){
+                    Util.execHandler(ErrorHandlers.ErrorTips, [this.code, this.message, type]);
+
+                    Util.delay(1500, ErrorHandlers.Login);
+                },
+                "context": ctx
+            };
+        }else{
+            return {
+                callback: function(handler, code, msg, type){
+                    Util.execHandler(ErrorHandlers.ErrorTips, [this.code, this.message, type]);
+                },
+                "context": ctx
+            }
+        }
     }
 };
 
@@ -49,12 +73,12 @@ var ErrorInfo = {
     //     Util.execHandler(handler);
     //     return true;
     // }
-    "20100001000": function(handler){
-        Util.execHandler(handler);
+    "*": {
+        callback: function(handler, code, msg, type){
+            Util.execHandler(ErrorHandlers.ErrorTips, [code, SEApp.conf("commonerror"), type]);
 
-        Util.delay(500, ErrorHandlers.Login);
-
-        return true;
+            return true;
+        }
     }
 };
 
@@ -826,6 +850,38 @@ var _App = {
         }
 
         CMD.injectErrorInfo(ErrorInfo);
+        //--------------------------------------------------
+        var errorCodeMeta = $('meta[name="errcode"]');
+
+        if(errorCodeMeta.length > 0 && errorCodeMeta.attr("data-turn") === "on"){
+            var errcodeConf = errorCodeMeta.attr("content");
+            var errcodeName = errorCodeMeta.attr("data-errkey");
+
+            ErrorCode.setConfigurePath(errcodeConf);
+            ErrorCode.check(errcodeName, {
+                callback: function(errinfo){
+                    errinfo = errinfo || {};
+
+                    if("iLang" in window){
+                        lang = iLang.language();
+                        errinfo = errinfo[lang] || {};
+                    }
+
+                    var tmp = {};
+                    var flag = false;
+                    for(var code in errinfo){
+                        flag = true;
+
+                        tmp[code] = ErrorHandlers.CreateErrorHandler(code, errinfo[code]);
+                    }
+
+                    if(true === flag){
+                        CMD.injectErrorInfo(tmp);
+                    }
+                }
+            });
+        }
+        //--------------------------------------------------
 
         //---------------------------------------------------
         var retmsg = (conf.message || "") + "";
@@ -864,7 +920,8 @@ var _public = {
     "Session": Session,
     "DataType": DataType,
     "Toast": Toast,
-    "ObjectPath": ObjectPath
+    "ObjectPath": ObjectPath,
+    "ErrorCode": ErrorCode
 };
 module.exports = (window["SEApp"] = _public);
 //---------------------------
