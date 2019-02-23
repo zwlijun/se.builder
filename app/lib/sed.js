@@ -3,6 +3,7 @@
 "use strict"
 
 var fs    = require("fs");
+var crypto = require('crypto');
 var childProcess  = require("child_process");
 
 var $sock = null;
@@ -100,7 +101,7 @@ var replace = function(content, replacement, isRequire){
 var readCount = 0;
 var writeCount = 0;
 var startTime = 0;
-var find = function(path, replacementItems, charset){
+var find = function(path, replacementItems, charset, inParams){
     fs.stat(path, function(error, stats){
         emit("encoding", "sed::find path: " + path);
         if(error){
@@ -118,7 +119,7 @@ var find = function(path, replacementItems, charset){
                 }
 
                 files.forEach(function(file){
-                    find(path + "/" + file, replacementItems, charset);
+                    find(path + "/" + file, replacementItems, charset, inParams);
                 });
             });
         }else if(stats.isFile()){
@@ -173,10 +174,16 @@ exports.hash = function(sock, project, deploy, replaceItems){
 
     var charset = (project.charset).replace(/\-/g, "");
 
+    const inParams = {
+        "project": project,
+        "deploy": deploy,
+        "replaceItems": replaceItems
+    };
+
     if(deploy.sed && true === deploy.sed.turn){
         for(var path in replaceItems){
             if(replaceItems.hasOwnProperty(path)){
-                find(path, replaceItems[path], charset);
+                find(path, replaceItems[path], charset, inParams);
             }
         } 
     }else{

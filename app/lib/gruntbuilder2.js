@@ -521,6 +521,61 @@ var parseRelativeName = function(relativeName, sign, alias){
 
     return result;
 };
+var fetchImage = function(filename){
+    var s0 = Date.now();
+
+    var proj = GetProjectInfo();
+    var env = GetEnvInfo();
+    var deploy = GetBuildInfo();
+
+    if("img" == deploy.alias){
+        return filename;
+    }
+
+    var nodeCharset = (proj.charset).replace(/\-/g, "");
+    var rootPath = env.root;
+    var doc = rootPath.doc;
+    var src = rootPath.src;
+    var imgRoot = doc + src;
+    var pattern = /((\/img\/(logic|mod|lib))(\/.*?)(\.[a-fA-F0-9]{40})?\.(png|jpe?g))/gmi;
+    var matcher = null;
+
+    pattern.lastIndex = 0;
+
+    var img = null;
+    var imgSha1 = null;
+    var hash = null;
+    var matchImagePath = null;
+    var replaceImagePath = null;
+
+    var content = fs.readFileSync(filename, nodeCharset);
+
+    console.log("fetchImage =>", filename, "<[START[");
+
+    while(null !== (matcher = pattern.exec(content))){
+        matchImagePath = matcher[1];
+
+        img = imgRoot + matcher[1].substring(1);
+        imgSha1 = img + ".sha1";
+
+        if(fs.existsSync(imgSha1)){
+            hash = fs.readFileSync(imgSha1, nodeCharset);
+
+            replaceImagePath = matcher[2] + matcher[4] + "." + hash + "." + matcher[6];
+
+            console.log("fetchImage =>", matchImagePath, "->", replaceImagePath);
+
+            content = content.replace(matchImagePath, replaceImagePath);
+        }
+    }
+
+    fs.writeFileSync(filename, content, {
+        "encoding": nodeCharset
+    })
+    console.log("fetchImage =>", filename, " ]END]>", ":", (Date.now() - s0) + "ms");
+
+    return filename;
+};
 // var _TEMP_COUNT1 = 0;
 // var _TEMP_COUNT2 = 0;
 // var _TEMP_COUNT3 = 0;
@@ -574,7 +629,9 @@ var writeChecksum = function(file, isDest){
                     delete wsopts.encoding;
                 }
 
-                var irs = fs.createReadStream(filename, rsopts);
+
+
+                var irs = fs.createReadStream(fetchImage(filename), rsopts);
                 var ows = fs.createWriteStream(filename.replace(ext, signExt), wsopts);
 
                 ows.on("finish", function(){
@@ -677,7 +734,7 @@ var updateBuildFileChecksum = function(sourceFile, distFile){
                     delete wsopts.encoding;
                 }
 
-                var irs = fs.createReadStream(_dist, rsopts);
+                var irs = fs.createReadStream(fetchImage(_dist), rsopts);
                 var ows = fs.createWriteStream(_dist.replace(ext, signExt), wsopts);
 
                 ows.on("finish", function(){
