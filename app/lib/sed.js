@@ -5,7 +5,7 @@
 var fs    = require("fs");
 var crypto = require('crypto');
 var childProcess  = require("child_process");
-var serviceWorkGen = require("./servicework");
+var serviceWorkGen = require("./serviceworker");
 
 var $sock = null;
 

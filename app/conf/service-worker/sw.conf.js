@@ -11,6 +11,7 @@ exports.conf = function(project){
 	        "urlPattern": /\/fonts\/iconfont\//i,
 	        "handler": "NetworkFirst"
 	    }],
+	    "modifyURLPrefix": {},
 	    "globDirectory": root.doc,
 	    "globPatterns": [
 	        "." + root.bin + "**/*.*.{css,png,jpg,jpeg}",

@@ -30,8 +30,8 @@
                serviceWork {Object} service work配置
                            {Object} => {
                                 trun {Boolean} 是否启用
-                                path {String} service-work.js存放路径
-                                dest {String} service-work.js 文件名
+                                path {String} service-worker.js存放路径
+                                dest {String} service-worker.js 文件名
                                 options {Object} workbox 配置
                                 conf {String} workbox 配置文件路径
                            } 
@@ -93,9 +93,9 @@ var ex = [
                 "serviceWork":{
                     "turn": true,
                     "path": "/static/v1.0/sw/",
-                    "dest": "service-work.js",
+                    "dest": "service-worker.js",
                     "options": {},
-                    "conf": "../conf/service-work/sw.conf"
+                    "conf": "../conf/service-worker/sw.conf"
                 },
                 "build": [
                     {
