@@ -27,6 +27,14 @@
                         bin {String} 资源构建后存放相对{root.doc}目录，如：/static/v1.0/res
                         sed {String} 资源版本查换替换相对{root.doc}目录，如：/
                     }
+               serviceWork {Object} service work配置
+                           {Object} => {
+                                trun {Boolean} 是否启用
+                                path {String} service-work.js存放路径
+                                dest {String} service-work.js 文件名
+                                options {Object} workbox 配置
+                                conf {String} workbox 配置文件路径
+                           } 
                build {Array} 构建配置
                      {Array} => [
                          {Object} => {
@@ -81,6 +89,13 @@ var ex = [
                     "src": "/static/v1.0/src/",
                     "bin": "/static/v1.0/res/",
                     "sed": "/"
+                },
+                "serviceWork":{
+                    "turn": true,
+                    "path": "/static/v1.0/sw/",
+                    "dest": "service-work.js",
+                    "options": {},
+                    "conf": "../conf/service-work/sw.conf"
                 },
                 "build": [
                     {

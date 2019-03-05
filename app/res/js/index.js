@@ -82,8 +82,8 @@
                 Logger.info(body.message);
                 Logger.info("**************************************************************************");
 
-                building = false;
-                Util.setBuildState("end");
+                // building = false;
+                // Util.setBuildState("end");
             break;
         }
         

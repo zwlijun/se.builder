@@ -2,10 +2,12 @@
 
 "use strict"
 
+const pkg = require("../package.json");
+
 //基础配置
 exports.debug = true;
 exports.port = 8000;
 exports.webmaster = "zwlijun@gmail.com";
-exports.siteName = "SE.Builder";
-exports.siteVersion = "1.2.0";
+exports.siteName = pkg.name;
+exports.siteVersion = pkg.version;
 exports.copyright = "SESHENGHUO.COM";

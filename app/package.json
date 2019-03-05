@@ -25,6 +25,7 @@
     "grunt-contrib-uglify": "^3.3.0",
     "grunt-contrib-watch": "^1.1.0",
     "lodash": "^4.17.10",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.1.1",
+    "workbox-build": "^4.0.0"
   }
 }

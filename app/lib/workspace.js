@@ -57,6 +57,7 @@ Workspace.prototype = {
                     "name": env.name,
                     "alias": env.alias,
                     "root": env.root,
+                    "serviceWork": env.serviceWork || {},
                     "build": null
                 }
 

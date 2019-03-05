@@ -5,6 +5,7 @@
 var fs    = require("fs");
 var crypto = require('crypto');
 var childProcess  = require("child_process");
+var serviceWorkGen = require("./servicework");
 
 var $sock = null;
 
@@ -157,7 +158,8 @@ var find = function(path, replacementItems, charset, inParams){
                         var endTime = Date.now();
                         var cost = endTime - startTime;
                         emit("deploy", "SED执行完成, 花费 " + cost + " ms");
-                        emit("end", "构建完成");
+                        // emit("end", "构建完成");
+                        serviceWorkGen.fetch($sock, inParams);
                     }
                 });
             });
