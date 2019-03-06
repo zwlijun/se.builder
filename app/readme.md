@@ -35,6 +35,14 @@
                 "bin": "/static/v1.0/res/",
                 "sed": "/"
             },
+            "serviceWork":{
+                "turn": true,
+                "path": "/static/v1.0/sw/",
+                "dest": "service-worker.js",
+                "options": {},
+                "conf": "../conf/service-worker/sw.conf",
+                "targets": []
+            },
             "build": [
                 {
                     "name": "JavaScript",

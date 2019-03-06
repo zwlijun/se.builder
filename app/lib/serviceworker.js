@@ -28,6 +28,33 @@ var emit = function(state, message){
     }
 };
 
+function generate(swc, proj, swDest, targets){
+	const target = targets.shift();
+	const cacheId = proj.alias + "-" + (target || "default");
+	const swDestFile = undefined === target ? swDest : swDest.replace(".js", `-${target}.js`);
+
+	console.log(`generate sw[${target}]: ${swDestFile} / ${cacheId}`);
+
+	if(swc.conf){
+		swc.options = require(swc.conf).conf(proj, target);
+	}
+
+	workboxBuild.generateSW(Object.assign({
+		"swDest": swDestFile,
+		"cacheId": cacheId
+	}, swc.options || {})).then(({count, size}) => {
+		emit("deploy", `Generated ${swDestFile}, which will precache ${count} files, totaling ${size} bytes.`);
+
+		if(targets.length > 0){
+			generate(swc, proj, swDest, targets);
+		}else{
+			emit("end", "构建完成");
+		}
+	}).catch((err) => {
+		emit("error", "`service-work`生成失败: " + err.message);
+		// emit("end", "构建失败");
+	})
+}
 
 exports.fetch = function(sock, conf){
 	$sock = sock;
@@ -40,24 +67,9 @@ exports.fetch = function(sock, conf){
 
 	if(true === swc.turn){
 		const swDest = root.doc + swc.path + swc.dest;
-		const cacheId = proj.alias + "_" + env.alias;
+		const targets = [].concat(swc.targets || []);
 
-		if(swc.conf){
-			swc.options = require(swc.conf).conf(proj);
-		}
-
-		console.log(swc.options)
-
-		workboxBuild.generateSW(Object.assign({
-			"swDest": swDest,
-			"cacheId": cacheId
-		}, swc.options || {})).then(({count, size}) => {
-			emit("deploy", `Generated ${swDest}, which will precache ${count} files, totaling ${size} bytes.`);
-			emit("end", "构建完成");
-		}).catch((err) => {
-			emit("error", "`service-work`生成失败: " + err.message);
-			// emit("end", "构建失败");
-		})
+		generate(swc, proj, swDest, targets);
 	}else{
 		emit("deploy", "`service-work`服务没有打开");
 		emit("end", "构建完成");

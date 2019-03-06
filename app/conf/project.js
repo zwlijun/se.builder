@@ -34,6 +34,7 @@
                                 dest {String} service-worker.js 文件名
                                 options {Object} workbox 配置
                                 conf {String} workbox 配置文件路径
+                                targets {Array} service-worker对应的不同环境，默认为 []
                            } 
                build {Array} 构建配置
                      {Array} => [
@@ -95,7 +96,8 @@ var ex = [
                     "path": "/static/v1.0/sw/",
                     "dest": "service-worker.js",
                     "options": {},
-                    "conf": "../conf/service-worker/sw.conf"
+                    "conf": "../conf/service-worker/sw.conf",
+                    "targets": []
                 },
                 "build": [
                     {
