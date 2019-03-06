@@ -15,12 +15,18 @@ exports.conf = function(project, target){
 	    "ignoreURLParametersMatching": [/./],
 	    "runtimeCaching": [{
 	        "urlPattern": /\/fonts\/iconfont\//i,
-	        "handler": "NetworkFirst"
+	        "handler": "CacheFirst",
+	        "options": {
+	        	"cacheName": "iconfont",
+                "fetchOptions": {
+                    "mode": 'no-cors',
+                }
+	        }
 	    }],
-	    "globDirectory": root.doc,
 	    "modifyURLPrefix": {
 	    	"static": _urlPrefix + "static"
 	    },
+	    "globDirectory": root.doc,
 	    "globPatterns": [
 	        "." + root.bin + "**/*.*.{css,png,jpg,jpeg}",
 	        "." + root.bin + "**/*.*.mix.*.js"
