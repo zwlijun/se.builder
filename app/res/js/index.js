@@ -483,7 +483,7 @@
 
             f.reset();
 
-            resourceParameters = [type, p_alias, e_alias, d_alias];
+            resourceParameters = [].concat([type, p_alias, e_alias, d_alias]);
 
             //======================
             setTimeout(function(){

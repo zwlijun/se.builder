@@ -110,8 +110,8 @@ var find = function(path, replacementItems, charset, inParams){
 
             throw error;
         }
-
         if(stats.isDirectory()){
+            readCount--;
             fs.readdir(path, charset, function(error, files){
                 if(error){
                     emit("error", "sed::read file error, path(0): " + path);
@@ -119,6 +119,7 @@ var find = function(path, replacementItems, charset, inParams){
                     throw error;
                 }
 
+                readCount += files.length;
                 files.forEach(function(file){
                     find(path + "/" + file, replacementItems, charset, inParams);
                 });
@@ -130,8 +131,6 @@ var find = function(path, replacementItems, charset, inParams){
 
                     throw error;
                 }
-
-                readCount++;
 
                 var content = files;
 
@@ -185,6 +184,7 @@ exports.hash = function(sock, project, deploy, replaceItems){
     if(deploy.sed && true === deploy.sed.turn){
         for(var path in replaceItems){
             if(replaceItems.hasOwnProperty(path)){
+                readCount++;
                 find(path, replaceItems[path], charset, inParams);
             }
         } 
