@@ -14,7 +14,7 @@ exports.conf = function(project, target){
 	    "clientsClaim": true,
 	    "ignoreURLParametersMatching": [/./],
 	    "runtimeCaching": [{
-	        "urlPattern": /\/fonts\/iconfont\//i,
+	        "urlPattern": new RegExp((_urlPrefix).replace(/(\.)/g, "\\$1") + "fonts/iconfont/.*\\.(svg|ttf|woff|eot)", "i"),
 	        "handler": "CacheFirst",
 	        "options": {
 	        	"cacheName": "iconfont",
