@@ -43,7 +43,7 @@ function generate(swc, proj, swDest, targets){
 		"swDest": swDestFile,
 		"cacheId": cacheId
 	}, swc.options || {})).then(({count, size}) => {
-		emit("deploy", `Generated ${swDestFile}, which will precache ${count} files, totaling ${size} bytes.`);
+		emit("deploy#SERVICE-WORKER", `Generated ${swDestFile}, which will precache ${count} files, totaling ${size} bytes.`);
 
 		if(targets.length > 0){
 			generate(swc, proj, swDest, targets);
@@ -71,7 +71,7 @@ exports.fetch = function(sock, conf){
 
 		generate(swc, proj, swDest, targets);
 	}else{
-		emit("deploy", "`service-work`服务没有打开");
+		emit("deploy#SERVICE-WORKER", "`service-work`服务没有打开");
 		emit("end", "构建完成");
 	}
 }

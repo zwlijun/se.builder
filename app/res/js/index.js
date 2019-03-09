@@ -42,11 +42,19 @@
         var head = message.head;
         var body = message.body;
 
+        var state = head.state;
+        var subState = "";
+
+        if(state.indexOf("#") != -1){
+            subState = state.substring(state.indexOf("#") + 1);
+            state = state.substring(0, state.indexOf("#"));
+        }
+
         building = true;
 
         Util.setBuildState("encoding");
 
-        switch(head.state){
+        switch(state){
             case "start":
                 Logger.info("**************************************************************************");
                 Logger.info("encode::Build start...");

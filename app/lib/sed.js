@@ -156,7 +156,7 @@ var find = function(path, replacementItems, charset, inParams){
                     if(writeCount == readCount){
                         var endTime = Date.now();
                         var cost = endTime - startTime;
-                        emit("deploy", "SED执行完成, 花费 " + cost + " ms");
+                        emit("deploy#SED", "SED执行完成, 花费 " + cost + " ms");
                         // emit("end", "构建完成");
                         serviceWorkGen.fetch($sock, inParams);
                     }
