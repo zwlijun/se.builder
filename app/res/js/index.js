@@ -86,7 +86,7 @@
             break;
             case "deploy":
                 Logger.info("**************************************************************************");
-                Logger.info("encode::deploy SED...");
+                Logger.info("encode::deploy " + subState + "...");
                 Logger.info(body.message);
                 Logger.info("**************************************************************************");
 
