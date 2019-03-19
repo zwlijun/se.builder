@@ -1,3 +1,5 @@
+const path = require("path");
+
 exports.conf = function(project, target){
 	var env = project.env;
 	var root = env.root;
@@ -7,29 +9,22 @@ exports.conf = function(project, target){
 	};
 
 	var _urlPrefix = prefix[target || "default"] || "/";
+	var _hashChars = (new Array(41)).join("?");
 
 	return {
 	    "importWorkboxFrom": "local",
 	    "skipWaiting": true,
 	    "clientsClaim": true,
 	    "ignoreURLParametersMatching": [/./],
-	    "runtimeCaching": [{
-	        "urlPattern": new RegExp((_urlPrefix).replace(/(\.)/g, "\\$1") + "fonts/iconfont/.*\\.(svg|ttf|woff|eot)", "i"),
-	        "handler": "CacheFirst",
-	        "options": {
-	        	"cacheName": "iconfont",
-                "fetchOptions": {
-                    "mode": 'no-cors',
-                }
-	        }
-	    }],
+	    "runtimeCaching": [],
 	    "modifyURLPrefix": {
 	    	"static": _urlPrefix + "static"
 	    },
 	    "globDirectory": root.doc,
 	    "globPatterns": [
-	        "." + root.bin + "**/*.*.{css,png,jpg,jpeg}",
-	        "." + root.bin + "**/*.*.mix.*.js"
+	        "." + root.bin + "**/*." + _hashChars + ".{css,png,jpg,jpeg}",
+            "." + root.bin + "**/*.mix." + _hashChars + ".js",
+	        "." + (path.join(root.bin, "..")).replace(/\\/g, "/") + "/fonts/**/*.{svg,ttf,woff,eot}"
 	    ]
 	};
 };
