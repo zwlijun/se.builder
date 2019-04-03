@@ -235,11 +235,10 @@
                             }else{
                                 buf.unshift(n);
                                 o = 0;
-                                break;
                             }
                         }
 
-                        if(o ===1){
+                        if(o === 1){
                             buf.unshift(1);
                         }
 
