@@ -284,13 +284,12 @@
             });
         },
         setShadow: function(shadow){
-            var v = shadow.value;
-            var node = this.getTooltipsNode();
-            var triangle = this.getTooltipsTriangle();
-
-            if(v){
+            if(shadow && shadow.value){
+                var node = this.getTooltipsNode();
+                var triangle = this.getTooltipsTriangle();
+                
                 var o = {
-                    "boxShadow": v
+                    "boxShadow": shadow.value
                 };
 
                 node.css(o);
@@ -306,19 +305,18 @@
             }
 
             if(DateType.isObject(border)){
+                var o = {};
                 for(var n in border){
                     if(border.hasOwnProperty(n)){
                         if(border[n]){
-                            var o = {};
                             var k = "border" + n.charAt(0).toUpperCase() + n.substring(1);
 
                             o[k] = border[n];
-
-                            node.css(o);
-                            triangle.css(o);
                         }
                     }
                 }
+                node.css(o);
+                triangle.css(o);
             }else{
                 var o = {
                     "border": border
