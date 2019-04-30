@@ -11,7 +11,13 @@
 <!--#include virtual="/static/basic/inc/stat_code_header.html" -->
 </head>
 <body>
-<header class="app-header"></header> 
+<header class="app-header">
+  <a href="#back" class="icofont back"></a>
+  <a href="#func" class="hide"></a>
+  <div class="page-title flexbox middle center">
+    <span>首页</span>
+  </div>
+</header> 
 <article class="app-body"></article>
 <footer class="app-footer"></footer>
 <script>

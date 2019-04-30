@@ -286,6 +286,18 @@ html.fixedpage.fxboth .app-body{
   height: -ms-calc(100% - .88rem - .88rem);
   height: calc(100% - .88rem - .88rem);
 }
+input::-webkit-input-placeholder{
+  color: #999;
+}
+input::-moz-placeholder{
+  color: #999;
+}
+input:-ms-input-placeholder{
+  color: #999;
+}
+input::placeholder{
+  color: #999;
+}
 .lightgray-bgcolor{
   background-color: #f6f6f6;
 }
