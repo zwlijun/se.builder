@@ -206,9 +206,29 @@ input[type="reset"],
 }
 
 .ellipsis{
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.line-clamp{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
+    word-wrap: break-word;
+}
+.line-clamp.line2{
+    -webkit-line-clamp: 2;
+}
+.line-clamp.line3{
+    -webkit-line-clamp: 3;
+}
+.line-clamp.line4{
+    -webkit-line-clamp: 4;
+}
+.line-clamp.line5{
+    -webkit-line-clamp: 5;
 }
 
 .icofont {
