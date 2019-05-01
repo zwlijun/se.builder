@@ -12,10 +12,28 @@
 ;define(function Util(require, exports, module){
     var ActionEvent = function(wrapper, actualType, originType){
         this.wrapper = wrapper;
-        this.actualType = actualType;
+        this.actualType = this._aot(actualType);
         this.originType = originType;
     };
     ActionEvent.prototype = {
+        _aot: function(attr){
+            if(attr.indexOf("-") === -1){
+                return attr;
+            }
+
+            var keys = attr.split("-");
+            var size = keys.length;
+            var tmp = [];
+            for(var i = 0; i < size; i++){
+                if(0 === i){
+                    tmp.push(keys[i]);
+                }else{
+                    tmp.push(keys[i].charAt(0).toUpperCase() + keys[i].substring(1));
+                }
+            }
+
+            return tmp.join("");
+        },
         listen: function(){
             var _this = this;
             var box = _this.wrapper;
@@ -327,7 +345,7 @@
                 actualType = originType;
 
                 if(mapping){
-                    var p = /^(swipe|swipeLeft|swipeRight|swipeUp|swipeDown|doubleTap|tap|singleTap|longTap)$/;
+                    var p = /^((swipe(\-(left|right|up|down))?)|(((double|single|long)\-)?tap))$/;
 
                     if(p.test(originType)){
                         if(!("ontouchstart" in window)){
