@@ -401,7 +401,6 @@
                 var args = (data || "").split(",");
                 var formName = args[0];
 
-                DataForm.DataFormUtil.build(formName)
                 var checker = DataForm.getInstance(formName);
 
                 checker.set("submit", {

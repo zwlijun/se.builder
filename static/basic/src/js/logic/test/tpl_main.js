@@ -10,6 +10,7 @@ var TemplateEngine  = require("mod/se/template");
 var Toast           = require("mod/ui/toast");
 var ObjectPath      = require("mod/se/opaths");
 var ErrorCode       = require("mod/conf/errcode");
+var LazyLoader      = require("mod/se/lazyloader");
 
 var ErrorTypes      = CMD.ErrorTypes;
 var RespTypes       = CMD.ResponseTypes;
@@ -736,8 +737,9 @@ var DataSetUtil = {
             "showLoading": false,
             "loadingText": "Loading...",
             "dataRendering": "append",
-            "pageStyle": "loadmore",
-            "page": 1
+            "pageStyle": "loadmore", // loadmore | pagebar | autoload
+            "page": 1,
+            "autoload": null
         }, def || {}, requests[requestName] || {});
 
         return request;
@@ -755,6 +757,15 @@ var DataSetUtil = {
             "showLoading": false,
             "dataRendering": "replace",
             "pageStyle": "pagebar",
+            "page": 1
+        }), data || {});
+    },
+    getRequestAutoLoadConf: function(requestName, data){
+        return $.extend(DataSetUtil.getRequestConf(requestName, {
+            "showLoading": false,
+            "dataRendering": "append",
+            "pageStyle": "autoload",
+            "autoload": "schema@se://dataset/auto#" + requestName,
             "page": 1
         }), data || {});
     },
@@ -921,7 +932,8 @@ var _public = {
     "DataType": DataType,
     "Toast": Toast,
     "ObjectPath": ObjectPath,
-    "ErrorCode": ErrorCode
+    "ErrorCode": ErrorCode,
+    "LazyLoader": LazyLoader
 };
 module.exports = (window["SEApp"] = _public);
 //---------------------------

@@ -745,7 +745,7 @@
                     }
                     
                     if(true !== el[0].checked){
-                        options[name].push(uncheckValue);
+                        uncheckValue && options[name].push(uncheckValue);
                         continue;
                     }
                 }
@@ -881,7 +881,7 @@
                     value = encodeURIComponent(value);
                 }
 
-                if("checkbox" == type || "radio" == type){
+                if(("checkbox" == type || "radio" == type)){
                     options[name].push(value);
                 }else{
                     this.setCheckResults(name, true, el, "", Types["OK"]);

@@ -13,7 +13,6 @@
 ;define(function(require, exports, module){
                               require("mod/polyfill/intersection-observer");
     var Util                = require("mod/se/util");
-    var Timer               = require("mod/se/timer");
     var DateType            = require("mod/se/datatype");
     var Listener            = require("mod/se/listener");
 
@@ -25,14 +24,12 @@
             "threshold": [0.0],         //Either a single number or an array of numbers between 0.0 and 1.0, 
             "margin": "30px",           //offset
             "visible": false,           //是否只有可见才加载，比较耗性能
-            "interval": 300,            //检测帧率 -> Timer.toFPS(opts.interval);
             "validity": true            //是否检测图片是否合法
         };
     };
 
     var LazyLoader = function(name){
         this.name = name;
-        this.timer = null;
         this.opts = GetDefaultOptions();
         this.observer = null;
 
@@ -410,10 +407,6 @@
             _this.wrapper = wrapper;
             _this.options("root", root || null);
 
-            if(_this.timer){
-                _this.timer.stop();
-            }
-
             if("IntersectionObserver" in window){
                 _this.observer = new IntersectionObserver(function(entries, observer){
                     entries.forEach(function(entry) {
@@ -432,17 +425,6 @@
                     "threshold": opts.threshold
                 });
             }
-
-            _this.timer = Timer.getTimer("lazy_" + _this.name);
-            _this.timer.setTimerFPS(Timer.toFPS(opts.interval));
-            _this.timer.setTimerHandler({
-                callback: function(_timer){
-                    this.filter();
-                },
-                args: [],
-                context: _this
-            });
-            _this.timer.start();
         }
     };
 
@@ -478,6 +460,11 @@
                 }
 
                 return opts;
+            },
+            filter: function(){
+                lazy.filter();
+
+                return this;
             },
             watch: function(wrapperSelector, root){
                 lazy.watch(wrapperSelector, root);

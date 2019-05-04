@@ -32,7 +32,8 @@
              *         "showLoading"    : [Optional] Boolean 是否显示loading
              *         "loadingText"    : [Optional] String loading显示的文案
              *         "dataRendering"  : [Optional] String 数据渲染方式，[append|replace]，默认为append
-             *         "pageStyle"      : [Optional] String 翻页方式，[loadmore|pagebar|pulldown]，默认为pagebar,
+             *         "pageStyle"      : [Optional] String 翻页方式，[loadmore|pagebar|autoload]，默认为pagebar,
+             *         "autoload"       : [Optional] String 自动加载回调处理，如果为autoload模式必传
              *         "page"           : [Optional] Number 初始页面
              *     }
              * }
@@ -83,7 +84,8 @@
              *         "showLoading"    : [Optional] Boolean 是否显示loading
              *         "loadingText"    : [Optional] String loading显示的文案
              *         "dataRendering"  : [Optional] String 数据渲染方式，[append|replace]，默认为append
-             *         "pageStyle"      : [Optional] String 翻页方式，[loadmore|pagebar|pulldown]，默认为pagebar,
+             *         "pageStyle"      : [Optional] String 翻页方式，[loadmore|pagebar|autoload]，默认为pagebar,
+             *         "autoload"       : [Optional] String 自动加载回调处理，如果为autoload模式必传
              *         "page"           : [Optional] Number 初始页面
              *     }
              * }
@@ -93,6 +95,54 @@
                 var name = args[0];
                 var request = SEApp.DataSetUtil.getRequestPageConf(name);
 
+                var requestName = null;
+                for(var i = 0; i < request.names.length; i++){
+                    requestName = request.names[i];
+
+                    if(!requestName){
+                        continue;
+                    }
+
+                    request.params = SEApp.Util.createObject(request.params, requestName.split("-"), node.attr("data-request-" + requestName));
+                }
+                node.addClass("loading");
+
+                Logic.requestMore(request, node);
+            },
+            /**
+             * 加载更多数据(自动加载)
+             * @param  {String} name [request name]
+             * @param  {String} lazyLoadName [lazyloader 实例名]
+             * @param  {Object} node    [jQuery/zepto节点对象，或null]
+             * @return {[type]}      [description]
+             * 示例
+             * se://dataset/auto#requestName
+             * DOM配置示例
+             * data-lazysrc="schema@se://dataset/auto#newslist"
+             * data-request-* 请求参数
+             * @requests配置项示例
+             * "requests": {
+             *     "requestName": {
+             *         "names"          : [Required] Array 请求参数列表
+             *         "pageKey"        : [Required] String 页码参数名
+             *         "url"            : [Required] String 数据请求接口
+             *         "paths"          : [Required] String 基于返回对象时的数据列表对象的路径
+             *         "params"         : [AutoFix] Object 会根据 names 和 data-request-* 填充，不需要传
+             *         "external"       : [Optional] String 虚拟schema回调地址
+             *         "startPage"      : [Optional] Number 启始页面码
+             *         "pageSize"       : [Optional] Number 每页加载的数据数
+             *         "name"           : [AutoFix] String requestName
+             *         "showLoading"    : [Optional] Boolean 是否显示loading
+             *         "loadingText"    : [Optional] String loading显示的文案
+             *         "dataRendering"  : [Optional] String 数据渲染方式，[append|replace]，默认为append
+             *         "pageStyle"      : [Optional] String 翻页方式，[loadmore|pagebar|autoload]，默认为pagebar,
+             *         "autoload"       : [Required] String 自动加载回调处理，如果为autoload模式必传
+             *         "page"           : [Optional] Number 初始页面
+             *     }
+             * }
+             */
+            auto: function(name, lazyLoadName, node){
+                var request = SEApp.DataSetUtil.getRequestAutoLoadConf(name);
                 var requestName = null;
                 for(var i = 0; i < request.names.length; i++){
                     requestName = request.names[i];
@@ -135,6 +185,7 @@
      * @type {Object}
      */
     var Logic = {
+        lazyLoader: null,
         /**
          * 请求数据
          * @param  {Object} request  [请求配置]
@@ -171,7 +222,7 @@
                     var triggerNode = this.triggerNode;
 
                     if(triggerNode){
-                        if("loadmore" === req.pageStyle){
+                        if("loadmore" === req.pageStyle || "autoload" === req.pageStyle){
                             triggerNode.removeClass("loading");
                         }
                     }
@@ -204,7 +255,7 @@
                                 }
                             }
 
-                            if("loadmore" === extra.pageStyle){
+                            if("loadmore" === extra.pageStyle || "autoload" === extra.pageStyle){
                                 if(size == 0){
                                     triggerNode.addClass("hide");
                                     return;
@@ -217,9 +268,7 @@
                                 }
 
                                 triggerNode.attr("data-request-" + extra.pageKey, currenPage + 1);
-                            }
-
-                            if("pagebar" === extra.pageStyle){
+                            }else if("pagebar" === extra.pageStyle){
                                 var pb = PageBar.createPageBar(extra.name);
 
                                 pb.options({
@@ -270,6 +319,11 @@
                                         this.append(ret.result);
                                     }
 
+                                    if("autoload" === pageStyle){
+                                        _node.attr("data-lazysrc", req.autoload);
+                                        Logic.lazyLoader && Logic.lazyLoader.filter();
+                                    }
+
                                     if(external){
                                         SEApp.Util.requestExternal(external, [page]);
                                     }
@@ -307,6 +361,11 @@
                 close: "~>",
                 root: "ds"
             });
+
+            Logic.lazyLoader = SEApp.LazyLoader.newInstance("dataset_autoload");
+            Logic.lazyLoader.options({
+                "threshold": [0.0]
+            }).watch().filter()
         }
     };
 

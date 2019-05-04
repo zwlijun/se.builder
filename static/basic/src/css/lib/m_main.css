@@ -153,6 +153,7 @@
 .dataset-moredata:active{
   background-color: rgba(0, 0, 0, .15);
 }
+
 .dataset-pagebar{
   height: .86rem;
 }
@@ -341,3 +342,30 @@ input::placeholder{
   box-shadow: 0 3px 7px rgba(0, 0, 0, .35);
   background-color: #fff;
 }
+/**
+<div class="dataset-nodata flexbox middle center hide">
+  <span class="icofont nodata">暂无数据</span>
+</div>
+<div class="dataset-moredata flexbox middle center">
+  <span class="icofont">点击加载更多</span>
+</div>
+**/
+.dataset-nodata{
+  height: 3.60rem;
+  text-align: center;
+  color: #a6a6a6;
+  background-color: #fff;
+}
+.dataset-nodata .nodata:before{
+  content: "\e6b3";
+  font-size: 1.80rem;
+  display: block;
+  margin-bottom: .24rem;
+  color: #bbb;
+}
+.dataset-moredata{
+  height: 1.50rem;
+  color: #a6a6a6;
+  font-size: .42rem;
+}
+
