@@ -1,1 +1,14 @@
 <!-- Statistics & Analysis -->
+<script>
+// service worker
+if (('serviceWorker' in navigator) && "https:" === location.protocol) {
+  var target = "";
+  window.addEventListener('DOMContentLoaded', () => {
+    navigator.serviceWorker.register('/static/v1.0/sw/service-worker' + target + '.js').then(registration => {
+      console.log('SW registered: ', registration);
+    }).catch(registrationError => {
+      console.log('SW registration failed: ', registrationError);
+    });
+  });
+}
+</script>
