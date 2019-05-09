@@ -287,6 +287,24 @@ html.fixedpage.fxboth .app-body{
   height: -ms-calc(100% - .88rem - .88rem);
   height: calc(100% - .88rem - .88rem);
 }
+html.fixedpage.wechat .app-header,
+html.fixedpage.mqq .app-header,
+html.fixedpage.aliapp .app-header{
+  display: none;
+}
+html.fixedpage.wechat.fxtop .app-body,
+html.fixedpage.mqq.fxtop .app-body,
+html.fixedpage.aliapp.fxtop .app-body{
+  height: 100%;
+}
+html.fixedpage.wechat.fxboth .app-body,
+html.fixedpage.mqq.fxboth .app-body,
+html.fixedpage.aliapp.fxboth .app-body{
+  height: -webkit-calc(100% - .44rem);
+  height: -moz-calc(100% - .44rem);
+  height: -ms-calc(100% - .44rem);
+  height: calc(100% - .44rem);
+}
 input::-webkit-input-placeholder{
   color: #999;
 }
