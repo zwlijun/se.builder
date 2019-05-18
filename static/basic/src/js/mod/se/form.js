@@ -412,7 +412,7 @@
         clear : function(){
             this.listner.clear();
         },
-        setCheckResults: function(name, verified, el, message, type){
+        setCheckResults: function(name, verified, el, message, type, onlyCheck){
             var ckey = true === verified ? "success" : "failure";
 
             this.checkResults["crs"][ckey] += 1;
@@ -420,7 +420,8 @@
                 "verified": verified,
                 "message": message,
                 "type": type,
-                "element": el
+                "element": el,
+                "onlyCheck": onlyCheck
             };
         },
         getCheckResultItems: function(name){
@@ -554,6 +555,7 @@
             var data = {};
             var options = {};
             var settings = {};
+            var onlyCheck = (false === execCheckDone);
             
             this.resetCheckResults();
 
@@ -734,7 +736,8 @@
                         "uboundTips": uboundTips,
                         "minTips": minTips,
                         "maxTips": maxTips
-                    }
+                    },
+                    "onlyCheck": onlyCheck
                 }; 
 
                 if(true === filter){ continue; }
@@ -764,10 +767,10 @@
 
                 if(required && value == ""){
                     if(spv){
-                        this.exec("tips", [el, empty, Types["EMPTY"]]);
+                        this.exec("tips", [el, empty, Types["EMPTY"], onlyCheck]);
                         return false;
                     }else{
-                        this.setCheckResults(name, false, el, empty, Types["EMPTY"]);
+                        this.setCheckResults(name, false, el, empty, Types["EMPTY"], onlyCheck);
                         continue;
                     }
                 }
@@ -777,10 +780,10 @@
 
                     if(!regExp.test(value)){
                         if(spv){
-                            this.exec("tips", [el, invalid, Types["MATCH"]]);
+                            this.exec("tips", [el, invalid, Types["MATCH"], onlyCheck]);
                             return false;
                         }else{
-                            this.setCheckResults(name, false, el, invalid, Types["MATCH"]);
+                            this.setCheckResults(name, false, el, invalid, Types["MATCH"], onlyCheck);
                             continue;
                         }
                     }
@@ -793,10 +796,10 @@
 
                     if(true !== ret){
                         if(spv){
-                            this.exec("tips", [el, invalid || empty, Types["FORMAT"]]);
+                            this.exec("tips", [el, invalid || empty, Types["FORMAT"], onlyCheck]);
                             return false;
                         }else{
-                            this.setCheckResults(name, false, el, invalid || empty, Types["FORMAT"]);
+                            this.setCheckResults(name, false, el, invalid || empty, Types["FORMAT"], onlyCheck);
                             continue;
                         }
                     }
@@ -810,20 +813,20 @@
                     if(0 !== compareType){
                         if(value != compareValue){
                             if(spv){
-                                this.exec("tips", [el, different || invalid, Types["DIFFERENT"]]);
+                                this.exec("tips", [el, different || invalid, Types["DIFFERENT"], onlyCheck]);
                                 return false;
                             }else{
-                                this.setCheckResults(name, false, el, different || invalid, Types["DIFFERENT"]);
+                                this.setCheckResults(name, false, el, different || invalid, Types["DIFFERENT"], onlyCheck);
                                 continue;
                             }
                         }
                     }else{
                         if(value == compareValue){
                             if(spv){
-                                this.exec("tips", [el, same || invalid,, Types["SAME"]]);
+                                this.exec("tips", [el, same || invalid,, Types["SAME"], onlyCheck]);
                                 return false;
                             }else{
-                                this.setCheckResults(name, false, el, same || invalid, Types["SAME"]);
+                                this.setCheckResults(name, false, el, same || invalid, Types["SAME"], onlyCheck);
                                 continue;
                             }
                         }
@@ -833,20 +836,20 @@
                 if(lbound > 0 || ubound > 0){
                     if(lbound > 0 && length < lbound){
                         if(spv){
-                            this.exec("tips", [el, lboundTips || invalid, Types["LBOUND"]]);
+                            this.exec("tips", [el, lboundTips || invalid, Types["LBOUND"], onlyCheck]);
                             return false;
                         }else{
-                            this.setCheckResults(name, false, el, lboundTips || invalid, Types["LBOUND"]);
+                            this.setCheckResults(name, false, el, lboundTips || invalid, Types["LBOUND"], onlyCheck);
                             continue;
                         }
                     }
 
                     if(ubound > 0 && length > ubound){
                         if(spv){
-                            this.exec("tips", [el, uboundTips || invalid, Types["UBOUND"]]);
+                            this.exec("tips", [el, uboundTips || invalid, Types["UBOUND"], onlyCheck]);
                             return false;
                         }else{
-                            this.setCheckResults(name, false, el, uboundTips || invalid, Types["UBOUND"]);
+                            this.setCheckResults(name, false, el, uboundTips || invalid, Types["UBOUND"], onlyCheck);
                             continue;
                         }
                     }
@@ -855,20 +858,20 @@
                 if(!isNaN(value)){
                     if(!isNaN(min) && Number(value) < min){
                         if(spv){
-                            this.exec("tips", [el, minTips || invalid, Types["MIN"]]);
+                            this.exec("tips", [el, minTips || invalid, Types["MIN"], onlyCheck]);
                             return false;
                         }else{
-                            this.setCheckResults(name, false, el, minTips || invalid, Types["MIN"]);
+                            this.setCheckResults(name, false, el, minTips || invalid, Types["MIN"], onlyCheck);
                             continue;
                         }
                     }
 
                     if(!isNaN(max) && Number(value) > max){
                         if(spv){
-                            this.exec("tips", [el, maxTips || invalid, Types["MAX"]]);
+                            this.exec("tips", [el, maxTips || invalid, Types["MAX"], onlyCheck]);
                             return false;
                         }else{
-                            this.setCheckResults(name, false, el, maxTips || invalid, Types["MAX"]);
+                            this.setCheckResults(name, false, el, maxTips || invalid, Types["MAX"], onlyCheck);
                             continue;
                         }
                     }
@@ -884,7 +887,7 @@
                 if(("checkbox" == type || "radio" == type)){
                     options[name].push(value);
                 }else{
-                    this.setCheckResults(name, true, el, "", Types["OK"]);
+                    this.setCheckResults(name, true, el, "", Types["OK"], onlyCheck);
                 }
 
                 data[name] = value;
@@ -924,14 +927,14 @@
                 if("radio" == setting.type && setting.required){
                     if(!data[setting.name]){
                         if(spv){
-                            this.exec("tips", [$(setting.node), setting.tips.empty, Types["EMPTY"]]);
+                            this.exec("tips", [$(setting.node), setting.tips.empty, Types["EMPTY"], onlyCheck]);
                             return false;
                         }else{
-                            this.setCheckResults(setting.name, false, $(setting.node), setting.tips.empty, Types["EMPTY"]);
+                            this.setCheckResults(setting.name, false, $(setting.node), setting.tips.empty, Types["EMPTY"], onlyCheck);
                             continue;
                         }
                     }else{
-                        this.setCheckResults(setting.name, true, $(setting.node), "", Types["OK"]);
+                        this.setCheckResults(setting.name, true, $(setting.node), "", Types["OK"], onlyCheck);
                     }
                 }
 
@@ -951,14 +954,14 @@
 
                     if(0 === flag){
                         if(spv){
-                            this.exec("tips", [$(setting.node), setting.tips.empty, Types["EMPTY"]]);
+                            this.exec("tips", [$(setting.node), setting.tips.empty, Types["EMPTY"], onlyCheck]);
                             return false;
                         }else{
-                            this.setCheckResults(setting.name, false, $(setting.node), setting.tips.empty, Types["EMPTY"]);
+                            this.setCheckResults(setting.name, false, $(setting.node), setting.tips.empty, Types["EMPTY"], onlyCheck);
                             continue;
                         }
                     }else{
-                        this.setCheckResults(setting.name, true, $(setting.node), "", Types["OK"]);
+                        this.setCheckResults(setting.name, true, $(setting.node), "", Types["OK"], onlyCheck);
                     }
                 }
             }
@@ -974,17 +977,17 @@
                 "spv": spv,
                 "crs": this.getCheckResultCRS(),
                 "cri": this.getCheckResultItems(),
-                "onlyCheck": (false === execCheckDone)
+                "onlyCheck": onlyCheck
             };
 
             if(!spv){
                 if(this.getCheckResultCRS("failure") > 0){
-                    this.exec("mpv", [___a]);
+                    this.exec("mpv", [___a, onlyCheck]);
                     return false;
                 }
             }
 
-            this.exec("done", [___a]);
+            this.exec("done", [___a, onlyCheck]);
 
             return true;
         },

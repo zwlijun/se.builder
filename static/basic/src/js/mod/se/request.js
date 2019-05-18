@@ -99,6 +99,25 @@
                 return host + url;
             }
 
+            if(ch2 == "./"){
+                url = url.substring(2);
+            }else if(ch2 == ".."){
+                var tmp = url.substring(0, url.lastIndexOf("../") + 3);
+                var pattern = new RegExp(tmp.replace(/\.{2}\//g, "([^\\/]+\\/)") + "$", "g");
+
+                url = url.substring(tmp.length);
+
+                pattern.lastIndex = 0;
+
+                if(pattern.test(current)){
+                    current = current.replace(pattern, "");
+                }else{
+                    console.warn("File not found.");
+
+                    return host + "/" + url;
+                }
+            }
+
             return host + current + url;
         },
         /**
@@ -196,7 +215,13 @@
 
             while(null != (matcher = pattern.exec(search))){
                 key = matcher[1];
-                value = decodeURIComponent(this.filterScript(matcher[2]));
+                value = this.filterScript(matcher[2]);
+
+                try{
+                    value = decodeURIComponent(value);
+                }catch(e){
+                    console.warn(key, value, e.message);
+                }
                 
                 if(key in items){
                     if(items[key] instanceof Array  && items[key].constructor == Array){ //数组

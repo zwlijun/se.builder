@@ -41,12 +41,15 @@
                         }
                     });
                     checker.set("tips", {
-                        callback: function(el, tips, type){
+                        callback: function(el, tips, type, onlyCheck){
                             // var p = $(el).parents("dd");
                             // var ins = p.find("ins");
 
                             // ins.html(tips).removeClass("hidden");
-                            
+                            if(true === onlyCheck){
+                            	return ;
+                            }
+
                             try{
                                 if(el && el.length > 0){
                                     el[0].scrollIntoView();
@@ -57,7 +60,7 @@
                         }
                     });
                     checker.set("mpv", {
-                        callback: function(result){
+                        callback: function(result, onlyCheck){
                             var checkResultCRS = result.crs;
                             var checkResultItems = result.cri;
                             var item = null;
@@ -207,22 +210,35 @@
                  */
                 r: function(data, node, e, type){
                     var args = (data || "").split(",");
+                    var formName = args[0];
 
                     var p = node.parents(".dataform-item");
                     var ins = p.find(".retmsg");
 
-                    if(ins[0].hasAttribute("data-defmsg")){
-                        var msg = ins.attr("data-defmsg") || "";
-                        var a = msg.split("::");
-                        var type = a.length === 1 ? "" : a[0];
-                        var text = a.length === 1 ? msg : a.slice(1).join("::");
+                    if(ins.length > 0){
+	                    if(ins[0].hasAttribute("data-defmsg")){
+	                        var msg = ins.attr("data-defmsg") || "";
+	                        var a = msg.split("::");
+	                        var type = a.length === 1 ? "" : a[0];
+	                        var text = a.length === 1 ? msg : a.slice(1).join("::");
 
-                        ins.html(text).addClass(type).removeClass("hide");
-                    }else{
-                        ins.addClass("hide").html("");
+	                        ins.html(text).addClass(type).removeClass("hide");
+	                    }else{
+	                        ins.addClass("hide").html("");
+	                    }
+
+	                    p.removeClass("err");
+	                }
+
+                    if(formName){
+                    	var checker = DataForm.getInstance(formName);
+
+                    	if(checker && false === checker.check(false)){
+                    		$(".btn.btn-orange").addClass("disabled");
+                    	}else{
+                    		$(".btn.btn-orange").removeClass("disabled");
+                    	}
                     }
-
-                    p.removeClass("err");
                 }
             },
             /**
@@ -309,7 +325,7 @@
                     }
                 };
 
-                node.attr("data-smscode-flag", "1");
+                node.attr("data-smscode-flag", "1").addClass("disabled");
 
                 SEApp.CMD.injectCommands(_command);
                 SEApp.CMD.exec("service.smscode.get", paramData, {
@@ -333,7 +349,7 @@
                                     callback: function(_timer){
                                         if(retryTime <= 0){
                                             retryTime = 0;
-                                            node.attr("data-smscode-flag", "0");
+                                            node.attr("data-smscode-flag", "0").removeClass("disabled");
                                             _timer.stop();
                                         }else{
                                             retryTime--;
@@ -356,7 +372,7 @@
                                 callback: function(ctx, code, msg, resp){
                                     var node = ctx.node;
 
-                                    node.attr("data-smscode-flag", "0");
+                                    node.attr("data-smscode-flag", "0").removeClass("disabled");
                                     SEApp.Toast.text(msg || "Error", SEApp.Toast.MIDDLE_CENTER, 3000);
                                 }
                             }
@@ -365,7 +381,7 @@
                     error: function(xhr, errorType, error){
                         var node = this.node;
                                     
-                        node.attr("data-smscode-flag", "0");
+                        node.attr("data-smscode-flag", "0").removeClass("disabled");
                         
                         var err = SEApp.CMD.RequestStatus[errorType];
                         SEApp.Toast.text(err.text, SEApp.Toast.MIDDLE_CENTER, 3000);
@@ -397,6 +413,10 @@
              */
             submit: function(data, node, e, type){
                 e.preventDefault();
+
+                if(node && node.hasClass("disabled")){
+                    return ;
+                }
 
                 var args = (data || "").split(",");
                 var formName = args[0];

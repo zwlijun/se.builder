@@ -11,6 +11,7 @@ var Toast           = require("mod/ui/toast");
 var ObjectPath      = require("mod/se/opaths");
 var ErrorCode       = require("mod/conf/errcode");
 var LazyLoader      = require("mod/se/lazyloader");
+var LayerBox        = require("mod/ui/layerbox");
 
 var ErrorTypes      = CMD.ErrorTypes;
 var RespTypes       = CMD.ResponseTypes;
@@ -401,7 +402,17 @@ var GoSchema = {
             return ;
         }
 
-        location.href = SecurityURL.fixed(url);
+        var loc = document.URL;
+        var locURLInfo = Request.parseURL(loc);
+        var tarURLInfo = Request.parseURL(url, true);
+
+        if(locURLInfo.host == tarURLInfo.host 
+                && locURLInfo.port == tarURLInfo.port 
+                        && locURLInfo.pathname == tarURLInfo.pathname){
+            location.replace(SecurityURL.fixed(url));
+        }else{
+            location.href = SecurityURL.fixed(url);
+        }
     },
     /**
      * 新开窗口打开URL
@@ -906,6 +917,14 @@ var _App = {
                 CMD.setBubbleTips(retmsg);
             }            
         }
+
+        var confirmBox = conf.confirm || {};
+
+        if(true === confirmBox.open){
+            LayerBox.newLayerBox(confirmBox.name || "global_confirm")
+                    .conf(confirmBox.options)
+                    .show();
+        }
         //---------------------------------------------------
         PreventDefaultLink();
     }
@@ -933,7 +952,8 @@ var _public = {
     "Toast": Toast,
     "ObjectPath": ObjectPath,
     "ErrorCode": ErrorCode,
-    "LazyLoader": LazyLoader
+    "LazyLoader": LazyLoader,
+    "LayerBox": LayerBox
 };
 module.exports = (window["SEApp"] = _public);
 //---------------------------

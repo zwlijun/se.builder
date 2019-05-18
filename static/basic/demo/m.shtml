@@ -52,6 +52,45 @@ window.__CONFIG = (function(){
                 }
             }
         },
+        "confirm": {
+            "open": false,
+            "name": "global_confirm",
+            "options": {
+                "text": "",
+                "skin": "global-confirm",
+                "type": "confirm",
+                "show": {
+                    callback: function(name){
+
+                    }
+                },
+                "hide": {
+                    callback: function(name){
+                        
+                    }
+                },
+                "btns": [
+                    {
+                        "label": "取消",
+                        "skin": "",
+                        "handler": {
+                            callback: function(layerbox, index, name){
+                                layerbox.hide();
+                            }
+                        }
+                    },
+                    {
+                        "label": "确定",
+                        "skin": "",
+                        "handler": {
+                            callback: function(layerbox, index, name){
+                                layerbox.hide();
+                            }
+                        }
+                    }
+                ]
+            }
+        },
         //BEGIN 重定向配置
         "redirectTo": {  
             //业务名称，默认：default

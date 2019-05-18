@@ -233,3 +233,31 @@
   border-color: #ff6e1f;
   color: #fff;
 }
+
+.global-confirm{
+
+}
+.global-confirm.mod-layerbox-mask.confirm .mod-layerbox-content:before{
+  content: none;
+}
+.global-confirm .mod-layerbox-box{
+  border-radius: .06rem;
+}
+.global-confirm .mod-layerbox-content{
+  font-size: .18rem;
+  color: #282828;
+  padding: .20rem .12rem;
+  line-height: 1.5;
+}
+.global-confirm .mod-layerbox-buttons{
+  margin-top: 0;
+}
+.global-confirm .mod-layerbox-buttons .button{
+  height: .40rem;
+  color: #666;
+}
+.global-confirm .mod-layerbox-buttons .button:last-child{
+  color: #FF662A;
+}
+
+
