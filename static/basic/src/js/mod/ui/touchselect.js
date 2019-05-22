@@ -31,20 +31,20 @@
 
     var _HTML_STRING = ''
                      + '<div class="mod-actionsheet mod-actionsheet-mask exit" data-actionsheet="<%=ts.name%>"></div>'
-                     + '<div class="mod-actionsheet mod-actionsheet-panel exit touchselect <%=ts.type%> <%=ts.skin%>" data-actionsheet="<%=ts.name%>">'
-                     + '  <h1 class="flexbox middle justify touchselect-header">'
+                     + '<div class="mod-actionsheet mod-actionsheet-panel exit touchselect disable-select <%=ts.type%> <%=ts.skin%>" data-actionsheet="<%=ts.name%>">'
+                     + '  <h1 class="flexbox middle justify touchselect-header disable-select">'
                      + '    <var class="touchselect-cancel" data-action-<%=ts.action%>="ts://cancel#<%=ts.name%>"><%=ts.labels.cancel%></var>'
                      + '    <span class="touchselect-title ellipsis"><%=ts.title%></span>'
                      + '    <var class="touchselect-confirm" data-action-<%=ts.action%>="ts://confirm#<%=ts.name%>"><%=ts.labels.confirm%></var>'
                      + '  </h1>'
-                     + '  <div class="touchselect-box flexbox top center">'
+                     + '  <div class="touchselect-box disable-select flexbox top center">'
                      + '    <%=ts.columns%>'
                      + '  </div>'
                      + '</div>'
                      + '';
     var _HTML_DATA = ''
-                   + '<div class="flexbox top center touchselect-column column<%=ts.index%>" data-column="<%=ts.index%>">'
-                   + '  <div class="touchselect-items">'
+                   + '<div class="flexbox top center touchselect-column disable-select column<%=ts.index%>" style="width: <%=Math.floor(100 / ts.size)%>%" data-column="<%=ts.index%>">'
+                   + '  <div class="touchselect-items disable-select">'
                    + '    <%'
                    + '    var offset = 0;'
                    + '    if(ts.label){'
@@ -359,7 +359,7 @@
 
             return newOptions;
         },
-        writeColumn: function(index, linked, label, options, defaultOptions){
+        writeColumn: function(index, linked, label, options, defaultOptions, size){
             var defaultOption = (defaultOptions || [])[index] || null;
 
             if(true === linked){
@@ -372,6 +372,7 @@
                 "label": label,
                 "defaultOption": defaultOption,
                 "options": options,
+                "size": size,
                 "setSelectedOption": function(name, index, selectedIndex, option){
                     if(!option){
                         return ;
@@ -415,7 +416,7 @@
                 label = data.label;
                 options = data.options;
 
-                columns.push(this.writeColumn(i, linked, label, options, defaultOptions))
+                columns.push(this.writeColumn(i, linked, label, options, defaultOptions, size))
             }
 
             columns.push(_HTML_SELECTED);
@@ -452,7 +453,7 @@
                 label = data.label;
                 options = data.options;
 
-                columns.push(this.writeColumn(i, linked, label, options, defaultOptions))
+                columns.push(this.writeColumn(i, linked, label, options, defaultOptions, size))
             }
 
             var columnNode = null;

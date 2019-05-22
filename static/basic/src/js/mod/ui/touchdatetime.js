@@ -19,36 +19,42 @@
                 "start": 1949,
                 "end": 2050,
                 "step": 1,
+                "reverse": false,
                 "label": {"value": "", "text": "年", "linkedvalue": ""}
             },
             "month": {
                 "start": 1,
                 "end": 12,
                 "step": 1,
+                "reverse": false,
                 "label": {"value": "", "text": "月", "linkedvalue": ""}
             },
             "date": {
                 "start": 1,
                 "end": 31,
                 "step": 1,
+                "reverse": false,
                 "label": {"value": "", "text": "日", "linkedvalue": ""}
             },
             "hours": {
                 "start": 0,
                 "end": 23,
                 "step": 1,
+                "reverse": false,
                 "label": {"value": "", "text": "时", "linkedvalue": ""}
             },
             "minutes": {
                 "start": 0,
                 "end": 59,
                 "step": 1,
+                "reverse": false,
                 "label": {"value": "", "text": "分", "linkedvalue": ""}
             },
             "seconds": {
                 "start": 0,
                 "end": 59,
                 "step": 1,
+                "reverse": false,
                 "label": {"value": "", "text": "秒", "linkedvalue": ""}
             }
         };
@@ -146,6 +152,10 @@
                 options.push(dateOption);
             }
 
+            if(true === range.reverse){
+                options["options"].reverse();
+            }
+
             return options
         },
         updateDateOptions: function(options){
@@ -171,6 +181,7 @@
 
             var yearOption = null;
             var monthOption = null;
+            var dateOption = null;
             var hoursOption = null;
             var minutesOption = null;
             var secondsOption = null;
@@ -198,9 +209,26 @@
                 this.yearDataMap["options"].push(yearOption);
             }
 
+            if(true === year.reverse){
+                this.yearDataMap["options"].reverse();
+            }
+
             for(var j = month.start; j <= month.end; j += month.step){
                 monthOption = {"value": j, "text": (j < 10 ? "0" + j : "" + j), "linkedvalue": ""};
                 this.monthDataMap["options"].push(monthOption);
+            }
+
+            if(true === month.reverse){
+                this.monthDataMap["options"].reverse();
+            }
+
+            for(var j = date.start; j <= date.end; j += date.step){
+                dateOption = {"value": j, "text": (j < 10 ? "0" + j : "" + j), "linkedvalue": ""};
+                this.dateDataMap["options"].push(dateOption);
+            }
+
+            if(true === date.reverse){
+                this.dateDataMap["options"].reverse();
             }
 
             for(var h = hours.start; h <= hours.end; h += hours.step){
@@ -208,14 +236,26 @@
                 this.hoursDataMap["options"].push(hoursOption);
             }
 
+            if(true === hours.reverse){
+                this.hoursDataMap["options"].reverse();
+            }
+
             for(var m = minutes.start; m <= minutes.end; m += minutes.step){
                 minutesOption = {"value": m, "text": (m < 10 ? "0" + m : "" + m), "linkedvalue": ""};
                 this.minutesDataMap["options"].push(minutesOption);
             }
 
+            if(true === minutes.reverse){
+                this.minutesDataMap["options"].reverse();
+            }
+
             for(var s = seconds.start; s <= seconds.end; s += seconds.step){
                 secondsOption = {"value": s, "text": (s < 10 ? "0" + s : "" + s), "linkedvalue": ""};
                 this.secondsDataMap["options"].push(secondsOption);
+            }
+
+            if(true === seconds.reverse){
+                this.secondsDataMap["options"].reverse();
             }
         },
         render: function(format, opts){
@@ -256,6 +296,9 @@
                 case TouchDatetime.FORMAT.MONTH_DATE:
                     opts.data.list.push(this.monthDataMap);
                     opts.data.list.push(this.dateDataMap);
+                break;
+                case TouchDatetime.FORMAT.YEAR:
+                    opts.data.list.push(this.yearDataMap);
                 break;
                 case TouchDatetime.FORMAT.TIME:
                     opts.data.list.push(this.hoursDataMap);
@@ -372,16 +415,24 @@
         }
     };
 
+    TouchDatetime.YEAR = (1 << 0);
+    TouchDatetime.MONTH = (1 << 1);
+    TouchDatetime.DATE = (1 << 2);
+    TouchDatetime.HOURS = (1 << 3);
+    TouchDatetime.MINUTES = (1 << 4);
+    TouchDatetime.SECONDS = (1 << 5);
+
     TouchDatetime.FORMAT = {
-        "DATETIME": 1, //年月日时分秒
-        "SHORT_DATETIME": 2, //年月日时分
-        "SHORT_DATETIME_HOUR": 3, //年月日时
-        "DATE": 4, //年月日
-        "SHORT_DATE": 5, //年月
-        "MONTH_DATE": 6, //月日
-        "TIME": 7, //时分秒
-        "SHORT_TIME": 8, //时分
-        "MINUTES_SECONDS": 9 //分秒
+        "YEAR": TouchDatetime.YEAR, //年
+        "DATETIME": TouchDatetime.YEAR | TouchDatetime.MONTH | TouchDatetime.DATE | TouchDatetime.HOURS | TouchDatetime.MINUTES | TouchDatetime.SECONDS, //年月日时分秒
+        "SHORT_DATETIME": TouchDatetime.YEAR | TouchDatetime.MONTH | TouchDatetime.DATE | TouchDatetime.HOURS | TouchDatetime.MINUTES, //年月日时分
+        "SHORT_DATETIME_HOUR": TouchDatetime.YEAR | TouchDatetime.MONTH | TouchDatetime.DATE | TouchDatetime.HOURS, //年月日时
+        "DATE": TouchDatetime.YEAR | TouchDatetime.MONTH | TouchDatetime.DATE, //年月日
+        "SHORT_DATE": TouchDatetime.YEAR | TouchDatetime.MONTH, //年月
+        "MONTH_DATE": TouchDatetime.MONTH | TouchDatetime.DATE, //月日
+        "TIME": TouchDatetime.HOURS | TouchDatetime.MINUTES | TouchDatetime.SECONDS, //时分秒
+        "SHORT_TIME": TouchDatetime.MINUTES | TouchDatetime.SECONDS, //时分
+        "MINUTES_SECONDS": TouchDatetime.MINUTES | TouchDatetime.SECONDS //分秒
     };
 
     TouchDatetime.Cache = {};
@@ -396,6 +447,11 @@
 
                 return this;
             },
+            define: function(range){
+                tc.generateData(range);
+
+                return this;
+            }, 
             render: function(format, opts){
                 tc.render(format, opts);
 

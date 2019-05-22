@@ -307,6 +307,7 @@
          * {"type": "animationstart", "mapping": null, "compatible": ["webkitAnimationStart", "mozAnimationStart"]}
          */
         registAction: function(target, events, settings){
+            console.log("target", target)
             var box = $(target || "body");
             var dom = box[0];
             var _events = [].concat(events);
@@ -320,7 +321,7 @@
             var actionEvent = null;
             
             if(!dom){
-                console.log("the target is not existed");
+                console.warn("the target(" + target + ") is not existed");
                 return false;
             }
             

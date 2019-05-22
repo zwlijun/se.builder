@@ -358,27 +358,24 @@ var GoSchema = {
     schema: "go",
     //--------------------------
     /**
-     * 登录校验重定向
+     * 历史记录跳转（history.go(step)）
      * @param  {String} data [参数]
      * @param  {Object} node [jQuery/zepto节点对象，或null]
      * @param  {Event}  e    [事件对象，或null]
      * @param  {String} type [事件类型]
      * @return {[type]}      [description]
      * 示例
-     * go://url#/index
+     * go://history#-1
      */
-    auth: function(data, node, e, type){
-        e && e.stopPropagation();
+    history: function(data, node, e, type){
+        var args = (data || "").split(",");
+        var step = Number(args[0] || -1);
 
-        if(SEApp.UserSign){
-            if(SEApp.UserSign.isLogin()){
-                Util.requestExternal("go://url#" + data, [node, e, type]);
-            }else{
-                SEApp.UserSign.login(data, false);
-            }
-        }else{
-            Util.requestExternal("go://url#" + data, [node, e, type]);
+        if(node && node.hasClass("disabled")){
+            return ;
         }
+
+        history.go(step);
     },
     /**
      * URL重定向
