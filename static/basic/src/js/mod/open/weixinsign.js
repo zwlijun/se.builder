@@ -202,11 +202,10 @@
                 if(!data){
                     return ;
                 }
-                var opts = data.options;
                 var meta = data.meta;
 
                 if(meta.options("allow")){
-                    this.invoke(name, opts);
+                    this.invoke(name, {});
                 }
             },
             args: [],
@@ -218,11 +217,10 @@
                 if(!data){
                     return ;
                 }
-                var opts = data.options;
                 var meta = data.meta;
 
                 if(!meta.options("allow")){
-                    this.invoke(name, opts);
+                    this.invoke(name, {});
                 }
             },
             args: [],
