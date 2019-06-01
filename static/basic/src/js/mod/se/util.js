@@ -40,8 +40,31 @@
             var actualType = _this.actualType;
             var originType = _this.originType;
 
+            //兼容input
+            if(actualType === "input"){
+                box.on("compositionstart", '[data-action-' + originType + ']', null, function(e){
+                    var currentTarget = $(e.currentTarget);
+
+                    currentTarget.attr("data-composition-lock", "1");
+                });
+                box.on("compositionend", '[data-action-' + originType + ']', null, function(e){
+                    var currentTarget = $(e.currentTarget);
+
+                    currentTarget.attr("data-composition-lock", "0");
+
+                    currentTarget.trigger("input");
+                });
+            }
+
             box.on(actualType, '[data-action-' + originType + ']', null, function(e){
                 var currentTarget = $(e.currentTarget);
+
+                if(e.type === "input"){
+                    if("1" == currentTarget.attr("data-composition-lock")){
+                        return ;
+                    }
+                }
+
                 var external = currentTarget.attr("data-action-" + originType);
                 var beforeCheck = currentTarget.attr("data-" + originType + "-beforecheck");
                 var before = currentTarget.attr("data-" + originType + "-before");
