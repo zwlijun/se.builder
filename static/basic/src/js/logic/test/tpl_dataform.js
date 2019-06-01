@@ -533,29 +533,30 @@
                                 SEApp.Util.requestExternal(external, [{
                                     "ctx": ctx, 
                                     "resp": resp, 
-                                    "msg": msg
+                                    "msg": msg,
+                                    "url": url
                                 }]);
-                            }
-
-                            if(true === formAction.redirectNow){
-                                // 业务重定向逻辑 ========= [[
-                                if(url){
-                                    SEApp.Util.requestExternal("go://url#" + url, []);
-                                }
-                                // 业务重定向逻辑 ========= ]]
                             }else{
-                                SEApp.Toast.text(msg || "处理成功", SEApp.Toast.MIDDLE_CENTER, 1500, {
-                                    hide: {
-                                        callback: function(id){
-                                            //TODO
-                                            // 业务重定向逻辑 ========= [[
-                                            if(url){
-                                                SEApp.Util.requestExternal("go://url#" + url, []);
-                                            }
-                                            // 业务重定向逻辑 ========= ]]
-                                        }
+                                if(true === formAction.redirectNow){
+                                    // 业务重定向逻辑 ========= [[
+                                    if(url){
+                                        SEApp.Util.requestExternal("go://url#" + url, []);
                                     }
-                                });
+                                    // 业务重定向逻辑 ========= ]]
+                                }else{
+                                    SEApp.Toast.text(msg || "处理成功", SEApp.Toast.MIDDLE_CENTER, 1500, {
+                                        hide: {
+                                            callback: function(id){
+                                                //TODO
+                                                // 业务重定向逻辑 ========= [[
+                                                if(url){
+                                                    SEApp.Util.requestExternal("go://url#" + url, []);
+                                                }
+                                                // 业务重定向逻辑 ========= ]]
+                                            }
+                                        }
+                                    });
+                                }
                             }
 
                             try{

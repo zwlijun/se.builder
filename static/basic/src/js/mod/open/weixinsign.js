@@ -226,6 +226,38 @@
             args: [],
             context: WeiXinAPI
         });
+        APIMap.put("updateAppMessageShareData", {
+            callback: function(name){
+                var data = G["GetJSAPITemplateData"]();
+                
+                if(!data){
+                    return ;
+                }
+                var opts = data.options;
+
+                delete opts.success;
+
+                this.invoke(name, opts);
+            },
+            args: [],
+            context: WeiXinAPI
+        });
+        APIMap.put("updateTimelineShareData", {
+            callback: function(name){
+                var data = G["GetJSAPITemplateData"]();
+                
+                if(!data){
+                    return ;
+                }
+                var opts = data.options;
+
+                delete opts.success;
+
+                this.invoke(name, opts);
+            },
+            args: [],
+            context: WeiXinAPI
+        });
         APIMap.put("onMenuShareTimeline", {
             callback: function(name){
                 var data = G["GetJSAPITemplateData"]();
