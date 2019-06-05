@@ -378,6 +378,66 @@ var GoSchema = {
         history.go(step);
     },
     /**
+     * 跳转前确认
+     * @param  {String} data [参数]
+     * @param  {Object} node [jQuery/zepto节点对象，或null]
+     * @param  {Event}  e    [事件对象，或null]
+     * @param  {String} type [事件类型]
+     * @return {[type]}      [description]
+     * 示例
+     * go://confirm#confKey,url
+     */
+    confirm: function(data, node, e, type){
+        var args = (data || "").split(",");
+        var key = args[0];
+        var url = args[1];
+
+        if(!key){
+            if(url){
+                Util.requestExternal("go://url#" + url, [node, e, type]);
+                return ;
+            }
+
+            return ;
+        }
+
+        var conf = SEApp.conf(key);
+
+        if(!conf){
+            if(url){
+                Util.requestExternal("go://url#" + url, [node, e, type]);
+                return ;
+            }
+
+            return ;
+        }
+
+        var opts = conf.options;
+        var btns = opts.btns;
+        var context = null;
+        var handler = null;
+
+        for(var i = 0; i < btns.length; i++){
+            handler = btns[i].handler || {};
+            btns[i].handler = handler;
+
+            context = handler.context || {};
+            context.go = function(){
+                if(url){
+                    SEApp.Util.requestExternal("go://url#" + url, [node, e, type]);
+                }
+            }
+
+            btns[i].handler.context = context;
+        }
+
+        opts.btns = btns;
+
+        LayerBox.newLayerBox(conf.name || "goback_confirm")
+                    .conf(opts)
+                    .show();
+    },
+    /**
      * URL重定向
      * @param  {String} data [参数]
      * @param  {Object} node [jQuery/zepto节点对象，或null]
