@@ -72,9 +72,9 @@
                     stat(meta.options("shareStatURL"));
                 }
 
-                if(meta.options("shareRedirectURL")){
-                    location.href = meta.options("shareRedirectURL");
-                }
+                // if(meta.options("shareRedirectURL")){
+                //     location.href = meta.options("shareRedirectURL");
+                // }
 
                 Stat.send("share");
             }
@@ -202,6 +202,7 @@
                 if(!data){
                     return ;
                 }
+
                 var meta = data.meta;
 
                 if(meta.options("allow")){
@@ -217,6 +218,7 @@
                 if(!data){
                     return ;
                 }
+
                 var meta = data.meta;
 
                 if(!meta.options("allow")){
@@ -235,7 +237,7 @@
                 }
                 var opts = data.options;
 
-                delete opts.success;
+                // delete opts.success;
 
                 this.invoke(name, opts);
             },
@@ -251,7 +253,7 @@
                 }
                 var opts = data.options;
 
-                delete opts.success;
+                // delete opts.success;
 
                 this.invoke(name, opts);
             },
@@ -364,6 +366,8 @@
             "nonceStr": data.nonceStr,
             "signature": data.signature,
             "jsApiList": [
+                'updateAppMessageShareData',
+                'updateTimelineShareData',
                 'onMenuShareTimeline',
                 'onMenuShareAppMessage',
                 'onMenuShareQQ',

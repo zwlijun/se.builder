@@ -64,7 +64,7 @@
                         return ;
                     }
                 }
-
+                
                 var external = currentTarget.attr("data-action-" + originType);
                 var beforeCheck = currentTarget.attr("data-" + originType + "-beforecheck");
                 var before = currentTarget.attr("data-" + originType + "-before");

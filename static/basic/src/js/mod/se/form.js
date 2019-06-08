@@ -314,7 +314,8 @@
         "SAME": "same",
         "DIFFERENT": "different",
         "EMPTY": "empty",
-        "FORMAT": "format"
+        "FORMAT": "format",
+        "DATECOMPARE": "datecompare"
     };
 
     /**
@@ -474,6 +475,8 @@
          *            data-encode="0|1"               //是否进行encodeURIComponent编码
          *            data-xss="0|1"                  //是否进行XSS过滤
          *            data-compare="name"             //确认输入比较的元素的name值
+         *            data-datecompre="logic,dt,i"    //日期比较
+         *            data-datecompare-tips="string"  //日期比较提示内容
          *            data-comparetype="0|1"          //比较类型，1:两个值需要一致，0:两个值不能一样
          *            data-different="string"         //两次输入比较不一致时的提示内容
          *            data-same="string"              //两次输入比较一样时的提示内容，data-comparetype="0"时触发
@@ -539,6 +542,8 @@
             var clearSpaces = false;
             var compare = null;
             var compareType = 1;
+            var dateCompare = null;
+            var dateCompareTips = null;
             var same = null;
             var lbound = 0;
             var ubound = 0;
@@ -692,6 +697,8 @@
                 compareType = Number(el.attr("data-comparetype") || 1);
                 refer = el.attr("data-refer");
                 selectUse = el.attr("data-selectuse");
+                dateCompare = el.attr("data-datecompare");
+                dateCompareTips = el.attr("data-datecompare-tips");
 
                 settings[name] = {
                     "form": f[0],
@@ -727,6 +734,8 @@
                     "compareType": compareType,
                     "refer": refer,
                     "selectUse": selectUse,
+                    "dateCompare": dateCompare,
+                    "dateCompareTips": dateCompareTips,
                     "tips": {
                         "empty": empty,
                         "invalid": invalid,
@@ -823,12 +832,38 @@
                     }else{
                         if(value == compareValue){
                             if(spv){
-                                this.exec("tips", [el, same || invalid,, Types["SAME"], onlyCheck]);
+                                this.exec("tips", [el, same || invalid, Types["SAME"], onlyCheck]);
                                 return false;
                             }else{
                                 this.setCheckResults(name, false, el, same || invalid, Types["SAME"], onlyCheck);
                                 continue;
                             }
+                        }
+                    }
+                }
+
+                if(dateCompare){
+                    var tmpItems = dateCompare.split(",");
+                    var logic = tmpItems[0];
+                    var dateTimeString = tmpItems[1] || "now";
+                    var compareInteravl = tmpItems[2] || "d";
+                    var compareDateResult = true;
+
+                    if(dateTimeString.toLowerCase() === "now"){
+                        dateTimeString = new Date();
+                    }
+
+                    if(logic in DateUtil){
+                        compareDateResult = DateUtil[logic].apply(DateUtil, [value, dateTimeString, el.attr("data-dtpicker-format"), compareInteravl]);
+                    }
+
+                    if(!compareDateResult){
+                        if(spv){
+                            this.exec("tips", [el, dateCompareTips || invalid, Types["DATECOMPARE"], onlyCheck]);
+                            return false;
+                        }else{
+                            this.setCheckResults(name, false, el, dateCompareTips || invalid, Types["DATECOMPARE"], onlyCheck);
+                            continue;
                         }
                     }
                 }

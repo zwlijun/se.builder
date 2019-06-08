@@ -313,6 +313,162 @@
             d2.setMinutes(d2.getMinutes() + timeZoneOffset);
 
             return d2;
+        },
+        /**
+         * currentDate < compareDate
+         * @param  {[type]} currentDate [description]
+         * @param  {[type]} compareDate [description]
+         * @param  {[type]} format      [description]
+         * @param  {[type]} interval    [description]
+         * @return {[type]}             [description]
+         */
+        lt: function(currentDate, compareDate, format, interval){
+            if(Object.prototype.toString.call(currentDate) === "[object Date]"){
+                currentDate = this.format(currentDate, format);
+            }
+
+            if(Object.prototype.toString.call(compareDate) === "[object Date]"){
+                compareDate = this.format(compareDate, format);
+            }
+
+            currentDate = this.parse(currentDate, format);
+            compareDate = this.parse(compareDate, format);
+
+            if(!(currentDate.ok && currentDate.ok)){
+                return false;
+            }
+
+            return this.dateDiff(interval, currentDate.date, compareDate.date) > 0;
+        },
+        /**
+         * currentDate > compareDate
+         * @param  {[type]} currentDate [description]
+         * @param  {[type]} compareDate [description]
+         * @param  {[type]} format      [description]
+         * @param  {[type]} interval    [description]
+         * @return {[type]}             [description]
+         */
+        gt: function(currentDate, compareDate, format, interval){
+            if(Object.prototype.toString.call(currentDate) === "[object Date]"){
+                currentDate = this.format(currentDate, format);
+            }
+
+            if(Object.prototype.toString.call(compareDate) === "[object Date]"){
+                compareDate = this.format(compareDate, format);
+            }
+
+            currentDate = this.parse(currentDate, format);
+            compareDate = this.parse(compareDate, format);
+
+            if(!(currentDate.ok && currentDate.ok)){
+                return false;
+            }
+
+            return this.dateDiff(interval, currentDate.date, compareDate.date) < 0;
+        },
+        /**
+         * currentDate == compareDate
+         * @param  {[type]} currentDate [description]
+         * @param  {[type]} compareDate [description]
+         * @param  {[type]} format      [description]
+         * @param  {[type]} interval    [description]
+         * @return {[type]}             [description]
+         */
+        eq: function(currentDate, compareDate, format, interval){
+            if(Object.prototype.toString.call(currentDate) === "[object Date]"){
+                currentDate = this.format(currentDate, format);
+            }
+
+            if(Object.prototype.toString.call(compareDate) === "[object Date]"){
+                compareDate = this.format(compareDate, format);
+            }
+
+            currentDate = this.parse(currentDate, format);
+            compareDate = this.parse(compareDate, format);
+
+            if(!(currentDate.ok && currentDate.ok)){
+                return false;
+            }
+
+            return this.dateDiff(interval, currentDate.date, compareDate.date) == 0;
+        },
+        /**
+         * currentDate !== compareDate
+         * @param  {[type]} currentDate [description]
+         * @param  {[type]} compareDate [description]
+         * @param  {[type]} format      [description]
+         * @param  {[type]} interval    [description]
+         * @return {[type]}             [description]
+         */
+        neq: function(currentDate, compareDate, format, interval){
+            if(Object.prototype.toString.call(currentDate) === "[object Date]"){
+                currentDate = this.format(currentDate, format);
+            }
+
+            if(Object.prototype.toString.call(compareDate) === "[object Date]"){
+                compareDate = this.format(compareDate, format);
+            }
+
+            currentDate = this.parse(currentDate, format);
+            compareDate = this.parse(compareDate, format);
+
+            if(!(currentDate.ok && currentDate.ok)){
+                return false;
+            }
+
+            return this.dateDiff(interval, currentDate.date, compareDate.date) != 0;
+        },
+        /**
+         * currentDate <= compareDate
+         * @param  {[type]} currentDate [description]
+         * @param  {[type]} compareDate [description]
+         * @param  {[type]} format      [description]
+         * @param  {[type]} interval    [description]
+         * @return {[type]}             [description]
+         */
+        lte: function(currentDate, compareDate, format, interval){
+            if(Object.prototype.toString.call(currentDate) === "[object Date]"){
+                currentDate = this.format(currentDate, format);
+            }
+
+            if(Object.prototype.toString.call(compareDate) === "[object Date]"){
+                compareDate = this.format(compareDate, format);
+            }
+
+            currentDate = this.parse(currentDate, format);
+            compareDate = this.parse(compareDate, format);
+
+            if(!(currentDate.ok && currentDate.ok)){
+                return false;
+            }
+
+            return this.dateDiff(interval, currentDate.date, compareDate.date) >= 0;
+        },
+        /**
+         * currentDate >= compareDate
+         * @param  {[type]} currentDate [description]
+         * @param  {[type]} compareDate [description]
+         * @param  {[type]} format      [description]
+         * @param  {[type]} interval    [description]
+         * @return {[type]}             [description]
+         */
+        gte: function(currentDate, compareDate, format, interval){
+            if(Object.prototype.toString.call(currentDate) === "[object Date]"){
+                currentDate = this.format(currentDate, format);
+            }
+
+            if(Object.prototype.toString.call(compareDate) === "[object Date]"){
+                compareDate = this.format(compareDate, format);
+            }
+
+            currentDate = this.parse(currentDate, format);
+            compareDate = this.parse(compareDate, format);
+
+            if(!(currentDate.ok && currentDate.ok)){
+                return false;
+            }
+
+            return this.dateDiff(interval, currentDate.date, compareDate.date) <= 0;
         }
     };
 });
