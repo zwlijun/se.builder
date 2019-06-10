@@ -90,8 +90,8 @@
                        + '    </div>'
                        + '  </div>'
                        + '  <%}%>'
-                       + '  <div class="liveplayer-master" data-action-click="liveplayer://swapBars#<%=liveplayer.name%>">'
-                       + '    <<%="audio" == liveplayer.type ? "audio" : "video"%> class="liveplayer-media" '
+                       + '  <div class="liveplayer-master" data-action-click="liveplayer://swapBars#<%=liveplayer.name%>" style="width: <%=liveplayer.width%>; height: <%=liveplayer.height%>;">'
+                       + '    <<%="audio" == liveplayer.type ? "audio" : "video"%> class="liveplayer-media" style="width: <%=liveplayer.width%>; height: <%=liveplayer.height%>;" '
                        + '      <%=liveplayer.loop ? " loop" : ""%> '
                        + '      <%=liveplayer.autoplay ? " autoplay" : ""%> '
                        + '      <%=liveplayer.muted ? " muted" : ""%> '
@@ -99,13 +99,13 @@
                        + '      preload="<%=liveplayer.preload%>" '
                        + '      poster="<%=liveplayer.poster%>" '
                        + '      x-webkit-airplay="allow" '
-                       + '      webkit-playsinline '
-                       + '      playsinline '
+                       + '      webkit-playsinline="true" '
+                       + '      playsinline="true" '
                        + '      <%if(liveplayer.crossOrigin){%>'
                        + '      crossOrigin="<%=liveplayer.crossOrigin%>"'
                        + '      <%}%>'
                        + '      <%if(liveplayer.x5h5){%>'
-                       + '      x5-video-player-type="h5" '
+                       + '      x5-video-player-type="<%=liveplayer.x5h5%>" '
                        + '      <%}%>'
                        + '      <%if("true" == liveplayer.x5fullscreen || "false" == liveplayer.x5fullscreen){%>'
                        + '      x5-video-player-fullscreen="<%=liveplayer.x5fullscreen%>" '
@@ -424,7 +424,7 @@
       data-liveplayer-muted="是否设置为禁用， 1 - 禁音， 0 - 不禁音" 
       data-liveplayer-controls="是否显示控制条， 1 - 显示， 0 - 不显示"
       data-liveplayer-appearance="播放器外观，define - 自定义 native - 系统默认样式 none - 无外观仅播放窗口"
-      data-liveplayer-x5h5="设置腾讯X5内核播放器H5属性 1 - 设置 0 - 不设置"
+      data-liveplayer-x5h5="设置腾讯X5内核播放器H5属性 h5/h5-page"
       data-liveplayer-x5fullscreen="设置腾讯X5内核播放器全屏模式 true|false"
       data-liveplayer-x5­orientation="设置腾讯X5内核视频的横竖屏  landscape 横屏, portraint竖屏"
 
@@ -469,7 +469,7 @@
             crossOrigin: "",
             contextmenu: false,
             appearance: "define",
-            x5h5: false,
+            x5h5: "h5-page",
             x5fullscreen: "",
             x5orientation: "",
             visualizerBackgroundImage: "",
@@ -1382,7 +1382,7 @@
                 //     crossOrigin: "",
                 //     contextmenu: false,
                 //     appearance: "define",
-                //     x5h5: false,
+                //     x5h5: "h5-page",
                 //     x5fullscreen: "",
                 //     x5orientation: "",
                 //     visualizerBackgroundImage: "",
@@ -1419,7 +1419,7 @@
                     {name: "crossOrigin", dataType: "string"},
                     {name: "contextmenu", dataType: "boolean"},
                     {name: "appearance", dataType: "string"},
-                    {name: "x5h5", dataType: "boolean"},
+                    {name: "x5h5", dataType: "string"},
                     {name: "x5fullscreen", dataType: "string"},
                     {name: "x5orientation", dataType: "string"},
                     {name: "visualizerBackgroundImage", dataType: "string"},
