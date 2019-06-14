@@ -560,7 +560,7 @@
                             }
 
                             try{
-                                ctx.dataForm.form.reset();
+                                formAction.reset && ctx.dataForm.form.reset();
                             }catch(e){}
                         }
                     });

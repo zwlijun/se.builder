@@ -850,7 +850,8 @@ var DataSetUtil = {
             "redirectNow": false,
             "external": null,
             "showLoading": true,
-            "loadingText": "Loading..."
+            "loadingText": "Loading...",
+            "reset": true
         }, forms[formName] || {});
 
         return formConf;
@@ -905,6 +906,30 @@ var _App = {
             }
 
             return undefined;
+        }
+    },
+    message: function(){
+        var conf = _App.conf();
+        var retmsg = (conf.message || "") + "";
+        retmsg = retmsg.replace(/^([\s]+)|([\s]+)$/gi, "");
+
+        if(retmsg){
+            var toastConfig = conf.toast || null;
+            if(toastConfig){
+                Toast.text(retmsg, toastConfig.align || Toast.BOTTOM_CENTER, toastConfig.delay || 3000, toastConfig.callbacks || {});
+            }else{
+                CMD.setBubbleTips(retmsg);
+            }            
+        }
+    },
+    confirm: function(forceOpen){
+        var conf = _App.conf();
+        var confirmBox = conf.confirm || {};
+
+        if(true === forceOpen || true === confirmBox.open){
+            LayerBox.newLayerBox(confirmBox.name || "global_confirm")
+                    .conf(confirmBox.options)
+                    .show();
         }
     },
     init: function(conf){
@@ -963,25 +988,8 @@ var _App = {
         //--------------------------------------------------
 
         //---------------------------------------------------
-        var retmsg = (conf.message || "") + "";
-        retmsg = retmsg.replace(/^([\s]+)|([\s]+)$/gi, "");
-
-        if(retmsg){
-            var toastConfig = conf.toast || null;
-            if(toastConfig){
-                Toast.text(retmsg, toastConfig.align || Toast.BOTTOM_CENTER, toastConfig.delay || 3000, toastConfig.callbacks || {});
-            }else{
-                CMD.setBubbleTips(retmsg);
-            }            
-        }
-
-        var confirmBox = conf.confirm || {};
-
-        if(true === confirmBox.open){
-            LayerBox.newLayerBox(confirmBox.name || "global_confirm")
-                    .conf(confirmBox.options)
-                    .show();
-        }
+        _App.message();
+        _App.confirm();
         //---------------------------------------------------
         PreventDefaultLink();
     }
@@ -991,6 +999,8 @@ var _public = {
     "version": "R18B0517",
     "init": _App.init,
     "conf": _App.conf,
+    "message": _App.message,
+    "confirm": _App.confirm,
     "path": LocalPath,
     "params": Request.serialized(location.search),
     "SecurityURL": SecurityURL,
