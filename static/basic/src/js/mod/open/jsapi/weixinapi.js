@@ -133,12 +133,11 @@
                 itemprop = meta.attr("itemprop");
                 itemcontent = meta.attr("content");
 
-                if(itemfor in map){
-                    map[itemfor][itemprop] = itemcontent;
-                }else{
+                if(!DataType.isObject(map[itemfor])){
                     map[itemfor] = {};
-                    map[itemfor][itemprop] = itemcontent;
                 }
+
+                map[itemfor][itemprop] = itemcontent;
             }
 
             for(var key in map){
