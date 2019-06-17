@@ -40,5 +40,23 @@ window["SEGlobalConf"] = {
     },
     "prevPage": "上一页",
     "nextPage": "下一页",
+    "wxapi": {
+        success: function(data, res){
+            var msg = res.errMsg;
+            
+            if(msg.indexOf("onMenuShare") != -1){
+                //分享成功
+            }
+        },
+        cancel: function(data, res){
+            // console.warn(res);
+        },
+        fail: function(data, res){
+            // console.warn(res);
+        },
+        complete: function(data, res){
+            // console.warn(res);
+        }
+    }
 };
 </script>

@@ -867,6 +867,32 @@ var DataSetUtil = {
     }
 };
 
+var WXApiSchema = {
+    "schema": "wxapi",
+    "callback": {
+        success: function(data, res){
+            var wxapi = SEApp.conf("wxapi") || {};
+
+            wxapi.success && wxapi.success.apply(null, [data, res]);
+        },
+        cancel: function(data, res){
+            var wxapi = SEApp.conf("wxapi") || {};
+
+            wxapi.cancel && wxapi.cancel.apply(null, [data, res]);
+        },
+        fail: function(data, res){
+            var wxapi = SEApp.conf("wxapi") || {};
+
+            wxapi.fail && wxapi.fail.apply(null, [data, res]);
+        },
+        complete: function(data, res){
+            var wxapi = SEApp.conf("wxapi") || {};
+
+            wxapi.complete && wxapi.complete.apply(null, [data, res]);
+        }
+    }
+};
+
 var _App = {
     _conf: {},
     /**
@@ -947,6 +973,7 @@ var _App = {
         Util.source(AppSchema);
         Util.source(GoSchema);
         Util.source(InputSchema);
+        Util.source(WXApiSchema);
 
         //重置CMD模块中的公共提示信息
         if(_App.conf("RequestStatus")){

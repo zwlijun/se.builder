@@ -30,6 +30,10 @@
     <meta itemprop="appKey" content="" itemfor="share" desc="应用KEY">
     <meta itemprop="token" content="" itemfor="share" desc="应用TOKEN"> 
     <meta itemprop="pageId" content="" itemfor="share" desc="分享页面标识">
+    <meta itemprop="success" content="" itemfor="share" desc="成功回调">
+    <meta itemprop="cancel" content="" itemfor="share" desc="取消回调">
+    <meta itemprop="fail" content="" itemfor="share" desc="失败回调">
+    <meta itemprop="complete" content="" itemfor="share" desc="完成回调，不管成功和失败">
     */
     
     /**
@@ -54,7 +58,11 @@
             token: "",
             type: "share",
             text: "通用",
-            pageId: ""
+            pageId: "",
+            success: "",
+            cancel: "",
+            fail: "",
+            complete: ""
         }, options || {});
     };
 

@@ -61,22 +61,44 @@
         var text = meta.options("description");
         var link = meta.options("link");
         var imgUrl = meta.options("image");
+        var successExternal = meta.options("success");
+        var cancelExternal = meta.options("cancel");
+        var failExternal = meta.options("fail");
+        var completeExternal = meta.options("complete");
 
         var options = {
             "imgUrl" : imgUrl,
             "link" : link,
             "title" : title,
             "desc" : text,
-            "success": function(){
+            "success": function(res){
+                if(successExternal){
+                    Util.requestExternal(successExternal, [res]);
+                }
                 if(meta.options("shareStatURL")){
                     stat(meta.options("shareStatURL"));
                 }
 
-                // if(meta.options("shareRedirectURL")){
-                //     location.href = meta.options("shareRedirectURL");
-                // }
+                if(meta.options("shareRedirectURL")){
+                    location.href = meta.options("shareRedirectURL");
+                }
 
                 Stat.send("share");
+            },
+            "cancel": function(res){
+                if(cancelExternal){
+                    Util.requestExternal(cancelExternal, [res]);
+                }
+            },
+            "fail": function(res){
+                if(failExternal){
+                    Util.requestExternal(failExternal, [res]);
+                }
+            },
+            "complete": function(res){
+                if(completeExternal){
+                    Util.requestExternal(completeExternal, [res]);
+                }
             }
         };
 
@@ -228,38 +250,38 @@
             args: [],
             context: WeiXinAPI
         });
-        APIMap.put("updateAppMessageShareData", {
-            callback: function(name){
-                var data = G["GetJSAPITemplateData"]();
+        // APIMap.put("updateAppMessageShareData", {
+        //     callback: function(name){
+        //         var data = G["GetJSAPITemplateData"]();
                 
-                if(!data){
-                    return ;
-                }
-                var opts = data.options;
+        //         if(!data){
+        //             return ;
+        //         }
+        //         var opts = data.options;
 
-                // delete opts.success;
+        //         // delete opts.success;
 
-                this.invoke(name, opts);
-            },
-            args: [],
-            context: WeiXinAPI
-        });
-        APIMap.put("updateTimelineShareData", {
-            callback: function(name){
-                var data = G["GetJSAPITemplateData"]();
+        //         this.invoke(name, opts);
+        //     },
+        //     args: [],
+        //     context: WeiXinAPI
+        // });
+        // APIMap.put("updateTimelineShareData", {
+        //     callback: function(name){
+        //         var data = G["GetJSAPITemplateData"]();
                 
-                if(!data){
-                    return ;
-                }
-                var opts = data.options;
+        //         if(!data){
+        //             return ;
+        //         }
+        //         var opts = data.options;
 
-                // delete opts.success;
+        //         // delete opts.success;
 
-                this.invoke(name, opts);
-            },
-            args: [],
-            context: WeiXinAPI
-        });
+        //         this.invoke(name, opts);
+        //     },
+        //     args: [],
+        //     context: WeiXinAPI
+        // });
         APIMap.put("onMenuShareTimeline", {
             callback: function(name){
                 var data = G["GetJSAPITemplateData"]();
@@ -483,7 +505,7 @@
     };
 
     module.exports = {
-        "version": "R17B0817",
+        "version": "R19B0616",
         "WeiXinAPI": WeiXinAPI,
         "MetaData": MetaData,
         "api": {
